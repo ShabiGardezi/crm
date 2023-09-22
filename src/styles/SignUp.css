@@ -1,0 +1,20 @@
+.MuiFormControl-root.MuiFormControl-fullWidth {
+  margin-top: 30px;
+}
+.btn-signup {
+  width: 30%;
+  margin-top: 30px;
+  font: bold 15px/24px "Mona Sans", "Helvetica Neue", Helvetica, Arial,
+    sans-serif;
+}
+h4.MuiTypography-root.MuiTypography-h4.MuiTypography-gutterBottom.MuiTypography-alignCenter {
+  font: bold 15px/24px "Mona Sans", "Helvetica Neue", Helvetica, Arial,
+    sans-serif;
+  font-size: 26px;
+}
+@media (min-width: 1280px) {
+  .MuiContainer-maxWidthLg {
+    max-width: 1280px;
+    margin-top: 75px;
+  }
+}

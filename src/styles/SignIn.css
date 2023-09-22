@@ -1,0 +1,39 @@
+.signin-form {
+  margin-top: 100px;
+}
+.MuiGrid-root.signin-form.MuiGrid-item.MuiGrid-grid-xs-2.MuiGrid-grid-md-6 {
+  margin-top: 100px;
+}
+
+.MuiFormControl-root.MuiTextField-root {
+  margin-top: 30px;
+}
+
+button.MuiButtonBase-root.MuiButton-root.MuiButton-contained.signin-btn.MuiButton-containedPrimary {
+  margin-top: 30px;
+  width: 18%;
+}
+h4.MuiTypography-root.MuiTypography-h4 {
+  font: bold 15px/24px "Mona Sans", "Helvetica Neue", Helvetica, Arial,
+    sans-serif;
+  font-size: 26px;
+  text-align: center;
+}
+span.MuiTypography-root.MuiFormControlLabel-label.MuiTypography-body1 {
+  font: bold 15px/24px "Mona Sans", "Helvetica Neue", Helvetica, Arial,
+    sans-serif;
+  font-size: 15px;
+}
+.MuiButton-label {
+  font: bold 15px/24px "Mona Sans", "Helvetica Neue", Helvetica, Arial,
+    sans-serif;
+}
+button.MuiButtonBase-root.MuiButton-root.MuiButton-text.forgot.MuiButton-textPrimary {
+  color: black;
+}
+button.MuiButtonBase-root.MuiButton-root.MuiButton-text.MuiButton-textPrimary {
+  color: black;
+}
+.MuiContainer-root.MuiContainer-maxWidthLg {
+  margin-top: 200px;
+}
