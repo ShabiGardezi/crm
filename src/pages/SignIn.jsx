@@ -44,7 +44,7 @@ const SignIn = () => {
 
     try {
       const response = await axios.post(
-        `http://localhost:5000/api/signin/signin`,
+        `http://localhost:5000/api/user/signin`,
         {
           email: email,
           password: password,
