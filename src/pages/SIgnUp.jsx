@@ -37,7 +37,7 @@ const SignUp = () => {
       setloading(true);
       const { username, email, password, role, confirmPassword } = formData;
       const userData = { username, email, password, role, confirmPassword };
-      const response = await axios.post("${url}api/signup", {
+      const response = await axios.post("http://localhost:5000/api/signup/signup", {
         ...userData,
       });
 

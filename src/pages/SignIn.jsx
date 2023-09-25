@@ -13,7 +13,9 @@ import {
 import { createTheme, ThemeProvider } from "@material-ui/core/styles";
 import SigninImg from "../assests/Rank-BPO-PVT-LTD-LOGO-02 copy.png";
 import "../styles/SignIn.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import toast, { Toaster } from "react-hot-toast";
 
 const theme = createTheme();
 
@@ -22,6 +24,8 @@ const SignIn = () => {
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [showPasswordReset, setShowPasswordReset] = useState(false); // To show/hide the password reset form
+  const navigate = useNavigate();
+  const url = process.env.REACT_APP_API_URL;
 
   // Load saved email and password from localStorage on component mount
   useEffect(() => {
@@ -35,27 +39,35 @@ const SignIn = () => {
     }
   }, []);
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  const handleLogin = async (e) => {
+    e.preventDefault();
 
-    // Validate the email and password
+    try {
+      const response = await axios.post(
+        `http://localhost:5000/api/signin/signin`,
+        {
+          email: email,
+          password: password,
+        }
+      );
 
-    // Sign the user in
-
-    // Redirect the user to the next page
-
-    // Save email and password to localStorage if "Remember Me" is checked
-    if (rememberMe) {
-      localStorage.setItem("savedEmail", email);
-      localStorage.setItem("savedPassword", password);
-    } else {
-      localStorage.removeItem("savedEmail");
-      localStorage.removeItem("savedPassword");
+      console.log(response.data);
+      localStorage.setItem("user", JSON.stringify(response.data.payload));
+      navigate("/home");
+    } catch (error) {
+      console.log("Error:", error);
+      toast.error(error.response.data.message);
     }
   };
-  const handleForgotPasswordClick = () => {
-    setShowPasswordReset(true);
-  };
+  React.useEffect(() => {
+    const rememberedEmail = localStorage.getItem("rememberedEmail");
+    const rememberedPassword = localStorage.getItem("rememberedPassword");
+    if (rememberedEmail && rememberedPassword) {
+      setEmail(rememberedEmail);
+      setPassword(rememberedPassword);
+      setRememberMe(true);
+    }
+  }, []);
 
   return (
     // <ThemeProvider theme={theme}>
@@ -73,7 +85,7 @@ const SignIn = () => {
         <Grid className="signin-form" item xs={12} md={6}>
           <Typography variant="h4">Sign In</Typography>
 
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleLogin}>
             <FormControl fullWidth margin="normal">
               <TextField
                 type="email"
@@ -104,16 +116,6 @@ const SignIn = () => {
                 }
                 label="Remember Me"
               />
-              <Grid item xs={12} md={6}>
-                <Button
-                  className="forgot"
-                  onClick={handleForgotPasswordClick}
-                  color="primary"
-                  style={{ textDecoration: "underline", cursor: "pointer" }}
-                >
-                  Forgot Password?
-                </Button>
-              </Grid>
             </div>
             <Button
               className="signin-btn"
