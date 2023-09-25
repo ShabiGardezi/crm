@@ -21,7 +21,8 @@ const SignUp = () => {
     email: "",
     password: "",
     confirmPassword: "",
-    role: "Custom Dev",
+    department: "",
+    role: "",
   });
   const [loading, setloading] = useState(false);
 
@@ -35,16 +36,27 @@ const SignUp = () => {
     // Add your form submission logic here
     try {
       setloading(true);
-      const { username, email, password, role, confirmPassword } = formData;
-      const userData = { username, email, password, role, confirmPassword };
-      const response = await axios.post("http://localhost:5000/api/user/signup", {
-        ...userData,
-      });
+      const { username, email, password, role, confirmPassword, department } =
+        formData;
+      const userData = {
+        username,
+        email,
+        password,
+        role,
+        confirmPassword,
+        department,
+      };
+      const response = await axios.post(
+        "http://localhost:5000/api/user/signup",
+        {
+          ...userData,
+        }
+      );
 
       console.log(response.data);
       toast.success("Successfully added");
     } catch (error) {
-      console.error("Error:", error);
+      console.error(error.response.data.message);
       toast.error(error.response.data.message);
     }
     setloading(false);
@@ -52,7 +64,6 @@ const SignUp = () => {
 
   return (
     <Container maxWidth="lg">
-      {/* <Paper elevation={3} className="signup-form"> */}
       <Grid container spacing={3}>
         <Grid item xs={12} sm={6}>
           <div className="image-container">
@@ -111,14 +122,14 @@ const SignUp = () => {
               margin="normal"
             />
             <FormControl variant="outlined" fullWidth margin="normal">
-              <InputLabel id="role-label">Role</InputLabel>
+              <InputLabel id="department-label">Department</InputLabel>
               <Select
-                labelId="role-label"
-                id="role"
-                name="role"
-                value={formData.role}
+                labelId="department-label"
+                id="department"
+                name="department"
+                value={formData.department}
                 onChange={handleChange}
-                label="Role"
+                label="Department"
               >
                 <MenuItem value="Custom Dev">Custom Dev</MenuItem>
                 <MenuItem value="Wordpress Dev">Wordpress Dev</MenuItem>
@@ -129,6 +140,22 @@ const SignUp = () => {
                 <MenuItem value="Sales">Sales</MenuItem>
               </Select>
             </FormControl>
+
+            <FormControl variant="outlined" fullWidth margin="normal">
+              <InputLabel id="role-label">Role</InputLabel>
+              <Select
+                labelId="role-label"
+                id="role"
+                name="role"
+                value={formData.role}
+                onChange={handleChange}
+                label="Role"
+              >
+                <MenuItem value="admin">admin</MenuItem>
+                <MenuItem value="employee">employee</MenuItem>
+              </Select>
+            </FormControl>
+
             <div className="btn-signup">
               <Button
                 variant="contained"
@@ -142,7 +169,6 @@ const SignUp = () => {
           </form>
         </Grid>
       </Grid>
-      {/* </Paper> */}
     </Container>
   );
 };
