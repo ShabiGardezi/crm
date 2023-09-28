@@ -2,12 +2,35 @@
   top: 64px !important;
   background: #d3d3d3;
 }
-.container {
+.makeStyles-container-1 {
   display: flex;
   flex-direction: column;
   align-items: center;
   height: 100vh;
-  width: 25vh;
+  width: 32vh !important;
   margin-top: 50px;
   align-content: space-between;
+  border-bottom: 1px solid black;
+}
+.signup {
+  margin-right: 83px;
+}
+span.MuiTypography-root.MuiTypography-body1.MuiListItemText-primary.css-10hburv-MuiTypography-root {
+  color: black;
+}
+img.logo {
+  width: 255px;
+  top: 3px;
+  left: 16px;
+  position: absolute;
+}
+.makeStyles-container-4 {
+  width: 30vh !important;
+}
+ul.MuiList-root.MuiList-padding.css-h4y409-MuiList-root {
+  margin-top: 35px;
+}
+.css-h93ljk-MuiTypography-root {
+  font: bold 15px/24px "Mona Sans", "Helvetica Neue", Helvetica, Arial,
+    sans-serif;
 }

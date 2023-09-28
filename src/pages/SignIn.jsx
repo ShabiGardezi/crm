@@ -23,7 +23,6 @@ const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
-  const [showPasswordReset, setShowPasswordReset] = useState(false); // To show/hide the password reset form
   const navigate = useNavigate();
   const url = process.env.REACT_APP_API_URL;
 
@@ -45,20 +44,26 @@ const SignIn = () => {
     try {
       const response = await axios.post(
         `http://localhost:5000/api/user/signin`,
-        {
-          email: email,
-          password: password,
-        }
+        { email, password }
       );
-
-      console.log(response.data);
-      localStorage.setItem("user", JSON.stringify(response.data.payload));
       navigate("/home");
+
+      // localStorage.setItem("user", JSON.stringify(response.data.payload));
+
+      // // Check if the user is logged in before calling the `/api/user/userdata` endpoint
+      // if (!localStorage.getItem("user")) {
+      //   return;
+      // }
+
+      // // Call the `/api/user/userdata` endpoint
+      // axios.get("http://localhost:5000/api/user/userdata").then((response) => {
+      //   // Handle the response
+      // });
     } catch (error) {
-      console.log("Error:", error);
-      toast.error(error.response.data.message);
+      console.log("Error logging in:", error);
     }
   };
+
   React.useEffect(() => {
     const rememberedEmail = localStorage.getItem("rememberedEmail");
     const rememberedPassword = localStorage.getItem("rememberedPassword");

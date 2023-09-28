@@ -3,7 +3,6 @@ import Login from "./components/Login";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SIgnUp";
 import Home from "./components/Home";
-import Header from "./pages/Header";
 import WebSeoForm from "./pages/Departments/WebSEO";
 import LocalSeoForm from "./pages/Departments/LocalSEO";
 import SocialMediaForm from "./pages/Departments/SocialMedia";
@@ -14,7 +13,6 @@ import PaidMarketing from "./pages/Departments/PaidMarketing";
 function App() {
   return (
     <div className="App">
-      <Header />
       <Routes>
         <Route path="/" Component={Login} />
         <Route path="/signin" Component={SignIn} />

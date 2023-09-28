@@ -15,6 +15,7 @@ import {
   CssBaseline,
   Popover,
 } from "@mui/material";
+import logoImage from "../assests/Navbarlogo.png";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import {
@@ -31,7 +32,7 @@ import {
 } from "@mui/icons-material";
 import { makeStyles } from "@mui/styles";
 import "../styles/header.css";
-import WebSeoForm from "./Departments/WebSEO";
+import { Link } from "react-router-dom";
 const useStyles = makeStyles((theme) => ({
   container: {
     display: "flex",
@@ -79,6 +80,7 @@ const Header = () => {
       await axios.post("http://localhost:5000/api/user/logout");
       console.log("Logout successful");
       navigate("/signin");
+      localStorage.removeItem("authToken");
     } catch (error) {
       console.error("Logout failed", error);
     }
@@ -107,6 +109,8 @@ const Header = () => {
     // Navigate to the WebSeoForm component when Website SEO is clicked
     navigate("/paidmarketingform");
   };
+  const user = JSON.parse(localStorage.getItem("user"));
+
   return (
     <>
       <CssBaseline />
@@ -159,6 +163,8 @@ const Header = () => {
       </AppBar>
       <Drawer anchor="left" open={isMenuOpen} onClose={toggleMenu}>
         <div className={classes.container}>
+          <img src={logoImage} alt="Logo" className="logo" />
+
           <List>
             <ListItem button>
               <ListItemIcon>
@@ -235,6 +241,18 @@ const Header = () => {
               </MenuItem>
             ))}
           </Popover>
+          {user.role === "admin" && (
+            <div className="signup">
+              <ListItem button>
+                <ListItemIcon>
+                  <AccountCircle />
+                </ListItemIcon>
+                <Link to="/signup">
+                  <ListItemText primary="Sign Up" />
+                </Link>
+              </ListItem>
+            </div>
+          )}
         </div>
       </Drawer>
     </>

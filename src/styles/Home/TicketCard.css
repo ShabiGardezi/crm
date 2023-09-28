@@ -1,0 +1,28 @@
+.ticket-cards {
+  display: flex;
+  justify-content: space-between;
+}
+
+.ticket-card {
+  width: 300px;
+  margin: 0 10px;
+}
+
+.ticket-card h6 {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.ticketcard {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+.open-tickets-card,
+.completed-tickets-card {
+  width: 30%;
+  margin: 10px;
+  border: 0.5px solid lightgray;
+}
