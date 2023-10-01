@@ -241,7 +241,7 @@ const Header = () => {
               </MenuItem>
             ))}
           </Popover>
-          {user.role === "admin" && (
+          {user?.role === "admin" && (
             <div className="signup">
               <ListItem button>
                 <ListItemIcon>

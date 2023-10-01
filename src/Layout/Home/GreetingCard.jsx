@@ -4,6 +4,7 @@ import "../../styles/Home/GreetingCard.css";
 
 const GreetingCard = ({ username }) => {
   const [greeting, setGreeting] = useState("");
+  const user = JSON.parse(localStorage.getItem("user"));
   const currentTime = new Date().getHours();
 
   useEffect(() => {
@@ -19,7 +20,7 @@ const GreetingCard = ({ username }) => {
       <Card>
         <CardContent>
           <CardHeader title={greeting} />
-          <Typography variant="h5">{username}</Typography>
+          <Typography variant="h5">{user?.username}</Typography>
         </CardContent>
       </Card>
     </div>

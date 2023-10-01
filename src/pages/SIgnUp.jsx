@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Container,
   Grid,
@@ -25,6 +25,20 @@ const SignUp = () => {
     role: "",
   });
   const [loading, setloading] = useState(false);
+  const [departments, setDepartments] = useState([]);
+  useEffect(() => {
+    const fetchDepartments = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:5000/api/departments`
+        );
+        setDepartments(response.data.payload);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchDepartments();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -131,13 +145,16 @@ const SignUp = () => {
                 onChange={handleChange}
                 label="Department"
               >
-                <MenuItem value="Custom Dev">Custom Dev</MenuItem>
-                <MenuItem value="Wordpress Dev">Wordpress Dev</MenuItem>
+                {/* <MenuItem value="Custom Dev">Custom Dev</MenuItem> */}
+                {departments.map((d) => {
+                  return <MenuItem value={d._id}>{d.name}</MenuItem>;
+                })}
+                {/* <MenuItem value="Wordpress Dev">Wordpress Dev</MenuItem>
                 <MenuItem value="Local SEO">Local SEO</MenuItem>
                 <MenuItem value="Web SEO">Web SEO</MenuItem>
                 <MenuItem value="Social Media">Social Media</MenuItem>
                 <MenuItem value="Paid Marketing">Paid Marketing</MenuItem>
-                <MenuItem value="Sales">Sales</MenuItem>
+                <MenuItem value="Sales">Sales</MenuItem> */}
               </Select>
             </FormControl>
 

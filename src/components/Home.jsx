@@ -5,7 +5,6 @@ import GreetingCard from "../Layout/Home/GreetingCard";
 import { useNavigate } from "react-router-dom";
 import TicketCards from "../Layout/Home/TicketCard";
 const Home = () => {
-  const [username, setUsername] = useState("");
   const navigate = useNavigate();
   // useEffect(() => {
   //   // Check if the user is authenticated before making the request
@@ -29,7 +28,7 @@ const Home = () => {
   return (
     <div>
       <Header />
-      <GreetingCard username={username} />
+      <GreetingCard />
       <TicketCards />
     </div>
   );

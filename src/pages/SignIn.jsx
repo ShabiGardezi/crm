@@ -46,9 +46,8 @@ const SignIn = () => {
         `http://localhost:5000/api/user/signin`,
         { email, password }
       );
+      localStorage.setItem("user", JSON.stringify(response.data.payload));
       navigate("/home");
-
-      // localStorage.setItem("user", JSON.stringify(response.data.payload));
 
       // // Check if the user is logged in before calling the `/api/user/userdata` endpoint
       // if (!localStorage.getItem("user")) {
