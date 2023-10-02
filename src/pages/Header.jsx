@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   AppBar,
   Toolbar,
@@ -14,6 +14,10 @@ import {
   ListItemText,
   CssBaseline,
   Popover,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from "@mui/material";
 import logoImage from "../assests/Navbarlogo.png";
 import { useNavigate } from "react-router-dom";
@@ -33,6 +37,7 @@ import {
 import { makeStyles } from "@mui/styles";
 import "../styles/header.css";
 import { Link } from "react-router-dom";
+import CreateTicketCard from "../components/createTicket";
 const useStyles = makeStyles((theme) => ({
   container: {
     display: "flex",
@@ -43,25 +48,44 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "50px",
   },
 }));
-const departmentItems = [
-  "Local SEO / GMB Optimization",
-  "Wordpress Development",
-  "Website SEO",
-  "Designing",
-  "Content Writing",
-  "Custom Development",
-  "Paid Marketing",
-  "Social Media Management",
-  "Customer Reviews Management",
-  "Sales Department",
-];
-
 const Header = () => {
+  const [formData, setFormData] = useState({
+    department: "",
+  });
+  const [isCreateModalOpen, setCreateModalOpen] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
   const classes = useStyles();
+  const [departments, setDepartments] = useState([]);
 
+  // Function to open the modal
+  const openCreateModal = () => {
+    setCreateModalOpen(true);
+  };
+
+  // Function to close the modal
+  const closeCreateModal = () => {
+    setCreateModalOpen(false);
+  };
+  useEffect(() => {
+    const fetchDepartments = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:5000/api/departments`
+        );
+        setDepartments(response.data.payload);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchDepartments();
+  }, []);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -85,30 +109,6 @@ const Header = () => {
       console.error("Logout failed", error);
     }
   };
-  const handleWebsiteSEOClick = () => {
-    // Navigate to the WebSeoForm component when Website SEO is clicked
-    navigate("/webseoform");
-  };
-  const handleLocalSEOClick = () => {
-    // Navigate to the WebSeoForm component when Website SEO is clicked
-    navigate("/localseoform");
-  };
-  const handleSocilaMediaClick = () => {
-    // Navigate to the WebSeoForm component when Website SEO is clicked
-    navigate("/socialmediaform");
-  };
-  const handleWordpressClick = () => {
-    // Navigate to the WebSeoForm component when Website SEO is clicked
-    navigate("/wordpressform");
-  };
-  const handleReviewClick = () => {
-    // Navigate to the WebSeoForm component when Website SEO is clicked
-    navigate("/reviewsform");
-  };
-  const handlePaidMarketingClick = () => {
-    // Navigate to the WebSeoForm component when Website SEO is clicked
-    navigate("/paidmarketingform");
-  };
   const user = JSON.parse(localStorage.getItem("user"));
 
   return (
@@ -124,9 +124,25 @@ const Header = () => {
           >
             <MenuIcon />
           </IconButton>
-          <Button color="inherit" startIcon={<AddIcon />}>
+          <Button
+            color="inherit"
+            startIcon={<AddIcon />}
+            onClick={openCreateModal}
+          >
             Create
           </Button>
+          {/* Create Ticket Modal */}
+          <Dialog open={isCreateModalOpen} onClose={closeCreateModal}>
+            <DialogContent>
+              {/* Render the CreateTicketCard component inside the modal */}
+              <CreateTicketCard />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={closeCreateModal} color="primary">
+                Close
+              </Button>
+            </DialogActions>
+          </Dialog>
           <div style={{ flexGrow: 1 }} />
           <div>
             <div style={{ display: "flex", alignItems: "center" }}>
@@ -168,12 +184,14 @@ const Header = () => {
           </div>
 
           <List>
-            <ListItem button>
-              <ListItemIcon>
-                <Home />
-              </ListItemIcon>
-              <ListItemText primary="Home" />
-            </ListItem>
+            <Link to="/home">
+              <ListItem button>
+                <ListItemIcon>
+                  <Home />
+                </ListItemIcon>
+                <ListItemText primary="Home" />
+              </ListItem>
+            </Link>
             <ListItem button>
               <ListItemIcon>
                 <Assignment />
@@ -186,25 +204,30 @@ const Header = () => {
               </ListItemIcon>
               <ListItemText primary="Inbox" />
             </ListItem>
-            <ListItem button>
-              <ListItemIcon>
-                <HistoryIcon />
-              </ListItemIcon>
-              <ListItemText primary="History" />
-            </ListItem>
-            <ListItem button onClick={handleProfileMenuOpen}>
-              <ListItemIcon>
-                <DepartmentIcon />
-              </ListItemIcon>
-              <ListItemText primary="Department" />
-              <ListItemIcon style={{ marginLeft: "auto" }}>
-                <ExpandMoreIcon />
-              </ListItemIcon>
-            </ListItem>
+            <Link to="/ticketlist">
+              <ListItem button>
+                <ListItemIcon>
+                  <HistoryIcon />
+                </ListItemIcon>
+                <ListItemText primary="History" />
+              </ListItem>
+            </Link>
+            {user?.role === "admin" || user?.department === "sales" ? (
+              <ListItem button onClick={handleProfileMenuOpen}>
+                <ListItemIcon>
+                  <DepartmentIcon />
+                </ListItemIcon>
+                <ListItemText primary="Department" />
+                <ListItemIcon style={{ marginLeft: "auto" }}>
+                  <ExpandMoreIcon />
+                </ListItemIcon>
+              </ListItem>
+            ) : null}
           </List>
           <Popover
             open={Boolean(anchorEl)}
             anchorEl={anchorEl}
+            value={formData.department}
             onClose={handleProfileMenuClose}
             anchorOrigin={{
               vertical: "bottom",
@@ -220,26 +243,46 @@ const Header = () => {
               },
             }}
           >
-            {departmentItems.map((item) => (
+            {departments.map((d) => (
               <MenuItem
-                key={item}
-                onClick={
-                  item === "Website SEO"
-                    ? handleWebsiteSEOClick
-                    : item === "Local SEO / GMB Optimization"
-                    ? handleLocalSEOClick
-                    : item === "Social Media Management"
-                    ? handleSocilaMediaClick
-                    : item === "Wordpress Development"
-                    ? handleWordpressClick
-                    : item === "Customer Reviews Management"
-                    ? handleReviewClick
-                    : item === "Paid Marketing"
-                    ? handlePaidMarketingClick
-                    : handleProfileMenuClose
-                }
+                key={d._id}
+                value={d._id}
+                onClick={() => {
+                  // Determine the route based on the department name
+                  let route = "/";
+                  switch (d.name) {
+                    case "Website SEO":
+                      route = "/webseoform";
+                      break;
+                    case "Local SEO / GMB Optimization":
+                      route = "/localseoform";
+                      break;
+                    case "Social Media Management":
+                      route = "/socialmediaform";
+                      break;
+                    case "Wordpress Development":
+                      route = "/wordpressform";
+                      break;
+                    case "Customer Reviews Management":
+                      route = "/reviewsform";
+                      break;
+                    case "Custom Development":
+                      route = "/customdevelopment";
+                      break;
+                    case "Paid Marketing":
+                      route = "/paidmarketingform";
+                      break;
+                    // Add more cases for other departments if needed
+                    default:
+                      break;
+                  }
+                  // Navigate to the determined route
+                  navigate(route);
+                  // Close the menu
+                  handleProfileMenuClose();
+                }}
               >
-                {item}
+                {d.name}
               </MenuItem>
             ))}
           </Popover>

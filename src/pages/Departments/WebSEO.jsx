@@ -54,6 +54,11 @@ const WebSeoForm = () => {
   const formStyle = {
     whiteSpace: "pre-line",
   };
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  // Define a function to check if the user has the required role or department
+  const isAdminOrSales = user?.role === "admin" || user?.department === "sales";
+
   return (
     <>
       <Header />
@@ -67,19 +72,33 @@ const WebSeoForm = () => {
           </div>
           <form onSubmit={handleSubmit}>
             <Grid container spacing={3}>
-              {/* SEO Information */}
-              <Grid item xs={12}>
-                <Typography variant="h6">Quotation</Typography>
-              </Grid>
-              <Grid item xs={6} style={formStyle}>
-                <TextField
-                  label="Price"
-                  fullWidth
-                  name="price"
-                  value={formData.price}
-                  onChange={handleChange}
-                />
-              </Grid>
+              {/* Conditionally render based on isAdminOrSales */}
+              {isAdminOrSales && (
+                <>
+                  {/* SEO Information */}
+                  <Grid item xs={12}>
+                    <Typography variant="h6">Quotation</Typography>
+                  </Grid>
+                  <Grid item xs={6} style={formStyle}>
+                    <TextField
+                      label="Price"
+                      fullWidth
+                      name="price"
+                      value={formData.price}
+                      onChange={handleChange}
+                    />
+                  </Grid>
+                  <Grid item xs={6} style={formStyle}>
+                    <TextField
+                      label="Advance"
+                      fullWidth
+                      name="advanceprice"
+                      value={formData.advanceprice}
+                      onChange={handleChange}
+                    />
+                  </Grid>
+                </>
+              )}
               <Grid item xs={6} style={formStyle}>
                 <TextField
                   label="Advance"

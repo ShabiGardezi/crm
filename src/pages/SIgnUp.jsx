@@ -145,16 +145,11 @@ const SignUp = () => {
                 onChange={handleChange}
                 label="Department"
               >
-                {/* <MenuItem value="Custom Dev">Custom Dev</MenuItem> */}
-                {departments.map((d) => {
-                  return <MenuItem value={d._id}>{d.name}</MenuItem>;
-                })}
-                {/* <MenuItem value="Wordpress Dev">Wordpress Dev</MenuItem>
-                <MenuItem value="Local SEO">Local SEO</MenuItem>
-                <MenuItem value="Web SEO">Web SEO</MenuItem>
-                <MenuItem value="Social Media">Social Media</MenuItem>
-                <MenuItem value="Paid Marketing">Paid Marketing</MenuItem>
-                <MenuItem value="Sales">Sales</MenuItem> */}
+                {departments.map((d) => (
+                  <MenuItem key={d._id} value={d._id}>
+                    {d.name}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
 
