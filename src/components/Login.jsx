@@ -20,9 +20,11 @@ const Login = () => {
     <ThemeProvider theme={theme}>
       <Grid container spacing={3}>
         <Grid item xs={12}>
-          <Box display="flex" justifyContent="center" alignItems="center">
-            <img className="logo" src={logo} alt="Logo" />
-          </Box>
+          <div className="landing-logo">
+            <Box display="flex" justifyContent="center" alignItems="center">
+              <img className="logo-login" src={logo} alt="Logo" />
+            </Box>
+          </div>
         </Grid>
         <Grid item xs={12}>
           <Box display="flex" justifyContent="center" alignItems="center">
@@ -59,20 +61,6 @@ const Login = () => {
                 <Avatar
                   alt="Admin"
                   src={admin}
-                  sx={{
-                    width: 300,
-                    height: 300,
-                    borderRadius: 5,
-                    boxShadow: "0 0 5px rgba(0, 0, 0, 0.3)",
-                    cursor: "pointer", // Add cursor pointer for clickability
-                  }}
-                  onClick={handleAvatarClick} // Add onClick handler
-                />
-              </Grid>
-              <Grid item xs={4} className="grid-item">
-                <Avatar
-                  alt="sales"
-                  src={sales}
                   sx={{
                     width: 300,
                     height: 300,

@@ -9,10 +9,12 @@ import SocialMediaForm from "./pages/Departments/SocialMedia";
 import WordPress from "./pages/Departments/Wordpress";
 import Reviews from "./pages/Departments/Review";
 import PaidMarketing from "./pages/Departments/PaidMarketing";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   return (
     <div className="App">
+      <Toaster />
       <Routes>
         <Route path="/" Component={Login} />
         <Route path="/signin" Component={SignIn} />

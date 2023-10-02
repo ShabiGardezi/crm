@@ -20,7 +20,7 @@ const GreetingCard = ({ username }) => {
       <Card>
         <CardContent>
           <CardHeader title={greeting} />
-          <Typography variant="h5">{user?.username}</Typography>
+          <div className="username">{user?.username}</div>
         </CardContent>
       </Card>
     </div>

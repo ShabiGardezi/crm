@@ -10,7 +10,7 @@ import {
   Select,
   MenuItem,
 } from "@material-ui/core";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import axios from "axios";
 import signupimg from "../assests/Rank-BPO-PVT-LTD-LOGO-02 copy.png";
 import "../styles/SignUp.css";

@@ -9,6 +9,8 @@ import {
 } from "@mui/material";
 import Header from "../Header";
 import "../../styles/globalfont.css";
+import "../../styles/formsCommon.css";
+
 //create field for image upload and on handle it on handleSubmit function
 const SocialMediaForm = () => {
   const [formData, setFormData] = useState({
@@ -29,6 +31,8 @@ const SocialMediaForm = () => {
     gmbUrl: "",
     workStatus: "",
     monthlyBlogsRequirement: "",
+    price: "",
+    advanceprice: "",
   });
 
   const handleChange = (event) => {
@@ -56,10 +60,33 @@ const SocialMediaForm = () => {
           <Typography variant="h5" gutterBottom>
             Social Media Form
           </Typography>
+          <div className="description">
+            <h5>Please fill the form to generate ticket.</h5>
+          </div>
           <form onSubmit={handleSubmit}>
             <Grid container spacing={3}>
               {/* Add more fields for SEO Information */}
-
+              <Grid item xs={12}>
+                <Typography variant="h6">Quotation</Typography>
+              </Grid>
+              <Grid item xs={6} style={formStyle}>
+                <TextField
+                  label="Price"
+                  fullWidth
+                  name="price"
+                  value={formData.price}
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item xs={6} style={formStyle}>
+                <TextField
+                  label="Advance"
+                  fullWidth
+                  name="advanceprice"
+                  value={formData.advanceprice}
+                  onChange={handleChange}
+                />
+              </Grid>
               {/* Services */}
               <Grid item xs={12}>
                 <Typography variant="h6">Services</Typography>

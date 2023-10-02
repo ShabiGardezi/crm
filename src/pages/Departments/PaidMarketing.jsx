@@ -8,6 +8,7 @@ import {
   Paper,
 } from "@mui/material";
 import Header from "../Header";
+import "../../styles/formsCommon.css";
 
 const PaidMarketing = () => {
   const [formData, setFormData] = useState({
@@ -16,6 +17,8 @@ const PaidMarketing = () => {
     location: "",
     website: "",
     comments: "",
+    price: "",
+    advanceprice: "",
   });
 
   const handleChange = (event) => {
@@ -49,7 +52,31 @@ const PaidMarketing = () => {
           <Typography variant="h5" gutterBottom>
             Paid Marketing Form
           </Typography>
+          <div className="description">
+            <h5>Please fill the form to generate ticket.</h5>
+          </div>
           <form onSubmit={handleSubmit}>
+            <Grid item xs={12}>
+              <Typography variant="h6">Quotation</Typography>
+            </Grid>
+            <Grid item xs={6} style={formStyle}>
+              <TextField
+                label="Price"
+                fullWidth
+                name="price"
+                value={formData.price}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={6} style={formStyle}>
+              <TextField
+                label="Advance"
+                fullWidth
+                name="advanceprice"
+                value={formData.advanceprice}
+                onChange={handleChange}
+              />
+            </Grid>
             <Grid container spacing={3}>
               {/* Ad Account Access */}
               <Grid item xs={12} style={formStyle}>

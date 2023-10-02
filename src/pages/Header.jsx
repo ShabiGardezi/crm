@@ -163,7 +163,9 @@ const Header = () => {
       </AppBar>
       <Drawer anchor="left" open={isMenuOpen} onClose={toggleMenu}>
         <div className={classes.container}>
-          <img src={logoImage} alt="Logo" className="logo" />
+          <div className="header-logo">
+            <img src={logoImage} alt="Logo" className="logo-header" />
+          </div>
 
           <List>
             <ListItem button>

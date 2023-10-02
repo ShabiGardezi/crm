@@ -49,17 +49,10 @@ const SignIn = () => {
       localStorage.setItem("user", JSON.stringify(response.data.payload));
       navigate("/home");
 
-      // // Check if the user is logged in before calling the `/api/user/userdata` endpoint
-      // if (!localStorage.getItem("user")) {
-      //   return;
-      // }
-
-      // // Call the `/api/user/userdata` endpoint
-      // axios.get("http://localhost:5000/api/user/userdata").then((response) => {
-      //   // Handle the response
-      // });
+      toast.success("Login successful"); // Show success toast
     } catch (error) {
       console.log("Error logging in:", error);
+      toast.error("Login failed"); // Show error toast
     }
   };
 
