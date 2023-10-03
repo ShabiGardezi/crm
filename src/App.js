@@ -12,7 +12,7 @@ import Reviews from "./pages/Departments/Review";
 import PaidMarketing from "./pages/Departments/PaidMarketing";
 import { Toaster } from "react-hot-toast";
 import CreateTicketCard from "./components/createTicket";
-import CreateTicketForm from "./pages/createTicketForm";
+// import CreateTicketForm from "./pages/createTicketForm";
 import TicketList from "./pages/TicketList";
 import NotFound from "./pages/404Error";
 import UserToDo from "./components/UserToDo";
@@ -42,8 +42,8 @@ function App() {
         <Route path="/wordpressform" element={<WordPress />} />
         <Route path="/reviewsform" element={<Reviews />} />
         <Route path="/paidmarketingform" element={<PaidMarketing />} />
-        <Route path="/createticket" element={<CreateTicketCard />} />
-        <Route path="/createticketform" element={<CreateTicketForm />} />
+        {/* <Route path="/createticket" element={<CreateTicketCard />} /> */}
+        {/* <Route path="/createticketform" element={<CreateTicketForm />} /> */}
         <Route path="/ticketlist" element={<TicketList />} />
         <Route path="/todo" element={<UserToDo showHeader={true} />} />
       </Routes>
