@@ -1,4 +1,5 @@
-import { Route, Routes, useNavigate } from "react-router-dom";
+import React from "react";
+import { Route, Routes, Navigate } from "react-router-dom";
 import Login from "./components/Login";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SIgnUp";
@@ -15,31 +16,29 @@ import CreateTicketForm from "./pages/createTicketForm";
 import TicketList from "./pages/TicketList";
 import NotFound from "./pages/404Error";
 import UserToDo from "./components/UserToDo";
+import CustomDevelopment from "./pages/Departments/CustomDevelopment";
+
 function App() {
   const user = JSON.parse(localStorage.getItem("user"));
-  const canAccessSignup = () => {
-    // Check if the user is an admin and belongs to the sales department
-    if (user?.role === "admin") {
-      return true; // User can access /signup
-    }
-    return false; // User cannot access /signup
-  };
+
   return (
     <div className="App">
       <Toaster />
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/signin" element={<SignIn />} />
-        {/* Use Navigate to redirect if user cannot access /signup */}
         <Route
           path="/signup"
-          element={canAccessSignup() ? <SignUp /> : <NotFound />}
+          element={
+            user?.role === "admin" ? <SignUp /> : <Navigate to="/notfound" />
+          }
         />
         <Route path="/home" element={<Home />} />
-        {/* <Route path="/notfound" element={NotFound} /> */}
+        <Route path="/notfound" element={<NotFound />} />
         <Route path="/webseoform" element={<WebSeoForm />} />
         <Route path="/localseoform" element={<LocalSeoForm />} />
         <Route path="/socialmediaform" element={<SocialMediaForm />} />
+        <Route path="/customdevelopment" element={<CustomDevelopment />} />
         <Route path="/wordpressform" element={<WordPress />} />
         <Route path="/reviewsform" element={<Reviews />} />
         <Route path="/paidmarketingform" element={<PaidMarketing />} />

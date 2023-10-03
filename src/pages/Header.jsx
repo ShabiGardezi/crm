@@ -15,10 +15,10 @@ import {
   CssBaseline,
   Popover,
   Dialog,
-  DialogTitle,
   DialogContent,
   DialogActions,
 } from "@mui/material";
+import DescriptionIcon from "@mui/icons-material/Description"; // Import the Description icon
 import logoImage from "../assests/Navbarlogo.png";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -198,6 +198,14 @@ const Header = () => {
               </ListItemIcon>
               <ListItemText primary="My Tasks" />
             </ListItem>
+            <Link to="/todo">
+              <ListItem button>
+                <ListItemIcon>
+                  <DescriptionIcon />
+                </ListItemIcon>
+                <ListItemText primary="Personal Notebook" />
+              </ListItem>
+            </Link>
             <ListItem button>
               <ListItemIcon>
                 <Inbox />
