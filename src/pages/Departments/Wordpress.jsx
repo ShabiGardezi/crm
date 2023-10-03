@@ -6,12 +6,14 @@ import {
   TextField,
   Button,
   Paper,
+  MenuItem,
 } from "@mui/material";
 import Header from "../Header";
 import "../../styles/formsCommon.css";
 
 //create field for image upload and on handle it on handleSubmit function
 const WordPress = () => {
+  const user = JSON.parse(localStorage.getItem("user"));
   const [formData, setFormData] = useState({
     profilePhoto: "",
     coverPhoto: "",
@@ -26,6 +28,9 @@ const WordPress = () => {
     referralwebsite: "",
     price: "",
     advanceprice: "",
+    assignor: user?.username || "",
+    priorityLevel: "",
+    dueDate: new Date().toISOString().substr(0, 10), // Initialize with the current date in yyyy-mm-dd format
   });
 
   const handleChange = (event) => {
@@ -83,6 +88,43 @@ const WordPress = () => {
                   name="advanceprice"
                   value={formData.advanceprice}
                   onChange={handleChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Typography variant="h6">Ticket Details</Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  label="Priority Level"
+                  fullWidth
+                  name="priorityLevel"
+                  value={formData.priorityLevel}
+                  onChange={handleChange}
+                  select
+                >
+                  <MenuItem value="Low">Low</MenuItem>
+                  <MenuItem value="Moderate">Moderate</MenuItem>
+                  <MenuItem value="High">High</MenuItem>
+                </TextField>
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  label="Assignor"
+                  fullWidth
+                  name="assignor"
+                  value={formData.assignor}
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item xs={6} style={formStyle}>
+                <TextField
+                  label="Deadline"
+                  fullWidth
+                  name="dueDate"
+                  value={formData.dueDate}
+                  onChange={handleChange}
+                  type="date"
+                  defaultValue={new Date()}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -178,19 +220,6 @@ const WordPress = () => {
                   fullWidth
                   name="socialProfile"
                   value={formData.socialProfile}
-                  onChange={handleChange}
-                  multiline
-                />
-              </Grid>
-              <Grid item xs={12} style={formStyle}>
-                <Typography variant="h6" style={{ marginTop: "20px" }}>
-                  What Client's Want
-                </Typography>
-                <TextField
-                  label="Give Details"
-                  fullWidth
-                  name="comments"
-                  value={formData.comments}
                   onChange={handleChange}
                   multiline
                 />

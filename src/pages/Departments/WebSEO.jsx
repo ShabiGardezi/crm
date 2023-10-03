@@ -40,9 +40,9 @@ const WebSeoForm = () => {
     monthlyBlogsRequirement: "",
     price: "",
     advanceprice: "",
-    dueDate: null, // Initialize dueDate as null
     assignor: user?.username || "",
     priorityLevel: "",
+    dueDate: new Date().toISOString().substr(0, 10), // Initialize with the current date in yyyy-mm-dd format
   });
 
   const handleChange = (event) => {
@@ -52,12 +52,7 @@ const WebSeoForm = () => {
       [name]: value,
     });
   };
-  const handleDueDateChange = (date) => {
-    setFormData({
-      ...formData,
-      dueDate: date,
-    });
-  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
     // Handle form submission here, you can send the formData to your server or perform other actions.
@@ -134,15 +129,17 @@ const WebSeoForm = () => {
                   onChange={handleChange}
                 />
               </Grid>
-              {/* <Grid item xs={6}>
-                <DatePicker
-                  label="Due Date"
+              <Grid item xs={6} style={formStyle}>
+                <TextField
+                  label="Deadline"
                   fullWidth
+                  name="dueDate"
                   value={formData.dueDate}
-                  onChange={handleDueDateChange}
-                  renderInput={(params) => <TextField {...params} />}
+                  onChange={handleChange}
+                  type="date"
+                  defaultValue={new Date()}
                 />
-              </Grid> */}
+              </Grid>
 
               <Grid item xs={12}>
                 <Typography variant="h6">SEO Information</Typography>

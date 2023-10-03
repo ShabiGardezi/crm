@@ -6,6 +6,7 @@ import {
   TextField,
   Button,
   Paper,
+  MenuItem,
 } from "@mui/material";
 import Header from "../Header";
 import "../../styles/globalfont.css";
@@ -13,6 +14,8 @@ import "../../styles/formsCommon.css";
 
 //create field for image upload and on handle it on handleSubmit function
 const SocialMediaForm = () => {
+  const user = JSON.parse(localStorage.getItem("user"));
+
   const [formData, setFormData] = useState({
     ProfilePhotos: "",
     coverPhoto: "",
@@ -33,6 +36,8 @@ const SocialMediaForm = () => {
     monthlyBlogsRequirement: "",
     price: "",
     advanceprice: "",
+    assignor: user?.username || "",
+    priorityLevel: "",
   });
 
   const handleChange = (event) => {
@@ -88,6 +93,32 @@ const SocialMediaForm = () => {
                 />
               </Grid>
               {/* Services */}
+              <Grid item xs={12}>
+                <Typography variant="h6">Ticket Details</Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  label="Priority Level"
+                  fullWidth
+                  name="priorityLevel"
+                  value={formData.priorityLevel}
+                  onChange={handleChange}
+                  select
+                >
+                  <MenuItem value="Low">Low</MenuItem>
+                  <MenuItem value="Moderate">Moderate</MenuItem>
+                  <MenuItem value="High">High</MenuItem>
+                </TextField>
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  label="Assignor"
+                  fullWidth
+                  name="assignor"
+                  value={formData.assignor}
+                  onChange={handleChange}
+                />
+              </Grid>
               <Grid item xs={12}>
                 <Typography variant="h6">Services</Typography>
               </Grid>
