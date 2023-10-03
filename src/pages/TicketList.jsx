@@ -38,6 +38,7 @@ const TicketList = () => {
               <TableCell>Created By</TableCell>
               <TableCell>Major Assignee</TableCell>
               <TableCell>Status</TableCell>
+              <TableCell>Priority</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -47,6 +48,7 @@ const TicketList = () => {
                 <TableCell>{ticket.created_by}</TableCell>
                 <TableCell>{ticket.majorAssignee}</TableCell>
                 <TableCell>{ticket.status}</TableCell>
+                <TableCell>{ticket.priority}</TableCell>
               </TableRow>
             ))}
           </TableBody>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   AppBar,
   Toolbar,
@@ -8,11 +8,15 @@ import {
   TextField,
   Button,
   Paper,
+  MenuItem,
 } from "@mui/material";
 import Header from "../Header";
 import "../../styles/formsCommon.css";
-
 const WebSeoForm = () => {
+  const user = JSON.parse(localStorage.getItem("user"));
+  // Define a function to check if the user has the required role or department
+  const isAdminOrSales = user?.role === "admin" || user?.department === "sales";
+
   const [formData, setFormData] = useState({
     keywords: "",
     webUrl: "",
@@ -36,6 +40,9 @@ const WebSeoForm = () => {
     monthlyBlogsRequirement: "",
     price: "",
     advanceprice: "",
+    dueDate: null, // Initialize dueDate as null
+    assignor: user?.username || "",
+    priorityLevel: "",
   });
 
   const handleChange = (event) => {
@@ -45,7 +52,12 @@ const WebSeoForm = () => {
       [name]: value,
     });
   };
-
+  const handleDueDateChange = (date) => {
+    setFormData({
+      ...formData,
+      dueDate: date,
+    });
+  };
   const handleSubmit = (event) => {
     event.preventDefault();
     // Handle form submission here, you can send the formData to your server or perform other actions.
@@ -54,10 +66,6 @@ const WebSeoForm = () => {
   const formStyle = {
     whiteSpace: "pre-line",
   };
-  const user = JSON.parse(localStorage.getItem("user"));
-
-  // Define a function to check if the user has the required role or department
-  const isAdminOrSales = user?.role === "admin" || user?.department === "sales";
 
   return (
     <>
@@ -76,6 +84,7 @@ const WebSeoForm = () => {
               {isAdminOrSales && (
                 <>
                   {/* SEO Information */}
+
                   <Grid item xs={12}>
                     <Typography variant="h6">Quotation</Typography>
                   </Grid>
@@ -99,15 +108,42 @@ const WebSeoForm = () => {
                   </Grid>
                 </>
               )}
-              <Grid item xs={6} style={formStyle}>
+              <Grid item xs={12}>
+                <Typography variant="h6">Ticket Details</Typography>
+              </Grid>
+              <Grid item xs={6}>
                 <TextField
-                  label="Advance"
+                  label="Priority Level"
                   fullWidth
-                  name="advanceprice"
-                  value={formData.advanceprice}
+                  name="priorityLevel"
+                  value={formData.priorityLevel}
+                  onChange={handleChange}
+                  select
+                >
+                  <MenuItem value="Low">Low</MenuItem>
+                  <MenuItem value="Moderate">Moderate</MenuItem>
+                  <MenuItem value="High">High</MenuItem>
+                </TextField>
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  label="Assignor"
+                  fullWidth
+                  name="assignor"
+                  value={formData.assignor}
                   onChange={handleChange}
                 />
               </Grid>
+              {/* <Grid item xs={6}>
+                <DatePicker
+                  label="Due Date"
+                  fullWidth
+                  value={formData.dueDate}
+                  onChange={handleDueDateChange}
+                  renderInput={(params) => <TextField {...params} />}
+                />
+              </Grid> */}
+
               <Grid item xs={12}>
                 <Typography variant="h6">SEO Information</Typography>
               </Grid>

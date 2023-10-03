@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Card, CardHeader, CardContent, Typography } from "@material-ui/core";
+import { Card, CardHeader, CardContent } from "@material-ui/core";
 import "../../styles/Home/GreetingCard.css";
 
 const GreetingCard = ({ username }) => {
