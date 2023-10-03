@@ -14,9 +14,8 @@ import CreateTicketCard from "./components/createTicket";
 import CreateTicketForm from "./pages/createTicketForm";
 import TicketList from "./pages/TicketList";
 import NotFound from "./pages/404Error";
-
+import UserToDo from "./components/UserToDo";
 function App() {
-  const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem("user"));
   const canAccessSignup = () => {
     // Check if the user is an admin and belongs to the sales department
@@ -29,21 +28,25 @@ function App() {
     <div className="App">
       <Toaster />
       <Routes>
-        <Route path="/" Component={Login} />
-        <Route path="/signin" Component={SignIn} />
+        <Route path="/" element={<Login />} />
+        <Route path="/signin" element={<SignIn />} />
         {/* Use Navigate to redirect if user cannot access /signup */}
-        <Route path="/signup" Component={canAccessSignup() ? <SignUp /> : ""} />
-        <Route path="/home" Component={Home} />
-        {<Route path="/notfound" Component={NotFound} />}
-        <Route path="/webseoform" Component={WebSeoForm} />
-        <Route path="/localseoform" Component={LocalSeoForm} />
-        <Route path="/socialmediaform" Component={SocialMediaForm} />
-        <Route path="/wordpressform" Component={WordPress} />
-        <Route path="/reviewsform" Component={Reviews} />
-        <Route path="/paidmarketingform" Component={PaidMarketing} />
-        <Route path="/createticket" Component={CreateTicketCard} />
-        <Route path="/createticketform" Component={CreateTicketForm} />
-        <Route path="/ticketlist" Component={TicketList} />
+        <Route
+          path="/signup"
+          element={canAccessSignup() ? <SignUp /> : <NotFound />}
+        />
+        <Route path="/home" element={<Home />} />
+        {/* <Route path="/notfound" element={NotFound} /> */}
+        <Route path="/webseoform" element={<WebSeoForm />} />
+        <Route path="/localseoform" element={<LocalSeoForm />} />
+        <Route path="/socialmediaform" element={<SocialMediaForm />} />
+        <Route path="/wordpressform" element={<WordPress />} />
+        <Route path="/reviewsform" element={<Reviews />} />
+        <Route path="/paidmarketingform" element={<PaidMarketing />} />
+        <Route path="/createticket" element={<CreateTicketCard />} />
+        <Route path="/createticketform" element={<CreateTicketForm />} />
+        <Route path="/ticketlist" element={<TicketList />} />
+        <Route path="/todo" element={<UserToDo showHeader={true} />} />
       </Routes>
     </div>
   );

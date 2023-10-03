@@ -1,0 +1,157 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  /* font-family: 'Urbanist', sans-serif; */
+}
+.deleteall {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+a {
+  text-decoration: none;
+}
+
+li {
+  list-style: none;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  margin-top: 10rem;
+}
+
+main h2 {
+  font-size: 3rem;
+  font: bold 18px/24px "Mona Sans", "Helvetica Neue", Helvetica, Arial,
+    sans-serif;
+  margin-bottom: 4.8rem;
+}
+
+main h2 .icons {
+  color: #68b984;
+}
+.todolists {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+nav {
+  width: 55rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 0.1rem solid #ccc;
+}
+
+nav a {
+  font-size: 2rem;
+  font: bold 18px/24px "Mona Sans", "Helvetica Neue", Helvetica, Arial,
+    sans-serif;
+  color: #534f4bf3;
+  border-bottom: 0.3rem solid transparent;
+}
+
+nav a:hover {
+  border-color: #3a3845;
+}
+
+nav a.active {
+  color: #000;
+  border-color: #68b984;
+}
+
+/*===================*/
+/*Form  styling */
+/*====================*/
+
+form input {
+  border: 0.1rem solid #ccc;
+  border-radius: 0.3rem;
+  width: 45rem;
+  margin: 4rem 0;
+  padding: 0.6rem 1rem;
+  font-size: 1.6rem;
+  letter-spacing: 0.06rem;
+  font-weight: bold;
+}
+
+form button {
+  padding: 0.8rem 2.8rem;
+  border: none;
+  font-family: "Mona Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  border-radius: 0.3rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin-left: 2.4rem;
+  background-color: #7257ee;
+  color: #fff;
+}
+
+label {
+  /* font-size: 1.5rem; */
+  letter-spacing: 0.06rem;
+  color: #3a3845;
+  font-weight: bold;
+}
+
+/*===================*/
+/* todo task list */
+/*====================*/
+
+.main-task li {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  align-items: center;
+  width: 50rem;
+  min-height: 6rem;
+  border-bottom: 0.1rem solid #ccc;
+}
+
+.main-task li:first-child {
+  border-top: 0.1rem solid #ccc;
+}
+
+.main-task li:hover {
+  background-color: #fef2f2;
+}
+
+.main-task li input[type="checkbox"]:checked + label {
+  text-decoration: line-through;
+  color: #d14d72;
+}
+
+.main-task li button {
+  padding: 0.6rem 1rem;
+  width: 7rem;
+  font-family: "Mona Sans", "Helvetica Neue", "Helvetica", "Arial", "sans-serif" !important;
+  background-color: #d14d72;
+  color: #fff9f9;
+  border: none;
+  display: inline-block;
+  cursor: pointer;
+  justify-self: center;
+  letter-spacing: 0.1rem;
+}
+
+#deleteAll {
+  margin-top: 1rem;
+  font-size: 18px;
+  font-family: "Mona Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: 600;
+  padding: 10px 20px;
+  width: 12rem;
+  background-color: #d14d72;
+  color: white;
+  border: transparent;
+  border-radius: 5px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+  cursor: pointer;
+  letter-spacing: 0.1rem;
+}
