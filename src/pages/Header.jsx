@@ -18,7 +18,7 @@ import {
   DialogContent,
   DialogActions,
 } from "@mui/material";
-import DescriptionIcon from "@mui/icons-material/Description"; // Import the Description icon
+import DescriptionIcon from "@mui/icons-material/Description";
 import logoImage from "../assests/Navbarlogo.png";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -38,6 +38,7 @@ import { makeStyles } from "@mui/styles";
 import "../styles/header.css";
 import { Link } from "react-router-dom";
 import CreateTicketCard from "../components/createTicket";
+
 const useStyles = makeStyles((theme) => ({
   container: {
     display: "flex",
@@ -48,7 +49,8 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "50px",
   },
 }));
-const Header = () => {
+
+const Header = ({ onDepartmentSelect }) => {
   const [formData, setFormData] = useState({
     department: "",
   });
@@ -59,15 +61,14 @@ const Header = () => {
   const classes = useStyles();
   const [departments, setDepartments] = useState([]);
 
-  // Function to open the modal
   const openCreateModal = () => {
     setCreateModalOpen(true);
   };
 
-  // Function to close the modal
   const closeCreateModal = () => {
     setCreateModalOpen(false);
   };
+
   useEffect(() => {
     const fetchDepartments = async () => {
       try {
@@ -86,6 +87,7 @@ const Header = () => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
+
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -97,6 +99,7 @@ const Header = () => {
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
+
   const navigate = useNavigate();
 
   const handleLogout = async () => {
@@ -109,6 +112,13 @@ const Header = () => {
       console.error("Logout failed", error);
     }
   };
+
+  const handleDepartmentSelection = (selectedDepartment) => {
+    // Pass the selected department to the parent component (CRMProjectForm)
+    onDepartmentSelect(selectedDepartment);
+    console.log(selectedDepartment);
+  };
+
   const user = JSON.parse(localStorage.getItem("user"));
 
   return (
@@ -131,10 +141,8 @@ const Header = () => {
           >
             Create
           </Button>
-          {/* Create Ticket Modal */}
           <Dialog open={isCreateModalOpen} onClose={closeCreateModal}>
             <DialogContent>
-              {/* Render the CreateTicketCard component inside the modal */}
               <CreateTicketCard />
             </DialogContent>
             <DialogActions>
@@ -182,7 +190,6 @@ const Header = () => {
           <div className="header-logo">
             <img src={logoImage} alt="Logo" className="logo-header" />
           </div>
-
           <List>
             <Link to="/home">
               <ListItem button>
@@ -229,71 +236,72 @@ const Header = () => {
                 <ListItemIcon style={{ marginLeft: "auto" }}>
                   <ExpandMoreIcon />
                 </ListItemIcon>
+                <Popover
+                  open={Boolean(anchorEl)}
+                  anchorEl={anchorEl}
+                  onClose={handleProfileMenuClose}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "left",
+                  }}
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "left",
+                  }}
+                  PaperProps={{
+                    style: {
+                      // backgroundColor: "white",
+                    },
+                  }}
+                >
+                  {departments.map((d) => (
+                    <MenuItem
+                      key={d._id}
+                      value={d._id}
+                      onClick={() => {
+                        // Determine the route based on the department name
+                        let route = "/";
+                        switch (d.name) {
+                          case "Website SEO":
+                            route = "/webseoform";
+                            break;
+                          case "Local SEO / GMB Optimization":
+                            route = "/localseoform";
+                            break;
+                          case "Social Media Management":
+                            route = "/socialmediaform";
+                            break;
+                          case "Wordpress Development":
+                            route = "/wordpressform";
+                            break;
+                          case "Customer Reviews Management":
+                            route = "/reviewsform";
+                            break;
+                          case "Custom Development":
+                            route = "/customdevelopment";
+                            break;
+                          case "Paid Marketing":
+                            route = "/paidmarketingform";
+                            break;
+                          // Add more cases for other departments if needed
+                          default:
+                            break;
+                        }
+                        // Navigate to the determined route
+                        navigate(route);
+                        // Close the menu
+                        handleProfileMenuClose();
+                        // Pass the selected department to the parent component (CRMProjectForm)
+                        handleDepartmentSelection(d.name);
+                      }}
+                    >
+                      {d.name}
+                    </MenuItem>
+                  ))}
+                </Popover>
               </ListItem>
             ) : null}
           </List>
-          <Popover
-            open={Boolean(anchorEl)}
-            anchorEl={anchorEl}
-            value={formData.department}
-            onClose={handleProfileMenuClose}
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "left",
-            }}
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "left",
-            }}
-            PaperProps={{
-              style: {
-                // backgroundColor: "white",
-              },
-            }}
-          >
-            {departments.map((d) => (
-              <MenuItem
-                key={d._id}
-                value={d._id}
-                onClick={() => {
-                  // Determine the route based on the department name
-                  let route = "/";
-                  switch (d.name) {
-                    case "Website SEO":
-                      route = "/webseoform";
-                      break;
-                    case "Local SEO / GMB Optimization":
-                      route = "/localseoform";
-                      break;
-                    case "Social Media Management":
-                      route = "/socialmediaform";
-                      break;
-                    case "Wordpress Development":
-                      route = "/wordpressform";
-                      break;
-                    case "Customer Reviews Management":
-                      route = "/reviewsform";
-                      break;
-                    case "Custom Development":
-                      route = "/customdevelopment";
-                      break;
-                    case "Paid Marketing":
-                      route = "/paidmarketingform";
-                      break;
-                    // Add more cases for other departments if needed
-                    default:
-                      break;
-                  }
-                  // Navigate to the determined route
-                  navigate(route);
-                  // Close the menu
-                  handleProfileMenuClose();
-                }}
-              >
-                {d.name}
-              </MenuItem>
-            ))}
-          </Popover>
           {user?.role === "admin" && (
             <div className="signup">
               <ListItem button>
