@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import logoImg from "../assests/Navbarlogo.png"; // Replace with the actual path to your logo image
 import "../styles/createTicket.css";
-import "../styles/formsCommon.css";
+import "../styles/Forms/formsCommon.css";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 function CreateTicketCard() {

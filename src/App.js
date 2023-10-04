@@ -17,6 +17,11 @@ import TicketList from "./pages/TicketList";
 import NotFound from "./pages/404Error";
 import UserToDo from "./components/UserToDo";
 import CustomDevelopment from "./pages/Departments/CustomDevelopment";
+import CRMProjectForm from "./components/TicketForm";
+import Services from "./pages/FormSections/Services";
+import BusinessDetailsComponent from "./pages/FormSections/BussinesDetails";
+import QuotationComponent from "./pages/FormSections/Quotation";
+import TicketDetails from "./pages/FormSections/TicketDetails";
 
 function App() {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -42,10 +47,16 @@ function App() {
         <Route path="/wordpressform" element={<WordPress />} />
         <Route path="/reviewsform" element={<Reviews />} />
         <Route path="/paidmarketingform" element={<PaidMarketing />} />
-        {/* <Route path="/createticket" element={<CreateTicketCard />} /> */}
-        {/* <Route path="/createticketform" element={<CreateTicketForm />} /> */}
         <Route path="/ticketlist" element={<TicketList />} />
         <Route path="/todo" element={<UserToDo showHeader={true} />} />
+        <Route path="/crmform" element={<CRMProjectForm />} />
+        <Route path="/services" element={<Services />} />
+        <Route path="/quotation" element={<QuotationComponent />} />
+        <Route path="/ticketdetails" element={<TicketDetails />} />
+        <Route
+          path="/business_details"
+          element={<BusinessDetailsComponent />}
+        />
       </Routes>
     </div>
   );

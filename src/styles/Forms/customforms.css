@@ -1,0 +1,20 @@
+.MuiFormControl-fullWidth {
+  width: 45% !important;
+}
+.MuiGrid-grid-xs-6 {
+  margin-left: 20px !important;
+  max-width: 45% !important;
+}
+.MuiTabs-flexContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.MuiGrid-spacing-xs-2 {
+  max-width: 100% !important ;
+  margin: auto;
+}
+
+.styleform {
+  text-align: right;
+}
