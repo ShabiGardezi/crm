@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Grid, TextField } from "@mui/material";
+import { Grid, TextField, Button } from "@mui/material";
 import "../../styles/Forms/customforms.css";
 import axios from "axios";
 const BusinessDetailsComponent = () => {
@@ -197,6 +197,9 @@ const BusinessDetailsComponent = () => {
             />
           </Grid>
         </Grid>
+        <Button type="submit" variant="contained" color="primary">
+          Submit
+        </Button>
       </form>
     </div>
   );
