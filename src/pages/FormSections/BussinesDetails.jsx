@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Grid, TextField } from "@mui/material";
 import "../../styles/Forms/customforms.css";
-
+import axios from "axios";
 const BusinessDetailsComponent = () => {
   const [formData, setFormData] = useState({
     clientName: "",
@@ -32,7 +32,7 @@ const BusinessDetailsComponent = () => {
 
     try {
       // Make an Axios POST request to your backend API
-      const response = await Axios.post("/api/your-endpoint", formData);
+      const response = await axios.post("/api/your-endpoint", formData);
 
       // Handle the response (e.g., show a success message)
       console.log("Data submitted successfully:", response.data);
