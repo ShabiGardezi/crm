@@ -82,7 +82,24 @@ const Header = ({ onDepartmentSelect }) => {
     };
     fetchDepartments();
   }, []);
-
+  useEffect(() => {
+    const handleOutsideClick = (e) => {
+      // Check if the click occurred outside the menu
+      if (
+        isMenuOpen &&
+        e.target.closest(".MuiDrawer-paper") === null &&
+        e.target.closest(".MuiIconButton-root") === null
+      ) {
+        setIsMenuOpen(false);
+      }
+    };
+    // Add the event listener to the window
+    window.addEventListener("click", handleOutsideClick);
+    return () => {
+      // Remove the event listener when the component unmounts
+      window.removeEventListener("click", handleOutsideClick);
+    };
+  }, [isMenuOpen]);
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
