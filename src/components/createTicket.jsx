@@ -18,7 +18,16 @@ function CreateTicketCard() {
     department: "",
   });
   const [departments, setDepartments] = useState([]);
+  const [isCardOpen, setIsCardOpen] = useState(true); // State to control card visibility
+  const [isOpen, setIsOpen] = useState(true); // State to control component visibility
+
   const navigate = useNavigate(); // Initialize the navigate function
+  const handleDepartmentSelect = (departmentName) => {
+    // Update the URL with the selected department as a query parameter
+    const encodedDepartment = encodeURIComponent(departmentName);
+    navigate(`/crmform/${encodedDepartment}`); // Use navigate for navigation
+    setIsOpen(false); // Close the component when a department is selected
+  };
 
   useEffect(() => {
     const fetchDepartments = async () => {
@@ -35,56 +44,10 @@ function CreateTicketCard() {
   }, []);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    // const { name, value } = e.target;
+    // setFormData({ ...formData, [name]: value });
+    // setIsCardOpen(false);
   };
-
-  const handleDropdownChange = (event) => {
-    const selectedDepartmentId = event.target.value;
-    const selectedDepartment = departments.find(
-      (department) => department._id === selectedDepartmentId
-    );
-    if (selectedDepartment) {
-      // Replace 'route' with the actual route you want to navigate to for each department
-      let route = "";
-      switch (selectedDepartment.name) {
-        case "Local SEO / GMB Optimization":
-          route = "/localseoform";
-          break;
-        case "Wordpress Development":
-          route = "/wordpressform";
-          break;
-        case "Website SEO":
-          route = "/webseoform";
-          break;
-        case "Designing":
-          route = "/designingform";
-          break;
-        case "Content Writing":
-          route = "/contentwritingform";
-          break;
-        case "Custom Development":
-          route = "/customdevelopmentform";
-          break;
-        case "Paid Marketing":
-          route = "/paidmarketingform";
-          break;
-        case "Social Media Management":
-          route = "/socialmediaform";
-          break;
-        case "Customer Reviews Management":
-          route = "/reviewsform";
-          break;
-        case "Sales Department":
-          route = "/salesform";
-          break;
-        default:
-          break;
-      }
-      navigate(route); // Navigate to the selected department's route
-    }
-  };
-
   return (
     <div>
       <div className="logoimg">
@@ -103,11 +66,20 @@ function CreateTicketCard() {
             id="department"
             name="department"
             value={formData.department}
-            onChange={handleDropdownChange}
             label="Department"
+            // onChange={handleDepartmentSelect}
           >
-            {departments.map((d) => (
-              <MenuItem key={d._id} value={d._id}>
+            {departments?.map((d) => (
+              <MenuItem
+                key={d._id}
+                value={d._id}
+                onClick={() => {
+                  // Update the URL with the selected department as a query parameter
+                  const newDepartment = encodeURIComponent(d.name);
+                  navigate(`/crmform/${newDepartment}`); // Use navigate for navigation
+                  setIsOpen(false); // Close the component when a department is selected
+                }}
+              >
                 {d.name}
               </MenuItem>
             ))}

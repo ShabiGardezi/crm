@@ -18,3 +18,9 @@
 .styleform {
   text-align: right;
 }
+.formbtn {
+  display: flex;
+  align-items: center;
+  margin-top: 2%;
+  margin-left: 25%;
+}

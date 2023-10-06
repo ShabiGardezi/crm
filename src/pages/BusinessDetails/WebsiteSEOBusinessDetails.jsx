@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { Grid, TextField } from "@material-ui/core";
+import { Grid, TextField, Button } from "@material-ui/core";
 import "../../styles/Forms/customforms.css";
-
+import axios from "axios";
 const WebsiteSEOBusinessDetails = () => {
   const [formData, setFormData] = useState({
     clientName: "",
@@ -32,6 +32,42 @@ const WebsiteSEOBusinessDetails = () => {
     });
   };
 
+  const handleSubmit = async (event) => {
+    event.preventDefault(); // Prevent the default form submission behavior
+
+    try {
+      // Make an Axios POST request to your backend API
+      const response = await axios.post("/api/your-endpoint", formData);
+
+      // Handle the response (e.g., show a success message)
+      console.log("Data submitted successfully:", response.data);
+
+      // Clear the form after submission
+      setFormData({
+        clientName: "",
+        street: "",
+        Keywords: "",
+        WebsiteURL: "",
+        country: "",
+        state: "",
+        zipcode: "",
+        businessNumber: "",
+        clientEmail: "",
+        businessHours: "",
+        socialProfile: "",
+        gmbUrl: "",
+        workStatus: "",
+        notes: "",
+        monthlyBlogsRequirement: "",
+        LoginCredentials: "",
+        SearchConsoleAccess: "",
+        GoogleAnalyticsAccess: "",
+      });
+    } catch (error) {
+      // Handle errors (e.g., show an error message)
+      console.error("Error submitting data:", error);
+    }
+  };
   return (
     <div className="styleform">
       <Grid container spacing={2}>
@@ -217,6 +253,11 @@ const WebsiteSEOBusinessDetails = () => {
         </Grid>
         {/* Add more fields as needed */}
       </Grid>
+      <div className="formbtn">
+        <Button type="submit" variant="contained" color="primary">
+          Submit
+        </Button>
+      </div>
     </div>
   );
 };

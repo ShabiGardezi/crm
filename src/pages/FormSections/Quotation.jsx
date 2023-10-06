@@ -59,9 +59,11 @@ const QuotationComponent = () => {
             />
           </Grid>
         </Grid>
-        <Button type="submit" variant="contained" color="primary">
-          Submit
-        </Button>
+        <div className="formbtn">
+          <Button type="submit" variant="contained" color="primary">
+            Submit
+          </Button>
+        </div>
       </form>
     </div>
   );

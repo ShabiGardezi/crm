@@ -26,7 +26,6 @@ const CRMProjectForm = () => {
     <div>
       {/* Render the Header component */}
       <Header />
-
       <Tabs
         onChange={handleTabChange}
         value={section}
