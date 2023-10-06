@@ -1,0 +1,11 @@
+.ticketinfo
+  h5.MuiTypography-root.MuiTypography-h5.css-ag7rrr-MuiTypography-root {
+  text-align: center;
+  font-family: "Mona Sans", "Helvetica Neue", "Helvetica", "Arial", "sans-serif";
+  font-weight: bold;
+}
+.submittedCard {
+  max-width: 50%;
+  margin: auto;
+  margin-top: 5% !important;
+}

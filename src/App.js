@@ -22,6 +22,9 @@ import Services from "./pages/FormSections/Services";
 import BusinessDetailsComponent from "./pages/FormSections/BussinesDetails";
 import QuotationComponent from "./pages/FormSections/Quotation";
 import TicketDetails from "./pages/FormSections/TicketDetails";
+import CustomPaginationActionsTable from "./pages/Tickets/TicketHistory";
+import TicketShortInfo from "./pages/Tickets/TicketShortInfo";
+import FormDataDisplay from "./pages/FormSections/FormDataDisplay";
 
 function App() {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -53,6 +56,8 @@ function App() {
         <Route path="/services" element={<Services />} />
         <Route path="/quotation" element={<QuotationComponent />} />
         <Route path="/ticketdetails" element={<TicketDetails />} />
+        <Route path="/info" element={<FormDataDisplay />} />
+        <Route path="/history" element={<CustomPaginationActionsTable />} />
         <Route
           path="/business_details"
           element={<BusinessDetailsComponent />}

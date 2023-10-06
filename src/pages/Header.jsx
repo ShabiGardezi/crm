@@ -235,7 +235,7 @@ const Header = () => {
               </ListItemIcon>
               <ListItemText primary="Inbox" />
             </ListItem>
-            <Link to="/ticketlist">
+            <Link to="/history">
               <ListItem button>
                 <ListItemIcon>
                   <HistoryIcon />
@@ -277,7 +277,7 @@ const Header = () => {
                       onClick={() => {
                         // Update the URL with the selected department as a query parameter
                         const newDepartment = encodeURIComponent(d.name);
-                        navigate(`/crmform/${newDepartment}`); // Use history for navigation
+                        navigate(`/crmform/${newDepartment}`); // Use navigate for navigation
                         handleProfileMenuClose();
                       }}
                     >
