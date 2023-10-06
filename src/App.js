@@ -49,7 +49,7 @@ function App() {
         <Route path="/paidmarketingform" element={<PaidMarketing />} />
         <Route path="/ticketlist" element={<TicketList />} />
         <Route path="/todo" element={<UserToDo showHeader={true} />} />
-        <Route path="/crmform" element={<CRMProjectForm />} />
+        <Route path="/crmform/:department" element={<CRMProjectForm />} />
         <Route path="/services" element={<Services />} />
         <Route path="/quotation" element={<QuotationComponent />} />
         <Route path="/ticketdetails" element={<TicketDetails />} />

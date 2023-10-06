@@ -20,7 +20,7 @@ import {
 } from "@mui/material";
 import DescriptionIcon from "@mui/icons-material/Description";
 import logoImage from "../assests/Navbarlogo.png";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import {
   Menu as MenuIcon,
@@ -38,7 +38,6 @@ import { makeStyles } from "@mui/styles";
 import "../styles/header.css";
 import { Link } from "react-router-dom";
 import CreateTicketCard from "../components/createTicket";
-
 const useStyles = makeStyles((theme) => ({
   container: {
     display: "flex",
@@ -50,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Header = ({ onDepartmentSelect }) => {
+const Header = () => {
   const [formData, setFormData] = useState({
     department: "",
   });
@@ -59,7 +58,7 @@ const Header = ({ onDepartmentSelect }) => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
   const classes = useStyles();
-  const [departments, setDepartments] = useState([]);
+  const [departments, setDepartments] = useState();
 
   const openCreateModal = () => {
     setCreateModalOpen(true);
@@ -130,13 +129,13 @@ const Header = ({ onDepartmentSelect }) => {
     }
   };
 
-  const handleDepartmentSelection = (selectedDepartment) => {
-    // Pass the selected department to the parent component (CRMProjectForm)
-    onDepartmentSelect(selectedDepartment);
-    console.log(selectedDepartment);
-  };
-
   const user = JSON.parse(localStorage.getItem("user"));
+  const handleDepartmentSelect = (departmentName) => {
+    // Update the URL with the selected department as a query parameter
+    const encodedDepartment = encodeURIComponent(departmentName);
+    navigate(`/crmform/${encodedDepartment}`); // Use navigate for navigation
+    handleProfileMenuClose();
+  };
 
   return (
     <>
@@ -271,45 +270,15 @@ const Header = ({ onDepartmentSelect }) => {
                     },
                   }}
                 >
-                  {departments.map((d) => (
+                  {departments?.map((d) => (
                     <MenuItem
                       key={d._id}
                       value={d._id}
                       onClick={() => {
-                        // Determine the route based on the department name
-                        let route = "/";
-                        switch (d.name) {
-                          case "Website SEO":
-                            route = "/webseoform";
-                            break;
-                          case "Local SEO / GMB Optimization":
-                            route = "/localseoform";
-                            break;
-                          case "Social Media Management":
-                            route = "/socialmediaform";
-                            break;
-                          case "Wordpress Development":
-                            route = "/wordpressform";
-                            break;
-                          case "Customer Reviews Management":
-                            route = "/reviewsform";
-                            break;
-                          case "Custom Development":
-                            route = "/customdevelopment";
-                            break;
-                          case "Paid Marketing":
-                            route = "/paidmarketingform";
-                            break;
-                          // Add more cases for other departments if needed
-                          default:
-                            break;
-                        }
-                        // Navigate to the determined route
-                        navigate(route);
-                        // Close the menu
+                        // Update the URL with the selected department as a query parameter
+                        const newDepartment = encodeURIComponent(d.name);
+                        navigate(`/crmform/${newDepartment}`); // Use history for navigation
                         handleProfileMenuClose();
-                        // Pass the selected department to the parent component (CRMProjectForm)
-                        handleDepartmentSelection(d.name);
                       }}
                     >
                       {d.name}
