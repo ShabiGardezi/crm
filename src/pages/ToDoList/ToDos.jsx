@@ -1,6 +1,8 @@
+import React from "react";
 import { useToDos } from "../../context/ToDoContext";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import "../../styles/ToDoList/ToDoList.css";
+import axios from "axios";
 
 const ToDos = () => {
   const { TODO, handleToggleToDo, deleteToDo, deleteAll } = useToDos();
@@ -9,12 +11,34 @@ const ToDos = () => {
   const todosData = searchParams.get("todos");
 
   let filterToDo = TODO;
-
+  console.log("TODO", TODO);
   if (todosData === "active") {
     filterToDo = TODO.filter((todo) => !todo.completed);
   } else if (todosData === "completed") {
     filterToDo = TODO.filter((todo) => todo.completed);
   }
+
+  const handleDeleteTodo = async (noteId) => {
+    console.log("noteId", noteId);
+    try {
+      // Send a DELETE request to your server
+      await axios.delete(`http://localhost:5000/api/notes/${noteId}`);
+      deleteToDo(noteId);
+    } catch (error) {
+      console.error("Error deleting note:", error);
+    }
+  };
+
+  const handleDeleteAll = async () => {
+    try {
+      // Send a DELETE request to delete all todos
+      await axios.delete("http://localhost:5000/api/notes/all");
+      // Assuming "deleteAll" function in your context clears the TODO state
+      deleteAll();
+    } catch (error) {
+      console.error("Error deleting all todos:", error);
+    }
+  };
 
   const handleTabClick = (tab) => {
     // Navigate to the appropriate URL when a tab is clicked
@@ -23,26 +47,6 @@ const ToDos = () => {
 
   return (
     <>
-      {/* <nav>
-        <button
-          className={todosData === null ? "active" : ""}
-          onClick={() => handleTabClick("all")}
-        >
-          All
-        </button>
-        <button
-          className={todosData === "active" ? "active" : ""}
-          onClick={() => handleTabClick("active")}
-        >
-          Active
-        </button>
-        <button
-          className={todosData === "completed" ? "active" : ""}
-          onClick={() => handleTabClick("completed")}
-        >
-          Completed
-        </button>
-      </nav> */}
       <ul className="main-task">
         {filterToDo.map((todo) => {
           return (
@@ -59,7 +63,7 @@ const ToDos = () => {
               {todo.completed && (
                 <button
                   onClick={() => {
-                    deleteToDo(todo.id);
+                    handleDeleteTodo(todo.id);
                   }}
                 >
                   Delete
@@ -71,7 +75,7 @@ const ToDos = () => {
       </ul>
       {filterToDo.length > 0 && (
         <div className="deleteall">
-          <button id="deleteAll" onClick={deleteAll}>
+          <button id="deleteAll" onClick={handleDeleteAll}>
             Delete All
           </button>
         </div>
