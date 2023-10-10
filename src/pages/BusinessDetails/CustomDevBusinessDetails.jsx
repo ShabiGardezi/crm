@@ -1,10 +1,19 @@
 import React, { useState } from "react";
-import { Grid, TextField, Button } from "@material-ui/core";
+import { Grid, TextField, Button, MenuItem } from "@material-ui/core";
 import axios from "axios"; // Import Axios for making API requests
 import "../../styles/Forms/customforms.css";
-
 const CustomDevBusinessDetails = () => {
+  const user = JSON.parse(localStorage.getItem("user"));
+
   const [formData, setFormData] = useState({
+    priorityLevel: "",
+    assignor: user?.username || "",
+    dueDate: new Date().toISOString().substr(0, 10), // Initialize with the current date in yyyy-mm-dd format
+    keywords: "",
+    webUrl: "",
+    loginCredentials: "",
+    price: "",
+    advanceprice: "",
     clientName: "",
     WebsiteURL: "",
     country: "",
@@ -36,6 +45,14 @@ const CustomDevBusinessDetails = () => {
 
       // Clear the form after successful submission
       setFormData({
+        priorityLevel: "",
+        assignor: user?.username || "",
+        dueDate: new Date().toISOString().substr(0, 10), // Initialize with the current date in yyyy-mm-dd format
+        keywords: "",
+        webUrl: "",
+        loginCredentials: "",
+        price: "",
+        advanceprice: "",
         clientName: "",
         WebsiteURL: "",
         country: "",
@@ -57,6 +74,102 @@ const CustomDevBusinessDetails = () => {
     <div className="styleform">
       <form onSubmit={handleSubmit}>
         <Grid container spacing={2}>
+          <Grid container spacing={2}>
+            <Grid item xs={6}>
+              <TextField
+                label="Service name"
+                fullWidth
+                name="serviceName"
+                value={formData.serviceName}
+                onChange={handleChange}
+                multiline
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                label="Service description"
+                fullWidth
+                name="serviceDescription"
+                value={formData.serviceDescription}
+                onChange={handleChange}
+                multiline
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                label="Service quantity"
+                fullWidth
+                name="serviceQuantity"
+                value={formData.serviceQuantity}
+                onChange={handleChange}
+                multiline
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                label="Service price"
+                fullWidth
+                name="servicePrice"
+                value={formData.servicePrice}
+                onChange={handleChange}
+                multiline
+              />
+            </Grid>
+          </Grid>
+          <Grid container spacing={2}>
+            <Grid item xs={6}>
+              <TextField
+                label="Priority Level"
+                fullWidth
+                name="priorityLevel"
+                value={formData.priorityLevel}
+                onChange={handleChange}
+                select
+              >
+                <MenuItem value="Low">Low</MenuItem>
+                <MenuItem value="Moderate">Moderate</MenuItem>
+                <MenuItem value="High">High</MenuItem>
+              </TextField>
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                label="Assignor"
+                fullWidth
+                name="assignor"
+                value={formData.assignor}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                label="Deadline"
+                fullWidth
+                name="dueDate"
+                value={formData.dueDate}
+                onChange={handleChange}
+                type="date"
+                defaultValue={new Date()}
+              />
+            </Grid>
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              label="Price"
+              fullWidth
+              name="price"
+              value={formData.price}
+              onChange={handleChange}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              label="Advance"
+              fullWidth
+              name="advanceprice"
+              value={formData.advanceprice}
+              onChange={handleChange}
+            />
+          </Grid>
           <Grid item xs={6}>
             <TextField
               label="Client Name"
