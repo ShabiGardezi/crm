@@ -1,20 +1,24 @@
-import React, { useState } from "react";
+import React from "react";
 import { Grid, TextField, Button } from "@material-ui/core";
 import axios from "axios"; // Import Axios
+import { useSelector, useDispatch } from "react-redux";
 
 import "../../styles/Forms/customforms.css";
 
 const QuotationComponent = () => {
-  const [formData, setFormData] = useState({
-    price: "",
-    advanceprice: "",
-  });
+  const dispatch = useDispatch();
+
+  const formData = useSelector((state) => state.form);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-    setFormData({
-      ...formData,
-      [name]: value,
+
+    dispatch({
+      type: "UPDATE_FORM_DATA",
+      payload: {
+        name,
+        value,
+      },
     });
   };
 
@@ -25,15 +29,16 @@ const QuotationComponent = () => {
       const response = await axios.post("/api/your-endpoint", formData);
       console.log("Data submitted successfully:", response.data);
       // Clear the form after submission
-      setFormData({
-        price: "",
-        advanceprice: "",
-      });
+      // setFormData({
+      //   price: "",
+      //   advanceprice: "",
+      // });
     } catch (error) {
       // Handle errors (e.g., show an error message)
       console.error("Error submitting data:", error);
     }
   };
+  console.log(formData);
 
   return (
     <div className="styleform">

@@ -15,8 +15,9 @@ import SocialMediaBusinessDetails from "../pages/BusinessDetails/SocialMediaBusi
 import LocalSEOBusinessDetails from "../pages/BusinessDetails/LocalSEOBusinessDetails";
 
 const CRMProjectForm = () => {
-  const [section, setSection] = useState("Quotation");
   const { department } = useParams(); // Get the department from the URL
+  const initialSection = department ? "Business Details" : "Quotation";
+  const [section, setSection] = useState(initialSection);
 
   const handleTabChange = (event, newSection) => {
     setSection(newSection);

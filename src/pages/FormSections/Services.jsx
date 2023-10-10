@@ -1,43 +1,43 @@
-import React, { useState } from "react";
+import React from "react";
 import { Grid, TextField, Button } from "@material-ui/core";
 import "../../styles/Forms/customforms.css";
 import axios from "axios";
+import { useSelector, useDispatch } from "react-redux";
+
 const Services = () => {
-  const [formData, setFormData] = useState({
-    keywords: "",
-    webUrl: "",
-    loginCredentials: "",
-  });
+  const dispatch = useDispatch();
+
+  const formData = useSelector((state) => state.form);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-    setFormData({
-      ...formData,
-      [name]: value,
+
+    dispatch({
+      type: "UPDATE_FORM_DATA",
+      payload: {
+        name,
+        value,
+      },
     });
   };
+
   const handleSubmit = async (event) => {
     event.preventDefault(); // Prevent the default form submission behavior
 
     try {
       // Make an Axios POST request to your backend API
-      const response = await axios.post("/api/your-endpoint", formData);
+      // const response = await axios.post("/api/your-endpoint", formData);
 
       // Handle the response (e.g., show a success message)
-      console.log("Data submitted successfully:", response.data);
+      // console.log("Data submitted successfully:", response.data);
 
       // Clear the form after submission
-      setFormData({
-        serviceName: "",
-        serviceDescription: "",
-        serviceQuantity: "",
-        servicePrice: "",
-      });
     } catch (error) {
       // Handle errors (e.g., show an error message)
       console.error("Error submitting data:", error);
     }
   };
+
   return (
     <div className="styleform">
       <form onSubmit={handleSubmit}>
