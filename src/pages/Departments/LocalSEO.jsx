@@ -94,6 +94,9 @@ const LocalSEOForm = () => {
   return (
     <div className="styleform">
       <Header />
+      <div className="formtitle">
+        <Typography variant="h5">Local SEO Form</Typography>
+      </div>
       <form onSubmit={handleSubmit}>
         <div className="ticketHeading">
           <Typography variant="h5">Ticket Details</Typography>

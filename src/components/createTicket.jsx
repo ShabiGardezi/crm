@@ -38,7 +38,7 @@ function CreateTicketCard() {
   const handleDepartmentSelect = (departmentId) => {
     // Define a mapping of department names to their respective routes
     const departmentRoutes = {
-      "Local SEO /GMB Optimization": "/localseoform",
+      "Local SEO / GMB Optimization": "/localseoform",
       "Wordpress Development": "/wordpressform",
       "Website SEO": "/webseoform",
       "Custom Development": "/customdevelopment",
