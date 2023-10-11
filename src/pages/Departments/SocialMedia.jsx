@@ -51,53 +51,56 @@ const SocialMediaForm = () => {
       [name]: value,
     });
   };
-
   const handleSubmit = async (event) => {
     event.preventDefault(); // Prevent the default form submission behavior
     try {
-      // Make an Axios request here (replace "/api/submit" with your actual API endpoint)
-      const response = await axios.post("/api/submit", formData);
-
-      // Handle the response as needed (e.g., show a success message)
-      console.log("Success:", response.data);
-
-      // Clear the form after successful submission
-      setFormData({
-        priorityLevel: "",
-        assignor: user?.username || "",
-        dueDate: new Date().toISOString().substr(0, 10), // Initialize with the current date in yyyy-mm-dd format
-        webUrl: "",
-        loginCredentials: "",
-        price: "",
-        advanceprice: "",
-        serviceName: "",
-        serviceDescription: "",
-        serviceQuantity: "",
-        servicePrice: "",
-        clientName: "",
-        street: "",
-        WebsiteURL: "",
-        country: "",
-        state: "",
-        zipcode: "",
-        businessNumber: "",
-        clientEmail: "",
-        businessHours: "",
-        socialProfile: "",
-        gmbUrl: "",
-        workStatus: "",
-        SocialMediaAccounts: "",
-        PageAdminAccess: "",
-        LikesFollowers: "",
-        notes: "",
+      // Make an Axios POST request to your backend API
+      const response = await axios.post(`http://localhost:5000/api/tickets`, {
+        dueDate: formData.dueDate,
+        created_by: user._id,
+        majorAssignee: "651ada3c819ff0aec6af1380",
+        assignorDepartment: user.department._id,
+        priority: formData.priorityLevel,
+        businessdetails: {
+          loginCredentials: "",
+          clientName: "",
+          street: "",
+          WebsiteURL: "",
+          country: "",
+          state: "",
+          zipcode: "",
+          businessNumber: "",
+          clientEmail: "",
+          businessHours: "",
+          socialProfile: "",
+          gmbUrl: "",
+          workStatus: "",
+          SocialMediaAccounts: "",
+          PageAdminAccess: "",
+          LikesFollowers: "",
+          notes: "",
+        },
+        Services: {
+          serviceName: formData.serviceName,
+          serviceDescription: formData.serviceDescription,
+          serviceQuantity: formData.serviceQuantity,
+          servicePrice: formData.servicePrice,
+        },
+        quotation: {
+          price: formData.price,
+          advanceprice: formData.advanceprice,
+        },
+        TicketDetails: {
+          assignor: formData.assignor,
+        },
       });
+      // Handle the response as needed (e.g., show a success message)
+      console.log("Success:", response);
     } catch (error) {
       // Handle errors (e.g., show an error message)
       console.error("Error:", error);
     }
-    console.log(formData);
   };
-
   return (
     <div className="styleform">
       <Header />

@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Grid,
   TextField,
   Button,
   MenuItem,
   Typography,
+  InputLabel,
+  Select,
 } from "@material-ui/core";
 import axios from "axios"; // Import Axios for making API requests
 import "../../styles/Forms/customforms.css";
@@ -12,6 +14,8 @@ import Header from "../Header";
 
 const LocalSEOForm = () => {
   const user = JSON.parse(localStorage.getItem("user"));
+  const [departments, setDepartments] = useState([]);
+
   const [formData, setFormData] = useState({
     priorityLevel: "",
     assignor: user?.username || "",
@@ -38,6 +42,7 @@ const LocalSEOForm = () => {
     gmbUrl: "",
     workStatus: "",
     notes: "",
+    department: "",
   });
 
   const handleChange = (event) => {
@@ -52,12 +57,21 @@ const LocalSEOForm = () => {
     try {
       // Make an Axios request here (replace "/api/submit" with your actual API endpoint)
       console.log(formData);
+      // Find the selected department object
+      const selectedDepartment = departments.find(
+        (department) => department.name === formData.department
+      );
+
+      // Set majorAssignee to the department's ID
+      const majorAssignee = selectedDepartment ? selectedDepartment._id : null;
+
       const response = await axios.post(`http://localhost:5000/api/tickets`, {
         dueDate: formData.dueDate,
         created_by: user._id,
-        majorAssignee: "65195c4b504d80e8f11b0d13",
+        majorAssignee: majorAssignee,
         assignorDepartment: user.department._id,
         priority: formData.priorityLevel,
+        department: formData.department,
         businessdetails: {
           clientName: formData.clientName,
           street: formData.street,
@@ -90,41 +104,25 @@ const LocalSEOForm = () => {
 
       // Handle the response as needed (e.g., show a success message)
       console.log("Success:", response);
-
-      // Clear the form after successful submission
-      // setFormData({
-      //   priorityLevel: "",
-      //   assignor: user?.username || "",
-      //   dueDate: new Date().toISOString().substr(0, 10), // Initialize with the current date in yyyy-mm-dd format
-      //   keywords: "",
-      //   webUrl: "",
-      //   loginCredentials: "",
-      //   price: "",
-      //   advanceprice: "",
-      //   serviceName: "",
-      //   serviceDescription: "",
-      //   serviceQuantity: "",
-      //   servicePrice: "",
-      //   clientName: "",
-      //   street: "",
-      //   WebsiteURL: "",
-      //   country: "",
-      //   state: "",
-      //   zipcode: "",
-      //   businessNumber: "",
-      //   clientEmail: "",
-      //   businessHours: "",
-      //   socialProfile: "",
-      //   gmbUrl: "",
-      //   workStatus: "",
-      //   notes: "",
-      // });
     } catch (error) {
       // Handle errors (e.g., show an error message)
       console.error("Error:", error);
     }
   };
-
+  useEffect(() => {
+    const fetchDepartments = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:5000/api/departments`
+        );
+        setDepartments(response.data.payload);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchDepartments();
+  }, []);
+  console.log(user);
   return (
     <div className="styleform">
       <Header />
@@ -148,6 +146,22 @@ const LocalSEOForm = () => {
               <MenuItem value="Low">Low</MenuItem>
               <MenuItem value="Moderate">Moderate</MenuItem>
               <MenuItem value="High">High</MenuItem>
+            </TextField>
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              label="Select Department"
+              fullWidth
+              name="department"
+              value={formData.department}
+              onChange={handleChange}
+              select
+            >
+              {departments?.map((d) => (
+                <MenuItem key={d._id} value={d.name}>
+                  {d.name}
+                </MenuItem>
+              ))}
             </TextField>
           </Grid>
           <Grid item xs={6}>

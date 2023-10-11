@@ -41,28 +41,37 @@ const PaidMarketing = () => {
     event.preventDefault(); // Prevent the default form submission behavior
     try {
       // Make an Axios request here (replace "/api/submit" with your actual API endpoint)
-      const response = await axios.post("/api/submit", formData);
+      console.log(formData);
+      const response = await axios.post(`http://localhost:5000/api/tickets`, {
+        dueDate: formData.dueDate,
+        created_by: user._id,
+        majorAssignee: "651ada3c819ff0aec6af1380",
+        assignorDepartment: user.department._id,
+        priority: formData.priorityLevel,
+        businessdetails: {
+          location: formData.location,
+          website: formData.website,
+          adAccountAccess: formData.adAccountAccess,
+          dailyBudget: formData.dailyBudget,
+          notes: formData.notes,
+        },
+        Services: {
+          serviceName: formData.serviceName,
+          serviceDescription: formData.serviceDescription,
+          serviceQuantity: formData.serviceQuantity,
+          servicePrice: formData.servicePrice,
+        },
+        quotation: {
+          price: formData.price,
+          advanceprice: formData.advanceprice,
+        },
+        TicketDetails: {
+          assignor: formData.assignor,
+        },
+      });
 
       // Handle the response as needed (e.g., show a success message)
-      console.log("Success:", response.data);
-
-      // Clear the form after successful submission
-      setFormData({
-        priorityLevel: "",
-        assignor: user?.username || "",
-        dueDate: new Date().toISOString().substr(0, 10), // Initialize with the current date in yyyy-mm-dd format
-        price: "",
-        advanceprice: "",
-        serviceName: "",
-        serviceDescription: "",
-        serviceQuantity: "",
-        servicePrice: "",
-        adAccountAccess: "",
-        dailyBudget: "",
-        location: "",
-        website: "",
-        notes: "",
-      });
+      console.log("Success:", response);
     } catch (error) {
       // Handle errors (e.g., show an error message)
       console.error("Error:", error);

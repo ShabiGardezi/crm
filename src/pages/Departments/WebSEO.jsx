@@ -17,7 +17,6 @@ const WebSeoForm = () => {
     priorityLevel: "",
     assignor: user?.username || "",
     dueDate: new Date().toISOString().substr(0, 10), // Initialize with the current date in yyyy-mm-dd format
-    keywords: "",
     webUrl: "",
     loginCredentials: "",
     price: "",
@@ -56,50 +55,53 @@ const WebSeoForm = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault(); // Prevent the default form submission behavior
-
     try {
       // Make an Axios POST request to your backend API
-      const response = await axios.post("/api/your-endpoint", formData);
-
-      // Handle the response (e.g., show a success message)
-      console.log("Data submitted successfully:", response.data);
-
-      // Clear the form after submission
-      setFormData({
-        priorityLevel: "",
-        assignor: user?.username || "",
-        dueDate: new Date().toISOString().substr(0, 10), // Initialize with the current date in yyyy-mm-dd format
-        keywords: "",
-        webUrl: "",
-        loginCredentials: "",
-        price: "",
-        advanceprice: "",
-        serviceName: "",
-        serviceDescription: "",
-        serviceQuantity: "",
-        servicePrice: "",
-        clientName: "",
-        street: "",
-        Keywords: "",
-        WebsiteURL: "",
-        country: "",
-        state: "",
-        zipcode: "",
-        businessNumber: "",
-        clientEmail: "",
-        businessHours: "",
-        socialProfile: "",
-        gmbUrl: "",
-        workStatus: "",
-        notes: "",
-        monthlyBlogsRequirement: "",
-        LoginCredentials: "",
-        SearchConsoleAccess: "",
-        GoogleAnalyticsAccess: "",
+      const response = await axios.post(`http://localhost:5000/api/tickets`, {
+        dueDate: formData.dueDate,
+        created_by: user._id,
+        majorAssignee: "651ada3c819ff0aec6af1380",
+        assignorDepartment: user.department._id,
+        priority: formData.priorityLevel,
+        businessdetails: {
+          SearchConsoleAccess: formData.SearchConsoleAccess,
+          GoogleAnalyticsAccess: formData.GoogleAnalyticsAccess,
+          LoginCredentials: formData.LoginCredentials,
+          monthlyBlogsRequirement: formData.monthlyBlogsRequirement,
+          clientName: formData.clientName,
+          street: formData.street,
+          WebsiteURL: formData.WebsiteURL,
+          country: formData.country,
+          state: formData.street,
+          zipcode: formData.zipcode,
+          businessNumber: formData.businessNumber,
+          clientEmail: formData.clientEmail,
+          businessHours: formData.businessHours,
+          socialProfile: formData.socialProfile,
+          gmbUrl: formData.gmbUrl,
+          workStatus: formData.workStatus,
+          notes: formData.notes,
+          Keywords: formData.Keywords,
+        },
+        Services: {
+          serviceName: formData.serviceName,
+          serviceDescription: formData.serviceDescription,
+          serviceQuantity: formData.serviceQuantity,
+          servicePrice: formData.servicePrice,
+        },
+        quotation: {
+          price: formData.price,
+          advanceprice: formData.advanceprice,
+        },
+        TicketDetails: {
+          assignor: formData.assignor,
+        },
       });
+      // Handle the response as needed (e.g., show a success message)
+      console.log("Success:", response);
     } catch (error) {
       // Handle errors (e.g., show an error message)
-      console.error("Error submitting data:", error);
+      console.error("Error:", error);
     }
   };
   return (

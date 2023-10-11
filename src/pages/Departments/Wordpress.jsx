@@ -47,42 +47,48 @@ const WordPress = () => {
   };
 
   const handleSubmit = async (event) => {
-    event.preventDefault();
+    event.preventDefault(); // Prevent the default form submission behavior
     try {
-      // Make an Axios POST request to your backend API
-      const response = await axios.post("/api/submit", formData);
-
-      // Handle the response (e.g., show a success message)
-      console.log("Data submitted successfully:", response.data);
-
-      // Clear the form after submission
-      setFormData({
-        priorityLevel: "",
-        assignor: user?.username || "",
-        dueDate: new Date().toISOString().substr(0, 10), // Initialize with the current date in yyyy-mm-dd format
-        keywords: "",
-        webUrl: "",
-        loginCredentials: "",
-        price: "",
-        advanceprice: "",
-        serviceName: "",
-        serviceDescription: "",
-        serviceQuantity: "",
-        servicePrice: "",
-        clientName: "",
-        WebsiteURL: "",
-        country: "",
-        state: "",
-        street: "",
-        zipcode: "",
-        businessNumber: "",
-        clientEmail: "",
-        ReferralWebsite: "",
-        notes: "",
+      // Make an Axios request here (replace "/api/submit" with your actual API endpoint)
+      console.log(formData);
+      const response = await axios.post(`http://localhost:5000/api/tickets`, {
+        dueDate: formData.dueDate,
+        created_by: user._id,
+        majorAssignee: "65195c98504d80e8f11b0d16",
+        assignorDepartment: user.department._id,
+        priority: formData.priorityLevel,
+        businessdetails: {
+          clientName: formData.clientName,
+          street: formData.street,
+          WebsiteURL: formData.WebsiteURL,
+          country: formData.country,
+          state: formData.state,
+          zipcode: formData.zipcode,
+          businessNumber: formData.businessNumber,
+          clientEmail: formData.clientEmail,
+          ReferralWebsite: formData.ReferralWebsite,
+          notes: formData.notes,
+        },
+        Services: {
+          serviceName: formData.serviceName,
+          serviceDescription: formData.serviceDescription,
+          serviceQuantity: formData.serviceQuantity,
+          servicePrice: formData.servicePrice,
+        },
+        quotation: {
+          price: formData.price,
+          advanceprice: formData.advanceprice,
+        },
+        TicketDetails: {
+          assignor: formData.assignor,
+        },
       });
+
+      // Handle the response as needed (e.g., show a success message)
+      console.log("Success:", response);
     } catch (error) {
       // Handle errors (e.g., show an error message)
-      console.error("Error submitting data:", error);
+      console.error("Error:", error);
     }
   };
   return (

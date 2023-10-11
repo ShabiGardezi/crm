@@ -46,45 +46,48 @@ const CustomDevelopment = () => {
   const handleSubmit = async (event) => {
     event.preventDefault(); // Prevent the default form submission behavior
     try {
-      // Make an Axios request here (replace with your actual API endpoint)
-      const response = await axios.post(
-        "http://localhost:5000/api/tickets",
-        formData
-      );
+      // Make an Axios request here (replace "/api/submit" with your actual API endpoint)
+      console.log(formData);
+      const response = await axios.post(`http://localhost:5000/api/tickets`, {
+        dueDate: formData.dueDate,
+        created_by: user._id,
+        majorAssignee: "65195c98504d80e8f11b0d16",
+        assignorDepartment: user.department._id,
+        priority: formData.priorityLevel,
+        businessdetails: {
+          clientName: formData.clientName,
+          street: formData.street,
+          WebsiteURL: formData.WebsiteURL,
+          country: formData.country,
+          state: formData.state,
+          zipcode: formData.zipcode,
+          businessNumber: formData.businessNumber,
+          clientEmail: formData.clientEmail,
+          ReferralWebsite: formData.ReferralWebsite,
+          notes: formData.notes,
+        },
+        Services: {
+          serviceName: formData.serviceName,
+          serviceDescription: formData.serviceDescription,
+          serviceQuantity: formData.serviceQuantity,
+          servicePrice: formData.servicePrice,
+        },
+        quotation: {
+          price: formData.price,
+          advanceprice: formData.advanceprice,
+        },
+        TicketDetails: {
+          assignor: formData.assignor,
+        },
+      });
 
       // Handle the response as needed (e.g., show a success message)
-      console.log("Success:", response.data);
-
-      // Clear the form after successful submission
-      setFormData({
-        priorityLevel: "",
-        assignor: user?.username || "",
-        dueDate: new Date().toISOString().substr(0, 10), // Initialize with the current date in yyyy-mm-dd format
-        serviceName: "",
-        serviceDescription: "",
-        serviceQuantity: "",
-        servicePrice: "",
-        price: "",
-        advanceprice: "",
-        clientName: "",
-        WebsiteURL: "",
-        country: "",
-        state: "",
-        street: "",
-        zipcode: "",
-        businessNumber: "",
-        clientEmail: "",
-        ReferralWebsite: "",
-        notes: "",
-      });
+      console.log("Success:", response);
     } catch (error) {
       // Handle errors (e.g., show an error message)
       console.error("Error:", error);
     }
-
-    console.log(formData);
   };
-
   return (
     <div className="styleform">
       <Header />
