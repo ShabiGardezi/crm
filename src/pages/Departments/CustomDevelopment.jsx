@@ -1,5 +1,5 @@
 import "../../styles/Forms/formsCommon.css";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Grid,
   TextField,
@@ -12,6 +12,7 @@ import Header from "../Header";
 
 const CustomDevelopment = () => {
   const user = JSON.parse(localStorage.getItem("user"));
+  const [departments, setDepartments] = useState([]);
 
   const [formData, setFormData] = useState({
     priorityLevel: "",
@@ -46,12 +47,17 @@ const CustomDevelopment = () => {
   const handleSubmit = async (event) => {
     event.preventDefault(); // Prevent the default form submission behavior
     try {
-      // Make an Axios request here (replace "/api/submit" with your actual API endpoint)
-      console.log(formData);
+      const selectedDepartment = departments.find(
+        (department) => department.name === formData.department
+      );
+
+      // Set majorAssignee to the department's ID
+      const majorAssignee = selectedDepartment ? selectedDepartment._id : null;
+
       const response = await axios.post(`http://localhost:5000/api/tickets`, {
         dueDate: formData.dueDate,
         created_by: user._id,
-        majorAssignee: "65195c98504d80e8f11b0d16",
+        majorAssignee: majorAssignee,
         assignorDepartment: user.department._id,
         priority: formData.priorityLevel,
         businessdetails: {
@@ -88,6 +94,19 @@ const CustomDevelopment = () => {
       console.error("Error:", error);
     }
   };
+  useEffect(() => {
+    const fetchDepartments = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:5000/api/departments`
+        );
+        setDepartments(response.data.payload);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchDepartments();
+  }, []);
   return (
     <div className="styleform">
       <Header />
@@ -111,6 +130,22 @@ const CustomDevelopment = () => {
               <MenuItem value="Low">Low</MenuItem>
               <MenuItem value="Moderate">Moderate</MenuItem>
               <MenuItem value="High">High</MenuItem>
+            </TextField>
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              label="Select Department"
+              fullWidth
+              name="department"
+              value={formData.department}
+              onChange={handleChange}
+              select
+            >
+              {departments?.map((d) => (
+                <MenuItem key={d._id} value={d.name}>
+                  {d.name}
+                </MenuItem>
+              ))}
             </TextField>
           </Grid>
           <Grid item xs={6}>
