@@ -47,44 +47,77 @@ const LocalSEOForm = () => {
       [name]: value,
     });
   };
-
   const handleSubmit = async (event) => {
     event.preventDefault(); // Prevent the default form submission behavior
     try {
       // Make an Axios request here (replace "/api/submit" with your actual API endpoint)
-      const response = await axios.post("/api/submit", formData);
+      console.log(formData);
+      const response = await axios.post(`http://localhost:5000/api/tickets`, {
+        dueDate: formData.dueDate,
+        created_by: user._id,
+        majorAssignee: "65195c4b504d80e8f11b0d13",
+        priority: formData.priorityLevel,
+        businessdetails: {
+          clientName: formData.clientName,
+          street: formData.street,
+          WebsiteURL: formData.WebsiteURL,
+          country: formData.country,
+          state: formData.state,
+          zipcode: formData.zipcode,
+          businessNumber: formData.businessNumber,
+          clientEmail: formData.clientEmail,
+          businessHours: formData.businessHours,
+          socialProfile: formData.socialProfile,
+          gmbUrl: formData.gmb,
+          workStatus: formData.workStatus,
+          notes: formData.notes,
+        },
+        Services: {
+          serviceName: formData.serviceName,
+          serviceDescription: formData.serviceDescription,
+          serviceQuantity: formData.serviceQuantity,
+          servicePrice: formData.servicePrice,
+        },
+        quotation: {
+          price: formData.price,
+          advanceprice: formData.advanceprice,
+        },
+        TicketDetails: {
+          assignor: formData.assignor,
+        },
+      });
 
       // Handle the response as needed (e.g., show a success message)
-      console.log("Success:", response.data);
+      console.log("Success:", response);
 
       // Clear the form after successful submission
-      setFormData({
-        priorityLevel: "",
-        assignor: user?.username || "",
-        dueDate: new Date().toISOString().substr(0, 10), // Initialize with the current date in yyyy-mm-dd format
-        keywords: "",
-        webUrl: "",
-        loginCredentials: "",
-        price: "",
-        advanceprice: "",
-        serviceName: "",
-        serviceDescription: "",
-        serviceQuantity: "",
-        servicePrice: "",
-        clientName: "",
-        street: "",
-        WebsiteURL: "",
-        country: "",
-        state: "",
-        zipcode: "",
-        businessNumber: "",
-        clientEmail: "",
-        businessHours: "",
-        socialProfile: "",
-        gmbUrl: "",
-        workStatus: "",
-        notes: "",
-      });
+      // setFormData({
+      //   priorityLevel: "",
+      //   assignor: user?.username || "",
+      //   dueDate: new Date().toISOString().substr(0, 10), // Initialize with the current date in yyyy-mm-dd format
+      //   keywords: "",
+      //   webUrl: "",
+      //   loginCredentials: "",
+      //   price: "",
+      //   advanceprice: "",
+      //   serviceName: "",
+      //   serviceDescription: "",
+      //   serviceQuantity: "",
+      //   servicePrice: "",
+      //   clientName: "",
+      //   street: "",
+      //   WebsiteURL: "",
+      //   country: "",
+      //   state: "",
+      //   zipcode: "",
+      //   businessNumber: "",
+      //   clientEmail: "",
+      //   businessHours: "",
+      //   socialProfile: "",
+      //   gmbUrl: "",
+      //   workStatus: "",
+      //   notes: "",
+      // });
     } catch (error) {
       // Handle errors (e.g., show an error message)
       console.error("Error:", error);
