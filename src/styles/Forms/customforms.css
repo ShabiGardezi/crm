@@ -24,3 +24,8 @@
   margin-top: 2%;
   margin-left: 25%;
 }
+h5.MuiTypography-root.MuiTypography-h5 {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+}
