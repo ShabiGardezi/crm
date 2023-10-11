@@ -56,10 +56,9 @@ const CustomDevelopment = () => {
 
       const response = await axios.post(`http://localhost:5000/api/tickets`, {
         dueDate: formData.dueDate,
-        created_by: user._id,
         majorAssignee: majorAssignee,
+        created_by: user._id,
         assignorDepartment: user.department._id,
-        priority: formData.priorityLevel,
         businessdetails: {
           clientName: formData.clientName,
           street: formData.street,
@@ -84,6 +83,7 @@ const CustomDevelopment = () => {
         },
         TicketDetails: {
           assignor: formData.assignor,
+          priority: formData.priorityLevel,
         },
       });
 

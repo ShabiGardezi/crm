@@ -53,10 +53,9 @@ const PaidMarketing = () => {
 
       const response = await axios.post(`http://localhost:5000/api/tickets`, {
         dueDate: formData.dueDate,
-        created_by: user._id,
         majorAssignee: majorAssignee,
+        created_by: user._id,
         assignorDepartment: user.department._id,
-        priority: formData.priorityLevel,
         businessdetails: {
           location: formData.location,
           website: formData.website,
@@ -76,6 +75,7 @@ const PaidMarketing = () => {
         },
         TicketDetails: {
           assignor: formData.assignor,
+          priority: formData.priorityLevel,
         },
       });
 

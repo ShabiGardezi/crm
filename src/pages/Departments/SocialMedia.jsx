@@ -65,10 +65,9 @@ const SocialMediaForm = () => {
 
       const response = await axios.post(`http://localhost:5000/api/tickets`, {
         dueDate: formData.dueDate,
-        created_by: user._id,
         majorAssignee: majorAssignee,
+        created_by: user._id,
         assignorDepartment: user.department._id,
-        priority: formData.priorityLevel,
         businessdetails: {
           loginCredentials: "",
           clientName: "",
@@ -100,6 +99,7 @@ const SocialMediaForm = () => {
         },
         TicketDetails: {
           assignor: formData.assignor,
+          priority: formData.priorityLevel,
         },
       });
       // Handle the response as needed (e.g., show a success message)

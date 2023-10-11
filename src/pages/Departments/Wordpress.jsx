@@ -13,9 +13,8 @@ import Header from "../Header";
 const WordPress = () => {
   const user = JSON.parse(localStorage.getItem("user"));
   const [departments, setDepartments] = useState([]);
-
   const [formData, setFormData] = useState({
-    priorityLevel: "",
+    priority: "",
     assignor: user?.username || "",
     dueDate: new Date().toISOString().substr(0, 10), // Initialize with the current date in yyyy-mm-dd format
     keywords: "",
@@ -64,7 +63,6 @@ const WordPress = () => {
         created_by: user._id,
         majorAssignee: majorAssignee,
         assignorDepartment: user.department._id,
-        priority: formData.priorityLevel,
         businessdetails: {
           clientName: formData.clientName,
           street: formData.street,
@@ -89,6 +87,7 @@ const WordPress = () => {
         },
         TicketDetails: {
           assignor: formData.assignor,
+          priority: formData.priority,
         },
       });
 
@@ -127,8 +126,8 @@ const WordPress = () => {
             <TextField
               label="Priority Level"
               fullWidth
-              name="priorityLevel"
-              value={formData.priorityLevel}
+              name="priority"
+              value={formData.priority}
               onChange={handleChange}
               select
             >
