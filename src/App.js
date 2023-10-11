@@ -17,11 +17,7 @@ import TicketList from "./pages/TicketList";
 import NotFound from "./pages/404Error";
 import UserToDo from "./components/UserToDo";
 import CustomDevelopment from "./pages/Departments/CustomDevelopment";
-import CRMProjectForm from "./components/TicketForm";
-import Services from "./pages/FormSections/Services";
-import BusinessDetailsComponent from "./pages/FormSections/BussinesDetails";
-import QuotationComponent from "./pages/FormSections/Quotation";
-import TicketDetails from "./pages/FormSections/TicketDetails";
+// import TicketDetails from "./pages/FormSections/TicketDetails";
 import CustomPaginationActionsTable from "./pages/Tickets/TicketHistory";
 import TicketShortInfo from "./pages/Tickets/TicketShortInfo";
 import FormDataDisplay from "./pages/FormSections/FormDataDisplay";
@@ -43,7 +39,7 @@ function App() {
         />
         <Route path="/home" element={<Home />} />
         <Route path="/notfound" element={<NotFound />} />
-        <Route path="/webseoform" element={<WebSeoForm />} />
+        <Route path="/webseoform" element={<WordPress />} />
         <Route path="/localseoform" element={<LocalSeoForm />} />
         <Route path="/socialmediaform" element={<SocialMediaForm />} />
         <Route path="/customdevelopment" element={<CustomDevelopment />} />
@@ -52,16 +48,8 @@ function App() {
         <Route path="/paidmarketingform" element={<PaidMarketing />} />
         <Route path="/ticketlist" element={<TicketList />} />
         <Route path="/todo" element={<UserToDo showHeader={true} />} />
-        {/* <Route path="/crmform/:department" element={<CRMProjectForm />} /> */}
-        <Route path="/services" element={<Services />} />
-        <Route path="/quotation" element={<QuotationComponent />} />
-        <Route path="/ticketdetails" element={<TicketDetails />} />
         <Route path="/info" element={<FormDataDisplay />} />
         <Route path="/history" element={<CustomPaginationActionsTable />} />
-        <Route
-          path="/business_details"
-          element={<BusinessDetailsComponent />}
-        />
       </Routes>
     </div>
   );

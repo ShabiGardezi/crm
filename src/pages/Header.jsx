@@ -130,13 +130,25 @@ const Header = () => {
   };
 
   const user = JSON.parse(localStorage.getItem("user"));
-  const handleDepartmentSelect = (departmentName) => {
-    // Update the URL with the selected department as a query parameter
-    const encodedDepartment = encodeURIComponent(departmentName);
-    navigate(`/crmform/${encodedDepartment}`); // Use navigate for navigation
-    handleProfileMenuClose();
-  };
+  const handleDepartmentSelect = (departmentId) => {
+    // Define a mapping of department names to their respective routes
+    const departmentRoutes = {
+      "Local SEO /GMB Optimization": "/localseoform",
+      "Wordpress Development": "/wordpressform",
+      "Website SEO": "/webseoform",
+      "Custom Development": "/customdevelopment",
+      "Paid Marketing": "/paidmarketingform",
+      "Social Media Management": "/socialmediaform",
+      "Customer Reviews Management": "/reviewsform",
+      Sales: "/sales",
+    };
 
+    // Get the route for the selected department
+    const selectedRoute = departmentRoutes[departmentId];
+
+    // Navigate to the selected route
+    navigate(selectedRoute);
+  };
   return (
     <>
       <CssBaseline />
@@ -274,12 +286,7 @@ const Header = () => {
                     <MenuItem
                       key={d._id}
                       value={d._id}
-                      onClick={() => {
-                        // Update the URL with the selected department as a query parameter
-                        const newDepartment = encodeURIComponent(d.name);
-                        navigate(`/crmform/${newDepartment}`); // Use navigate for navigation
-                        handleProfileMenuClose();
-                      }}
+                      onClick={() => handleDepartmentSelect(d.name)}
                     >
                       {d.name}
                     </MenuItem>

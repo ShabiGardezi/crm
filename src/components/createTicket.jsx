@@ -18,16 +18,8 @@ function CreateTicketCard() {
     department: "",
   });
   const [departments, setDepartments] = useState([]);
-  const [isCardOpen, setIsCardOpen] = useState(true); // State to control card visibility
-  const [isOpen, setIsOpen] = useState(true); // State to control component visibility
 
   const navigate = useNavigate(); // Initialize the navigate function
-  const handleDepartmentSelect = (departmentName) => {
-    // Update the URL with the selected department as a query parameter
-    const encodedDepartment = encodeURIComponent(departmentName);
-    navigate(`/crmform/${encodedDepartment}`); // Use navigate for navigation
-    setIsOpen(false); // Close the component when a department is selected
-  };
 
   useEffect(() => {
     const fetchDepartments = async () => {
@@ -43,10 +35,24 @@ function CreateTicketCard() {
     fetchDepartments();
   }, []);
 
-  const handleChange = (e) => {
-    // const { name, value } = e.target;
-    // setFormData({ ...formData, [name]: value });
-    // setIsCardOpen(false);
+  const handleDepartmentSelect = (departmentId) => {
+    // Define a mapping of department names to their respective routes
+    const departmentRoutes = {
+      "Local SEO /GMB Optimization": "/localseoform",
+      "Wordpress Development": "/wordpressform",
+      "Website SEO": "/webseoform",
+      "Custom Development": "/customdevelopment",
+      "Paid Marketing": "/paidmarketingform",
+      "Social Media Management": "/socialmediaform",
+      "Customer Reviews Management": "/reviewsform",
+      Sales: "/sales",
+    };
+
+    // Get the route for the selected department
+    const selectedRoute = departmentRoutes[departmentId];
+
+    // Navigate to the selected route
+    navigate(selectedRoute);
   };
   return (
     <div>
@@ -67,18 +73,12 @@ function CreateTicketCard() {
             name="department"
             value={formData.department}
             label="Department"
-            // onChange={handleDepartmentSelect}
           >
             {departments?.map((d) => (
               <MenuItem
                 key={d._id}
                 value={d._id}
-                onClick={() => {
-                  // Update the URL with the selected department as a query parameter
-                  const newDepartment = encodeURIComponent(d.name);
-                  navigate(`/crmform/${newDepartment}`); // Use navigate for navigation
-                  setIsOpen(false); // Close the component when a department is selected
-                }}
+                onClick={() => handleDepartmentSelect(d.name)}
               >
                 {d.name}
               </MenuItem>

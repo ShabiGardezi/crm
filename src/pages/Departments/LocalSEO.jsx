@@ -1,7 +1,14 @@
 import React, { useState } from "react";
-import { Grid, TextField, Button, MenuItem } from "@material-ui/core";
+import {
+  Grid,
+  TextField,
+  Button,
+  MenuItem,
+  Typography,
+} from "@material-ui/core";
 import axios from "axios"; // Import Axios for making API requests
 import "../../styles/Forms/customforms.css";
+import Header from "../Header";
 
 const LocalSEOForm = () => {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -14,6 +21,10 @@ const LocalSEOForm = () => {
     loginCredentials: "",
     price: "",
     advanceprice: "",
+    serviceName: "",
+    serviceDescription: "",
+    serviceQuantity: "",
+    servicePrice: "",
     clientName: "",
     street: "",
     WebsiteURL: "",
@@ -56,6 +67,10 @@ const LocalSEOForm = () => {
         loginCredentials: "",
         price: "",
         advanceprice: "",
+        serviceName: "",
+        serviceDescription: "",
+        serviceQuantity: "",
+        servicePrice: "",
         clientName: "",
         street: "",
         WebsiteURL: "",
@@ -78,86 +93,51 @@ const LocalSEOForm = () => {
 
   return (
     <div className="styleform">
+      <Header />
       <form onSubmit={handleSubmit}>
+        <div className="ticketHeading">
+          <Typography variant="h5">Ticket Details</Typography>
+        </div>
         <Grid container spacing={2}>
-          <Grid container spacing={2}>
-            <Grid item xs={6}>
-              <TextField
-                label="Service name"
-                fullWidth
-                name="serviceName"
-                value={formData.serviceName}
-                onChange={handleChange}
-                multiline
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextField
-                label="Service description"
-                fullWidth
-                name="serviceDescription"
-                value={formData.serviceDescription}
-                onChange={handleChange}
-                multiline
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextField
-                label="Service quantity"
-                fullWidth
-                name="serviceQuantity"
-                value={formData.serviceQuantity}
-                onChange={handleChange}
-                multiline
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextField
-                label="Service price"
-                fullWidth
-                name="servicePrice"
-                value={formData.servicePrice}
-                onChange={handleChange}
-                multiline
-              />
-            </Grid>
+          <Grid item xs={6}>
+            <TextField
+              label="Priority Level"
+              fullWidth
+              name="priorityLevel"
+              value={formData.priorityLevel}
+              onChange={handleChange}
+              select
+            >
+              <MenuItem value="Low">Low</MenuItem>
+              <MenuItem value="Moderate">Moderate</MenuItem>
+              <MenuItem value="High">High</MenuItem>
+            </TextField>
           </Grid>
-          <Grid container spacing={2}>
-            <Grid item xs={6}>
-              <TextField
-                label="Priority Level"
-                fullWidth
-                name="priorityLevel"
-                value={formData.priorityLevel}
-                onChange={handleChange}
-                select
-              >
-                <MenuItem value="Low">Low</MenuItem>
-                <MenuItem value="Moderate">Moderate</MenuItem>
-                <MenuItem value="High">High</MenuItem>
-              </TextField>
-            </Grid>
-            <Grid item xs={6}>
-              <TextField
-                label="Assignor"
-                fullWidth
-                name="assignor"
-                value={formData.assignor}
-                onChange={handleChange}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextField
-                label="Deadline"
-                fullWidth
-                name="dueDate"
-                value={formData.dueDate}
-                onChange={handleChange}
-                type="date"
-                defaultValue={new Date()}
-              />
-            </Grid>
+          <Grid item xs={6}>
+            <TextField
+              label="Assignor"
+              fullWidth
+              name="assignor"
+              value={formData.assignor}
+              onChange={handleChange}
+            />
           </Grid>
+          <Grid item xs={6}>
+            <TextField
+              label="Deadline"
+              fullWidth
+              name="dueDate"
+              value={formData.dueDate}
+              onChange={handleChange}
+              type="date"
+              defaultValue={new Date()}
+            />
+          </Grid>
+        </Grid>
+        <div className="ticketHeading">
+          <Typography variant="h5">Quotation</Typography>
+        </div>
+        <Grid container spacing={2}>
           <Grid item xs={6}>
             <TextField
               label="Price"
@@ -176,6 +156,56 @@ const LocalSEOForm = () => {
               onChange={handleChange}
             />
           </Grid>
+        </Grid>
+        <div className="ticketHeading">
+          <Typography variant="h5">Services</Typography>
+        </div>
+        <Grid container spacing={2}>
+          <Grid item xs={6}>
+            <TextField
+              label="Service name"
+              fullWidth
+              name="serviceName"
+              value={formData.serviceName}
+              onChange={handleChange}
+              multiline
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              label="Service description"
+              fullWidth
+              name="serviceDescription"
+              value={formData.serviceDescription}
+              onChange={handleChange}
+              multiline
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              label="Service quantity"
+              fullWidth
+              name="serviceQuantity"
+              value={formData.serviceQuantity}
+              onChange={handleChange}
+              multiline
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              label="Service price"
+              fullWidth
+              name="servicePrice"
+              value={formData.servicePrice}
+              onChange={handleChange}
+              multiline
+            />
+          </Grid>
+        </Grid>
+        <div className="ticketHeading">
+          <Typography variant="h5">Business Details</Typography>
+        </div>
+        <Grid container spacing={2}>
           <Grid item xs={6}>
             <TextField
               label="Client Name"
@@ -306,8 +336,8 @@ const LocalSEOForm = () => {
               multiline
             />
           </Grid>
-          {/* Add more fields as needed */}
         </Grid>
+        {/* Add more fields as needed */}
         <div className="formbtn">
           <Button type="submit" variant="contained" color="primary">
             Submit

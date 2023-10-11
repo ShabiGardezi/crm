@@ -10,3 +10,14 @@ h6.MuiTypography-root.MuiTypography-h6.css-2ulfj5-MuiTypography-root {
   justify-content: center;
   align-items: center;
 }
+.ticketHeading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 5%;
+}
+.formtitle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
