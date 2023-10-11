@@ -56,6 +56,7 @@ const LocalSEOForm = () => {
         dueDate: formData.dueDate,
         created_by: user._id,
         majorAssignee: "65195c4b504d80e8f11b0d13",
+        assignorDepartment: user.department._id,
         priority: formData.priorityLevel,
         businessdetails: {
           clientName: formData.clientName,
