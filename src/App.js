@@ -39,7 +39,7 @@ function App() {
         />
         <Route path="/home" element={<Home />} />
         <Route path="/notfound" element={<NotFound />} />
-        <Route path="/webseoform" element={<WordPress />} />
+        <Route path="/webseoform" element={<WebSeoForm />} />
         <Route path="/localseoform" element={<LocalSeoForm />} />
         <Route path="/socialmediaform" element={<SocialMediaForm />} />
         <Route path="/customdevelopment" element={<CustomDevelopment />} />

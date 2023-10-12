@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
@@ -100,19 +100,12 @@ function createData(
 }
 
 const rows = [
-  createData(
-    "Client 1",
-    "Assignor 1",
-    "Assignee 1",
-    "2023-10-05",
-    "2023-12-31",
-    "Completed"
-  ),
+  createData("Client 1", "Assignor 1", "Assignee 1", "2023-12-31", "Completed"),
   createData(
     "Client 2",
     "Assignor 2",
     "Assignee 2",
-    "2023-10-02",
+
     "2023-11-15",
     "In Progress"
   ),
@@ -120,7 +113,7 @@ const rows = [
     "Client 2",
     "Assignor 2",
     "Assignee 2",
-    "2023-10-02",
+
     "2023-11-15",
     "In Progress"
   ),
@@ -128,7 +121,7 @@ const rows = [
     "Client 2",
     "Assignor 2",
     "Assignee 2",
-    "2023-10-02",
+
     "2023-11-15",
     "In Progress"
   ),
@@ -136,7 +129,7 @@ const rows = [
     "Client 2",
     "Assignor 2",
     "Assignee 2",
-    "2023-10-02",
+
     "2023-11-15",
     "In Progress"
   ),
@@ -144,7 +137,7 @@ const rows = [
     "Client 2",
     "Assignor 2",
     "Assignee 2",
-    "2023-10-02",
+
     "2023-11-15",
     "In Progress"
   ),
@@ -152,7 +145,7 @@ const rows = [
     "Client 2",
     "Assignor 2",
     "Assignee 2",
-    "2023-10-02",
+
     "2023-11-15",
     "In Progress"
   ),
@@ -160,7 +153,7 @@ const rows = [
     "Client 2",
     "Assignor 2",
     "Assignee 2",
-    "2023-10-02",
+
     "2023-11-15",
     "In Progress"
   ),
@@ -168,7 +161,7 @@ const rows = [
     "Client 2",
     "Assignor 2",
     "Assignee 2",
-    "2023-10-02",
+
     "2023-11-15",
     "In Progress"
   ),
@@ -176,7 +169,7 @@ const rows = [
     "Client 2",
     "Assignor 2",
     "Assignee 2",
-    "2023-10-02",
+
     "2023-11-15",
     "In Progress"
   ),
@@ -184,7 +177,7 @@ const rows = [
     "Client 2",
     "Assignor 2",
     "Assignee 2",
-    "2023-10-02",
+
     "2023-11-15",
     "In Progress"
   ),
@@ -192,7 +185,7 @@ const rows = [
     "Client 2",
     "Assignor 2",
     "Assignee 2",
-    "2023-10-02",
+
     "2023-11-15",
     "In Progress"
   ),
@@ -200,7 +193,7 @@ const rows = [
     "Client 2",
     "Assignor 2",
     "Assignee 2",
-    "2023-10-02",
+
     "2023-11-15",
     "In Progress"
   ),
@@ -208,7 +201,7 @@ const rows = [
     "Client 2",
     "Assignor 2",
     "Assignee 2",
-    "2023-10-02",
+
     "2023-11-15",
     "In Progress"
   ),
@@ -216,7 +209,7 @@ const rows = [
     "Client 2",
     "Assignor 2",
     "Assignee 2",
-    "2023-10-02",
+
     "2023-11-15",
     "In Progress"
   ),
@@ -224,8 +217,31 @@ const rows = [
 ].sort((a, b) => (a.clientName < b.clientName ? -1 : 1));
 
 export default function CustomPaginationActionsTable() {
+  const user = JSON.parse(localStorage.getItem("user"));
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [tickets, setTickets] = useState([]); // State to store fetched data
+
+  // Fetch data from the API when the component mounts
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:5000/api/tickets?departmentId=${user?.department?._id}`
+        );
+        if (response.ok) {
+          const data = await response.json();
+          setTickets(data.payload); // Assuming 'payload' contains ticket data
+        } else {
+          console.error("Error fetching data");
+        }
+      } catch (error) {
+        console.error("Error fetching data", error);
+      }
+    };
+
+    fetchData();
+  }, []); // Empty dependency array to fetch data only once
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
@@ -250,38 +266,37 @@ export default function CustomPaginationActionsTable() {
             <TableRow>
               <TableCell>Client Name</TableCell>
               <TableCell>Assignor</TableCell>
-              <TableCell>Assignee</TableCell>
-              <TableCell>Completed On</TableCell>
+              <TableCell>Assignor Department</TableCell>
+              <TableCell>Assignee Department</TableCell>
               <TableCell>Deadline</TableCell>
               <TableCell>Status</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {(rowsPerPage > 0
-              ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              : rows
-            ).map((row) => (
-              <TableRow key={row.clientName}>
-                <TableCell component="th" scope="row">
-                  {row.clientName}
-                </TableCell>
-                <TableCell style={{ width: 160 }} align="left">
-                  {row.assignor}
-                </TableCell>
-                <TableCell style={{ width: 160 }} align="left">
-                  {row.assignee}
-                </TableCell>
-                <TableCell style={{ width: 160 }} align="left">
-                  {row.completedOn}
-                </TableCell>
-                <TableCell style={{ width: 160 }} align="left">
-                  {row.deadline}
-                </TableCell>
-                <TableCell style={{ width: 160 }} align="left">
-                  {row.status}
-                </TableCell>
-              </TableRow>
-            ))}
+            {tickets
+              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map((ticket) => (
+                <TableRow key={ticket._id}>
+                  <TableCell component="th" scope="row">
+                    {ticket.businessdetails.clientName}
+                  </TableCell>
+                  <TableCell style={{ width: 160 }} align="left">
+                    {ticket.TicketDetails.assignor}
+                  </TableCell>
+                  <TableCell style={{ width: 160 }} align="left">
+                    {ticket.assignorDepartment.name}
+                  </TableCell>
+                  <TableCell style={{ width: 160 }} align="left">
+                    {ticket.majorAssignee.name}
+                  </TableCell>
+                  <TableCell style={{ width: 160 }} align="left">
+                    {ticket.dueDate}
+                  </TableCell>
+                  <TableCell style={{ width: 160 }} align="left">
+                    {ticket.status}
+                  </TableCell>
+                </TableRow>
+              ))}
             {emptyRows > 0 && (
               <TableRow style={{ height: 53 * emptyRows }}>
                 <TableCell colSpan={6} />
