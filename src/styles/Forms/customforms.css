@@ -29,3 +29,10 @@ h5.MuiTypography-root.MuiTypography-h5 {
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
 }
+h6.MuiTypography-root.MuiTypography-subtitle1.ticketHeading.css-10wpov9-MuiTypography-root {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  font-weight: bold;
+  /* margin-bottom: 25px; */
+}

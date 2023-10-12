@@ -29,6 +29,8 @@ const PaidMarketing = () => {
     location: "",
     website: "",
     notes: "",
+    clientName: "",
+    clientEmail: "",
   });
 
   const handleChange = (event) => {
@@ -57,6 +59,8 @@ const PaidMarketing = () => {
         created_by: user._id,
         assignorDepartment: user.department._id,
         businessdetails: {
+          clientName: formData.clientName,
+          clientEmail: formData.clientEmail,
           location: formData.location,
           website: formData.website,
           adAccountAccess: formData.adAccountAccess,
@@ -233,6 +237,26 @@ const PaidMarketing = () => {
           <Typography variant="h5">Business Details</Typography>
         </div>
         <Grid container spacing={2}>
+          <Grid item xs={6}>
+            <TextField
+              label="Client Name"
+              fullWidth
+              name="clientName"
+              value={formData.clientName}
+              onChange={handleChange}
+              multiline
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              label="Business Email"
+              fullWidth
+              name="clientEmail"
+              value={formData.clientEmail}
+              onChange={handleChange}
+              multiline
+            />
+          </Grid>
           <Grid item xs={6}>
             <TextField
               label="Ad Account Access"

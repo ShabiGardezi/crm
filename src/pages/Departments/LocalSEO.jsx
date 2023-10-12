@@ -56,7 +56,6 @@ const LocalSEOForm = () => {
     event.preventDefault(); // Prevent the default form submission behavior
     try {
       // Make an Axios request here (replace "/api/submit" with your actual API endpoint)
-      console.log(formData);
       // Find the selected department object
       const selectedDepartment = departments.find(
         (department) => department.name === formData.department
@@ -122,7 +121,7 @@ const LocalSEOForm = () => {
     };
     fetchDepartments();
   }, []);
-  console.log(user);
+
   return (
     <div className="styleform">
       <Header />

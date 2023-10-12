@@ -9,3 +9,10 @@
   margin: auto;
   margin-top: 5% !important;
 }
+.displayFields {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1%;
+  margin-top: 2%;
+}

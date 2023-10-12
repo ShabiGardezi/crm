@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Typography,
   Paper,
@@ -11,61 +11,62 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import TicketShortInfo from "../Tickets/TicketShortInfo";
 import "../../styles/Tickets/ticketInfo.css";
 import Header from "../Header";
-const FormDataDisplay = ({ departmentData }) => {
-  // Dummy data for each section (replace with actual data)
-  const dummyData = {
-    name: "Local SEO / GMB Optimization",
-    quotation: {
-      price: "$500",
-      advanceprice: "$100",
-    },
-    ticketdetails: {
-      priorityLevel: "High",
-      assignor: "John Doe",
-      dueDate: "2023-12-31",
-    },
-    services: {
-      keywords: "SEO, GMB",
-      webUrl: "https://example.com",
-      loginCredentials: "username:password",
-    },
-    businessDetails: {
-      clientName: "Client ABC",
-      street: "123 Main St",
-      WebsiteURL: "https://clientabc.com",
-      country: "USA",
-      state: "CA",
-      zipcode: "12345",
-      businessNumber: "123-456-7890",
-      clientEmail: "client@example.com",
-      businessHours: "9:00 AM - 5:00 PM",
-      socialProfile: "https://facebook.com/clientabc",
-      gmbUrl: "https://gmb.example.com",
-      workStatus: "In Progress",
-      notes: "This is a note about the client.",
-    },
+import axios from "axios";
+import "../../styles/Forms/customforms.css";
+
+const FormDataDisplay = () => {
+  const user = JSON.parse(localStorage.getItem("user"));
+  const [ticketData, setTicketData] = useState([]);
+
+  useEffect(() => {
+    const fetchTicketData = async () => {
+      try {
+        // Make an API request to get the actual ticket data for the logged-in user
+        const response = await axios.get(
+          `http://localhost:5000/api/tickets?departmentId=${user?.department?._id}`
+        );
+        setTicketData(response.data.payload);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchTicketData();
+  }, [user.department._id]);
+
+  const renderFields = (data) => {
+    return Object.entries(data).map(([key, value]) => (
+      <div key={key} className="displayFields">
+        <Typography variant="subtitle2">{key}:</Typography>
+        <div>
+          <Typography>{value}</Typography>
+        </div>
+      </div>
+    ));
   };
 
-  // If departmentData is not provided, use dummy data
-  const dataToDisplay = departmentData || dummyData;
-
-  // Function to render fields for a department
-  const renderFields = (sectionName, sectionData) => {
-    if (!sectionData) {
-      return null; // Return null if the section data is missing
-    }
-
-    return (
-      <Grid container spacing={2}>
-        {Object.keys(sectionData).map((fieldName) => (
-          <Grid item xs={12} key={fieldName}>
-            <Typography variant="subtitle2">{fieldName}:</Typography>
-            <Typography>{sectionData[fieldName]}</Typography>
-          </Grid>
-        ))}
-      </Grid>
-    );
-  };
+  const renderTicket = (ticket) => (
+    <Accordion key={ticket._id}>
+      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+        <Typography variant="subtitle1" className="ticketHeading">
+          Ticket Data
+        </Typography>
+      </AccordionSummary>
+      <AccordionDetails>
+        <Typography variant="subtitle1" className="ticketHeading">
+          Ticket Details
+        </Typography>
+        {renderFields(ticket.TicketDetails)}
+        <Typography variant="subtitle1" className="ticketHeading">
+          Services
+        </Typography>
+        {renderFields(ticket.Services)}
+        <Typography variant="subtitle1" className="ticketHeading">
+          Business Details
+        </Typography>
+        {renderFields(ticket.businessdetails)}
+      </AccordionDetails>
+    </Accordion>
+  );
 
   return (
     <div>
@@ -74,48 +75,9 @@ const FormDataDisplay = ({ departmentData }) => {
       <div className="submittedCard">
         <Paper elevation={3} style={{ padding: "20px", margin: "20px" }}>
           <Typography variant="h5" gutterBottom>
-            Submitted Data for {dataToDisplay.name}
+            Tickets Data for {user.department.name}
           </Typography>
-
-          {/* Render Quotation section */}
-          <Accordion>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography variant="subtitle1">Quotation Data</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              {renderFields("quotation", dataToDisplay.quotation)}
-            </AccordionDetails>
-          </Accordion>
-
-          {/* Render Ticket Details section */}
-          <Accordion>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography variant="subtitle1">Ticket Details Data</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              {renderFields("ticketdetails", dataToDisplay.ticketdetails)}
-            </AccordionDetails>
-          </Accordion>
-
-          {/* Render Services section */}
-          <Accordion>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography variant="subtitle1">Services Data</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              {renderFields("services", dataToDisplay.services)}
-            </AccordionDetails>
-          </Accordion>
-
-          {/* Render Business Details section */}
-          <Accordion>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography variant="subtitle1">Business Details Data</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              {renderFields("businessDetails", dataToDisplay.businessDetails)}
-            </AccordionDetails>
-          </Accordion>
+          {ticketData.map((ticket) => renderTicket(ticket))}
         </Paper>
       </div>
     </div>
