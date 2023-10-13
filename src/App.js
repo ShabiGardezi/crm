@@ -21,6 +21,7 @@ import CustomDevelopment from "./pages/Departments/CustomDevelopment";
 import CustomPaginationActionsTable from "./pages/Tickets/TicketHistory";
 import TicketShortInfo from "./pages/Tickets/TicketShortInfo";
 import FormDataDisplay from "./pages/FormSections/FormDataDisplay";
+import TicketCreatedTable from "./pages/Tickets/TicketCreated";
 
 function App() {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -50,6 +51,7 @@ function App() {
         <Route path="/todo" element={<UserToDo showHeader={true} />} />
         <Route path="/info" element={<FormDataDisplay />} />
         <Route path="/history" element={<CustomPaginationActionsTable />} />
+        <Route path="/tickets_created" element={<TicketCreatedTable />} />
       </Routes>
     </div>
   );

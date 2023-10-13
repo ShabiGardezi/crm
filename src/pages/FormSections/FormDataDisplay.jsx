@@ -32,7 +32,6 @@ const FormDataDisplay = () => {
     };
     fetchTicketData();
   }, [user.department._id]);
-
   const renderFields = (data) => {
     return Object.entries(data).map(([key, value]) => (
       <div key={key} className="displayFields">
@@ -48,7 +47,7 @@ const FormDataDisplay = () => {
     <Accordion key={ticket._id}>
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
         <Typography variant="subtitle1" className="ticketHeading">
-          Ticket Data
+          {ticket.businessdetails.clientName}
         </Typography>
       </AccordionSummary>
       <AccordionDetails>

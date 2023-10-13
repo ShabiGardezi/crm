@@ -19,9 +19,6 @@ import LastPageIcon from "@mui/icons-material/LastPage";
 import Header from "../Header";
 import TicketCards from "../../Layout/Home/TicketCard";
 import FilterTickets from "./FilterTickets";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
 
 function TablePaginationActions(props) {
   const theme = useTheme();
@@ -104,105 +101,119 @@ function createData(
 }
 
 const rows = [
-  // createData("Client 1", "Assignor 1", "Assignee 1", "2023-12-31", "Completed"),
-  // createData(
-  //   "Client 2",
-  //   "Assignor 2",
-  //   "Assignee 2",
-  //   "2023-11-15",
-  //   "In Progress"
-  // ),
-  // createData(
-  //   "Client 2",
-  //   "Assignor 2",
-  //   "Assignee 2",
-  //   "2023-11-15",
-  //   "In Progress"
-  // ),
-  // createData(
-  //   "Client 2",
-  //   "Assignor 2",
-  //   "Assignee 2",
-  //   "2023-11-15",
-  //   "In Progress"
-  // ),
-  // createData(
-  //   "Client 2",
-  //   "Assignor 2",
-  //   "Assignee 2",
-  //   "2023-11-15",
-  //   "In Progress"
-  // ),
-  // createData(
-  //   "Client 2",
-  //   "Assignor 2",
-  //   "Assignee 2",
-  //   "2023-11-15",
-  //   "In Progress"
-  // ),
-  // createData(
-  //   "Client 2",
-  //   "Assignor 2",
-  //   "Assignee 2",
-  //   "2023-11-15",
-  //   "In Progress"
-  // ),
-  // createData(
-  //   "Client 2",
-  //   "Assignor 2",
-  //   "Assignee 2",
-  //   "2023-11-15",
-  //   "In Progress"
-  // ),
-  // createData(
-  //   "Client 2",
-  //   "Assignor 2",
-  //   "Assignee 2",
-  //   "2023-11-15",
-  //   "In Progress"
-  // ),
-  // createData(
-  //   "Client 2",
-  //   "Assignor 2",
-  //   "Assignee 2",
-  //   "2023-11-15",
-  //   "In Progress"
-  // ),
-  // createData(
-  //   "Client 2",
-  //   "Assignor 2",
-  //   "Assignee 2",
-  //   "2023-11-15",
-  //   "In Progress"
-  // ),
-  // createData(
-  //   "Client 2",
-  //   "Assignor 2",
-  //   "Assignee 2",
-  //   "2023-11-15",
-  //   "In Progress"
-  // ),
-  // createData(
-  //   "Client 2",
-  //   "Assignor 2",
-  //   "Assignee 2",
-  //   "2023-11-15",
-  //   "In Progress"
-  // ),
-  // createData(
-  //   "Client 2",
-  //   "Assignor 2",
-  //   "Assignee 2",
-  //   "2023-11-15",
-  //   "In Progress"
-  // ),
-  // createData(
-  //   "Client 2",
-  //   "Assignor 2",
-  //   "Assignee 2",
-  //   "2023-11-15",
-  //   "In Progress"
-  // ),
+  createData("Client 1", "Assignor 1", "Assignee 1", "2023-12-31", "Completed"),
+  createData(
+    "Client 2",
+    "Assignor 2",
+    "Assignee 2",
+
+    "2023-11-15",
+    "In Progress"
+  ),
+  createData(
+    "Client 2",
+    "Assignor 2",
+    "Assignee 2",
+
+    "2023-11-15",
+    "In Progress"
+  ),
+  createData(
+    "Client 2",
+    "Assignor 2",
+    "Assignee 2",
+
+    "2023-11-15",
+    "In Progress"
+  ),
+  createData(
+    "Client 2",
+    "Assignor 2",
+    "Assignee 2",
+
+    "2023-11-15",
+    "In Progress"
+  ),
+  createData(
+    "Client 2",
+    "Assignor 2",
+    "Assignee 2",
+
+    "2023-11-15",
+    "In Progress"
+  ),
+  createData(
+    "Client 2",
+    "Assignor 2",
+    "Assignee 2",
+
+    "2023-11-15",
+    "In Progress"
+  ),
+  createData(
+    "Client 2",
+    "Assignor 2",
+    "Assignee 2",
+
+    "2023-11-15",
+    "In Progress"
+  ),
+  createData(
+    "Client 2",
+    "Assignor 2",
+    "Assignee 2",
+
+    "2023-11-15",
+    "In Progress"
+  ),
+  createData(
+    "Client 2",
+    "Assignor 2",
+    "Assignee 2",
+
+    "2023-11-15",
+    "In Progress"
+  ),
+  createData(
+    "Client 2",
+    "Assignor 2",
+    "Assignee 2",
+
+    "2023-11-15",
+    "In Progress"
+  ),
+  createData(
+    "Client 2",
+    "Assignor 2",
+    "Assignee 2",
+
+    "2023-11-15",
+    "In Progress"
+  ),
+  createData(
+    "Client 2",
+    "Assignor 2",
+    "Assignee 2",
+
+    "2023-11-15",
+    "In Progress"
+  ),
+  createData(
+    "Client 2",
+    "Assignor 2",
+    "Assignee 2",
+
+    "2023-11-15",
+    "In Progress"
+  ),
+  createData(
+    "Client 2",
+    "Assignor 2",
+    "Assignee 2",
+
+    "2023-11-15",
+    "In Progress"
+  ),
   // Add more rows as needed
 ].sort((a, b) => (a.clientName < b.clientName ? -1 : 1));
 
@@ -211,14 +222,13 @@ export default function CustomPaginationActionsTable() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [tickets, setTickets] = useState([]); // State to store fetched data
-  const [selectedStatus, setSelectedStatus] = useState("Not Started Yet");
 
   // Fetch data from the API when the component mounts
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/tickets?departmentId=${user?.department?._id}`
+          `http://localhost:5000/api/tickets/created?departmentId=${user?.department?._id}`
         );
         if (response.ok) {
           const data = await response.json();
@@ -245,12 +255,6 @@ export default function CustomPaginationActionsTable() {
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
-  };
-
-  const handleStatusChange = (event, ticketId) => {
-    const newSelectedStatus = { ...selectedStatus };
-    newSelectedStatus[ticketId] = event.target.value;
-    setSelectedStatus(newSelectedStatus);
   };
 
   return (
@@ -291,20 +295,10 @@ export default function CustomPaginationActionsTable() {
                     {ticket.dueDate}
                   </TableCell>
                   <TableCell style={{ width: 160 }} align="left">
-                    <FormControl>
-                      <Select
-                        value={selectedStatus[ticket._id] || ticket.status}
-                        onChange={(e) => handleStatusChange(e, ticket._id)}
-                      >
-                        <MenuItem value="Completed">Completed</MenuItem>
-                        <MenuItem value="Pending">Pending</MenuItem>
-                        <MenuItem value="Blockage">Blockage</MenuItem>
-                      </Select>
-                    </FormControl>
+                    {ticket.status}
                   </TableCell>
                 </TableRow>
               ))}
-
             {emptyRows > 0 && (
               <TableRow style={{ height: 53 * emptyRows }}>
                 <TableCell colSpan={6} />

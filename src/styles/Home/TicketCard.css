@@ -26,3 +26,13 @@
   margin: 10px;
   border: 0.5px solid lightgray;
 }
+.col-6
+  .MuiPaper-root.MuiCard-root.completed-tickets-card.MuiPaper-elevation1.MuiPaper-rounded,
+.col-6
+  .MuiPaper-root.MuiCard-root.open-tickets-card.MuiPaper-elevation1.MuiPaper-rounded {
+  width: 100%;
+}
+.filterticketscard {
+  display: flex;
+  justify-content: space-evenly;
+}
