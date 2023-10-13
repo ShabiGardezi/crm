@@ -296,9 +296,9 @@ export default function CustomPaginationActionsTable() {
                         value={selectedStatus[ticket._id] || ticket.status}
                         onChange={(e) => handleStatusChange(e, ticket._id)}
                       >
-                        <MenuItem value="Completed">Completed</MenuItem>
+                        <MenuItem value="Blockage">In Progress</MenuItem>
                         <MenuItem value="Pending">Pending</MenuItem>
-                        <MenuItem value="Blockage">Blockage</MenuItem>
+                        <MenuItem value="Completed">Completed</MenuItem>
                       </Select>
                     </FormControl>
                   </TableCell>
