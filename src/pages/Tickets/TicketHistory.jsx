@@ -92,126 +92,14 @@ TablePaginationActions.propTypes = {
   rowsPerPage: PropTypes.number.isRequired,
 };
 
-function createData(
-  clientName,
-  assignor,
-  assignee,
-  completedOn,
-  deadline,
-  status
-) {
-  return { clientName, assignor, assignee, completedOn, deadline, status };
-}
-
-const rows = [
-  // createData("Client 1", "Assignor 1", "Assignee 1", "2023-12-31", "Completed"),
-  // createData(
-  //   "Client 2",
-  //   "Assignor 2",
-  //   "Assignee 2",
-  //   "2023-11-15",
-  //   "In Progress"
-  // ),
-  // createData(
-  //   "Client 2",
-  //   "Assignor 2",
-  //   "Assignee 2",
-  //   "2023-11-15",
-  //   "In Progress"
-  // ),
-  // createData(
-  //   "Client 2",
-  //   "Assignor 2",
-  //   "Assignee 2",
-  //   "2023-11-15",
-  //   "In Progress"
-  // ),
-  // createData(
-  //   "Client 2",
-  //   "Assignor 2",
-  //   "Assignee 2",
-  //   "2023-11-15",
-  //   "In Progress"
-  // ),
-  // createData(
-  //   "Client 2",
-  //   "Assignor 2",
-  //   "Assignee 2",
-  //   "2023-11-15",
-  //   "In Progress"
-  // ),
-  // createData(
-  //   "Client 2",
-  //   "Assignor 2",
-  //   "Assignee 2",
-  //   "2023-11-15",
-  //   "In Progress"
-  // ),
-  // createData(
-  //   "Client 2",
-  //   "Assignor 2",
-  //   "Assignee 2",
-  //   "2023-11-15",
-  //   "In Progress"
-  // ),
-  // createData(
-  //   "Client 2",
-  //   "Assignor 2",
-  //   "Assignee 2",
-  //   "2023-11-15",
-  //   "In Progress"
-  // ),
-  // createData(
-  //   "Client 2",
-  //   "Assignor 2",
-  //   "Assignee 2",
-  //   "2023-11-15",
-  //   "In Progress"
-  // ),
-  // createData(
-  //   "Client 2",
-  //   "Assignor 2",
-  //   "Assignee 2",
-  //   "2023-11-15",
-  //   "In Progress"
-  // ),
-  // createData(
-  //   "Client 2",
-  //   "Assignor 2",
-  //   "Assignee 2",
-  //   "2023-11-15",
-  //   "In Progress"
-  // ),
-  // createData(
-  //   "Client 2",
-  //   "Assignor 2",
-  //   "Assignee 2",
-  //   "2023-11-15",
-  //   "In Progress"
-  // ),
-  // createData(
-  //   "Client 2",
-  //   "Assignor 2",
-  //   "Assignee 2",
-  //   "2023-11-15",
-  //   "In Progress"
-  // ),
-  // createData(
-  //   "Client 2",
-  //   "Assignor 2",
-  //   "Assignee 2",
-  //   "2023-11-15",
-  //   "In Progress"
-  // ),
-  // Add more rows as needed
-].sort((a, b) => (a.clientName < b.clientName ? -1 : 1));
+const rows = [].sort((a, b) => (a.clientName < b.clientName ? -1 : 1));
 
 export default function CustomPaginationActionsTable() {
   const user = JSON.parse(localStorage.getItem("user"));
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [tickets, setTickets] = useState([]); // State to store fetched data
-  const [selectedStatus, setSelectedStatus] = useState("Not Started Yet");
+  const [selectedStatus, setSelectedStatus] = useState({});
 
   // Fetch data from the API when the component mounts
   useEffect(() => {
@@ -222,7 +110,12 @@ export default function CustomPaginationActionsTable() {
         );
         if (response.ok) {
           const data = await response.json();
-          setTickets(data.payload); // Assuming 'payload' contains ticket data
+          const initialStatus = data.payload.reduce((status, ticket) => {
+            status[ticket._id] = ticket.status || "Not Started Yet";
+            return status;
+          }, {});
+          setTickets(data.payload);
+          setSelectedStatus(initialStatus); // Set the initial status
         } else {
           console.error("Error fetching data");
         }
@@ -234,7 +127,6 @@ export default function CustomPaginationActionsTable() {
     fetchData();
   }, []); // Empty dependency array to fetch data only once
 
-  // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
@@ -249,10 +141,35 @@ export default function CustomPaginationActionsTable() {
 
   const handleStatusChange = (event, ticketId) => {
     const newSelectedStatus = { ...selectedStatus };
-    newSelectedStatus[ticketId] = event.target.value;
+    const newStatus = event.target.value;
+    newSelectedStatus[ticketId] = newStatus;
     setSelectedStatus(newSelectedStatus);
-  };
 
+    const updateTicketStatus = async (ticketId, status) => {
+      try {
+        const response = await fetch(
+          "http://localhost:5000/api/tickets/status-update",
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ ticketId, status }),
+          }
+        );
+
+        if (response.ok) {
+          // Status updated successfully, you can handle this as needed
+        } else {
+          console.error("Error updating status");
+        }
+      } catch (error) {
+        console.error("Error updating status", error);
+      }
+    };
+
+    updateTicketStatus(ticketId, newStatus);
+  };
   return (
     <div>
       <Header />
@@ -293,10 +210,13 @@ export default function CustomPaginationActionsTable() {
                   <TableCell style={{ width: 160 }} align="left">
                     <FormControl>
                       <Select
-                        value={selectedStatus[ticket._id] || ticket.status}
+                        value={selectedStatus[ticket._id] || "Not Started Yet"} // Default value set here
                         onChange={(e) => handleStatusChange(e, ticket._id)}
                       >
-                        <MenuItem value="Blockage">In Progress</MenuItem>
+                        <MenuItem value="Not Started Yet">
+                          Not Started Yet
+                        </MenuItem>
+                        <MenuItem value="In Progress">In Progress</MenuItem>
                         <MenuItem value="Pending">Pending</MenuItem>
                         <MenuItem value="Completed">Completed</MenuItem>
                       </Select>
