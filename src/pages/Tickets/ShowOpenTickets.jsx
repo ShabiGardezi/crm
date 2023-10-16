@@ -90,7 +90,7 @@ TablePaginationActions.propTypes = {
 
 const rows = [].sort((a, b) => (a.clientName < b.clientName ? -1 : 1));
 
-export default function CustomPaginationActionsTable() {
+export default function ShowOpenTickets() {
   const user = JSON.parse(localStorage.getItem("user"));
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -101,7 +101,7 @@ export default function CustomPaginationActionsTable() {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/tickets/created?departmentId=${user?.department?._id}`
+          `http://localhost:5000/api/tickets/notStarted?departmentId=${user?.department?._id}`
         );
         if (response.ok) {
           const data = await response.json();
@@ -113,10 +113,9 @@ export default function CustomPaginationActionsTable() {
         console.error("Error fetching data", error);
       }
     };
-
     fetchData();
   }, []); // Empty dependency array to fetch data only once
-
+  console.log(tickets);
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
@@ -133,6 +132,7 @@ export default function CustomPaginationActionsTable() {
     <div>
       <Header />
       <TicketCards />
+      {/* {<FilterTickets />} */}
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 800 }} aria-label="custom pagination table">
           <TableHead>
@@ -159,7 +159,6 @@ export default function CustomPaginationActionsTable() {
                   <TableCell style={{ width: 160 }} align="left">
                     {ticket.assignorDepartment.name}
                   </TableCell>
-                  {console.log(ticket.assignorDepartment.name)}{" "}
                   <TableCell style={{ width: 160 }} align="left">
                     {ticket.majorAssignee.name}
                   </TableCell>

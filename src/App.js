@@ -22,6 +22,10 @@ import CustomPaginationActionsTable from "./pages/Tickets/TicketHistory";
 import TicketShortInfo from "./pages/Tickets/TicketShortInfo";
 import FormDataDisplay from "./pages/FormSections/FormDataDisplay";
 import TicketCreatedTable from "./pages/Tickets/TicketCreated";
+import OpenCloseTIckets from "./pages/Tickets/ShowOpenTickets";
+import OpenCloseTickets from "./pages/Tickets/ShowOpenTickets";
+import ShowOpenTickets from "./pages/Tickets/ShowOpenTickets";
+import ShowCloseTickets from "./pages/Tickets/ShowCloseTickets";
 
 function App() {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -52,6 +56,8 @@ function App() {
         <Route path="/info" element={<FormDataDisplay />} />
         <Route path="/history" element={<CustomPaginationActionsTable />} />
         <Route path="/tickets_created" element={<TicketCreatedTable />} />
+        <Route path="/open_tickets" element={<ShowOpenTickets />} />
+        <Route path="/close_tickets" element={<ShowCloseTickets />} />
       </Routes>
     </div>
   );

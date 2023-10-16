@@ -174,7 +174,6 @@ export default function CustomPaginationActionsTable() {
     <div>
       <Header />
       <TicketCards />
-      {<FilterTickets />}
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 800 }} aria-label="custom pagination table">
           <TableHead>

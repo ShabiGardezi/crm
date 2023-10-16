@@ -170,6 +170,7 @@ const LocalSEOForm = () => {
               name="assignor"
               value={formData.assignor}
               onChange={handleChange}
+              disabled
             />
           </Grid>
           <Grid item xs={6}>

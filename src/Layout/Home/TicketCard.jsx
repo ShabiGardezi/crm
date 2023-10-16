@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Card, CardHeader, CardContent, Typography } from "@material-ui/core";
 import "../../styles/Home/TicketCard.css";
 import axios from "axios";
+import { Link } from "react-router-dom";
 import FilterTickets from "../../pages/Tickets/FilterTickets";
 const TicketCard = ({ heading, counter, onClick }) => {
   const cardClass =
@@ -51,15 +52,24 @@ const TicketCards = () => {
   }, []);
 
   return (
-    <div className="ticketcard">
-      <TicketCard heading="Open Tickets" counter={openTicketsCounter} />
-      <TicketCard
-        heading="Completed Tickets"
-        counter={completedTicketsCounter}
-      />
-      {/* Pass filterStatus as a prop to FilterTickets */}
-      {/* <FilterTickets /> */}
-    </div>
+    <>
+      <div className="filterticketscard">
+        <div className="col-6">
+          <Link to="/open_tickets">
+            <TicketCard heading="Open Tickets" counter={openTicketsCounter} />
+          </Link>
+        </div>
+        <div className="col-6">
+          <Link to="/close_tickets">
+            <TicketCard
+              heading="Close Tickets"
+              counter={completedTicketsCounter}
+            />
+          </Link>
+        </div>
+        <FilterTickets />
+      </div>
+    </>
   );
 };
 
