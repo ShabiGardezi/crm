@@ -20,6 +20,8 @@ import Header from "../Header";
 import TicketCards from "../../Layout/Home/TicketCard";
 import DisplayTicketDetails from "./DisplayTicketDetails";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import SearchIcon from "@mui/icons-material/Search";
+import InputBase from "@mui/material/InputBase";
 
 function TablePaginationActions(props) {
   const theme = useTheme();
@@ -99,6 +101,8 @@ export default function ShowCloseTickets() {
   const [tickets, setTickets] = useState([]); // State to store fetched data
   const [isTicketDetailsOpen, setIsTicketDetailsOpen] = useState(false);
   const [selectedTicketDetails, setSelectedTicketDetails] = useState(null); // Step 1
+  const [searchQuery, setSearchQuery] = useState("");
+
   // Function to close the ticket details modal
   const closeTicketDetailsModal = () => {
     setIsTicketDetailsOpen(false);
@@ -151,12 +155,49 @@ export default function ShowCloseTickets() {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
-
+  const handleSearch = async (e) => {
+    if (e.key === "Enter" && searchQuery) {
+      try {
+        const response = await fetch(
+          `http://localhost:5000/api/tickets/client-search?searchString=${searchQuery}`
+        );
+        if (response.ok) {
+          const data = await response.json();
+          setTickets(data.payload);
+        } else {
+          console.error("Error fetching search results");
+        }
+      } catch (error) {
+        console.error("Error fetching search results", error);
+      }
+    }
+  };
   return (
     <div>
       <Header />
       <TicketCards />
       <TableContainer component={Paper}>
+      <div>
+          <div
+            className="search"
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              alignItems: "center",
+              marginTop: "3%",
+            }}
+          >
+            <div className="searchIcon">
+              <SearchIcon />
+            </div>
+            <InputBase
+              placeholder="Search Client..."
+              inputProps={{ "aria-label": "search" }}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyPress={handleSearch}
+            />
+          </div>
+        </div>
         <Table sx={{ minWidth: 800 }} aria-label="custom pagination table">
           <TableHead>
             <TableRow>
