@@ -18,7 +18,8 @@ import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
 import Header from "../Header";
 import TicketCards from "../../Layout/Home/TicketCard";
-import FilterTickets from "./FilterTickets";
+import DisplayTicketDetails from "./DisplayTicketDetails";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 
 function TablePaginationActions(props) {
   const theme = useTheme();
@@ -96,7 +97,12 @@ export default function ShowCloseTickets() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [tickets, setTickets] = useState([]); // State to store fetched data
-
+  const [isTicketDetailsOpen, setIsTicketDetailsOpen] = useState(false);
+  const [selectedTicketDetails, setSelectedTicketDetails] = useState(null); // Step 1
+  // Function to close the ticket details modal
+  const closeTicketDetailsModal = () => {
+    setIsTicketDetailsOpen(false);
+  };
   // Fetch data from the API when the component mounts
   useEffect(() => {
     const fetchData = async () => {
@@ -116,7 +122,24 @@ export default function ShowCloseTickets() {
     };
     fetchData();
   }, []); // Empty dependency array to fetch data only once
-  console.log(tickets);
+
+  // Function to fetch ticket details by ID
+  const fetchTicketDetails = async (ticketId) => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/tickets/${ticketId}`
+      );
+      if (response.ok) {
+        const data = await response.json();
+        setSelectedTicketDetails(data.payload);
+        setIsTicketDetailsOpen(true); // Open the modal when details are fetched
+      } else {
+        console.error("Error fetching ticket details");
+      }
+    } catch (error) {
+      console.error("Error fetching ticket details", error);
+    }
+  };
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
@@ -142,6 +165,7 @@ export default function ShowCloseTickets() {
               <TableCell>Assignor Department</TableCell>
               <TableCell>Assignee Department</TableCell>
               <TableCell>Deadline</TableCell>
+              <TableCell>Details</TableCell>
               <TableCell>Status</TableCell>
             </TableRow>
           </TableHead>
@@ -164,6 +188,13 @@ export default function ShowCloseTickets() {
                   </TableCell>
                   <TableCell style={{ width: 160 }} align="left">
                     {ticket.dueDate}
+                  </TableCell>
+                  <TableCell style={{ width: 160 }} align="left">
+                    <IconButton
+                      onClick={() => fetchTicketDetails(ticket._id)} // Fetch ticket details on click
+                    >
+                      <VisibilityIcon />
+                    </IconButton>
                   </TableCell>
                   <TableCell style={{ width: 160 }} align="left">
                     {ticket.status}
@@ -198,6 +229,13 @@ export default function ShowCloseTickets() {
           </TableFooter>
         </Table>
       </TableContainer>
+      {selectedTicketDetails && (
+        <DisplayTicketDetails
+          open={isTicketDetailsOpen}
+          handleClose={closeTicketDetailsModal}
+          ticketDetails={selectedTicketDetails}
+        />
+      )}
     </div>
   );
 }
