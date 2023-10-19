@@ -254,7 +254,7 @@ const Header = () => {
                 <ListItemIcon>
                   <HistoryIcon />
                 </ListItemIcon>
-                <ListItemText primary="History" />
+                <ListItemText primary="Ticket History" />
               </ListItem>
             </Link>
             {user?.role === "admin" || user?.department === "sales" ? (

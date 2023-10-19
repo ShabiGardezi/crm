@@ -20,6 +20,7 @@ import FormDataDisplay from "./pages/FormSections/FormDataDisplay";
 import TicketCreatedTable from "./pages/Tickets/TicketCreated";
 import ShowOpenTickets from "./pages/Tickets/ShowOpenTickets";
 import ShowCloseTickets from "./pages/Tickets/ShowCloseTickets";
+import WebSeoSheet from "./pages/Client-Sheets/WebSEOSheet";
 
 function App() {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -52,6 +53,7 @@ function App() {
         <Route path="/tickets_created" element={<TicketCreatedTable />} />
         <Route path="/open_tickets" element={<ShowOpenTickets />} />
         <Route path="/close_tickets" element={<ShowCloseTickets />} />
+        <Route path="/webseo_sheet" element={<WebSeoSheet />} />
       </Routes>
     </div>
   );

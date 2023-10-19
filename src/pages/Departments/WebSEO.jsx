@@ -13,6 +13,7 @@ import Header from "../Header";
 const WebSeoForm = () => {
   const user = JSON.parse(localStorage.getItem("user"));
   const [departments, setDepartments] = useState([]);
+  const [remainingPrice, setRemainingPrice] = useState(0); // Initialize remainingPrice
 
   const [formData, setFormData] = useState({
     priorityLevel: "",
@@ -22,8 +23,9 @@ const WebSeoForm = () => {
     loginCredentials: "",
     price: "",
     advanceprice: "",
+    remainingPrice: "",
     serviceName: "",
-    serviceDescription: "",
+    // serviceDescription: "",
     serviceQuantity: "",
     servicePrice: "",
     clientName: "",
@@ -45,9 +47,31 @@ const WebSeoForm = () => {
     SearchConsoleAccess: "",
     GoogleAnalyticsAccess: "",
   });
+  useEffect(() => {
+    // Calculate one month later from the current date
+    const currentDate = new Date();
+    currentDate.setMonth(currentDate.getMonth() + 1);
+
+    setFormData({
+      ...formData,
+      dueDate: currentDate.toISOString().substr(0, 10),
+    });
+  }, []);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
+    let updatedPrice = parseFloat(formData.price) || 0;
+    let updatedAdvancePrice = parseFloat(formData.advanceprice) || 0;
+
+    if (name === "price") {
+      updatedPrice = parseFloat(value) || 0;
+    } else if (name === "advanceprice") {
+      updatedAdvancePrice = parseFloat(value) || 0;
+    }
+
+    const remaining = updatedPrice - updatedAdvancePrice;
+    setRemainingPrice(remaining);
+
     setFormData({
       ...formData,
       [name]: value,
@@ -91,13 +115,14 @@ const WebSeoForm = () => {
         },
         Services: {
           serviceName: formData.serviceName,
-          serviceDescription: formData.serviceDescription,
+          // serviceDescription: formData.serviceDescription,
           serviceQuantity: formData.serviceQuantity,
           servicePrice: formData.servicePrice,
         },
         quotation: {
           price: formData.price,
           advanceprice: formData.advanceprice,
+          remainingPrice: formData.remainingPrice,
         },
         TicketDetails: {
           assignor: formData.assignor,
@@ -132,7 +157,7 @@ const WebSeoForm = () => {
       </div>
       <form onSubmit={handleSubmit}>
         <div className="ticketHeading">
-          <Typography variant="h5">Ticket Details</Typography>
+          {/* <Typography variant="h5">Ticket Details</Typography> */}
         </div>
         <Grid container spacing={2}>
           <Grid item xs={6}>
@@ -188,7 +213,7 @@ const WebSeoForm = () => {
           </Grid>
         </Grid>
         <div className="ticketHeading">
-          <Typography variant="h5">Quotation</Typography>
+          {/* <Typography variant="h5">Quotation</Typography> */}
         </div>
         <Grid container spacing={2}>
           <Grid item xs={6}>
@@ -209,9 +234,23 @@ const WebSeoForm = () => {
               onChange={handleChange}
             />
           </Grid>
+          <Grid item xs={6}>
+            <TextField
+              label="Remaining Price"
+              fullWidth
+              name="remainingprice"
+              value={remainingPrice} // Display the calculated remaining price
+              InputProps={{
+                readOnly: true, // Make this field read-only
+              }}
+            />
+          </Grid>
         </Grid>
         <div className="ticketHeading">
-          <Typography variant="h5">Services</Typography>
+          {/* <Typography variant="h5">Services</Typography> */}
+        </div>
+        <div className="ticketHeading">
+          <Typography variant="h5">Business Details</Typography>
         </div>
         <Grid container spacing={2}>
           <Grid item xs={6}>
@@ -224,7 +263,7 @@ const WebSeoForm = () => {
               multiline
             />
           </Grid>
-          <Grid item xs={6}>
+          {/* <Grid item xs={6}>
             <TextField
               label="Service description"
               fullWidth
@@ -233,10 +272,10 @@ const WebSeoForm = () => {
               onChange={handleChange}
               multiline
             />
-          </Grid>
+          </Grid> */}
           <Grid item xs={6}>
             <TextField
-              label="Service quantity"
+              label="Service Location"
               fullWidth
               name="serviceQuantity"
               value={formData.serviceQuantity}
@@ -244,7 +283,7 @@ const WebSeoForm = () => {
               multiline
             />
           </Grid>
-          <Grid item xs={6}>
+          {/* <Grid item xs={6}>
             <TextField
               label="Service price"
               fullWidth
@@ -253,78 +292,15 @@ const WebSeoForm = () => {
               onChange={handleChange}
               multiline
             />
-          </Grid>
+          </Grid> */}
         </Grid>
-        <div className="ticketHeading">
-          <Typography variant="h5">Business Details</Typography>
-        </div>
         <Grid container spacing={2}>
           <Grid item xs={6}>
             <TextField
-              label="Client Name"
+              label="Client / Business Name"
               fullWidth
               name="clientName"
               value={formData.clientName}
-              onChange={handleChange}
-              multiline
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="Street"
-              fullWidth
-              name="street"
-              value={formData.street}
-              onChange={handleChange}
-              multiline
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="Keywords"
-              fullWidth
-              name="Keywords"
-              value={formData.Keywords}
-              onChange={handleChange}
-              multiline
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="Website URL"
-              fullWidth
-              name="WebsiteURL"
-              value={formData.WebsiteURL}
-              onChange={handleChange}
-              multiline
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="Country"
-              fullWidth
-              name="country"
-              value={formData.country}
-              onChange={handleChange}
-              multiline
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="State"
-              fullWidth
-              name="state"
-              value={formData.state}
-              onChange={handleChange}
-              multiline
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="ZipCode"
-              fullWidth
-              name="zipcode"
-              value={formData.zipcode}
               onChange={handleChange}
               multiline
             />
@@ -361,6 +337,67 @@ const WebSeoForm = () => {
           </Grid>
           <Grid item xs={6}>
             <TextField
+              label="Country"
+              fullWidth
+              name="country"
+              value={formData.country}
+              onChange={handleChange}
+              multiline
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              label="State"
+              fullWidth
+              name="state"
+              value={formData.state}
+              onChange={handleChange}
+              multiline
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              label="ZipCode"
+              fullWidth
+              name="zipcode"
+              value={formData.zipcode}
+              onChange={handleChange}
+              multiline
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              label="Street"
+              fullWidth
+              name="street"
+              value={formData.street}
+              onChange={handleChange}
+              multiline
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              label="Website URL"
+              fullWidth
+              name="WebsiteURL"
+              value={formData.WebsiteURL}
+              onChange={handleChange}
+              multiline
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              label="Keywords"
+              fullWidth
+              name="Keywords"
+              value={formData.Keywords}
+              onChange={handleChange}
+              multiline
+            />
+          </Grid>
+
+          <Grid item xs={6}>
+            <TextField
               label="Social Profile"
               fullWidth
               name="socialProfile"
@@ -386,9 +423,15 @@ const WebSeoForm = () => {
               name="workStatus"
               value={formData.workStatus}
               onChange={handleChange}
-              multiline
-            />
+              select
+            >
+              <MenuItem value="On-Page">On-Page</MenuItem>
+              <MenuItem value="Off-Page">Off-Page</MenuItem>
+              <MenuItem value="Technical">Technical</MenuItem>
+              <MenuItem value="All">All</MenuItem>
+            </TextField>
           </Grid>
+
           <Grid item xs={6}>
             <TextField
               label="Monthly Blogs Requirement"
@@ -399,16 +442,7 @@ const WebSeoForm = () => {
               multiline
             />
           </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="Notes"
-              fullWidth
-              name="notes"
-              value={formData.notes}
-              onChange={handleChange}
-              multiline
-            />
-          </Grid>
+
           <Grid item xs={6}>
             <TextField
               label="Login Credentials"
@@ -435,6 +469,16 @@ const WebSeoForm = () => {
               fullWidth
               name="GoogleAnalyticsAccess"
               value={formData.GoogleAnalyticsAccess}
+              onChange={handleChange}
+              multiline
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              label="Notes"
+              fullWidth
+              name="notes"
+              value={formData.notes}
               onChange={handleChange}
               multiline
             />
