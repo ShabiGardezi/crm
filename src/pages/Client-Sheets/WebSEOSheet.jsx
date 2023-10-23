@@ -26,6 +26,7 @@ import Button from "@mui/material/Button";
 import DisplayTicketDetails from "../Tickets/DisplayTicketDetails";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import ActiveNotSctiveCard from "./ActiveNotSctiveCard";
+import axios from "axios";
 export default function WebSeoSheet() {
   const user = JSON.parse(localStorage.getItem("user"));
   const [page, setPage] = React.useState(0);
@@ -311,6 +312,22 @@ export default function WebSeoSheet() {
     }, timerInterval);
   };
 
+  const handleClick = (ticket) => {
+    let temp = "";
+    if (ticket.ActiveNotActive === "Active") {
+      temp = "Not Active";
+    } else temp = "Active";
+    const newState = tickets.map((p) => {
+      if (p._id === ticket._id) return { ...p, ActiveNotActive: temp };
+      return p;
+    });
+    setTickets(newState);
+    axios.put("http://localhost:5000/api/tickets/active-status/update", {
+      ticketId: ticket._id,
+      status: temp,
+    });
+  };
+  console.log(tickets);
   return (
     <>
       <Header />
@@ -373,7 +390,10 @@ export default function WebSeoSheet() {
                   )}
                   <TableCell style={{ width: 160 }} align="left">
                     <FormControl>
-                      <Select value={selectedStatus[ticket._id] || "Active"}>
+                      <Select
+                        value={ticket.ActiveNotActive || "Active"}
+                        onClick={() => handleClick(ticket)}
+                      >
                         <MenuItem value="Active">Active</MenuItem>
                         <MenuItem value="Not Active">Not Active</MenuItem>
                       </Select>
