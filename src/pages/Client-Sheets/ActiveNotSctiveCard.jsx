@@ -33,7 +33,7 @@ const ActiveNotActiveCard = () => {
       try {
         // Fetch the count of non-active clients
         const nonActiveResponse = await axios.get(
-          `http://localhost:5000/api/tickets/activeee?departmentId=${
+          `http://localhost:5000/api/tickets/active-nonactive-clients?departmentId=${
             user?.department?._id
           }&status=${"Active"}`
         );
