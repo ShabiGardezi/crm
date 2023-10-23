@@ -123,37 +123,7 @@ export default function WebSeoSheet() {
     }
   };
 
-  const handleStatusChange = async (event, ticketId) => {
-    const newSelectedStatus = { ...selectedStatus };
-    const newStatus = event.target.value;
-    newSelectedStatus[ticketId] = newStatus;
-    setSelectedStatus(newSelectedStatus);
-
-    const updateTicketStatus = async (ticketId, status) => {
-      try {
-        const response = await fetch(
-          "http://localhost:5000/api/tickets/status-update",
-          {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ ticketId, status }),
-          }
-        );
-
-        if (response.ok) {
-          // Status updated successfully
-        } else {
-          console.error("Error updating status");
-        }
-      } catch (error) {
-        console.error("Error updating status", error);
-      }
-    };
-
-    updateTicketStatus(ticketId, newStatus);
-  };
+  
 
   // Function to fetch ticket details by ID
   const fetchTicketDetails = async (ticketId) => {
@@ -190,13 +160,7 @@ export default function WebSeoSheet() {
         if (response.ok) {
           const data = await response.json();
 
-          const initialStatus = data.payload.reduce((status, ticket) => {
-            status[ticket._id] = ticket.status || "Not Started Yet";
-            return status;
-          });
-
           setTickets(data.payload);
-          setSelectedStatus(initialStatus);
           data.payload.forEach((ticket) => {
             fetchReportingDate(ticket._id);
           });
@@ -358,7 +322,6 @@ export default function WebSeoSheet() {
                     <FormControl>
                       <Select
                         value={selectedStatus[ticket._id] || "Active"}
-                        onChange={(e) => handleStatusChange(e, ticket._id)}
                       >
                         <MenuItem value="Active">Active</MenuItem>
                         <MenuItem value="Not Active">Not Active</MenuItem>
