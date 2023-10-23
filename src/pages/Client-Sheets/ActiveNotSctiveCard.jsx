@@ -2,16 +2,17 @@ import React, { useEffect, useState } from "react";
 import { Card, CardHeader, CardContent, Typography } from "@material-ui/core";
 import "../../styles/Home/TicketCard.css";
 import axios from "axios";
-import { Link } from "react-router-dom"; // Import the Link component
+import { Link, useNavigate } from "react-router-dom"; // Import useHistory from react-router-dom
 
-const TicketCard = ({ heading, counter }) => {
+const TicketCard = ({ heading, counter, onClick }) => {
+  // Pass onClick function
   const cardClass =
-    heading === "Created Tickets"
-      ? "open-tickets-card"
-      : "completed-tickets-card";
-
+    heading === "Active Clients"
+      ? "active-clients-card"
+      : "non-active-clients-card";
+  const navigate = useNavigate();
   return (
-    <Card className={cardClass}>
+    <Card className={cardClass} onClick={onClick}>
       <CardHeader title={heading} />
       <CardContent>
         <Typography variant="h6">{counter}</Typography>
@@ -20,56 +21,65 @@ const TicketCard = ({ heading, counter }) => {
   );
 };
 
-const FilterTickets = () => {
+const ActiveNotActiveCard = () => {
+  const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem("user"));
-  const [createdTickets, setCreatedTickets] = useState(0); // State for created tickets count
-  const [assignedTickets, setAssignedTickets] = useState(0); // State for assigned tickets count
+
+  const [activeClients, setActiveClients] = useState(0);
+  const [nonActiveClients, setNonActiveClients] = useState(0);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch the count of tickets created by the department
-        const createdResponse = await axios
-          .get
-          //   `http://localhost:5000/api/tickets/created-count?departmentId=${user?.department?._id}`
-          ();
+        // Fetch the count of non-active clients
+        const nonActiveResponse = await axios.get(
+          `http://localhost:5000/api/tickets/activeee?departmentId=${
+            user?.department?._id
+          }&status=${"Active"}`
+        );
 
-        // Fetch the count of tickets assigned to the department
-        const assignedResponse = await axios
-          .get
-          //   `http://localhost:5000/api/tickets/assigned-count?departmentId=${user?.department?._id}`
-          ();
-        // Extract the counts from the API response
-        const createdCount = createdResponse.data.payload;
-        const assignedCount = assignedResponse.data.payload;
-        // Set the counts in state
-        setCreatedTickets(createdCount);
-        setAssignedTickets(assignedCount);
+        const nonActiveCount = nonActiveResponse.data.payload;
+
+        setNonActiveClients(nonActiveCount);
       } catch (error) {
         console.log(error);
       }
     };
 
     fetchData();
-  }, []); // Empty dependency array to fetch data only once
-  const cardLinkStyle = {
-    textDecoration: "none", // Remove underline
-    color: "inherit", // Inherit text color
+  }, []);
+
+  const handleActiveClientsClick = () => {
+    navigate.push("/active-clients"); // Navigate to the "active-clients" route
   };
+
+  const handleNonActiveClientsClick = () => {
+    navigate.push("/non-active-clients"); // Navigate to the "non-active-clients" route
+  };
+
+  const cardLinkStyle = {
+    textDecoration: "none",
+    color: "inherit",
+  };
+
   return (
-    <div className="filterticketscard">
+    <div className="filter-tickets-card">
       <div className="col-6">
-        <Link>
-          <TicketCard heading="Active Clients" counter={createdTickets} />
-        </Link>
+        <TicketCard
+          heading="Active Clients"
+          counter={activeClients}
+          onClick={handleActiveClientsClick}
+        />
       </div>
       <div className="col-6">
-        <Link>
-          <TicketCard heading="Non Active Clients" counter={assignedTickets} />
-        </Link>
+        <TicketCard
+          heading="Non Active Clients"
+          counter={nonActiveClients}
+          onClick={handleNonActiveClientsClick}
+        />
       </div>
     </div>
   );
 };
 
-export default FilterTickets;
+export default ActiveNotActiveCard;
