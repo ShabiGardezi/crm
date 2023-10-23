@@ -3,6 +3,7 @@ import { Card, CardHeader, CardContent, Typography } from "@material-ui/core";
 import "../../styles/Home/TicketCard.css";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import FilterTickets from "../Tickets/FilterTickets";
 
 const TicketCard = ({ heading, counter }) => {
   const cardClass =
