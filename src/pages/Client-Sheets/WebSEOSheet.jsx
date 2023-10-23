@@ -22,9 +22,10 @@ import Select from "@mui/material/Select";
 import SearchIcon from "@mui/icons-material/Search";
 import InputBase from "@mui/material/InputBase";
 import Header from "../Header";
-import { TextField } from "@mui/material";
+import Button from "@mui/material/Button";
 import DisplayTicketDetails from "../Tickets/DisplayTicketDetails";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import ActiveNotSctiveCard from "./ActiveNotSctiveCard";
 export default function WebSeoSheet() {
   const user = JSON.parse(localStorage.getItem("user"));
   const [page, setPage] = React.useState(0);
@@ -122,8 +123,6 @@ export default function WebSeoSheet() {
       }
     }
   };
-
-  
 
   // Function to fetch ticket details by ID
   const fetchTicketDetails = async (ticketId) => {
@@ -261,9 +260,61 @@ export default function WebSeoSheet() {
     // Call the updateReportingDate function
     updateReportingDate(ticketId, newReportingDate);
   };
+
+  const handleRecurringClick = (ticketId) => {
+    // Get the current reporting date
+    const currentReportingDate = new Date(reportingDates[ticketId]);
+
+    // Calculate one month later date
+    const oneMonthLaterDate = new Date(
+      currentReportingDate.getFullYear(),
+      currentReportingDate.getMonth() + 1,
+      currentReportingDate.getDate()
+    );
+
+    // Update the local state immediately
+    setReportingDates((prevReportingDates) => ({
+      ...prevReportingDates,
+      [ticketId]: oneMonthLaterDate.toISOString(),
+    }));
+
+    // Make an API call to update the reporting date in the database
+    fetch("http://localhost:5000/api/tickets/reportingDate-update", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ticketId,
+        reportingDate: oneMonthLaterDate.toISOString(),
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (!data.payload) {
+          console.error("Error updating reporting date in the database.");
+        }
+      })
+      .catch((error) => {
+        console.error("Error updating reporting date:", error);
+      });
+
+    // Set up a timer to update the reporting date on a real-time basis
+    const timerInterval = 1000; // 1000 milliseconds = 1 second
+    const updateInterval = setInterval(() => {
+      const newReportingDate = new Date(reportingDates[ticketId]);
+      newReportingDate.setDate(newReportingDate.getDate() + 1); // Increment the day by 1
+      setReportingDates((prevReportingDates) => ({
+        ...prevReportingDates,
+        [ticketId]: newReportingDate.toISOString(),
+      }));
+    }, timerInterval);
+  };
+
   return (
     <>
       <Header />
+      <ActiveNotSctiveCard />
       <TableContainer component={Paper}>
         <div>
           <div
@@ -296,6 +347,8 @@ export default function WebSeoSheet() {
               <TableCell>Subscription Date</TableCell>
               <TableCell>Reporting Date</TableCell>
               <TableCell>Details</TableCell>
+              <TableCell>Notes</TableCell>
+              <TableCell>Recurring</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -320,9 +373,7 @@ export default function WebSeoSheet() {
                   )}
                   <TableCell style={{ width: 160 }} align="left">
                     <FormControl>
-                      <Select
-                        value={selectedStatus[ticket._id] || "Active"}
-                      >
+                      <Select value={selectedStatus[ticket._id] || "Active"}>
                         <MenuItem value="Active">Active</MenuItem>
                         <MenuItem value="Not Active">Not Active</MenuItem>
                       </Select>
@@ -330,7 +381,7 @@ export default function WebSeoSheet() {
                   </TableCell>
                   <TableCell style={{ width: 160 }} align="left">
                     {new Date(ticket.createdAt).toLocaleDateString()}
-                  </TableCell>{" "}
+                  </TableCell>
                   <TableCell
                     style={{ width: 160 }}
                     align="left"
@@ -346,11 +397,21 @@ export default function WebSeoSheet() {
                       <VisibilityIcon />
                     </IconButton>
                   </TableCell>
+                  <TableCell>{ticket.businessdetails.notes}</TableCell>
+                  <TableCell>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={() => handleRecurringClick(ticket._id)}
+                    >
+                      Recurring
+                    </Button>
+                  </TableCell>
                 </TableRow>
               ))}
             {emptyRows > 0 && (
               <TableRow style={{ height: 53 * emptyRows }}>
-                <TableCell colSpan={7} />
+                <TableCell colSpan={8} />
               </TableRow>
             )}
           </TableBody>
@@ -358,7 +419,7 @@ export default function WebSeoSheet() {
             <TableRow>
               <TablePagination
                 rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
-                colSpan={7}
+                colSpan={8}
                 count={tickets.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
