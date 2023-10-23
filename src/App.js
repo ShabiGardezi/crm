@@ -21,6 +21,8 @@ import TicketCreatedTable from "./pages/Tickets/TicketCreated";
 import ShowOpenTickets from "./pages/Tickets/ShowOpenTickets";
 import ShowCloseTickets from "./pages/Tickets/ShowCloseTickets";
 import WebSeoSheet from "./pages/Client-Sheets/WebSEOSheet";
+import ActiveClients from "./pages/Client-Sheets/ActiveClients";
+import NotActiveClients from "./pages/Client-Sheets/NotActiveClients";
 
 function App() {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -54,6 +56,8 @@ function App() {
         <Route path="/open_tickets" element={<ShowOpenTickets />} />
         <Route path="/close_tickets" element={<ShowCloseTickets />} />
         <Route path="/webseo_sheet" element={<WebSeoSheet />} />
+        <Route path="/active_clients" element={<ActiveClients />} />
+        <Route path="/notactive_clients" element={<NotActiveClients />} />
       </Routes>
     </div>
   );

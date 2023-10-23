@@ -27,7 +27,7 @@ import DisplayTicketDetails from "../Tickets/DisplayTicketDetails";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import ActiveNotSctiveCard from "./ActiveNotActiveCard";
 import axios from "axios";
-export default function WebSeoSheet() {
+export default function NotActiveClients() {
   const user = JSON.parse(localStorage.getItem("user"));
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -160,7 +160,12 @@ export default function WebSeoSheet() {
         if (response.ok) {
           const data = await response.json();
 
-          setTickets(data.payload);
+          // Filter only the tickets with an "Active" status
+          const activeTickets = data.payload.filter(
+            (ticket) => ticket.ActiveNotActive === "Not Active"
+          );
+
+          setTickets(activeTickets);
           data.payload.forEach((ticket) => {
             fetchReportingDate(ticket._id);
           });
@@ -355,7 +360,7 @@ export default function WebSeoSheet() {
       status: temp,
     });
   };
-  console.log(tickets);
+//   console.log(tickets);
   return (
     <>
       <Header />
@@ -496,13 +501,6 @@ export default function WebSeoSheet() {
           </TableFooter>
         </Table>
       </TableContainer>
-      {selectedTicketDetails && (
-        <DisplayTicketDetails
-          open={isTicketDetailsOpen}
-          handleClose={closeTicketDetailsModal}
-          ticketDetails={selectedTicketDetails}
-        />
-      )}
     </>
   );
 }

@@ -23,16 +23,14 @@ import SearchIcon from "@mui/icons-material/Search";
 import InputBase from "@mui/material/InputBase";
 import Header from "../Header";
 import Button from "@mui/material/Button";
-import DisplayTicketDetails from "../Tickets/DisplayTicketDetails";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import ActiveNotSctiveCard from "./ActiveNotActiveCard";
 import axios from "axios";
-export default function WebSeoSheet() {
+export default function ActiveClients() {
   const user = JSON.parse(localStorage.getItem("user"));
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [tickets, setTickets] = useState([]);
-  const [selectedStatus, setSelectedStatus] = useState({});
   const [searchQuery, setSearchQuery] = useState("");
   const [reportingDates, setReportingDates] = useState({});
   const [isTicketDetailsOpen, setIsTicketDetailsOpen] = useState(false);
@@ -160,7 +158,12 @@ export default function WebSeoSheet() {
         if (response.ok) {
           const data = await response.json();
 
-          setTickets(data.payload);
+          // Filter only the tickets with an "Active" status
+          const activeTickets = data.payload.filter(
+            (ticket) => ticket.ActiveNotActive === "Active"
+          );
+
+          setTickets(activeTickets);
           data.payload.forEach((ticket) => {
             fetchReportingDate(ticket._id);
           });
@@ -496,13 +499,6 @@ export default function WebSeoSheet() {
           </TableFooter>
         </Table>
       </TableContainer>
-      {selectedTicketDetails && (
-        <DisplayTicketDetails
-          open={isTicketDetailsOpen}
-          handleClose={closeTicketDetailsModal}
-          ticketDetails={selectedTicketDetails}
-        />
-      )}
     </>
   );
 }
