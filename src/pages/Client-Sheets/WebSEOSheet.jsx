@@ -262,6 +262,7 @@ export default function WebSeoSheet() {
     updateReportingDate(ticketId, newReportingDate);
   };
 
+  // Function to handle the "Recurring" button click
   const handleRecurringClick = (ticketId) => {
     // Get the current reporting date
     const currentReportingDate = new Date(reportingDates[ticketId]);
@@ -273,13 +274,7 @@ export default function WebSeoSheet() {
       currentReportingDate.getDate()
     );
 
-    // Update the local state immediately
-    setReportingDates((prevReportingDates) => ({
-      ...prevReportingDates,
-      [ticketId]: oneMonthLaterDate.toISOString(),
-    }));
-
-    // Make an API call to update the reporting date in the database
+    // Make an API request to update the reporting date in the database
     fetch("http://localhost:5000/api/tickets/reportingDate-update", {
       method: "PUT",
       headers: {
@@ -292,24 +287,57 @@ export default function WebSeoSheet() {
     })
       .then((response) => response.json())
       .then((data) => {
-        if (!data.payload) {
-          console.error("Error updating reporting date in the database.");
+        if (data.payload) {
+          // If the update is successful, update the local state with the new reporting date
+          setReportingDates((prevReportingDates) => ({
+            ...prevReportingDates,
+            [ticketId]: oneMonthLaterDate.toISOString(),
+          }));
+        } else {
+          console.error("Error updating reporting date");
         }
       })
       .catch((error) => {
-        console.error("Error updating reporting date:", error);
+        console.error("Error updating reporting date", error);
       });
-
-    // Set up a timer to update the reporting date on a real-time basis
-    const timerInterval = 1000; // 1000 milliseconds = 1 second
-    const updateInterval = setInterval(() => {
-      const newReportingDate = new Date(reportingDates[ticketId]);
-      newReportingDate.setDate(newReportingDate.getDate() + 1); // Increment the day by 1
-      setReportingDates((prevReportingDates) => ({
-        ...prevReportingDates,
-        [ticketId]: newReportingDate.toISOString(),
-      }));
-    }, timerInterval);
+  };
+  // Function to handle notes edit and update
+  const handleNotesEdit = (ticketId, editedNotes) => {
+    // Make an API request to update the notes in the database
+    fetch("http://localhost:5000/api/tickets/notes-update", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ticketId,
+        notes: editedNotes,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.payload) {
+          // If the update is successful, update the local state with the edited notes
+          const updatedTickets = tickets.map((ticket) => {
+            if (ticket._id === ticketId) {
+              return {
+                ...ticket,
+                businessdetails: {
+                  ...ticket.businessdetails,
+                  notes: editedNotes,
+                },
+              };
+            }
+            return ticket;
+          });
+          setTickets(updatedTickets);
+        } else {
+          console.error("Error updating notes");
+        }
+      })
+      .catch((error) => {
+        console.error("Error updating notes", error);
+      });
   };
 
   const handleClick = (ticket) => {
@@ -417,7 +445,17 @@ export default function WebSeoSheet() {
                       <VisibilityIcon />
                     </IconButton>
                   </TableCell>
-                  <TableCell>{ticket.businessdetails.notes}</TableCell>
+                  <TableCell
+                    style={{ width: 180, whiteSpace: "pre-line" }} // Apply the white-space property here
+                    align="left"
+                    contentEditable={true}
+                    onBlur={(e) =>
+                      handleNotesEdit(ticket._id, e.target.innerText)
+                    }
+                  >
+                    {ticket.businessdetails.notes}
+                  </TableCell>
+
                   <TableCell>
                     <Button
                       variant="contained"
