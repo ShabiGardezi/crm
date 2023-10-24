@@ -65,7 +65,7 @@ const ClientsCard = () => {
         </div>
         <div className="col-6">
           <Link to="/notactive_clients">
-            <TicketCard heading="Not Active Clients" counter={notActiveCount} />
+            <TicketCard heading="InActive Clients" counter={notActiveCount} />
           </Link>
         </div>
       </div>

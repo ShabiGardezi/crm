@@ -12,7 +12,6 @@ import Reviews from "./pages/Departments/Review";
 import PaidMarketing from "./pages/Departments/PaidMarketing";
 import { Toaster } from "react-hot-toast";
 import TicketList from "./pages/TicketList";
-import NotFound from "./pages/404Error";
 import UserToDo from "./components/UserToDo";
 import CustomDevelopment from "./pages/Departments/CustomDevelopment";
 import CustomPaginationActionsTable from "./pages/Tickets/TicketHistory";
@@ -35,12 +34,9 @@ function App() {
         <Route path="/signin" element={<SignIn />} />
         <Route
           path="/signup"
-          element={
-            user?.role === "admin" ? <SignUp /> : <Navigate to="/notfound" />
-          }
+          element={user?.role === "admin" ? <SignUp /> : <Navigate to="/" />}
         />
         <Route path="/home" element={<Home />} />
-        <Route path="/notfound" element={<NotFound />} />
         <Route path="/webseoform" element={<WebSeoForm />} />
         <Route path="/localseoform" element={<LocalSeoForm />} />
         <Route path="/socialmediaform" element={<SocialMediaForm />} />

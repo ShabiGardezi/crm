@@ -9,12 +9,13 @@ import {
 } from "@material-ui/core";
 import axios from "axios";
 import Header from "../Header";
+import toast, { Toaster } from "react-hot-toast";
+// import "react-toastify/dist/ReactToastify.css";
 
 const WebSeoForm = () => {
   const user = JSON.parse(localStorage.getItem("user"));
   const [departments, setDepartments] = useState([]);
   const [remainingPrice, setRemainingPrice] = useState(0); // Initialize remainingPrice
-
   const [formData, setFormData] = useState({
     priorityLevel: "",
     assignor: user?.username || "",
@@ -25,7 +26,6 @@ const WebSeoForm = () => {
     advanceprice: "",
     remainingPrice: "",
     serviceName: "",
-    // serviceDescription: "",
     serviceQuantity: "",
     servicePrice: "",
     clientName: "",
@@ -129,9 +129,13 @@ const WebSeoForm = () => {
           priority: formData.priorityLevel,
         },
       });
+      toast.success("Form submitted successfully!");
+
       // Handle the response as needed (e.g., show a success message)
       console.log("Success:", response);
     } catch (error) {
+      toast.error("An error occurred. Please try again.");
+
       // Handle errors (e.g., show an error message)
       console.error("Error:", error);
     }
@@ -263,16 +267,7 @@ const WebSeoForm = () => {
               multiline
             />
           </Grid>
-          {/* <Grid item xs={6}>
-            <TextField
-              label="Service description"
-              fullWidth
-              name="serviceDescription"
-              value={formData.serviceDescription}
-              onChange={handleChange}
-              multiline
-            />
-          </Grid> */}
+
           <Grid item xs={6}>
             <TextField
               label="Service Location"
@@ -283,16 +278,6 @@ const WebSeoForm = () => {
               multiline
             />
           </Grid>
-          {/* <Grid item xs={6}>
-            <TextField
-              label="Service price"
-              fullWidth
-              name="servicePrice"
-              value={formData.servicePrice}
-              onChange={handleChange}
-              multiline
-            />
-          </Grid> */}
         </Grid>
         <Grid container spacing={2}>
           <Grid item xs={6}>
