@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useTheme } from "@mui/material/styles";
 import PropTypes from "prop-types";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -32,11 +37,69 @@ export default function WebSeoSheet() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [tickets, setTickets] = useState([]);
-  const [selectedStatus, setSelectedStatus] = useState({});
   const [searchQuery, setSearchQuery] = useState("");
   const [reportingDates, setReportingDates] = useState({});
   const [isTicketDetailsOpen, setIsTicketDetailsOpen] = useState(false);
   const [selectedTicketDetails, setSelectedTicketDetails] = useState(null);
+  const [openRecurringDialog, setOpenRecurringDialog] = useState(false);
+  const [price, setPrice] = useState("");
+  const [advancePrice, setAdvancePrice] = useState("");
+  const [remainingPrice, setRemainingPrice] = useState("");
+  // Function to open the recurring dialog
+  // Function to open the recurring dialog and reset state values
+  const handleRecurringDialogOpen = () => {
+    setOpenRecurringDialog(true);
+    setPrice(""); // Set price to an empty string or 0 if needed
+    setAdvancePrice(""); // Set advancePrice to an empty string or 0 if needed
+    setRemainingPrice(""); // Set remainingPrice to an empty string or 0 if needed
+  };
+
+  // Function to close the recurring dialog
+  const handleRecurringDialogClose = () => {
+    setOpenRecurringDialog(false);
+  };
+
+  // Function to handle form field changes
+  const handlePriceChange = (event) => {
+    const { name, value } = event.target;
+
+    // Convert the input value to a float, or 0 if it's not a valid number
+    const updatedPrice = parseFloat(value) || 0;
+    const updatedAdvancePrice = parseFloat(advancePrice) || 0;
+
+    // Calculate the remaining price
+    const remaining = updatedPrice - updatedAdvancePrice;
+
+    // Update the state variables for price and remaining price
+    setPrice(updatedPrice);
+    setRemainingPrice(remaining);
+  };
+
+  const handleAdvancePriceChange = (event) => {
+    const { name, value } = event.target;
+
+    // Convert the input value to a float, or 0 if it's not a valid number
+    const updatedPrice = parseFloat(price) || 0;
+    const updatedAdvancePrice = parseFloat(value) || 0;
+
+    // Calculate the remaining price
+    const remaining = updatedPrice - updatedAdvancePrice;
+
+    // Update the state variables for advance price and remaining price
+    setAdvancePrice(updatedAdvancePrice);
+    setRemainingPrice(remaining);
+  };
+
+  const handleRemainingPriceChange = (event) => {
+    setRemainingPrice(event.target.value);
+  };
+
+  // Function to handle submission of recurring data
+  const handleRecurringSubmit = () => {
+    // You can send the price, advancePrice, and remainingPrice to your backend or perform other actions here.
+    // Don't forget to close the dialog afterward.
+    setOpenRecurringDialog(false);
+  };
 
   function TablePaginationActions(props) {
     const theme = useTheme();
@@ -355,7 +418,6 @@ export default function WebSeoSheet() {
       status: temp,
     });
   };
-  console.log(tickets);
   return (
     <>
       <Header />
@@ -455,16 +517,53 @@ export default function WebSeoSheet() {
                   >
                     {ticket.businessdetails.notes}
                   </TableCell>
-
                   <TableCell>
                     <Button
                       style={{ backgroundColor: "red" }}
                       variant="contained"
                       color="primary"
-                      onClick={() => handleRecurringClick(ticket._id)}
+                      onClick={() => {
+                        handleRecurringDialogOpen();
+                        handleRecurringClick(ticket._id);
+                      }}
                     >
                       Recurring
                     </Button>
+                    {/* Recurring Dialog */}
+                    <Dialog
+                      open={openRecurringDialog}
+                      onClose={handleRecurringDialogClose}
+                    >
+                      <DialogTitle>Recurring Details</DialogTitle>
+                      <DialogContent>
+                        <TextField
+                          label="Price"
+                          value={price}
+                          onChange={handlePriceChange}
+                          fullWidth
+                        />
+                        <TextField
+                          label="Advance Price"
+                          value={advancePrice}
+                          onChange={handleAdvancePriceChange}
+                          fullWidth
+                        />
+                        <TextField
+                          label="Remaining Price"
+                          value={remainingPrice}
+                          onChange={handleRemainingPriceChange}
+                          fullWidth
+                        />
+                      </DialogContent>
+                      <DialogActions>
+                        <Button onClick={handleRecurringDialogClose}>
+                          Cancel
+                        </Button>
+                        <Button onClick={handleRecurringSubmit} color="primary">
+                          Save
+                        </Button>
+                      </DialogActions>
+                    </Dialog>
                   </TableCell>
                 </TableRow>
               ))}
