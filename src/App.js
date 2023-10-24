@@ -22,6 +22,8 @@ import ShowCloseTickets from "./pages/Tickets/ShowCloseTickets";
 import WebSeoSheet from "./pages/Client-Sheets/WebSEOSheet";
 import ActiveClients from "./pages/Client-Sheets/ActiveClients";
 import NotActiveClients from "./pages/Client-Sheets/NotActiveClients";
+import ClientHistory from "./pages/ClientHistory/WebSeoClients";
+import WebSeoClients from "./pages/ClientHistory/WebSeoClients";
 
 function App() {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -37,13 +39,22 @@ function App() {
           element={user?.role === "admin" ? <SignUp /> : <Navigate to="/" />}
         />
         <Route path="/home" element={<Home />} />
-        <Route path="/webseoform" element={<WebSeoForm />} />
-        <Route path="/localseoform" element={<LocalSeoForm />} />
-        <Route path="/socialmediaform" element={<SocialMediaForm />} />
-        <Route path="/customdevelopment" element={<CustomDevelopment />} />
-        <Route path="/wordpressform" element={<WordPress />} />
-        <Route path="/reviewsform" element={<Reviews />} />
-        <Route path="/paidmarketingform" element={<PaidMarketing />} />
+        <Route path="/department/webseoform" element={<WebSeoForm />} />
+        <Route path="/department/localseoform" element={<LocalSeoForm />} />
+        <Route
+          path="/department/socialmediaform"
+          element={<SocialMediaForm />}
+        />
+        <Route
+          path="/department/customdevelopment"
+          element={<CustomDevelopment />}
+        />
+        <Route path="/department/wordpressform" element={<WordPress />} />
+        <Route path="/department/reviewsform" element={<Reviews />} />
+        <Route
+          path="/department/paidmarketingform"
+          element={<PaidMarketing />}
+        />
         <Route path="/ticketlist" element={<TicketList />} />
         <Route path="/todo" element={<UserToDo showHeader={true} />} />
         <Route path="/info" element={<FormDataDisplay />} />
@@ -54,6 +65,7 @@ function App() {
         <Route path="/webseo_sheet" element={<WebSeoSheet />} />
         <Route path="/active_clients" element={<ActiveClients />} />
         <Route path="/notactive_clients" element={<NotActiveClients />} />
+        <Route path="/webseo_clients" element={<WebSeoClients />} />
       </Routes>
     </div>
   );

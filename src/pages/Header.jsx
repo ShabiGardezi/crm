@@ -17,10 +17,11 @@ import {
   Dialog,
   DialogContent,
   DialogActions,
+  Select,
 } from "@mui/material";
 import DescriptionIcon from "@mui/icons-material/Description";
 import logoImage from "../assests/Navbarlogo.png";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import {
   Menu as MenuIcon,
@@ -34,6 +35,7 @@ import {
   Business as DepartmentIcon,
   ExpandMore as ExpandMoreIcon,
 } from "@mui/icons-material";
+import AssignmentIcon from "@mui/icons-material/Assignment"; // You can choose a different icon from Material-UI icons
 import { makeStyles } from "@mui/styles";
 import "../styles/header.css";
 import { Link } from "react-router-dom";
@@ -50,12 +52,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Header = () => {
-  const [formData, setFormData] = useState({
-    department: "",
-  });
   const [isCreateModalOpen, setCreateModalOpen] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const [isDepartmentOpen, setDepartmentOpen] = useState(false);
+  const [isClientHistoryOpen, setClientHistoryOpen] = useState(false);
 
   const classes = useStyles();
   const [departments, setDepartments] = useState();
@@ -99,10 +100,6 @@ const Header = () => {
       window.removeEventListener("click", handleOutsideClick);
     };
   }, [isMenuOpen]);
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -130,25 +127,36 @@ const Header = () => {
   };
 
   const user = JSON.parse(localStorage.getItem("user"));
-  const handleDepartmentSelect = (departmentId) => {
+  const handleDepartmentSelect = (departmentName) => {
     // Define a mapping of department names to their respective routes
     const departmentRoutes = {
-      "Local SEO / GMB Optimization": "/localseoform",
-      "Wordpress Development": "/wordpressform",
-      "Website SEO": "/webseoform",
-      "Custom Development": "/customdevelopment",
-      "Paid Marketing": "/paidmarketingform",
-      "Social Media Management": "/socialmediaform",
-      "Customer Reviews Management": "/reviewsform",
-      Sales: "/sales",
+      "Local SEO / GMB Optimization": "/department/localseoform",
+      "Wordpress Development": "/department/wordpressform",
+      "Website SEO": "/department/webseoform",
+      "Custom Development": "/department/customdevelopment",
+      "Paid Marketing": "/department/paidmarketingform",
+      "Social Media Management": "/department/socialmediaform",
+      "Customer Reviews Management": "/department/reviewsform",
+      Sales: "/department/sales",
     };
 
     // Get the route for the selected department
-    const selectedRoute = departmentRoutes[departmentId];
+    const selectedRoute = departmentRoutes[departmentName];
 
     // Navigate to the selected route
     navigate(selectedRoute);
   };
+
+  // Step 2: Function to toggle "Client History" dropdown
+  const toggleClientHistory = () => {
+    setClientHistoryOpen(!isClientHistoryOpen);
+  };
+
+  // Function to toggle the "Department" dropdown
+  const toggleDepartment = () => {
+    setDepartmentOpen(!isDepartmentOpen);
+  };
+
   return (
     <>
       <CssBaseline />
@@ -257,58 +265,79 @@ const Header = () => {
                 <ListItemText primary="Ticket History" />
               </ListItem>
             </Link>
-            {user?.role === "admin" || user?.department === "sales" ? (
-              <ListItem button onClick={handleProfileMenuOpen}>
-                <ListItemIcon>
-                  <DepartmentIcon />
-                </ListItemIcon>
-                <ListItemText primary="Department" />
-                <ListItemIcon style={{ marginLeft: "auto" }}>
-                  <ExpandMoreIcon />
-                </ListItemIcon>
-                <Popover
-                  open={Boolean(anchorEl)}
-                  anchorEl={anchorEl}
-                  onClose={handleProfileMenuClose}
-                  anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "left",
-                  }}
-                  transformOrigin={{
-                    vertical: "top",
-                    horizontal: "left",
-                  }}
-                  PaperProps={{
-                    style: {
-                      // backgroundColor: "white",
-                    },
-                  }}
-                >
-                  {departments?.map((d) => (
-                    <MenuItem
-                      key={d._id}
-                      value={d._id}
-                      onClick={() => handleDepartmentSelect(d.name)}
-                    >
-                      {d.name}
-                    </MenuItem>
-                  ))}
-                </Popover>
-              </ListItem>
-            ) : null}
-          </List>
-          {user?.role === "admin" && (
-            <div className="signup">
-              <ListItem button>
-                <ListItemIcon>
-                  <AccountCircle />
-                </ListItemIcon>
-                <Link to="/signup">
-                  <ListItemText primary="Sign Up" />
+            <ListItem button onClick={toggleClientHistory}>
+              <ListItemIcon>
+                <AssignmentIcon />
+              </ListItemIcon>
+              <ListItemText primary="Client History" />
+              {/* Use the same dropdown icon as the "Department" item */}
+              <ListItemIcon style={{ marginLeft: "auto" }}>
+                <ExpandMoreIcon />
+              </ListItemIcon>
+            </ListItem>
+
+            {/* Step 4: Add sub-items for "Client History" dropdown */}
+            {isClientHistoryOpen && (
+              <div className="client-history-dropdown">
+                <Link to="/webseo_clients">
+                  <ListItem button>
+                    {/* Web SEO */}
+                    <ListItemText primary="Web SEO" />
+                  </ListItem>
                 </Link>
-              </ListItem>
-            </div>
-          )}
+
+                <ListItem button>
+                  {/* Local SEO */}
+                  <ListItemText primary="Local SEO" />
+                </ListItem>
+                <ListItem button>
+                  {/* Paid Marketing */}
+                  <ListItemText primary="Paid Marketing" />
+                </ListItem>
+                <ListItem button>
+                  {/* Wordpress */}
+                  <ListItemText primary="Wordpress" />
+                </ListItem>
+              </div>
+            )}
+            <ListItem button onClick={toggleDepartment}>
+              <ListItemIcon>
+                <DepartmentIcon />
+              </ListItemIcon>
+              <ListItemText primary="Department" />
+              <ListItemIcon style={{ marginLeft: "auto" }}>
+                <ExpandMoreIcon />
+              </ListItemIcon>
+            </ListItem>
+            {isDepartmentOpen && (
+              <div className="client-history-dropdown">
+                {departments?.map((d) => (
+                  <ListItem
+                    button
+                    key={d._id}
+                    onClick={() => handleDepartmentSelect(d.name)}
+                  >
+                    <Link to={`/department/${d.name}`}>
+                      <ListItemText primary={d.name} />
+                    </Link>
+                  </ListItem>
+                ))}
+              </div>
+            )}
+
+            {user?.role === "admin" && (
+              <div className="signup">
+                <ListItem button>
+                  <ListItemIcon>
+                    <AccountCircle />
+                  </ListItemIcon>
+                  <Link to="/signup">
+                    <ListItemText primary="Sign Up" />
+                  </Link>
+                </ListItem>
+              </div>
+            )}
+          </List>
         </div>
       </Drawer>
     </>

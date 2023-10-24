@@ -39,3 +39,11 @@ ul.MuiList-root.MuiList-padding.css-h4y409-MuiList-root {
 gutters.MuiToolbar-regular.css-hyum1k-MuiToolbar-root {
   background: #1976d2;
 }
+.client-history-dropdown {
+  display: grid;
+  justify-content: center;
+}
+.client-history-dropdown
+  span.MuiTypography-root.MuiTypography-body1.MuiListItemText-primary.css-10hburv-MuiTypography-root {
+  color: #0000008f;
+}

@@ -11,8 +11,12 @@ const Home = () => {
     <div>
       <Header />
       <GreetingCard />
-      <TicketCards />
-      <UserToDo wrapInCard={true} showHeader={false} />
+      <div className="homeCards" style={{ marginTop: "5%" }}>
+        <TicketCards />
+      </div>
+      <div className="homeTodo" style={{ marginTop: "5%" }}>
+        <UserToDo wrapInCard={true} showHeader={false} />
+      </div>
     </div>
   );
 };
