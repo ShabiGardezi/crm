@@ -5,16 +5,15 @@ import {
   Button,
   MenuItem,
   Typography,
-  InputLabel,
-  Select,
 } from "@material-ui/core";
 import axios from "axios"; // Import Axios for making API requests
 import "../../styles/Forms/customforms.css";
 import Header from "../Header";
-
+import toast from "react-hot-toast";
 const LocalSEOForm = () => {
   const user = JSON.parse(localStorage.getItem("user"));
   const [departments, setDepartments] = useState([]);
+  const [remainingPrice, setRemainingPrice] = useState(0); // Initialize remainingPrice
 
   const [formData, setFormData] = useState({
     priorityLevel: "",
@@ -25,6 +24,7 @@ const LocalSEOForm = () => {
     loginCredentials: "",
     price: "",
     advanceprice: "",
+    remainingPrice: "",
     serviceName: "",
     serviceDescription: "",
     serviceQuantity: "",
@@ -47,11 +47,25 @@ const LocalSEOForm = () => {
 
   const handleChange = (event) => {
     const { name, value } = event.target;
+    let updatedPrice = parseFloat(formData.price) || 0;
+    let updatedAdvancePrice = parseFloat(formData.advanceprice) || 0;
+
+    if (name === "price") {
+      updatedPrice = parseFloat(value) || 0;
+    } else if (name === "advanceprice") {
+      updatedAdvancePrice = parseFloat(value) || 0;
+    }
+
+    const remaining = updatedPrice - updatedAdvancePrice;
+    setRemainingPrice(remaining);
+
     setFormData({
       ...formData,
       [name]: value,
+      remainingPrice: remaining, // Update remainingPrice in formData
     });
   };
+
   const handleSubmit = async (event) => {
     event.preventDefault(); // Prevent the default form submission behavior
     try {
@@ -94,6 +108,7 @@ const LocalSEOForm = () => {
         quotation: {
           price: formData.price,
           advanceprice: formData.advanceprice,
+          remainingPrice: formData.remainingPrice,
         },
         TicketDetails: {
           assignor: formData.assignor,
@@ -102,9 +117,11 @@ const LocalSEOForm = () => {
       });
 
       // Handle the response as needed (e.g., show a success message)
+      toast.success("Form submitted successfully!");
       console.log("Success:", response);
     } catch (error) {
       // Handle errors (e.g., show an error message)
+      toast.error("An error occurred. Please try again.");
       console.error("Error:", error);
     }
   };
@@ -129,9 +146,6 @@ const LocalSEOForm = () => {
         <Typography variant="h5">Local SEO Form</Typography>
       </div>
       <form onSubmit={handleSubmit}>
-        <div className="ticketHeading">
-          <Typography variant="h5">Ticket Details</Typography>
-        </div>
         <Grid container spacing={2}>
           <Grid item xs={6}>
             <TextField
@@ -185,9 +199,7 @@ const LocalSEOForm = () => {
             />
           </Grid>
         </Grid>
-        <div className="ticketHeading">
-          <Typography variant="h5">Quotation</Typography>
-        </div>
+
         <Grid container spacing={2}>
           <Grid item xs={6}>
             <TextField
@@ -207,9 +219,21 @@ const LocalSEOForm = () => {
               onChange={handleChange}
             />
           </Grid>
+          <Grid item xs={6}>
+            <TextField
+              label="Remaining Price"
+              fullWidth
+              name="remainingPrice"
+              value={remainingPrice} // Display the calculated remaining price
+              InputProps={{
+                readOnly: true, // Make this field read-only
+              }}
+            />
+          </Grid>
         </Grid>
+
         <div className="ticketHeading">
-          <Typography variant="h5">Services</Typography>
+          <Typography variant="h5">Business Details</Typography>
         </div>
         <Grid container spacing={2}>
           <Grid item xs={6}>
@@ -252,67 +276,13 @@ const LocalSEOForm = () => {
               multiline
             />
           </Grid>
-        </Grid>
-        <div className="ticketHeading">
-          <Typography variant="h5">Business Details</Typography>
-        </div>
-        <Grid container spacing={2}>
+
           <Grid item xs={6}>
             <TextField
-              label="Client Name"
+              label="Client/Business Name"
               fullWidth
               name="clientName"
               value={formData.clientName}
-              onChange={handleChange}
-              multiline
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="Street"
-              fullWidth
-              name="street"
-              value={formData.street}
-              onChange={handleChange}
-              multiline
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="Website URL"
-              fullWidth
-              name="WebsiteURL"
-              value={formData.WebsiteURL}
-              onChange={handleChange}
-              multiline
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="Country"
-              fullWidth
-              name="country"
-              value={formData.country}
-              onChange={handleChange}
-              multiline
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="State"
-              fullWidth
-              name="state"
-              value={formData.state}
-              onChange={handleChange}
-              multiline
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="ZipCode"
-              fullWidth
-              name="zipcode"
-              value={formData.zipcode}
               onChange={handleChange}
               multiline
             />
@@ -347,6 +317,58 @@ const LocalSEOForm = () => {
               multiline
             />
           </Grid>
+          <Grid item xs={6}>
+            <TextField
+              label="Website URL"
+              fullWidth
+              name="WebsiteURL"
+              value={formData.WebsiteURL}
+              onChange={handleChange}
+              multiline
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              label="Street"
+              fullWidth
+              name="street"
+              value={formData.street}
+              onChange={handleChange}
+              multiline
+            />
+          </Grid>
+
+          <Grid item xs={6}>
+            <TextField
+              label="Country"
+              fullWidth
+              name="country"
+              value={formData.country}
+              onChange={handleChange}
+              multiline
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              label="State"
+              fullWidth
+              name="state"
+              value={formData.state}
+              onChange={handleChange}
+              multiline
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              label="ZipCode"
+              fullWidth
+              name="zipcode"
+              value={formData.zipcode}
+              onChange={handleChange}
+              multiline
+            />
+          </Grid>
+
           <Grid item xs={6}>
             <TextField
               label="Social Profile"

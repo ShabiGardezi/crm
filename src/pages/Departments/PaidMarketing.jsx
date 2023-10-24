@@ -9,10 +9,11 @@ import {
 } from "@material-ui/core";
 import axios from "axios";
 import Header from "../Header";
-
+import toast from "react-hot-toast";
 const PaidMarketing = () => {
   const user = JSON.parse(localStorage.getItem("user"));
   const [departments, setDepartments] = useState([]);
+  const [remainingPrice, setRemainingPrice] = useState(0); // Initialize remainingPrice
 
   const [formData, setFormData] = useState({
     priorityLevel: "",
@@ -20,6 +21,7 @@ const PaidMarketing = () => {
     dueDate: new Date().toISOString().substr(0, 10), // Initialize with the current date in yyyy-mm-dd format
     price: "",
     advanceprice: "",
+    remainingPrice: "",
     serviceName: "",
     serviceDescription: "",
     serviceQuantity: "",
@@ -35,9 +37,22 @@ const PaidMarketing = () => {
 
   const handleChange = (event) => {
     const { name, value } = event.target;
+    let updatedPrice = parseFloat(formData.price) || 0;
+    let updatedAdvancePrice = parseFloat(formData.advanceprice) || 0;
+
+    if (name === "price") {
+      updatedPrice = parseFloat(value) || 0;
+    } else if (name === "advanceprice") {
+      updatedAdvancePrice = parseFloat(value) || 0;
+    }
+
+    const remaining = updatedPrice - updatedAdvancePrice;
+    setRemainingPrice(remaining);
+
     setFormData({
       ...formData,
       [name]: value,
+      remainingPrice: remaining, // Update remainingPrice in formData
     });
   };
 
@@ -84,9 +99,11 @@ const PaidMarketing = () => {
       });
 
       // Handle the response as needed (e.g., show a success message)
+      toast.success("Form submitted successfully!");
       console.log("Success:", response);
     } catch (error) {
       // Handle errors (e.g., show an error message)
+      toast.error("An error occurred. Please try again.");
       console.error("Error:", error);
     }
   };
@@ -110,9 +127,6 @@ const PaidMarketing = () => {
         <Typography variant="h5">Paid Marketing Form</Typography>
       </div>
       <form onSubmit={handleSubmit}>
-        <div className="ticketHeading">
-          <Typography variant="h5">Ticket Details</Typography>
-        </div>
         <Grid container spacing={2}>
           <Grid item xs={6}>
             <TextField
@@ -166,9 +180,7 @@ const PaidMarketing = () => {
             />
           </Grid>
         </Grid>
-        <div className="ticketHeading">
-          <Typography variant="h5">Quotation</Typography>
-        </div>
+
         <Grid container spacing={2}>
           <Grid item xs={6}>
             <TextField
@@ -188,10 +200,19 @@ const PaidMarketing = () => {
               onChange={handleChange}
             />
           </Grid>
+          <Grid item xs={6}>
+            <TextField
+              label="Remaining Price"
+              fullWidth
+              name="remainingprice"
+              value={remainingPrice} // Display the calculated remaining price
+              InputProps={{
+                readOnly: true, // Make this field read-only
+              }}
+            />
+          </Grid>
         </Grid>
-        <div className="ticketHeading">
-          <Typography variant="h5">Services</Typography>
-        </div>
+
         <Grid container spacing={2}>
           <Grid item xs={6}>
             <TextField

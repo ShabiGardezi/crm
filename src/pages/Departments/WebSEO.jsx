@@ -9,7 +9,7 @@ import {
 } from "@material-ui/core";
 import axios from "axios";
 import Header from "../Header";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 // import "react-toastify/dist/ReactToastify.css";
 
 const WebSeoForm = () => {
@@ -75,6 +75,7 @@ const WebSeoForm = () => {
     setFormData({
       ...formData,
       [name]: value,
+      remainingPrice: remaining, // Update remainingPrice in formData
     });
   };
 

@@ -9,10 +9,13 @@ import {
 } from "@material-ui/core";
 import axios from "axios";
 import Header from "../Header";
+import toast from "react-hot-toast";
+
 //create field for image upload and on handle it on handleSubmit function
 const WordPress = () => {
   const user = JSON.parse(localStorage.getItem("user"));
   const [departments, setDepartments] = useState([]);
+  const [remainingPrice, setRemainingPrice] = useState(0); // Initialize remainingPrice
   const [formData, setFormData] = useState({
     priority: "",
     assignor: user?.username || "",
@@ -22,6 +25,7 @@ const WordPress = () => {
     loginCredentials: "",
     price: "",
     advanceprice: "",
+    remainingPrice: "",
     serviceName: "",
     serviceDescription: "",
     serviceQuantity: "",
@@ -40,9 +44,22 @@ const WordPress = () => {
 
   const handleChange = (event) => {
     const { name, value } = event.target;
+    let updatedPrice = parseFloat(formData.price) || 0;
+    let updatedAdvancePrice = parseFloat(formData.advanceprice) || 0;
+
+    if (name === "price") {
+      updatedPrice = parseFloat(value) || 0;
+    } else if (name === "advanceprice") {
+      updatedAdvancePrice = parseFloat(value) || 0;
+    }
+
+    const remaining = updatedPrice - updatedAdvancePrice;
+    setRemainingPrice(remaining);
+
     setFormData({
       ...formData,
       [name]: value,
+      remainingPrice: remaining, // Update remainingPrice in formData
     });
   };
 
@@ -84,16 +101,20 @@ const WordPress = () => {
         quotation: {
           price: formData.price,
           advanceprice: formData.advanceprice,
+          remainingPrice: formData.remainingPrice,
         },
         TicketDetails: {
           assignor: formData.assignor,
           priority: formData.priority,
         },
       });
+      toast.success("Form submitted successfully!");
 
       // Handle the response as needed (e.g., show a success message)
       console.log("Success:", response);
     } catch (error) {
+      toast.error("An error occurred. Please try again.");
+
       // Handle errors (e.g., show an error message)
       console.error("Error:", error);
     }
@@ -118,9 +139,7 @@ const WordPress = () => {
         <Typography variant="h5">Wordpress Form</Typography>
       </div>
       <form onSubmit={handleSubmit}>
-        <div className="ticketHeading">
-          <Typography variant="h5">Ticket Details</Typography>
-        </div>
+        {/* <div className="ticketHeading"></div> */}
         <Grid container spacing={2}>
           <Grid item xs={6}>
             <TextField
@@ -174,9 +193,7 @@ const WordPress = () => {
             />
           </Grid>
         </Grid>
-        <div className="ticketHeading">
-          <Typography variant="h5">Quotation</Typography>
-        </div>
+
         <Grid container spacing={2}>
           <Grid item xs={6}>
             <TextField
@@ -196,9 +213,22 @@ const WordPress = () => {
               onChange={handleChange}
             />
           </Grid>
+          <Grid item xs={6}>
+            <TextField
+              label="Remaining Price"
+              fullWidth
+              name="remainingprice"
+              value={remainingPrice} // Display the calculated remaining price
+              InputProps={{
+                readOnly: true, // Make this field read-only
+              }}
+            />
+          </Grid>
         </Grid>
+
+        <Grid container spacing={2}></Grid>
         <div className="ticketHeading">
-          <Typography variant="h5">Services</Typography>
+          <Typography variant="h5">Business Details</Typography>
         </div>
         <Grid container spacing={2}>
           <Grid item xs={6}>
@@ -241,17 +271,32 @@ const WordPress = () => {
               multiline
             />
           </Grid>
-        </Grid>
-        <div className="ticketHeading">
-          <Typography variant="h5">Business Details</Typography>
-        </div>
-        <Grid container spacing={2}>
           <Grid item xs={6}>
             <TextField
-              label="Client Name"
+              label="Client/Business Name"
               fullWidth
               name="clientName"
               value={formData.clientName}
+              onChange={handleChange}
+              multiline
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              label="Client/Business Email"
+              fullWidth
+              name="clientEmail"
+              value={formData.clientEmail}
+              onChange={handleChange}
+              multiline
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              label="Business Number"
+              fullWidth
+              name="businessNumber"
+              value={formData.businessNumber}
               onChange={handleChange}
               multiline
             />
@@ -288,16 +333,6 @@ const WordPress = () => {
           </Grid>
           <Grid item xs={6}>
             <TextField
-              label="Street"
-              fullWidth
-              name="street"
-              value={formData.street}
-              onChange={handleChange}
-              multiline
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
               label="ZipCode"
               fullWidth
               name="zipcode"
@@ -308,24 +343,15 @@ const WordPress = () => {
           </Grid>
           <Grid item xs={6}>
             <TextField
-              label="Business Number"
+              label="Street"
               fullWidth
-              name="businessNumber"
-              value={formData.businessNumber}
+              name="street"
+              value={formData.street}
               onChange={handleChange}
               multiline
             />
           </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="Client Email"
-              fullWidth
-              name="clientEmail"
-              value={formData.clientEmail}
-              onChange={handleChange}
-              multiline
-            />
-          </Grid>
+
           <Grid item xs={6}>
             <TextField
               label="Referral Website"

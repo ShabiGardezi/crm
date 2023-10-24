@@ -9,10 +9,12 @@ import {
 } from "@material-ui/core";
 import axios from "axios"; // Import Axios for making API requests
 import Header from "../Header";
+import toast from "react-hot-toast";
 
 const CustomDevelopment = () => {
   const user = JSON.parse(localStorage.getItem("user"));
   const [departments, setDepartments] = useState([]);
+  const [remainingPrice, setRemainingPrice] = useState(0); // Initialize remainingPrice
 
   const [formData, setFormData] = useState({
     priorityLevel: "",
@@ -20,6 +22,8 @@ const CustomDevelopment = () => {
     dueDate: new Date().toISOString().substr(0, 10), // Initialize with the current date in yyyy-mm-dd format
     price: "",
     advanceprice: "",
+    remainingPrice: "",
+
     serviceName: "",
     serviceDescription: "",
     serviceQuantity: "",
@@ -38,9 +42,22 @@ const CustomDevelopment = () => {
 
   const handleChange = (event) => {
     const { name, value } = event.target;
+    let updatedPrice = parseFloat(formData.price) || 0;
+    let updatedAdvancePrice = parseFloat(formData.advanceprice) || 0;
+
+    if (name === "price") {
+      updatedPrice = parseFloat(value) || 0;
+    } else if (name === "advanceprice") {
+      updatedAdvancePrice = parseFloat(value) || 0;
+    }
+
+    const remaining = updatedPrice - updatedAdvancePrice;
+    setRemainingPrice(remaining);
+
     setFormData({
       ...formData,
       [name]: value,
+      remainingPrice: remaining, // Update remainingPrice in formData
     });
   };
   console.log(formData);
@@ -80,6 +97,7 @@ const CustomDevelopment = () => {
         quotation: {
           price: formData.price,
           advanceprice: formData.advanceprice,
+          remainingPrice: formData.remainingPrice,
         },
         TicketDetails: {
           assignor: formData.assignor,
@@ -89,9 +107,11 @@ const CustomDevelopment = () => {
 
       // Handle the response as needed (e.g., show a success message)
       console.log("Success:", response);
+      toast.success("Form submitted successfully!");
     } catch (error) {
       // Handle errors (e.g., show an error message)
       console.error("Error:", error);
+      toast.error("An error occurred. Please try again.");
     }
   };
   useEffect(() => {
@@ -114,9 +134,6 @@ const CustomDevelopment = () => {
         <Typography variant="h5">Custom Development Form</Typography>
       </div>
       <form onSubmit={handleSubmit}>
-        <div className="ticketHeading">
-          <Typography variant="h5">Ticket Details</Typography>
-        </div>
         <Grid container spacing={2}>
           <Grid item xs={6}>
             <TextField
@@ -170,9 +187,6 @@ const CustomDevelopment = () => {
             />
           </Grid>
         </Grid>
-        <div className="ticketHeading">
-          <Typography variant="h5">Quotation</Typography>
-        </div>
         <Grid container spacing={2}>
           <Grid item xs={6}>
             <TextField
@@ -192,9 +206,18 @@ const CustomDevelopment = () => {
               onChange={handleChange}
             />
           </Grid>
+          <Grid item xs={6}>
+            <TextField
+              label="Remaining Price"
+              fullWidth
+              name="remainingPrice"
+              value={remainingPrice}
+              onChange={handleChange}
+            />
+          </Grid>
         </Grid>
         <div className="ticketHeading">
-          <Typography variant="h5">Services</Typography>
+          <Typography variant="h5">Business Details</Typography>
         </div>
         <Grid container spacing={2}>
           <Grid item xs={6}>
@@ -237,17 +260,32 @@ const CustomDevelopment = () => {
               multiline
             />
           </Grid>
-        </Grid>
-        <div className="ticketHeading">
-          <Typography variant="h5">Business Details</Typography>
-        </div>
-        <Grid container spacing={2}>
           <Grid item xs={6}>
             <TextField
-              label="Client Name"
+              label="Client/Business Name"
               fullWidth
               name="clientName"
               value={formData.clientName}
+              onChange={handleChange}
+              multiline
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              label="Business Number"
+              fullWidth
+              name="businessNumber"
+              value={formData.businessNumber}
+              onChange={handleChange}
+              multiline
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              label="Business Email"
+              fullWidth
+              name="clientEmail"
+              value={formData.clientEmail}
               onChange={handleChange}
               multiline
             />
@@ -302,26 +340,7 @@ const CustomDevelopment = () => {
               multiline
             />
           </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="Business Number"
-              fullWidth
-              name="businessNumber"
-              value={formData.businessNumber}
-              onChange={handleChange}
-              multiline
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="Client Email"
-              fullWidth
-              name="clientEmail"
-              value={formData.clientEmail}
-              onChange={handleChange}
-              multiline
-            />
-          </Grid>
+
           <Grid item xs={6}>
             <TextField
               label="Referral Website"
