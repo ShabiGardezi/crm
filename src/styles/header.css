@@ -42,6 +42,9 @@ gutters.MuiToolbar-regular.css-hyum1k-MuiToolbar-root {
 .client-history-dropdown {
   display: grid;
   justify-content: center;
+  position: absolute;
+  right: 0;
+  top: 6.5px;
 }
 .client-history-dropdown
   span.MuiTypography-root.MuiTypography-body1.MuiListItemText-primary.css-10hburv-MuiTypography-root {

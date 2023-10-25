@@ -19,11 +19,11 @@ import FormDataDisplay from "./pages/FormSections/FormDataDisplay";
 import TicketCreatedTable from "./pages/Tickets/TicketCreated";
 import ShowOpenTickets from "./pages/Tickets/ShowOpenTickets";
 import ShowCloseTickets from "./pages/Tickets/ShowCloseTickets";
-import WebSeoSheet from "./pages/Client-Sheets/WebSEOSheet";
 import ActiveClients from "./pages/Client-Sheets/ActiveClients";
 import NotActiveClients from "./pages/Client-Sheets/NotActiveClients";
 import WebSeoClients from "./pages/ClientHistory/WebSeoClients";
 import LocalSeoSheet from "./pages/Client-Sheets/LocalSeoClients/LocalSeoClient";
+import AddClient from "./pages/AddClient/AddClient";
 
 function App() {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -67,6 +67,7 @@ function App() {
         <Route path="/notactive_clients" element={<NotActiveClients />} />
         <Route path="/webseo_clients" element={<WebSeoClients />} />
         <Route path="/localseo_clients" element={<LocalSeoSheet />} />
+        <Route path="/add_clients" element={<AddClient />} />
       </Routes>
     </div>
   );

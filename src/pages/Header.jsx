@@ -38,7 +38,6 @@ import { makeStyles } from "@mui/styles";
 import "../styles/header.css";
 import { Link } from "react-router-dom";
 import CreateTicketCard from "../components/createTicket";
-import AddClient from "./AddClient/AddClient";
 const useStyles = makeStyles((theme) => ({
   container: {
     display: "flex",
@@ -154,31 +153,6 @@ const Header = () => {
   // Function to toggle the "Department" dropdown
   const toggleDepartment = () => {
     setDepartmentOpen(!isDepartmentOpen);
-  };
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [clientName, setClientName] = useState("");
-  const [businessEmail, setBusinessEmail] = useState("");
-
-  const openDialog = () => {
-    setIsDialogOpen(true);
-  };
-
-  const closeDialog = () => {
-    setIsDialogOpen(false);
-  };
-
-  const handleClientNameChange = (event) => {
-    setClientName(event.target.value);
-  };
-
-  const handleBusinessEmailChange = (event) => {
-    setBusinessEmail(event.target.value);
-  };
-
-  const handleAddClient = () => {
-    // Here, you can perform the necessary action, such as sending the data to your backend or handling it as needed.
-    // After adding the client, you can close the dialog.
-    closeDialog();
   };
   return (
     <>

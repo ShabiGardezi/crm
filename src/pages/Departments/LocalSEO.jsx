@@ -6,15 +6,25 @@ import {
   MenuItem,
   Typography,
 } from "@material-ui/core";
+import AddClient from "../AddClient/AddClient";
 import axios from "axios"; // Import Axios for making API requests
 import "../../styles/Forms/customforms.css";
 import Header from "../Header";
 import toast from "react-hot-toast";
 const LocalSEOForm = () => {
   const user = JSON.parse(localStorage.getItem("user"));
+  const [isAddClientDialogOpen, setIsAddClientDialogOpen] = useState(false);
   const [departments, setDepartments] = useState([]);
   const [remainingPrice, setRemainingPrice] = useState(0); // Initialize remainingPrice
+  // Function to open the Add Client dialog
+  const openAddClientDialog = () => {
+    setIsAddClientDialogOpen(true);
+  };
 
+  // Function to close the Add Client dialog
+  const closeAddClientDialog = () => {
+    setIsAddClientDialogOpen(false);
+  };
   const [formData, setFormData] = useState({
     priorityLevel: "",
     assignor: user?.username || "",
@@ -143,6 +153,8 @@ const LocalSEOForm = () => {
       <Header />
       <div className="formtitle">
         <Typography variant="h5">Local SEO Form</Typography>
+        {/* AddClient Dialog */}
+        <AddClient />
       </div>
       <form onSubmit={handleSubmit}>
         <Grid container spacing={2}>
