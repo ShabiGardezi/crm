@@ -25,10 +25,6 @@ const LocalSEOForm = () => {
     price: "",
     advanceprice: "",
     remainingPrice: "",
-    serviceName: "",
-    serviceDescription: "",
-    serviceQuantity: "",
-    servicePrice: "",
     clientName: "",
     street: "",
     WebsiteURL: "",
@@ -58,7 +54,16 @@ const LocalSEOForm = () => {
 
     const remaining = updatedPrice - updatedAdvancePrice;
     setRemainingPrice(remaining);
+    if (name === "workStatus") {
+      // Log the selected value for debugging
+      console.log("Selected workStatus:", value);
 
+      // Update the state
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    }
     setFormData({
       ...formData,
       [name]: value,
@@ -98,12 +103,6 @@ const LocalSEOForm = () => {
           gmbUrl: formData.gmb,
           workStatus: formData.workStatus,
           notes: formData.notes,
-        },
-        Services: {
-          serviceName: formData.serviceName,
-          serviceDescription: formData.serviceDescription,
-          serviceQuantity: formData.serviceQuantity,
-          servicePrice: formData.servicePrice,
         },
         quotation: {
           price: formData.price,
@@ -238,47 +237,6 @@ const LocalSEOForm = () => {
         <Grid container spacing={2}>
           <Grid item xs={6}>
             <TextField
-              label="Service name"
-              fullWidth
-              name="serviceName"
-              value={formData.serviceName}
-              onChange={handleChange}
-              multiline
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="Service description"
-              fullWidth
-              name="serviceDescription"
-              value={formData.serviceDescription}
-              onChange={handleChange}
-              multiline
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="Service quantity"
-              fullWidth
-              name="serviceQuantity"
-              value={formData.serviceQuantity}
-              onChange={handleChange}
-              multiline
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="Service price"
-              fullWidth
-              name="servicePrice"
-              value={formData.servicePrice}
-              onChange={handleChange}
-              multiline
-            />
-          </Grid>
-
-          <Grid item xs={6}>
-            <TextField
               label="Client/Business Name"
               fullWidth
               name="clientName"
@@ -396,8 +354,13 @@ const LocalSEOForm = () => {
               name="workStatus"
               value={formData.workStatus}
               onChange={handleChange}
-              multiline
-            />
+              select
+            >
+              <MenuItem value="GMB Full Optimization">
+                GMB Full Optimization
+              </MenuItem>
+              <MenuItem value="GMB Off Page">GMB Off Page</MenuItem>
+            </TextField>
           </Grid>
           <Grid item xs={6}>
             <TextField

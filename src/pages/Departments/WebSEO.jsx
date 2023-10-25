@@ -14,6 +14,7 @@ import toast from "react-hot-toast";
 
 const WebSeoForm = () => {
   const user = JSON.parse(localStorage.getItem("user"));
+  console.log(user);
   const [departments, setDepartments] = useState([]);
   const [remainingPrice, setRemainingPrice] = useState(0); // Initialize remainingPrice
   const [formData, setFormData] = useState({

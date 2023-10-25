@@ -13,11 +13,9 @@ import {
   ListItemIcon,
   ListItemText,
   CssBaseline,
-  Popover,
   Dialog,
   DialogContent,
   DialogActions,
-  Select,
 } from "@mui/material";
 import DescriptionIcon from "@mui/icons-material/Description";
 import logoImage from "../assests/Navbarlogo.png";
@@ -40,6 +38,7 @@ import { makeStyles } from "@mui/styles";
 import "../styles/header.css";
 import { Link } from "react-router-dom";
 import CreateTicketCard from "../components/createTicket";
+import AddClient from "./AddClient/AddClient";
 const useStyles = makeStyles((theme) => ({
   container: {
     display: "flex",
@@ -156,7 +155,31 @@ const Header = () => {
   const toggleDepartment = () => {
     setDepartmentOpen(!isDepartmentOpen);
   };
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [clientName, setClientName] = useState("");
+  const [businessEmail, setBusinessEmail] = useState("");
 
+  const openDialog = () => {
+    setIsDialogOpen(true);
+  };
+
+  const closeDialog = () => {
+    setIsDialogOpen(false);
+  };
+
+  const handleClientNameChange = (event) => {
+    setClientName(event.target.value);
+  };
+
+  const handleBusinessEmailChange = (event) => {
+    setBusinessEmail(event.target.value);
+  };
+
+  const handleAddClient = () => {
+    // Here, you can perform the necessary action, such as sending the data to your backend or handling it as needed.
+    // After adding the client, you can close the dialog.
+    closeDialog();
+  };
   return (
     <>
       <CssBaseline />
@@ -285,11 +308,12 @@ const Header = () => {
                     <ListItemText primary="Web SEO" />
                   </ListItem>
                 </Link>
-
-                <ListItem button>
-                  {/* Local SEO */}
-                  <ListItemText primary="Local SEO" />
-                </ListItem>
+                <Link to="/localseo_clients">
+                  <ListItem button>
+                    {/* Local SEO */}
+                    <ListItemText primary="Local SEO" />
+                  </ListItem>
+                </Link>
                 <ListItem button>
                   {/* Paid Marketing */}
                   <ListItemText primary="Paid Marketing" />
@@ -317,7 +341,11 @@ const Header = () => {
                     key={d._id}
                     onClick={() => handleDepartmentSelect(d.name)}
                   >
-                    <Link to={`/department/${d.name}`}>
+                    <Link
+                      to={`/department/${encodeURIComponent(
+                        d.name.toLowerCase()
+                      )}`}
+                    >
                       <ListItemText primary={d.name} />
                     </Link>
                   </ListItem>
