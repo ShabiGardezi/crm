@@ -21,8 +21,8 @@
 .formbtn {
   display: flex;
   align-items: center;
+  justify-content: center;
   margin-top: 2%;
-  margin-left: 25%;
 }
 h5.MuiTypography-root.MuiTypography-h5 {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
@@ -34,10 +34,13 @@ h6.MuiTypography-root.MuiTypography-subtitle1.ticketHeading.css-10wpov9-MuiTypog
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   font-weight: bold;
-  /* margin-bottom: 25px; */
+  margin-bottom: 25px;
 }
 .client {
   position: absolute;
   right: 0;
   top: 6px;
+}
+.formtitle {
+  margin-bottom: 25px;
 }

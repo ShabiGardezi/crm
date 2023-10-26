@@ -6,30 +6,25 @@ import {
   MenuItem,
   Typography,
 } from "@material-ui/core";
-import AddClient from "../AddClient/AddClient";
 import axios from "axios"; // Import Axios for making API requests
 import "../../styles/Forms/customforms.css";
 import Header from "../Header";
 import toast from "react-hot-toast";
+import Autosuggest from "react-autosuggest";
 const LocalSEOForm = () => {
   const user = JSON.parse(localStorage.getItem("user"));
   const [isAddClientDialogOpen, setIsAddClientDialogOpen] = useState(false);
   const [departments, setDepartments] = useState([]);
   const [remainingPrice, setRemainingPrice] = useState(0); // Initialize remainingPrice
-  // Function to open the Add Client dialog
-  const openAddClientDialog = () => {
-    setIsAddClientDialogOpen(true);
-  };
+  const [clientSuggestions, setClientSuggestions] = useState([]);
+  const [clientInput, setClientInput] = useState("");
 
-  // Function to close the Add Client dialog
-  const closeAddClientDialog = () => {
-    setIsAddClientDialogOpen(false);
-  };
   const [formData, setFormData] = useState({
     priorityLevel: "",
     assignor: user?.username || "",
     dueDate: new Date().toISOString().substr(0, 10), // Initialize with the current date in yyyy-mm-dd format
     keywords: "",
+    supportPerson: "",
     webUrl: "",
     loginCredentials: "",
     price: "",
@@ -49,8 +44,14 @@ const LocalSEOForm = () => {
     workStatus: "",
     notes: "",
     department: "",
+    frontier: "",
+    closure: "",
   });
 
+  useEffect(() => {
+    // Fetch existing client names from the server when the component loads
+    fetchClientNamesFromServer();
+  }, []);
   const handleChange = (event) => {
     const { name, value } = event.target;
     let updatedPrice = parseFloat(formData.price) || 0;
@@ -80,11 +81,51 @@ const LocalSEOForm = () => {
       remainingPrice: remaining, // Update remainingPrice in formData
     });
   };
+  const fetchClientNamesFromServer = async () => {
+    try {
+      // Replace this with an actual API call to get existing client names
+      const response = await axios.get(
+        `http://localhost:5000/api/clientName/client-names`
+      );
+      const clientNames = response.data.clientNames; // Adjust this based on your API response
+      setClientSuggestions(clientNames);
+    } catch (error) {
+      console.error("Error fetching client names:", error);
+    }
+  };
+
+  const onClientInputChange = (event, { newValue }) => {
+    if (newValue !== undefined) {
+      setClientInput(newValue);
+      setFormData({
+        ...formData,
+        clientName: newValue,
+      });
+    }
+  };
+
+  const onClientSuggestionSelected = (event, { suggestion }) => {
+    setClientInput(suggestion);
+    setFormData({
+      ...formData,
+      clientName: suggestion,
+    });
+  };
+  const getSuggestions = (value) => {
+    const inputValue = value.trim().toLowerCase();
+    const inputLength = inputValue.length;
+
+    return inputLength === 0
+      ? []
+      : clientSuggestions.filter(
+          (clientName) =>
+            clientName.toLowerCase().slice(0, inputLength) === inputValue
+        );
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault(); // Prevent the default form submission behavior
     try {
-      // Make an Axios request here (replace "/api/submit" with your actual API endpoint)
       // Find the selected department object
       const selectedDepartment = departments.find(
         (department) => department.name === formData.department
@@ -100,6 +141,7 @@ const LocalSEOForm = () => {
         assignorDepartment: user.department._id,
         department: formData.department,
         businessdetails: {
+          frontier: formData.frontier,
           clientName: formData.clientName,
           street: formData.street,
           WebsiteURL: formData.WebsiteURL,
@@ -113,6 +155,8 @@ const LocalSEOForm = () => {
           gmbUrl: formData.gmb,
           workStatus: formData.workStatus,
           notes: formData.notes,
+          supportPerson: formData.supportPerson,
+          closure: formData.closure,
         },
         quotation: {
           price: formData.price,
@@ -151,16 +195,83 @@ const LocalSEOForm = () => {
   return (
     <div className="styleform">
       <Header />
-      <div className="formtitle">
-        <Typography variant="h5">Local SEO Form</Typography>
-        {/* AddClient Dialog */}
-        <div className="client">
-          <AddClient />
-        </div>
-      </div>
       <form onSubmit={handleSubmit}>
+        <div className="formtitle">
+          <Typography variant="h5">Custometer</Typography>
+        </div>
+        <Grid container spacing={3}>
+          <Grid item xs={5}>
+            <TextField
+              label="Client/Business Name"
+              fullWidth
+              name="clientName"
+              value={formData.clientName}
+              onChange={handleChange}
+              multiline
+            />
+            <Autosuggest
+              suggestions={getSuggestions(clientInput)}
+              onSuggestionsFetchRequested={() => {}}
+              onSuggestionsClearRequested={() => {}}
+              getSuggestionValue={(suggestion) => suggestion}
+              renderSuggestion={(suggestion) => <div>{suggestion}</div>}
+              inputProps={{
+                placeholder: "Client/Business Name",
+                value: clientInput,
+                onChange: onClientInputChange,
+              }}
+            />
+          </Grid>
+          <Grid item xs={5}>
+            <TextField
+              label="Business Email"
+              fullWidth
+              name="clientEmail"
+              value={formData.clientEmail}
+              onChange={handleChange}
+              multiline
+            />
+          </Grid>
+        </Grid>
+
+        <div className="formtitle ticketHeading">
+          <Typography variant="h5">Sale Department</Typography>
+        </div>
         <Grid container spacing={2}>
-          <Grid item xs={6}>
+          <Grid item xs={3}>
+            <TextField
+              label="Assignor"
+              fullWidth
+              name="assignor"
+              value={formData.assignor}
+              onChange={handleChange}
+              disabled
+            />
+          </Grid>
+          <Grid item xs={3}>
+            <TextField
+              label="Closure Person"
+              fullWidth
+              name="closure"
+              value={formData.closure}
+              onChange={handleChange}
+            />
+          </Grid>
+          <Grid item xs={3}>
+            <TextField
+              label="Frontier"
+              fullWidth
+              name="frontier"
+              value={formData.frontier}
+              onChange={handleChange}
+            />
+          </Grid>
+        </Grid>
+        <div className="formtitle ticketHeading">
+          <Typography variant="h5">Local SEO Form</Typography>
+        </div>
+        <Grid container spacing={2}>
+          <Grid item xs={2}>
             <TextField
               label="Priority Level"
               fullWidth
@@ -174,7 +285,7 @@ const LocalSEOForm = () => {
               <MenuItem value="High">High</MenuItem>
             </TextField>
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={2}>
             <TextField
               label="Select Department"
               fullWidth
@@ -190,17 +301,7 @@ const LocalSEOForm = () => {
               ))}
             </TextField>
           </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="Assignor"
-              fullWidth
-              name="assignor"
-              value={formData.assignor}
-              onChange={handleChange}
-              disabled
-            />
-          </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={2}>
             <TextField
               label="Deadline"
               fullWidth
@@ -211,10 +312,7 @@ const LocalSEOForm = () => {
               defaultValue={new Date()}
             />
           </Grid>
-        </Grid>
-
-        <Grid container spacing={2}>
-          <Grid item xs={6}>
+          <Grid item xs={2}>
             <TextField
               label="Price"
               fullWidth
@@ -223,7 +321,7 @@ const LocalSEOForm = () => {
               onChange={handleChange}
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={2}>
             <TextField
               label="Advance"
               fullWidth
@@ -232,7 +330,7 @@ const LocalSEOForm = () => {
               onChange={handleChange}
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={2}>
             <TextField
               label="Remaining Price"
               fullWidth
@@ -249,17 +347,7 @@ const LocalSEOForm = () => {
           <Typography variant="h5">Business Details</Typography>
         </div>
         <Grid container spacing={2}>
-          <Grid item xs={6}>
-            <TextField
-              label="Client/Business Name"
-              fullWidth
-              name="clientName"
-              value={formData.clientName}
-              onChange={handleChange}
-              multiline
-            />
-          </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={2}>
             <TextField
               label="Business Number"
               fullWidth
@@ -269,17 +357,8 @@ const LocalSEOForm = () => {
               multiline
             />
           </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="Business Email"
-              fullWidth
-              name="clientEmail"
-              value={formData.clientEmail}
-              onChange={handleChange}
-              multiline
-            />
-          </Grid>
-          <Grid item xs={6}>
+
+          <Grid item xs={2}>
             <TextField
               label="Business Hours"
               fullWidth
@@ -289,7 +368,7 @@ const LocalSEOForm = () => {
               multiline
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={2}>
             <TextField
               label="Website URL"
               fullWidth
@@ -299,7 +378,7 @@ const LocalSEOForm = () => {
               multiline
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={2}>
             <TextField
               label="Street"
               fullWidth
@@ -310,7 +389,7 @@ const LocalSEOForm = () => {
             />
           </Grid>
 
-          <Grid item xs={6}>
+          <Grid item xs={2}>
             <TextField
               label="Country"
               fullWidth
@@ -320,7 +399,7 @@ const LocalSEOForm = () => {
               multiline
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={2}>
             <TextField
               label="State"
               fullWidth
@@ -330,7 +409,7 @@ const LocalSEOForm = () => {
               multiline
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={2}>
             <TextField
               label="ZipCode"
               fullWidth
@@ -341,7 +420,7 @@ const LocalSEOForm = () => {
             />
           </Grid>
 
-          <Grid item xs={6}>
+          <Grid item xs={2}>
             <TextField
               label="Social Profile"
               fullWidth
@@ -351,7 +430,7 @@ const LocalSEOForm = () => {
               multiline
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={2}>
             <TextField
               label="GMB Url"
               fullWidth
@@ -361,7 +440,7 @@ const LocalSEOForm = () => {
               multiline
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={2}>
             <TextField
               label="Work Status"
               fullWidth
@@ -376,7 +455,7 @@ const LocalSEOForm = () => {
               <MenuItem value="GMB Off Page">GMB Off Page</MenuItem>
             </TextField>
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={2}>
             <TextField
               label="Notes"
               fullWidth
