@@ -10,6 +10,7 @@ import {
 import axios from "axios";
 import Header from "../Header";
 import toast from "react-hot-toast";
+import AddClient from "../AddClient/AddClient";
 // import "react-toastify/dist/ReactToastify.css";
 
 const WebSeoForm = () => {
@@ -160,6 +161,9 @@ const WebSeoForm = () => {
       <Header />
       <div className="formtitle">
         <Typography variant="h5">Website SEO Form</Typography>
+        <div className="client">
+          <AddClient />
+        </div>
       </div>
       <form onSubmit={handleSubmit}>
         <div className="ticketHeading">

@@ -36,3 +36,8 @@ h6.MuiTypography-root.MuiTypography-subtitle1.ticketHeading.css-10wpov9-MuiTypog
   font-weight: bold;
   /* margin-bottom: 25px; */
 }
+.client {
+  position: absolute;
+  right: 0;
+  top: 6px;
+}

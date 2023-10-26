@@ -154,7 +154,9 @@ const LocalSEOForm = () => {
       <div className="formtitle">
         <Typography variant="h5">Local SEO Form</Typography>
         {/* AddClient Dialog */}
-        <AddClient />
+        <div className="client">
+          <AddClient />
+        </div>
       </div>
       <form onSubmit={handleSubmit}>
         <Grid container spacing={2}>

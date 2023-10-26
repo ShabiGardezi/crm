@@ -6,7 +6,7 @@ import Button from "@mui/material/Button";
 import { MenuItem } from "@mui/material";
 import axios from "axios";
 import toast from "react-hot-toast";
-
+import "../../styles/clients/AddClient.css";
 export default function AddClient() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [departments, setDepartments] = useState([]);
@@ -48,7 +48,7 @@ export default function AddClient() {
       const response = await axios.post(``, {
         clientName: formData.clientName,
         businessEmail: formData.businessEmail,
-        department: majorAssignee, // Send department data to your API
+        majorAssignee: majorAssignee,
       });
 
       // Handle the response as needed (e.g., show a success message)
@@ -118,9 +118,9 @@ export default function AddClient() {
               ))}
             </TextField>
           </DialogContent>
-          <div className="formbtn">
+          <div className="savebtn">
             <Button type="submit" variant="contained" color="primary">
-              Submit
+              Save
             </Button>
           </div>
         </form>
