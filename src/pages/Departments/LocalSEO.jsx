@@ -10,15 +10,12 @@ import axios from "axios"; // Import Axios for making API requests
 import "../../styles/Forms/customforms.css";
 import Header from "../Header";
 import toast from "react-hot-toast";
-import Autosuggest from "react-autosuggest";
 const LocalSEOForm = () => {
   const user = JSON.parse(localStorage.getItem("user"));
-  const [isAddClientDialogOpen, setIsAddClientDialogOpen] = useState(false);
   const [departments, setDepartments] = useState([]);
   const [remainingPrice, setRemainingPrice] = useState(0); // Initialize remainingPrice
   const [clientSuggestions, setClientSuggestions] = useState([]);
-  const [clientInput, setClientInput] = useState("");
-
+  const [selectedClient, setSelectedClient] = useState(null);
   const [formData, setFormData] = useState({
     priorityLevel: "",
     assignor: user?.username || "",
@@ -48,10 +45,6 @@ const LocalSEOForm = () => {
     closure: "",
   });
 
-  useEffect(() => {
-    // Fetch existing client names from the server when the component loads
-    fetchClientNamesFromServer();
-  }, []);
   const handleChange = (event) => {
     const { name, value } = event.target;
     let updatedPrice = parseFloat(formData.price) || 0;
@@ -81,48 +74,6 @@ const LocalSEOForm = () => {
       remainingPrice: remaining, // Update remainingPrice in formData
     });
   };
-  const fetchClientNamesFromServer = async () => {
-    try {
-      // Replace this with an actual API call to get existing client names
-      const response = await axios.get(
-        `http://localhost:5000/api/clientName/client-names`
-      );
-      const clientNames = response.data.clientNames; // Adjust this based on your API response
-      setClientSuggestions(clientNames);
-    } catch (error) {
-      console.error("Error fetching client names:", error);
-    }
-  };
-
-  const onClientInputChange = (event, { newValue }) => {
-    if (newValue !== undefined) {
-      setClientInput(newValue);
-      setFormData({
-        ...formData,
-        clientName: newValue,
-      });
-    }
-  };
-
-  const onClientSuggestionSelected = (event, { suggestion }) => {
-    setClientInput(suggestion);
-    setFormData({
-      ...formData,
-      clientName: suggestion,
-    });
-  };
-  const getSuggestions = (value) => {
-    const inputValue = value.trim().toLowerCase();
-    const inputLength = inputValue.length;
-
-    return inputLength === 0
-      ? []
-      : clientSuggestions.filter(
-          (clientName) =>
-            clientName.toLowerCase().slice(0, inputLength) === inputValue
-        );
-  };
-
   const handleSubmit = async (event) => {
     event.preventDefault(); // Prevent the default form submission behavior
     try {
@@ -191,7 +142,29 @@ const LocalSEOForm = () => {
     };
     fetchDepartments();
   }, []);
+  // Function to fetch suggestions as the user types
+  const fetchSuggestions = async (query) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5000/api/client/suggestions?query=${query}`
+      );
+      setClientSuggestions(response.data);
+    } catch (error) {
+      console.error("Error fetching suggestions:", error);
+    }
+  };
 
+  // Function to fetch client details when a suggestion is selected
+  const handleClientSelection = async (clientName) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5000/api/client/details/${clientName}`
+      );
+      setSelectedClient(response.data);
+    } catch (error) {
+      console.error("Error fetching client details:", error);
+    }
+  };
   return (
     <div className="styleform">
       <Header />
@@ -208,19 +181,51 @@ const LocalSEOForm = () => {
               value={formData.clientName}
               onChange={handleChange}
               multiline
+              onInput={(e) => fetchSuggestions(e.target.value)}
             />
-            <Autosuggest
-              suggestions={getSuggestions(clientInput)}
-              onSuggestionsFetchRequested={() => {}}
-              onSuggestionsClearRequested={() => {}}
-              getSuggestionValue={(suggestion) => suggestion}
-              renderSuggestion={(suggestion) => <div>{suggestion}</div>}
-              inputProps={{
-                placeholder: "Client/Business Name",
-                value: clientInput,
-                onChange: onClientInputChange,
-              }}
-            />
+
+            {/* Display client suggestions as a dropdown */}
+            {clientSuggestions.length > 0 && (
+              <ul>
+                {clientSuggestions.map((client, index) => (
+                  <li
+                    key={index}
+                    onClick={() => handleClientSelection(client.clientName)}
+                  >
+                    {client.clientName}
+                  </li>
+                ))}
+              </ul>
+            )}
+            {selectedClient && (
+              <>
+                <TextField
+                  label="Client/Business Name"
+                  fullWidth
+                  name="clientName"
+                  value={selectedClient.clientName}
+                  onChange={handleChange}
+                  multiline
+                />
+
+                <TextField
+                  label="Business Number"
+                  fullWidth
+                  name="businessNumber"
+                  value={selectedClient.businessNumber}
+                  onChange={handleChange}
+                  multiline
+                />
+                <TextField
+                  label="State"
+                  fullWidth
+                  name="state"
+                  value={selectedClient.state}
+                  onChange={handleChange}
+                  multiline
+                />
+              </>
+            )}
           </Grid>
           <Grid item xs={5}>
             <TextField

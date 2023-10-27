@@ -44,3 +44,6 @@ h6.MuiTypography-root.MuiTypography-subtitle1.ticketHeading.css-10wpov9-MuiTypog
 .formtitle {
   margin-bottom: 25px;
 }
+.styleform .MuiGrid-spacing-xs-3 {
+  width: calc(100% + 10px);
+}
