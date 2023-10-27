@@ -41,8 +41,8 @@ const LocalSEOForm = () => {
     workStatus: "",
     notes: "",
     department: "",
-    frontier: "",
-    closure: "",
+    fronter: "",
+    closer: "",
   });
 
   const handleChange = (event) => {
@@ -92,7 +92,7 @@ const LocalSEOForm = () => {
         assignorDepartment: user.department._id,
         department: formData.department,
         businessdetails: {
-          frontier: formData.frontier,
+          fronter: formData.fronter,
           clientName: formData.clientName,
           street: formData.street,
           WebsiteURL: formData.WebsiteURL,
@@ -107,7 +107,7 @@ const LocalSEOForm = () => {
           workStatus: formData.workStatus,
           notes: formData.notes,
           supportPerson: formData.supportPerson,
-          closure: formData.closure,
+          closer: formData.closer,
         },
         quotation: {
           price: formData.price,
@@ -144,6 +144,11 @@ const LocalSEOForm = () => {
   }, []);
   // Function to fetch suggestions as the user types
   const fetchSuggestions = async (query) => {
+    if (query.trim() === "") {
+      // If the query is empty, clear the clientSuggestions array
+      setClientSuggestions([]);
+      return;
+    }
     try {
       const response = await axios.get(
         `http://localhost:5000/api/client/suggestions?query=${query}`
@@ -164,9 +169,19 @@ const LocalSEOForm = () => {
       setFormData({
         ...formData,
         businessNumber: response.data.businessNumber,
+        clientEmail: response.data.clientEmail,
         clientName: response.data.clientName,
+        country: response.data.country,
         state: response.data.state,
+        street: response.data.street,
+        zipcode: response.data.zipcode,
+        socialProfile: response.data.socialProfile,
+        businessHours: response.data.businessHours,
+        workStatus: response.data.workStatus,
+        gmbUrl: response.data.gmbUrl,
+        WebsiteURL: response.data.WebsiteURL,
       });
+      setClientSuggestions([]);
     } catch (error) {
       console.error("Error fetching client details:", error);
     }
@@ -197,6 +212,7 @@ const LocalSEOForm = () => {
                   <li
                     key={index}
                     onClick={() => handleClientSelection(client.clientName)}
+                    className="pointer-cursor" // Apply the CSS class here
                   >
                     {client.clientName}
                   </li>
@@ -261,19 +277,19 @@ const LocalSEOForm = () => {
           </Grid>
           <Grid item xs={3}>
             <TextField
-              label="Closure Person"
+              label="Closer Person"
               fullWidth
-              name="closure"
-              value={formData.closure}
+              name="closer"
+              value={formData.closer}
               onChange={handleChange}
             />
           </Grid>
           <Grid item xs={3}>
             <TextField
-              label="Frontier"
+              label="Fronter"
               fullWidth
-              name="frontier"
-              value={formData.frontier}
+              name="fronter"
+              value={formData.fronter}
               onChange={handleChange}
             />
           </Grid>

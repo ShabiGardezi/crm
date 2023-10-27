@@ -47,3 +47,8 @@ h6.MuiTypography-root.MuiTypography-subtitle1.ticketHeading.css-10wpov9-MuiTypog
 .styleform .MuiGrid-spacing-xs-3 {
   width: calc(100% + 10px);
 }
+.pointer-cursor {
+  cursor: pointer;
+  max-width: 60%;
+  margin: auto;
+}
