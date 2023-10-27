@@ -22,6 +22,7 @@ const LocalSEOForm = () => {
     dueDate: new Date().toISOString().substr(0, 10), // Initialize with the current date in yyyy-mm-dd format
     keywords: "",
     supportPerson: "",
+
     webUrl: "",
     loginCredentials: "",
     price: "",
@@ -142,10 +143,10 @@ const LocalSEOForm = () => {
     };
     fetchDepartments();
   }, []);
+
   // Function to fetch suggestions as the user types
   const fetchSuggestions = async (query) => {
     if (query.trim() === "") {
-      // If the query is empty, clear the clientSuggestions array
       setClientSuggestions([]);
       return;
     }
@@ -155,6 +156,7 @@ const LocalSEOForm = () => {
       );
       setClientSuggestions(response.data);
     } catch (error) {
+      console.log(error);
       console.error("Error fetching suggestions:", error);
     }
   };
@@ -207,47 +209,20 @@ const LocalSEOForm = () => {
 
             {/* Display client suggestions as a dropdown */}
             {clientSuggestions.length > 0 && (
-              <ul>
-                {clientSuggestions.map((client, index) => (
-                  <li
-                    key={index}
-                    onClick={() => handleClientSelection(client.clientName)}
-                    className="pointer-cursor" // Apply the CSS class here
-                  >
-                    {client.clientName}
-                  </li>
-                ))}
-              </ul>
+              <div className="scrollable-suggestions">
+                <ul>
+                  {clientSuggestions.map((client, index) => (
+                    <li
+                      key={index}
+                      onClick={() => handleClientSelection(client.clientName)}
+                      className="pointer-cursor" // Apply the CSS class here
+                    >
+                      {client.clientName}
+                    </li>
+                  ))}
+                </ul>
+              </div>
             )}
-            {/* {selectedClient && (
-              <>
-                <TextField
-                  label="Client/Business Name"
-                  fullWidth
-                  name="clientName"
-                  value={selectedClient.clientName}
-                  onChange={handleChange}
-                  multiline
-                />
-
-                <TextField
-                  label="Business Number"
-                  fullWidth
-                  name="businessNumber"
-                  value={selectedClient.businessNumber}
-                  onChange={handleChange}
-                  multiline
-                />
-                <TextField
-                  label="State"
-                  fullWidth
-                  name="state"
-                  value={selectedClient.state}
-                  onChange={handleChange}
-                  multiline
-                />
-              </>
-            )} */}
           </Grid>
           <Grid item xs={5}>
             <TextField
@@ -273,6 +248,15 @@ const LocalSEOForm = () => {
               value={formData.assignor}
               onChange={handleChange}
               disabled
+            />
+          </Grid>
+          <Grid item xs={3}>
+            <TextField
+              label="Support Person"
+              fullWidth
+              name="supportPerson"
+              value={formData.supportPerson}
+              onChange={handleChange}
             />
           </Grid>
           <Grid item xs={3}>

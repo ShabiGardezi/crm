@@ -44,6 +44,7 @@ h6.MuiTypography-root.MuiTypography-subtitle1.ticketHeading.css-10wpov9-MuiTypog
 .formtitle {
   margin-bottom: 25px;
 }
+/* CLIENTS DATA SUGGESTIONS */
 .styleform .MuiGrid-spacing-xs-3 {
   width: calc(100% + 10px);
 }
@@ -51,4 +52,9 @@ h6.MuiTypography-root.MuiTypography-subtitle1.ticketHeading.css-10wpov9-MuiTypog
   cursor: pointer;
   max-width: 60%;
   margin: auto;
+}
+/* scrollable container for client suggestions */
+.scrollable-suggestions {
+  max-height: 150px;
+  overflow-y: auto;
 }
