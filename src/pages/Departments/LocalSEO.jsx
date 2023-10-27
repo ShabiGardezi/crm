@@ -161,6 +161,12 @@ const LocalSEOForm = () => {
         `http://localhost:5000/api/client/details/${clientName}`
       );
       setSelectedClient(response.data);
+      setFormData({
+        ...formData,
+        businessNumber: response.data.businessNumber,
+        clientName: response.data.clientName,
+        state: response.data.state,
+      });
     } catch (error) {
       console.error("Error fetching client details:", error);
     }
@@ -197,7 +203,7 @@ const LocalSEOForm = () => {
                 ))}
               </ul>
             )}
-            {selectedClient && (
+            {/* {selectedClient && (
               <>
                 <TextField
                   label="Client/Business Name"
@@ -225,7 +231,7 @@ const LocalSEOForm = () => {
                   multiline
                 />
               </>
-            )}
+            )} */}
           </Grid>
           <Grid item xs={5}>
             <TextField
