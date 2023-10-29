@@ -32,7 +32,7 @@ import DisplayTicketDetails from "../Tickets/DisplayTicketDetails";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import ActiveNotSctiveCard from "./ActiveNotActiveCard";
 import axios from "axios";
-export default function WebSeoSheet() {
+export default function WebSeoSheet(props) {
   const user = JSON.parse(localStorage.getItem("user"));
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -217,9 +217,15 @@ export default function WebSeoSheet() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(
-          `http://localhost:5000/api/tickets?departmentId=${user?.department?._id}`
-        );
+        console.log(user.role);
+        console.log(props.department);
+        let url = "";
+        if (user.role === "admin" || user.department.name === "Sales") {
+          url = `http://localhost:5000/api/tickets?departmentId=${props.department._id}`;
+        } else {
+          url = `http://localhost:5000/api/tickets?departmentId=${user?.department?._id}`;
+        }
+        const response = await fetch(url);
         if (response.ok) {
           const data = await response.json();
 
