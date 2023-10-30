@@ -40,6 +40,7 @@ const ClientsCard = () => {
         const activeTicketsFiltered = tickets.filter(
           (ticket) => ticket.ActiveNotActive === "Active"
         );
+
         const notActiveTicketsFiltered = tickets.filter(
           (ticket) => ticket.ActiveNotActive === "Not Active"
         );

@@ -18,6 +18,9 @@ const WebSeoForm = () => {
   console.log(user);
   const [departments, setDepartments] = useState([]);
   const [remainingPrice, setRemainingPrice] = useState(0); // Initialize remainingPrice
+  const [selectedClient, setSelectedClient] = useState(null);
+  const [showNoOfBacklinks, setShowNoOfBacklinks] = useState(false);
+  const [clientSuggestions, setClientSuggestions] = useState([]);
   const [formData, setFormData] = useState({
     priorityLevel: "",
     assignor: user?.username || "",
@@ -48,6 +51,11 @@ const WebSeoForm = () => {
     LoginCredentials: "",
     SearchConsoleAccess: "",
     GoogleAnalyticsAccess: "",
+    fronter: "",
+    closer: "",
+    supportPerson: "",
+    onceService: "",
+    noOfBacklinks: "",
   });
   useEffect(() => {
     // Calculate one month later from the current date
@@ -74,6 +82,15 @@ const WebSeoForm = () => {
     const remaining = updatedPrice - updatedAdvancePrice;
     setRemainingPrice(remaining);
 
+    // Check if the selected service is "Backlinks" to decide whether to show the "No. of Backlinks" TextField
+    if (
+      name === "workStatus" &&
+      (value === "backlinks" || value === "paid-guest")
+    ) {
+      setShowNoOfBacklinks(true);
+    } else {
+      setShowNoOfBacklinks(false);
+    }
     setFormData({
       ...formData,
       [name]: value,
@@ -115,6 +132,11 @@ const WebSeoForm = () => {
           workStatus: formData.workStatus,
           notes: formData.notes,
           Keywords: formData.Keywords,
+          fronter: formData.fronter,
+          closer: formData.closer,
+          supportPerson: formData.supportPerson,
+          onceService: formData.onceService,
+          noOfBacklinks: formData.noOfBacklinks,
         },
         Services: {
           serviceName: formData.serviceName,
@@ -156,21 +178,143 @@ const WebSeoForm = () => {
     };
     fetchDepartments();
   }, []);
+  // Function to fetch suggestions as the user types
+  const fetchSuggestions = async (query) => {
+    if (query.trim() === "") {
+      setClientSuggestions([]);
+      return;
+    }
+    try {
+      const response = await axios.get(
+        `http://localhost:5000/api/client/suggestions?query=${query}`
+      );
+      setClientSuggestions(response.data);
+    } catch (error) {
+      console.log(error);
+      console.error("Error fetching suggestions:", error);
+    }
+  };
+  // Function to fetch client details when a suggestion is selected
+  const handleClientSelection = async (clientName) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5000/api/client/details/${clientName}`
+      );
+      setSelectedClient(response.data);
+      setFormData({
+        ...formData,
+        businessNumber: response.data.businessNumber,
+        clientEmail: response.data.clientEmail,
+        clientName: response.data.clientName,
+        country: response.data.country,
+        state: response.data.state,
+        street: response.data.street,
+        zipcode: response.data.zipcode,
+        socialProfile: response.data.socialProfile,
+        businessHours: response.data.businessHours,
+        workStatus: response.data.workStatus,
+        gmbUrl: response.data.gmbUrl,
+        WebsiteURL: response.data.WebsiteURL,
+      });
+      setClientSuggestions([]);
+    } catch (error) {
+      console.error("Error fetching client details:", error);
+    }
+  };
   return (
     <div className="styleform">
       <Header />
-      <div className="formtitle">
-        <Typography variant="h5">Website SEO Form</Typography>
-        <div className="client">
-          <AddClient />
-        </div>
-      </div>
       <form onSubmit={handleSubmit}>
-        <div className="ticketHeading">
-          {/* <Typography variant="h5">Ticket Details</Typography> */}
+        <div className="formtitle">
+          <Typography variant="h5">Custometer</Typography>
+        </div>
+        <Grid container spacing={3}>
+          <Grid item xs={5}>
+            <TextField
+              label="Client/Business Name"
+              fullWidth
+              name="clientName"
+              value={formData.clientName}
+              onChange={handleChange}
+              multiline
+              onInput={(e) => fetchSuggestions(e.target.value)}
+            />
+
+            {/* Display client suggestions as a dropdown */}
+            {clientSuggestions.length > 0 && (
+              <div className="scrollable-suggestions">
+                <ul>
+                  {clientSuggestions.map((client, index) => (
+                    <li
+                      key={index}
+                      onClick={() => handleClientSelection(client.clientName)}
+                      className="pointer-cursor" // Apply the CSS class here
+                    >
+                      {client.clientName}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </Grid>
+          <Grid item xs={5}>
+            <TextField
+              label="Business Email"
+              fullWidth
+              name="clientEmail"
+              value={formData.clientEmail}
+              onChange={handleChange}
+              multiline
+            />
+          </Grid>
+        </Grid>
+        <div className="formtitle ticketHeading">
+          <Typography variant="h5">Sale Department</Typography>
         </div>
         <Grid container spacing={2}>
-          <Grid item xs={6}>
+          <Grid item xs={3}>
+            <TextField
+              label="Assignor"
+              fullWidth
+              name="assignor"
+              value={formData.assignor}
+              onChange={handleChange}
+              disabled
+            />
+          </Grid>
+          <Grid item xs={3}>
+            <TextField
+              label="Support Person"
+              fullWidth
+              name="supportPerson"
+              value={formData.supportPerson}
+              onChange={handleChange}
+            />
+          </Grid>
+          <Grid item xs={3}>
+            <TextField
+              label="Closer Person"
+              fullWidth
+              name="closer"
+              value={formData.closer}
+              onChange={handleChange}
+            />
+          </Grid>
+          <Grid item xs={3}>
+            <TextField
+              label="Fronter"
+              fullWidth
+              name="fronter"
+              value={formData.fronter}
+              onChange={handleChange}
+            />
+          </Grid>
+        </Grid>
+        <div className="formtitle ticketHeading">
+          <Typography variant="h5">Web SEO Form</Typography>
+        </div>
+        <Grid container spacing={2}>
+          <Grid item xs={2}>
             <TextField
               label="Priority Level"
               fullWidth
@@ -184,7 +328,7 @@ const WebSeoForm = () => {
               <MenuItem value="High">High</MenuItem>
             </TextField>
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={2}>
             <TextField
               label="Select Department"
               fullWidth
@@ -200,17 +344,7 @@ const WebSeoForm = () => {
               ))}
             </TextField>
           </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="Assignor"
-              fullWidth
-              name="assignor"
-              value={formData.assignor}
-              onChange={handleChange}
-              disabled
-            />
-          </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={2}>
             <TextField
               label="Deadline"
               fullWidth
@@ -221,12 +355,7 @@ const WebSeoForm = () => {
               defaultValue={new Date()}
             />
           </Grid>
-        </Grid>
-        <div className="ticketHeading">
-          {/* <Typography variant="h5">Quotation</Typography> */}
-        </div>
-        <Grid container spacing={2}>
-          <Grid item xs={6}>
+          <Grid item xs={2}>
             <TextField
               label="Price"
               fullWidth
@@ -235,7 +364,7 @@ const WebSeoForm = () => {
               onChange={handleChange}
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={2}>
             <TextField
               label="Advance"
               fullWidth
@@ -244,11 +373,11 @@ const WebSeoForm = () => {
               onChange={handleChange}
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={2}>
             <TextField
               label="Remaining Price"
               fullWidth
-              name="remainingprice"
+              name="remainingPrice"
               value={remainingPrice} // Display the calculated remaining price
               InputProps={{
                 readOnly: true, // Make this field read-only
@@ -256,14 +385,11 @@ const WebSeoForm = () => {
             />
           </Grid>
         </Grid>
-        <div className="ticketHeading">
-          {/* <Typography variant="h5">Services</Typography> */}
-        </div>
-        <div className="ticketHeading">
+        <div className="formtitle ticketHeading">
           <Typography variant="h5">Business Details</Typography>
         </div>
         <Grid container spacing={2}>
-          <Grid item xs={6}>
+          <Grid item xs={2}>
             <TextField
               label="Service name"
               fullWidth
@@ -274,7 +400,7 @@ const WebSeoForm = () => {
             />
           </Grid>
 
-          <Grid item xs={6}>
+          <Grid item xs={2}>
             <TextField
               label="Service Location"
               fullWidth
@@ -284,19 +410,7 @@ const WebSeoForm = () => {
               multiline
             />
           </Grid>
-        </Grid>
-        <Grid container spacing={2}>
-          <Grid item xs={6}>
-            <TextField
-              label="Client / Business Name"
-              fullWidth
-              name="clientName"
-              value={formData.clientName}
-              onChange={handleChange}
-              multiline
-            />
-          </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={2}>
             <TextField
               label="Business Number"
               fullWidth
@@ -306,17 +420,7 @@ const WebSeoForm = () => {
               multiline
             />
           </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="Business Email"
-              fullWidth
-              name="clientEmail"
-              value={formData.clientEmail}
-              onChange={handleChange}
-              multiline
-            />
-          </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={2}>
             <TextField
               label="Business Hours"
               fullWidth
@@ -326,7 +430,7 @@ const WebSeoForm = () => {
               multiline
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={2}>
             <TextField
               label="Country"
               fullWidth
@@ -336,7 +440,7 @@ const WebSeoForm = () => {
               multiline
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={2}>
             <TextField
               label="State"
               fullWidth
@@ -346,7 +450,7 @@ const WebSeoForm = () => {
               multiline
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={2}>
             <TextField
               label="ZipCode"
               fullWidth
@@ -356,7 +460,7 @@ const WebSeoForm = () => {
               multiline
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={2}>
             <TextField
               label="Street"
               fullWidth
@@ -366,7 +470,7 @@ const WebSeoForm = () => {
               multiline
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={2}>
             <TextField
               label="Website URL"
               fullWidth
@@ -376,7 +480,7 @@ const WebSeoForm = () => {
               multiline
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={2}>
             <TextField
               label="Keywords"
               fullWidth
@@ -387,7 +491,7 @@ const WebSeoForm = () => {
             />
           </Grid>
 
-          <Grid item xs={6}>
+          <Grid item xs={2}>
             <TextField
               label="Social Profile"
               fullWidth
@@ -397,7 +501,7 @@ const WebSeoForm = () => {
               multiline
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={2}>
             <TextField
               label="GMB Url"
               fullWidth
@@ -407,9 +511,9 @@ const WebSeoForm = () => {
               multiline
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={2}>
             <TextField
-              label="Work Status"
+              label="Work Nature"
               fullWidth
               name="workStatus"
               value={formData.workStatus}
@@ -417,15 +521,26 @@ const WebSeoForm = () => {
               select
             >
               <MenuItem value="On-Page">On-Page</MenuItem>
-              <MenuItem value="Off-Page">Off-Page</MenuItem>
-              <MenuItem value="Technical">Technical</MenuItem>
-              <MenuItem value="All">All</MenuItem>
+              <MenuItem value="backlinks">Backlinks</MenuItem>
+              <MenuItem value="paid-guest">Paid-Guest Posting</MenuItem>
+              <MenuItem value="All">Monthly SEO</MenuItem>
             </TextField>
           </Grid>
+          {showNoOfBacklinks && (
+            <Grid item xs={2}>
+              <TextField
+                label="No. of Backlinks"
+                fullWidth
+                name="noOfBacklinks"
+                value={formData.noOfBacklinks}
+                onChange={handleChange}
+              />
+            </Grid>
+          )}
 
-          <Grid item xs={6}>
+          <Grid item xs={2}>
             <TextField
-              label="Monthly Blogs Requirement"
+              label="Monthly Blogs"
               fullWidth
               name="monthlyBlogsRequirement"
               value={formData.monthlyBlogsRequirement}
@@ -434,7 +549,7 @@ const WebSeoForm = () => {
             />
           </Grid>
 
-          <Grid item xs={6}>
+          <Grid item xs={2}>
             <TextField
               label="Login Credentials"
               fullWidth
@@ -444,9 +559,9 @@ const WebSeoForm = () => {
               multiline
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={2}>
             <TextField
-              label="Search Console Access"
+              label="Console Access"
               fullWidth
               name="SearchConsoleAccess"
               value={formData.SearchConsoleAccess}
@@ -454,9 +569,9 @@ const WebSeoForm = () => {
               multiline
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={2}>
             <TextField
-              label="Google Analytics Access"
+              label="Analytics Access"
               fullWidth
               name="GoogleAnalyticsAccess"
               value={formData.GoogleAnalyticsAccess}
@@ -464,7 +579,7 @@ const WebSeoForm = () => {
               multiline
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={2}>
             <TextField
               label="Notes"
               fullWidth

@@ -217,8 +217,8 @@ export default function WebSeoSheet(props) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log(user.role);
-        console.log(props.department);
+        // console.log(user.role);
+        // console.log(props.department);
         let url = "";
         if (user.role === "admin" || user.department.name === "Sales") {
           url = `http://localhost:5000/api/tickets?departmentId=${props.department._id}`;
