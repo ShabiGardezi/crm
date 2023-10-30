@@ -13,7 +13,7 @@ import toast from "react-hot-toast";
 
 const WebSeoForm = () => {
   const user = JSON.parse(localStorage.getItem("user"));
-  console.log(user);
+  console.log("user", user);
   const [departments, setDepartments] = useState([]);
   const [remainingPrice, setRemainingPrice] = useState(0); // Initialize remainingPrice
   const [selectedClient, setSelectedClient] = useState(null);
@@ -90,7 +90,7 @@ const WebSeoForm = () => {
     } else {
       setShowNoOfBacklinks(false);
     }
-    if (name === "workStatus" && value === "All") {
+    if (name === "workStatus" && value === "Monthly-SEO") {
       setShowMonthlyBlogs(true);
     } else {
       setShowMonthlyBlogs(false);
@@ -527,7 +527,7 @@ const WebSeoForm = () => {
               <MenuItem value="On-Page">On-Page</MenuItem>
               <MenuItem value="backlinks">Backlinks</MenuItem>
               <MenuItem value="paid-guest">Paid-Guest Posting</MenuItem>
-              <MenuItem value="All">Monthly SEO</MenuItem>
+              <MenuItem value="Monthly-SEO">Monthly SEO</MenuItem>
             </TextField>
           </Grid>
           {showNoOfBacklinks && (
