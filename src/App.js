@@ -62,7 +62,6 @@ function App() {
         <Route path="/tickets_created" element={<TicketCreatedTable />} />
         <Route path="/open_tickets" element={<ShowOpenTickets />} />
         <Route path="/close_tickets" element={<ShowCloseTickets />} />
-        {/* <Route path="/webseo_sheet" element={<WebSeoSheet />} /> */}
         <Route path="/active_clients" element={<ActiveClients />} />
         <Route path="/notactive_clients" element={<NotActiveClients />} />
         <Route path="/webseo_clients" element={<WebSeoClients />} />

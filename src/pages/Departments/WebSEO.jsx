@@ -10,8 +10,6 @@ import {
 import axios from "axios";
 import Header from "../Header";
 import toast from "react-hot-toast";
-import AddClient from "../AddClient/AddClient";
-// import "react-toastify/dist/ReactToastify.css";
 
 const WebSeoForm = () => {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -20,6 +18,7 @@ const WebSeoForm = () => {
   const [remainingPrice, setRemainingPrice] = useState(0); // Initialize remainingPrice
   const [selectedClient, setSelectedClient] = useState(null);
   const [showNoOfBacklinks, setShowNoOfBacklinks] = useState(false);
+  const [showMonthlyBlogs, setShowMonthlyBlogs] = useState(false); // Initialize as hidden
   const [clientSuggestions, setClientSuggestions] = useState([]);
   const [formData, setFormData] = useState({
     priorityLevel: "",
@@ -90,6 +89,11 @@ const WebSeoForm = () => {
       setShowNoOfBacklinks(true);
     } else {
       setShowNoOfBacklinks(false);
+    }
+    if (name === "workStatus" && value === "All") {
+      setShowMonthlyBlogs(true);
+    } else {
+      setShowMonthlyBlogs(false);
     }
     setFormData({
       ...formData,
@@ -537,18 +541,18 @@ const WebSeoForm = () => {
               />
             </Grid>
           )}
-
-          <Grid item xs={2}>
-            <TextField
-              label="Monthly Blogs"
-              fullWidth
-              name="monthlyBlogsRequirement"
-              value={formData.monthlyBlogsRequirement}
-              onChange={handleChange}
-              multiline
-            />
-          </Grid>
-
+          {showMonthlyBlogs && (
+            <Grid item xs={2}>
+              <TextField
+                label="Monthly Blogs"
+                fullWidth
+                name="monthlyBlogsRequirement"
+                value={formData.monthlyBlogsRequirement}
+                onChange={handleChange}
+                multiline
+              />
+            </Grid>
+          )}
           <Grid item xs={2}>
             <TextField
               label="Login Credentials"
