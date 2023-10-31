@@ -26,6 +26,10 @@ import Button from "@mui/material/Button";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import ActiveNotSctiveCard from "./ActiveNotActiveCard";
 import axios from "axios";
+import OneTimeServiceClientsCard from "./OneTimeClientCard";
+import DisplayTicketDetails from "../Tickets/DisplayTicketDetails";
+import "../../styles/Home/TicketCard.css";
+
 export default function ActiveClients() {
   const user = JSON.parse(localStorage.getItem("user"));
   const [page, setPage] = React.useState(0);
@@ -362,7 +366,10 @@ export default function ActiveClients() {
   return (
     <>
       <Header />
-      <ActiveNotSctiveCard />
+      <div className="cards">
+        <ActiveNotSctiveCard />
+        <OneTimeServiceClientsCard />
+      </div>
       <TableContainer component={Paper}>
         <div>
           <div
@@ -400,77 +407,75 @@ export default function ActiveClients() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {tickets
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((ticket) => (
-                <TableRow key={ticket._id}>
-                  {ticket.businessdetails && (
-                    <TableCell component="th" scope="row">
-                      {ticket.businessdetails.clientName}
-                    </TableCell>
-                  )}
-                  {ticket.TicketDetails && (
-                    <TableCell style={{ width: 160 }} align="left">
-                      {ticket.TicketDetails.assignor}
-                    </TableCell>
-                  )}
-                  {ticket.businessdetails && (
-                    <TableCell style={{ width: 160 }} align="left">
-                      {ticket.businessdetails.workStatus}
-                    </TableCell>
-                  )}
+            {tickets.map((ticket) => (
+              <TableRow key={ticket._id}>
+                {ticket.businessdetails && (
+                  <TableCell component="th" scope="row">
+                    {ticket.businessdetails.clientName}
+                  </TableCell>
+                )}
+                {ticket.TicketDetails && (
                   <TableCell style={{ width: 160 }} align="left">
-                    <FormControl>
-                      <Select
-                        value={ticket.ActiveNotActive || "Active"}
-                        onClick={() => handleClick(ticket)}
-                      >
-                        <MenuItem value="Active">Active</MenuItem>
-                        <MenuItem value="Not Active">Not Active</MenuItem>
-                      </Select>
-                    </FormControl>
+                    {ticket.TicketDetails.assignor}
                   </TableCell>
+                )}
+                {ticket.businessdetails && (
                   <TableCell style={{ width: 160 }} align="left">
-                    {new Date(ticket.createdAt).toLocaleDateString()}
+                    {ticket.businessdetails.workStatus}
                   </TableCell>
-                  <TableCell
-                    style={{ width: 160 }}
-                    align="left"
-                    contentEditable={true}
-                    onBlur={(e) =>
-                      handleReportingDateEdit(ticket._id, e.target.innerText)
-                    }
-                  >
-                    {new Date(ticket.reportingDate).toLocaleDateString()}
-                  </TableCell>
-                  <TableCell style={{ width: 160 }} align="left">
-                    <IconButton onClick={() => fetchTicketDetails(ticket._id)}>
-                      <VisibilityIcon />
-                    </IconButton>
-                  </TableCell>
-                  <TableCell
-                    style={{ width: 180, whiteSpace: "pre-line" }} // Apply the white-space property here
-                    align="left"
-                    contentEditable={true}
-                    onBlur={(e) =>
-                      handleNotesEdit(ticket._id, e.target.innerText)
-                    }
-                  >
-                    {ticket.businessdetails.notes}
-                  </TableCell>
-
-                  <TableCell>
-                    <Button
-                      style={{ backgroundColor: "red" }}
-                      variant="contained"
-                      color="primary"
-                      onClick={() => handleRecurringClick(ticket._id)}
+                )}
+                <TableCell style={{ width: 160 }} align="left">
+                  <FormControl>
+                    <Select
+                      value={ticket.ActiveNotActive || "Active"}
+                      onClick={() => handleClick(ticket)}
                     >
-                      Recurring
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
+                      <MenuItem value="Active">Active</MenuItem>
+                      <MenuItem value="Not Active">Not Active</MenuItem>
+                    </Select>
+                  </FormControl>
+                </TableCell>
+                <TableCell style={{ width: 160 }} align="left">
+                  {new Date(ticket.createdAt).toLocaleDateString()}
+                </TableCell>
+                <TableCell
+                  style={{ width: 160 }}
+                  align="left"
+                  contentEditable={true}
+                  onBlur={(e) =>
+                    handleReportingDateEdit(ticket._id, e.target.innerText)
+                  }
+                >
+                  {new Date(ticket.reportingDate).toLocaleDateString()}
+                </TableCell>
+                <TableCell style={{ width: 160 }} align="left">
+                  <IconButton onClick={() => fetchTicketDetails(ticket._id)}>
+                    <VisibilityIcon />
+                  </IconButton>
+                </TableCell>
+                <TableCell
+                  style={{ width: 180, whiteSpace: "pre-line" }} // Apply the white-space property here
+                  align="left"
+                  contentEditable={true}
+                  onBlur={(e) =>
+                    handleNotesEdit(ticket._id, e.target.innerText)
+                  }
+                >
+                  {ticket.businessdetails.notes}
+                </TableCell>
+
+                <TableCell>
+                  <Button
+                    style={{ backgroundColor: "red" }}
+                    variant="contained"
+                    color="primary"
+                    onClick={() => handleRecurringClick(ticket._id)}
+                  >
+                    Recurring
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
             {emptyRows > 0 && (
               <TableRow style={{ height: 53 * emptyRows }}>
                 <TableCell colSpan={8} />
@@ -499,6 +504,13 @@ export default function ActiveClients() {
           </TableFooter>
         </Table>
       </TableContainer>
+      {selectedTicketDetails && (
+        <DisplayTicketDetails
+          open={isTicketDetailsOpen}
+          handleClose={closeTicketDetailsModal}
+          ticketDetails={selectedTicketDetails}
+        />
+      )}
     </>
   );
 }

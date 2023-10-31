@@ -84,16 +84,14 @@ const WebSeoForm = () => {
     // Check if the selected service is "Backlinks" to decide whether to show the "No. of Backlinks" TextField
     if (
       name === "workStatus" &&
-      (value === "backlinks" || value === "paid-guest")
+      (value === "backlinks" ||
+        value === "paid-guest" ||
+        value === "extra-backlinks")
     ) {
       setShowNoOfBacklinks(true);
-    } else {
-      setShowNoOfBacklinks(false);
     }
     if (name === "workStatus" && value === "Monthly-SEO") {
       setShowMonthlyBlogs(true);
-    } else {
-      setShowMonthlyBlogs(false);
     }
     setFormData({
       ...formData,
@@ -526,6 +524,7 @@ const WebSeoForm = () => {
             >
               <MenuItem value="On-Page">On-Page</MenuItem>
               <MenuItem value="backlinks">Backlinks</MenuItem>
+              <MenuItem value="extra-backlinks">Extra Backlinks</MenuItem>
               <MenuItem value="paid-guest">Paid-Guest Posting</MenuItem>
               <MenuItem value="Monthly-SEO">Monthly SEO</MenuItem>
             </TextField>
@@ -533,7 +532,7 @@ const WebSeoForm = () => {
           {showNoOfBacklinks && (
             <Grid item xs={2}>
               <TextField
-                label="No. of Backlinks"
+                label="Backlink/Guest No."
                 fullWidth
                 name="noOfBacklinks"
                 value={formData.noOfBacklinks}

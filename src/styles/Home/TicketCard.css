@@ -40,3 +40,8 @@
 .col-6 {
   margin-right: 10px;
 }
+.cards {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

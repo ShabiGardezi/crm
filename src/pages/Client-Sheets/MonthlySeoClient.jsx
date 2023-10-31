@@ -27,15 +27,13 @@ import Select from "@mui/material/Select";
 import SearchIcon from "@mui/icons-material/Search";
 import InputBase from "@mui/material/InputBase";
 import Header from "../Header";
-import Button from "@mui/material/Button";
+import "../../styles/Home/TicketCard.css";
 import DisplayTicketDetails from "../Tickets/DisplayTicketDetails";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import ActiveNotSctiveCard from "./ActiveNotActiveCard";
+import ActiveNotActiveCard from "../Client-Sheets/ActiveNotActiveCard";
 import axios from "axios";
 import OneTimeServiceClientsCard from "./OneTimeClientCard";
-import "../../styles/Home/TicketCard.css";
-
-export default function WebSeoSheet(props) {
+export default function MonthlySeoClients() {
   const user = JSON.parse(localStorage.getItem("user"));
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -44,65 +42,8 @@ export default function WebSeoSheet(props) {
   const [reportingDates, setReportingDates] = useState({});
   const [isTicketDetailsOpen, setIsTicketDetailsOpen] = useState(false);
   const [selectedTicketDetails, setSelectedTicketDetails] = useState(null);
-  const [openRecurringDialog, setOpenRecurringDialog] = useState(false);
-  const [price, setPrice] = useState("");
-  const [advancePrice, setAdvancePrice] = useState("");
-  const [remainingPrice, setRemainingPrice] = useState("");
-  // Function to open the recurring dialog
-  // Function to open the recurring dialog and reset state values
-  const handleRecurringDialogOpen = () => {
-    setOpenRecurringDialog(true);
-    setPrice(""); // Set price to an empty string or 0 if needed
-    setAdvancePrice(""); // Set advancePrice to an empty string or 0 if needed
-    setRemainingPrice(""); // Set remainingPrice to an empty string or 0 if needed
-  };
-
-  // Function to close the recurring dialog
-  const handleRecurringDialogClose = () => {
-    setOpenRecurringDialog(false);
-  };
-
-  // Function to handle form field changes
-  const handlePriceChange = (event) => {
-    const { name, value } = event.target;
-
-    // Convert the input value to a float, or 0 if it's not a valid number
-    const updatedPrice = parseFloat(value) || 0;
-    const updatedAdvancePrice = parseFloat(advancePrice) || 0;
-
-    // Calculate the remaining price
-    const remaining = updatedPrice - updatedAdvancePrice;
-
-    // Update the state variables for price and remaining price
-    setPrice(updatedPrice);
-    setRemainingPrice(remaining);
-  };
-
-  const handleAdvancePriceChange = (event) => {
-    const { name, value } = event.target;
-
-    // Convert the input value to a float, or 0 if it's not a valid number
-    const updatedPrice = parseFloat(price) || 0;
-    const updatedAdvancePrice = parseFloat(value) || 0;
-
-    // Calculate the remaining price
-    const remaining = updatedPrice - updatedAdvancePrice;
-
-    // Update the state variables for advance price and remaining price
-    setAdvancePrice(updatedAdvancePrice);
-    setRemainingPrice(remaining);
-  };
-
-  const handleRemainingPriceChange = (event) => {
-    setRemainingPrice(event.target.value);
-  };
-
-  // Function to handle submission of recurring data
-  const handleRecurringSubmit = () => {
-    // You can send the price, advancePrice, and remainingPrice to your backend or perform other actions here.
-    // Don't forget to close the dialog afterward.
-    setOpenRecurringDialog(false);
-  };
+  const [ticketData, setTicketData] = useState([]);
+  const [monthlySeoTickets, setMonthlySeoTickets] = useState([]); // New state for monthly SEO tickets
 
   function TablePaginationActions(props) {
     const theme = useTheme();
@@ -213,25 +154,32 @@ export default function WebSeoSheet(props) {
     setIsTicketDetailsOpen(false);
   };
 
-  const clearSelectedTicketDetails = () => {
-    setSelectedTicketDetails(null);
+  // Function to fetch the Monthly SEO tickets
+  const fetchMonthlySeoTickets = async () => {
+    try {
+      const response = await fetch(
+        "http://localhost:5000/api/tickets/monthly-seo-tickets"
+      );
+      if (response.ok) {
+        const data = await response.json();
+        setMonthlySeoTickets(data.payload);
+        console.log(setMonthlySeoTickets);
+      } else {
+        console.error("Error fetching Monthly SEO tickets");
+      }
+    } catch (error) {
+      console.error("Error fetching Monthly SEO tickets", error);
+    }
   };
-
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // console.log(user.role);
-        // console.log(props.department);
-        let url = "";
-        if (user.role === "admin" || user.department.name === "Sales") {
-          url = `http://localhost:5000/api/tickets?departmentId=${props.department._id}`;
-        } else {
-          url = `http://localhost:5000/api/tickets?departmentId=${user?.department?._id}`;
-        }
-        const response = await fetch(url);
+        const response = await fetch(
+          `http://localhost:5000/api/tickets?departmentId=${user?.department?._id}`
+        );
         if (response.ok) {
           const data = await response.json();
-
+          console.log(data);
           setTickets(data.payload);
           data.payload.forEach((ticket) => {
             fetchReportingDate(ticket._id);
@@ -245,6 +193,8 @@ export default function WebSeoSheet(props) {
     };
 
     fetchData();
+    // Fetch Monthly SEO Tickets
+    fetchMonthlySeoTickets();
   }, []);
 
   const fetchReportingDate = async (ticketId) => {
@@ -334,45 +284,6 @@ export default function WebSeoSheet(props) {
     updateReportingDate(ticketId, newReportingDate);
   };
 
-  // Function to handle the "Recurring" button click
-  const handleRecurringClick = (ticketId) => {
-    // Get the current reporting date
-    const currentReportingDate = new Date(reportingDates[ticketId]);
-
-    // Calculate one month later date
-    const oneMonthLaterDate = new Date(
-      currentReportingDate.getFullYear(),
-      currentReportingDate.getMonth() + 1,
-      currentReportingDate.getDate()
-    );
-
-    // Make an API request to update the reporting date in the database
-    fetch("http://localhost:5000/api/tickets/reportingDate-update", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        ticketId,
-        reportingDate: oneMonthLaterDate.toISOString(),
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.payload) {
-          // If the update is successful, update the local state with the new reporting date
-          setReportingDates((prevReportingDates) => ({
-            ...prevReportingDates,
-            [ticketId]: oneMonthLaterDate.toISOString(),
-          }));
-        } else {
-          console.error("Error updating reporting date");
-        }
-      })
-      .catch((error) => {
-        console.error("Error updating reporting date", error);
-      });
-  };
   // Function to handle notes edit and update
   const handleNotesEdit = (ticketId, editedNotes) => {
     // Make an API request to update the notes in the database
@@ -431,7 +342,7 @@ export default function WebSeoSheet(props) {
     <>
       <Header />
       <div className="cards">
-        <ActiveNotSctiveCard />
+        <ActiveNotActiveCard />
         <OneTimeServiceClientsCard />
       </div>
       <TableContainer component={Paper}>
@@ -467,118 +378,67 @@ export default function WebSeoSheet(props) {
               <TableCell>Reporting Date</TableCell>
               <TableCell>Details</TableCell>
               <TableCell>Notes</TableCell>
-              <TableCell>Recurring</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {tickets
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((ticket) => (
-                <TableRow key={ticket._id}>
-                  {ticket.businessdetails && (
-                    <TableCell component="th" scope="row">
-                      {ticket.businessdetails.clientName}
-                    </TableCell>
-                  )}
-                  {ticket.TicketDetails && (
-                    <TableCell style={{ width: 160 }} align="left">
-                      {ticket.TicketDetails.assignor}
-                    </TableCell>
-                  )}
-                  {ticket.businessdetails && (
-                    <TableCell style={{ width: 160 }} align="left">
-                      {ticket.businessdetails.workStatus}
-                    </TableCell>
-                  )}
+            {monthlySeoTickets.map((ticket) => (
+              <TableRow key={ticket._id}>
+                {ticket.businessdetails && (
+                  <TableCell component="th" scope="row">
+                    {ticket.businessdetails.clientName}
+                  </TableCell>
+                )}
+                {ticket.TicketDetails && (
                   <TableCell style={{ width: 160 }} align="left">
-                    <FormControl>
-                      <Select
-                        value={ticket.ActiveNotActive || "Active"}
-                        onClick={() => handleClick(ticket)}
-                      >
-                        <MenuItem value="Active">Active</MenuItem>
-                        <MenuItem value="Not Active">Not Active</MenuItem>
-                      </Select>
-                    </FormControl>
+                    {ticket.TicketDetails.assignor}
                   </TableCell>
+                )}
+                {ticket.businessdetails && (
                   <TableCell style={{ width: 160 }} align="left">
-                    {new Date(ticket.createdAt).toLocaleDateString()}
+                    {ticket.businessdetails.workStatus}
                   </TableCell>
-                  <TableCell
-                    style={{ width: 160 }}
-                    align="left"
-                    contentEditable={true}
-                    onBlur={(e) =>
-                      handleReportingDateEdit(ticket._id, e.target.innerText)
-                    }
-                  >
-                    {new Date(ticket.reportingDate).toLocaleDateString()}
-                  </TableCell>
-                  <TableCell style={{ width: 160 }} align="left">
-                    <IconButton onClick={() => fetchTicketDetails(ticket._id)}>
-                      <VisibilityIcon />
-                    </IconButton>
-                  </TableCell>
-                  <TableCell
-                    style={{ width: 180, whiteSpace: "pre-line" }} // Apply the white-space property here
-                    align="left"
-                    contentEditable={true}
-                    onBlur={(e) =>
-                      handleNotesEdit(ticket._id, e.target.innerText)
-                    }
-                  >
-                    {ticket.businessdetails.notes}
-                  </TableCell>
-                  <TableCell>
-                    <Button
-                      style={{ backgroundColor: "red" }}
-                      variant="contained"
-                      color="primary"
-                      onClick={() => {
-                        handleRecurringDialogOpen();
-                        handleRecurringClick(ticket._id);
-                      }}
+                )}
+                <TableCell style={{ width: 160 }} align="left">
+                  <FormControl>
+                    <Select
+                      value={ticket.ActiveNotActive || "Active"}
+                      onClick={() => handleClick(ticket)}
                     >
-                      Recurring
-                    </Button>
-                    {/* Recurring Dialog */}
-                    <Dialog
-                      open={openRecurringDialog}
-                      onClose={handleRecurringDialogClose}
-                    >
-                      <DialogTitle>Recurring Details</DialogTitle>
-                      <DialogContent>
-                        <TextField
-                          label="Price"
-                          value={price}
-                          onChange={handlePriceChange}
-                          fullWidth
-                        />
-                        <TextField
-                          label="Advance Price"
-                          value={advancePrice}
-                          onChange={handleAdvancePriceChange}
-                          fullWidth
-                        />
-                        <TextField
-                          label="Remaining Price"
-                          value={remainingPrice}
-                          onChange={handleRemainingPriceChange}
-                          fullWidth
-                        />
-                      </DialogContent>
-                      <DialogActions>
-                        <Button onClick={handleRecurringDialogClose}>
-                          Cancel
-                        </Button>
-                        <Button onClick={handleRecurringSubmit} color="primary">
-                          Save
-                        </Button>
-                      </DialogActions>
-                    </Dialog>
-                  </TableCell>
-                </TableRow>
-              ))}
+                      <MenuItem value="Active">Active</MenuItem>
+                      <MenuItem value="Not Active">Not Active</MenuItem>
+                    </Select>
+                  </FormControl>
+                </TableCell>
+                <TableCell style={{ width: 160 }} align="left">
+                  {new Date(ticket.createdAt).toLocaleDateString()}
+                </TableCell>
+                <TableCell
+                  style={{ width: 160 }}
+                  align="left"
+                  contentEditable={true}
+                  onBlur={(e) =>
+                    handleReportingDateEdit(ticket._id, e.target.innerText)
+                  }
+                >
+                  {new Date(ticket.reportingDate).toLocaleDateString()}
+                </TableCell>
+                <TableCell style={{ width: 160 }} align="left">
+                  <IconButton onClick={() => fetchTicketDetails(ticket._id)}>
+                    <VisibilityIcon />
+                  </IconButton>
+                </TableCell>
+                <TableCell
+                  style={{ width: 180, whiteSpace: "pre-line" }} // Apply the white-space property here
+                  align="left"
+                  contentEditable={true}
+                  onBlur={(e) =>
+                    handleNotesEdit(ticket._id, e.target.innerText)
+                  }
+                >
+                  {ticket.businessdetails.notes}
+                </TableCell>
+              </TableRow>
+            ))}
             {emptyRows > 0 && (
               <TableRow style={{ height: 53 * emptyRows }}>
                 <TableCell colSpan={8} />

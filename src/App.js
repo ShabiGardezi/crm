@@ -25,6 +25,7 @@ import WebSeoClients from "./pages/ClientHistory/WebSeoClients";
 import LocalSeoSheet from "./pages/Client-Sheets/LocalSeoClients/LocalSeoClient";
 import AddClient from "./pages/AddClient/AddClient";
 import TableCustomized from "./pages/Client-Sheets/SingleWebSeoClient";
+import MonthlySeoClients from "./pages/Client-Sheets/MonthlySeoClient";
 
 function App() {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -68,7 +69,8 @@ function App() {
         <Route path="/webseo_clients" element={<WebSeoClients />} />
         <Route path="/localseo_clients" element={<LocalSeoSheet />} />
         <Route path="/add_clients" element={<AddClient />} />
-        <Route path="/TableCustomized" element={<TableCustomized />} />
+        <Route path="/one_time_service_clients" element={<TableCustomized />} />
+        <Route path="/monthly_service_clients" element={<MonthlySeoClients />} />
       </Routes>
     </div>
   );
