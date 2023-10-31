@@ -1,19 +1,51 @@
 import React, { useState, useEffect } from "react";
+import "../../styles/globalfont.css";
 import "../../styles/Forms/formsCommon.css";
 import {
   Grid,
   TextField,
   Button,
-  Typography,
   MenuItem,
+  Typography,
 } from "@material-ui/core";
 import axios from "axios";
 import Header from "../Header";
 import toast from "react-hot-toast";
-const Reviews = () => {
+
+const SocialMediaForm = () => {
   const user = JSON.parse(localStorage.getItem("user"));
   const [departments, setDepartments] = useState([]);
   const [remainingPrice, setRemainingPrice] = useState(0); // Initialize remainingPrice
+  const [selectedClient, setSelectedClient] = useState(null);
+  const [clientSuggestions, setClientSuggestions] = useState([]);
+
+  const [formData, setFormData] = useState({
+    priorityLevel: "",
+    assignor: user?.username || "",
+    dueDate: new Date().toISOString().substr(0, 10), // Initialize with the current date in yyyy-mm-dd format
+    webUrl: "",
+    price: "",
+    advanceprice: "",
+    serviceName: "",
+    clientName: "",
+    street: "",
+    WebsiteURL: "",
+    country: "",
+    state: "",
+    zipcode: "",
+    businessNumber: "",
+    clientEmail: "",
+    businessHours: "",
+    socialProfile: "",
+    gmbUrl: "",
+    workStatus: "",
+    SocialMediaAccounts: "",
+    notes: "",
+    supportPerson: "",
+    closer: "",
+    fronter: "",
+  });
+  console.log(formData);
   const handleChange = (event) => {
     const { name, value } = event.target;
     let updatedPrice = parseFloat(formData.price) || 0;
@@ -34,39 +66,10 @@ const Reviews = () => {
       remainingPrice: remaining, // Update remainingPrice in formData
     });
   };
-  const [formData, setFormData] = useState({
-    priorityLevel: "",
-    assignor: user?.username || "",
-    dueDate: new Date().toISOString().substr(0, 10), // Initialize with the current date in yyyy-mm-dd format
-    loginCredentials: "",
-    price: "",
-    advanceprice: "",
-    remainingPrice: "",
-    serviceName: "",
-    serviceDescription: "",
-    serviceQuantity: "",
-    servicePrice: "",
-    clientName: "",
-    street: "",
-    WebsiteURL: "",
-    country: "",
-    state: "",
-    zipcode: "",
-    businessNumber: "",
-    clientEmail: "",
-    businessHours: "",
-    socialProfile: "",
-    gmbUrl: "",
-    workStatus: "",
-    CodeMails: "",
-    time: "",
-    notes: "",
-    notestoremember: "",
-  });
-
   const handleSubmit = async (event) => {
     event.preventDefault(); // Prevent the default form submission behavior
     try {
+      // Make an Axios POST request to your backend API
       const selectedDepartment = departments.find(
         (department) => department.name === formData.department
       );
@@ -80,7 +83,6 @@ const Reviews = () => {
         created_by: user._id,
         assignorDepartment: user.department._id,
         businessdetails: {
-          loginCredentials: formData.loginCredentials,
           clientName: formData.clientName,
           street: formData.street,
           WebsiteURL: formData.WebsiteURL,
@@ -88,19 +90,19 @@ const Reviews = () => {
           state: formData.state,
           zipcode: formData.zipcode,
           businessNumber: formData.businessNumber,
-          clientEmail: formData.clientName,
+          clientEmail: formData.clientEmail,
           businessHours: formData.businessHours,
           socialProfile: formData.socialProfile,
           gmbUrl: formData.gmbUrl,
           workStatus: formData.workStatus,
-          CodeMails: formData.CodeMails,
+          SocialMediaAccounts: formData.SocialMediaAccounts,
           notes: formData.notes,
+          supportPerson: formData.supportPerson,
+          fronter: formData.fronter,
+          closer: formData.closer,
         },
         Services: {
           serviceName: formData.serviceName,
-          serviceDescription: formData.serviceDescription,
-          serviceQuantity: formData.serviceQuantity,
-          servicePrice: formData.servicePrice,
         },
         quotation: {
           price: formData.price,
@@ -123,7 +125,6 @@ const Reviews = () => {
       console.error("Error:", error);
     }
   };
-
   useEffect(() => {
     const fetchDepartments = async () => {
       try {
@@ -137,16 +138,144 @@ const Reviews = () => {
     };
     fetchDepartments();
   }, []);
+  // Function to fetch suggestions as the user types
+  const fetchSuggestions = async (query) => {
+    if (query.trim() === "") {
+      setClientSuggestions([]);
+      return;
+    }
+    try {
+      const response = await axios.get(
+        `http://localhost:5000/api/client/suggestions?query=${query}`
+      );
+      setClientSuggestions(response.data);
+    } catch (error) {
+      console.log(error);
+      console.error("Error fetching suggestions:", error);
+    }
+  };
+  // Function to fetch client details when a suggestion is selected
+  const handleClientSelection = async (clientName) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5000/api/client/details/${clientName}`
+      );
+      setSelectedClient(response.data);
+      setFormData({
+        ...formData,
+        businessNumber: response.data.businessNumber,
+        clientEmail: response.data.clientEmail,
+        clientName: response.data.clientName,
+        country: response.data.country,
+        state: response.data.state,
+        street: response.data.street,
+        zipcode: response.data.zipcode,
+        socialProfile: response.data.socialProfile,
+        businessHours: response.data.businessHours,
+        workStatus: response.data.workStatus,
+        gmbUrl: response.data.gmbUrl,
+        WebsiteURL: response.data.WebsiteURL,
+      });
+      setClientSuggestions([]);
+    } catch (error) {
+      console.error("Error fetching client details:", error);
+    }
+  };
   return (
     <div className="styleform">
       <Header />
-      <div className="formtitle">
-        <Typography variant="h5">Reviews Form</Typography>
-      </div>
+
       <form onSubmit={handleSubmit}>
-        {/* <div className="ticketHeading"></div> */}
+        <div className="ticketHeading">
+          <Typography variant="h5">Customers</Typography>
+        </div>
+        <Grid container spacing={3}>
+          <Grid item xs={5}>
+            <TextField
+              label="Client/Business Name"
+              fullWidth
+              name="clientName"
+              value={formData.clientName}
+              onChange={handleChange}
+              multiline
+              onInput={(e) => fetchSuggestions(e.target.value)}
+            />
+
+            {/* Display client suggestions as a dropdown */}
+            {clientSuggestions.length > 0 && (
+              <div className="scrollable-suggestions">
+                <ul>
+                  {clientSuggestions.map((client, index) => (
+                    <li
+                      key={index}
+                      onClick={() => handleClientSelection(client.clientName)}
+                      className="pointer-cursor" // Apply the CSS class here
+                    >
+                      {client.clientName}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </Grid>
+          <Grid item xs={5}>
+            <TextField
+              label="Business Email"
+              fullWidth
+              name="clientEmail"
+              value={formData.clientEmail}
+              onChange={handleChange}
+              multiline
+            />
+          </Grid>
+        </Grid>
+        <div className="formtitle ticketHeading">
+          <Typography variant="h5">Sale Department</Typography>
+        </div>
         <Grid container spacing={2}>
-          <Grid item xs={6}>
+          <Grid item xs={3}>
+            <TextField
+              label="Assignor"
+              fullWidth
+              name="assignor"
+              value={formData.assignor}
+              onChange={handleChange}
+              disabled
+            />
+          </Grid>
+          <Grid item xs={3}>
+            <TextField
+              label="Support Person"
+              fullWidth
+              name="supportPerson"
+              value={formData.supportPerson}
+              onChange={handleChange}
+            />
+          </Grid>
+          <Grid item xs={3}>
+            <TextField
+              label="Closer Person"
+              fullWidth
+              name="closer"
+              value={formData.closer}
+              onChange={handleChange}
+            />
+          </Grid>
+          <Grid item xs={3}>
+            <TextField
+              label="Fronter"
+              fullWidth
+              name="fronter"
+              value={formData.fronter}
+              onChange={handleChange}
+            />
+          </Grid>
+        </Grid>
+        <div className="formtitle ticketHeading">
+          <Typography variant="h5">Customer Reviews Form</Typography>
+        </div>
+        <Grid container spacing={2}>
+          <Grid item xs={2}>
             <TextField
               label="Priority Level"
               fullWidth
@@ -160,7 +289,7 @@ const Reviews = () => {
               <MenuItem value="High">High</MenuItem>
             </TextField>
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={2}>
             <TextField
               label="Select Department"
               fullWidth
@@ -176,17 +305,8 @@ const Reviews = () => {
               ))}
             </TextField>
           </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="Assignor"
-              fullWidth
-              name="assignor"
-              value={formData.assignor}
-              onChange={handleChange}
-              disabled
-            />
-          </Grid>
-          <Grid item xs={6}>
+
+          <Grid item xs={2}>
             <TextField
               label="Deadline"
               fullWidth
@@ -197,10 +317,7 @@ const Reviews = () => {
               defaultValue={new Date()}
             />
           </Grid>
-        </Grid>
-
-        <Grid container spacing={2}>
-          <Grid item xs={6}>
+          <Grid item xs={2}>
             <TextField
               label="Price"
               fullWidth
@@ -209,7 +326,7 @@ const Reviews = () => {
               onChange={handleChange}
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={2}>
             <TextField
               label="Advance"
               fullWidth
@@ -218,7 +335,7 @@ const Reviews = () => {
               onChange={handleChange}
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={2}>
             <TextField
               label="Remaining Price"
               fullWidth
@@ -230,12 +347,11 @@ const Reviews = () => {
             />
           </Grid>
         </Grid>
-
         <div className="ticketHeading">
           <Typography variant="h5">Business Details</Typography>
         </div>
-        <Grid container spacing={2}>
-          <Grid item xs={6}>
+        <Grid container spacing={3}>
+          <Grid item xs={3}>
             <TextField
               label="Service name"
               fullWidth
@@ -245,48 +361,8 @@ const Reviews = () => {
               multiline
             />
           </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="Service description"
-              fullWidth
-              name="serviceDescription"
-              value={formData.serviceDescription}
-              onChange={handleChange}
-              multiline
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="Service quantity"
-              fullWidth
-              name="serviceQuantity"
-              value={formData.serviceQuantity}
-              onChange={handleChange}
-              multiline
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="Service price"
-              fullWidth
-              name="servicePrice"
-              value={formData.servicePrice}
-              onChange={handleChange}
-              multiline
-            />
-          </Grid>
 
-          <Grid item xs={6}>
-            <TextField
-              label="Client/Business Name"
-              fullWidth
-              name="clientName"
-              value={formData.clientName}
-              onChange={handleChange}
-              multiline
-            />
-          </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={3}>
             <TextField
               label="Business Number"
               fullWidth
@@ -296,17 +372,8 @@ const Reviews = () => {
               multiline
             />
           </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="Business Email"
-              fullWidth
-              name="clientEmail"
-              value={formData.clientEmail}
-              onChange={handleChange}
-              multiline
-            />
-          </Grid>
-          <Grid item xs={6}>
+
+          <Grid item xs={3}>
             <TextField
               label="Business Hours"
               fullWidth
@@ -316,58 +383,7 @@ const Reviews = () => {
               multiline
             />
           </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="Login Credentials"
-              fullWidth
-              name="loginCredentials"
-              value={formData.loginCredentials}
-              onChange={handleChange}
-              multiline
-            />
-          </Grid>
-
-          <Grid item xs={6}>
-            <TextField
-              label="Country"
-              fullWidth
-              name="country"
-              value={formData.country}
-              onChange={handleChange}
-              multiline
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="State"
-              fullWidth
-              name="state"
-              value={formData.state}
-              onChange={handleChange}
-              multiline
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="ZipCode"
-              fullWidth
-              name="zipcode"
-              value={formData.zipcode}
-              onChange={handleChange}
-              multiline
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="Street"
-              fullWidth
-              name="street"
-              value={formData.street}
-              onChange={handleChange}
-              multiline
-            />
-          </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={3}>
             <TextField
               label="Website URL"
               fullWidth
@@ -377,8 +393,47 @@ const Reviews = () => {
               multiline
             />
           </Grid>
-
-          <Grid item xs={6}>
+          <Grid item xs={3}>
+            <TextField
+              label="Country"
+              fullWidth
+              name="country"
+              value={formData.country}
+              onChange={handleChange}
+              multiline
+            />
+          </Grid>
+          <Grid item xs={3}>
+            <TextField
+              label="State"
+              fullWidth
+              name="state"
+              value={formData.state}
+              onChange={handleChange}
+              multiline
+            />
+          </Grid>
+          <Grid item xs={3}>
+            <TextField
+              label="ZipCode"
+              fullWidth
+              name="zipcode"
+              value={formData.zipcode}
+              onChange={handleChange}
+              multiline
+            />
+          </Grid>
+          <Grid item xs={3}>
+            <TextField
+              label="Street"
+              fullWidth
+              name="street"
+              value={formData.street}
+              onChange={handleChange}
+              multiline
+            />
+          </Grid>
+          <Grid item xs={3}>
             <TextField
               label="Social Profile"
               fullWidth
@@ -388,9 +443,9 @@ const Reviews = () => {
               multiline
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={3}>
             <TextField
-              label="GMB Url"
+              label="GMB URL"
               fullWidth
               name="gmbUrl"
               value={formData.gmbUrl}
@@ -398,27 +453,31 @@ const Reviews = () => {
               multiline
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={3}>
             <TextField
               label="Work Status"
               fullWidth
               name="workStatus"
               value={formData.workStatus}
               onChange={handleChange}
-              multiline
-            />
+              select
+            >
+              <MenuItem value="facebook">Facebook</MenuItem>
+              <MenuItem value="GMB">GMB</MenuItem>
+              <MenuItem value="AllSocialMedia">All</MenuItem>
+            </TextField>
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={3}>
             <TextField
-              label="CodeMails"
+              label="Social Media Accounts"
               fullWidth
-              name="CodeMails"
-              value={formData.CodeMails}
+              name="SocialMediaAccounts"
+              value={formData.SocialMediaAccounts}
               onChange={handleChange}
               multiline
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={3}>
             <TextField
               label="Notes"
               fullWidth
@@ -440,4 +499,4 @@ const Reviews = () => {
   );
 };
 
-export default Reviews;
+export default SocialMediaForm;

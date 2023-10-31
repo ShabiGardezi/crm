@@ -16,6 +16,8 @@ const SocialMediaForm = () => {
   const user = JSON.parse(localStorage.getItem("user"));
   const [departments, setDepartments] = useState([]);
   const [remainingPrice, setRemainingPrice] = useState(0); // Initialize remainingPrice
+  const [selectedClient, setSelectedClient] = useState(null);
+  const [clientSuggestions, setClientSuggestions] = useState([]);
 
   const [formData, setFormData] = useState({
     priorityLevel: "",
@@ -26,9 +28,6 @@ const SocialMediaForm = () => {
     price: "",
     advanceprice: "",
     serviceName: "",
-    serviceDescription: "",
-    serviceQuantity: "",
-    servicePrice: "",
     clientName: "",
     street: "",
     WebsiteURL: "",
@@ -45,6 +44,9 @@ const SocialMediaForm = () => {
     PageAdminAccess: "",
     LikesFollowers: "",
     notes: "",
+    supportPerson: "",
+    closer: "",
+    fronter: "",
   });
   console.log(formData);
   const handleChange = (event) => {
@@ -64,6 +66,7 @@ const SocialMediaForm = () => {
     setFormData({
       ...formData,
       [name]: value,
+      remainingPrice: remaining, // Update remainingPrice in formData
     });
   };
   const handleSubmit = async (event) => {
@@ -83,29 +86,29 @@ const SocialMediaForm = () => {
         created_by: user._id,
         assignorDepartment: user.department._id,
         businessdetails: {
-          loginCredentials: "",
-          clientName: "",
-          street: "",
-          WebsiteURL: "",
-          country: "",
-          state: "",
-          zipcode: "",
-          businessNumber: "",
-          clientEmail: "",
-          businessHours: "",
-          socialProfile: "",
-          gmbUrl: "",
-          workStatus: "",
-          SocialMediaAccounts: "",
-          PageAdminAccess: "",
-          LikesFollowers: "",
-          notes: "",
+          loginCredentials: formData.loginCredentials,
+          clientName: formData.clientName,
+          street: formData.street,
+          WebsiteURL: formData.WebsiteURL,
+          country: formData.country,
+          state: formData.state,
+          zipcode: formData.zipcode,
+          businessNumber: formData.businessNumber,
+          clientEmail: formData.clientEmail,
+          businessHours: formData.businessHours,
+          socialProfile: formData.socialProfile,
+          gmbUrl: formData.gmbUrl,
+          workStatus: formData.workStatus,
+          SocialMediaAccounts: formData.SocialMediaAccounts,
+          PageAdminAccess: formData.PageAdminAccess,
+          LikesFollowers: formData.LikesFollowers,
+          notes: formData.notes,
+          supportPerson: formData.supportPerson,
+          fronter: formData.fronter,
+          closer: formData.closer,
         },
         Services: {
           serviceName: formData.serviceName,
-          serviceDescription: formData.serviceDescription,
-          serviceQuantity: formData.serviceQuantity,
-          servicePrice: formData.servicePrice,
         },
         quotation: {
           price: formData.price,
@@ -141,14 +144,144 @@ const SocialMediaForm = () => {
     };
     fetchDepartments();
   }, []);
+  // Function to fetch suggestions as the user types
+  const fetchSuggestions = async (query) => {
+    if (query.trim() === "") {
+      setClientSuggestions([]);
+      return;
+    }
+    try {
+      const response = await axios.get(
+        `http://localhost:5000/api/client/suggestions?query=${query}`
+      );
+      setClientSuggestions(response.data);
+    } catch (error) {
+      console.log(error);
+      console.error("Error fetching suggestions:", error);
+    }
+  };
+  // Function to fetch client details when a suggestion is selected
+  const handleClientSelection = async (clientName) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5000/api/client/details/${clientName}`
+      );
+      setSelectedClient(response.data);
+      setFormData({
+        ...formData,
+        businessNumber: response.data.businessNumber,
+        clientEmail: response.data.clientEmail,
+        clientName: response.data.clientName,
+        country: response.data.country,
+        state: response.data.state,
+        street: response.data.street,
+        zipcode: response.data.zipcode,
+        socialProfile: response.data.socialProfile,
+        businessHours: response.data.businessHours,
+        workStatus: response.data.workStatus,
+        gmbUrl: response.data.gmbUrl,
+        WebsiteURL: response.data.WebsiteURL,
+      });
+      setClientSuggestions([]);
+    } catch (error) {
+      console.error("Error fetching client details:", error);
+    }
+  };
   return (
     <div className="styleform">
       <Header />
-      {/* <div className="formtitle"></div> */}
 
       <form onSubmit={handleSubmit}>
+        <div className="ticketHeading">
+          <Typography variant="h5">Customers</Typography>
+        </div>
+        <Grid container spacing={3}>
+          <Grid item xs={5}>
+            <TextField
+              label="Client/Business Name"
+              fullWidth
+              name="clientName"
+              value={formData.clientName}
+              onChange={handleChange}
+              multiline
+              onInput={(e) => fetchSuggestions(e.target.value)}
+            />
+
+            {/* Display client suggestions as a dropdown */}
+            {clientSuggestions.length > 0 && (
+              <div className="scrollable-suggestions">
+                <ul>
+                  {clientSuggestions.map((client, index) => (
+                    <li
+                      key={index}
+                      onClick={() => handleClientSelection(client.clientName)}
+                      className="pointer-cursor" // Apply the CSS class here
+                    >
+                      {client.clientName}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </Grid>
+          <Grid item xs={5}>
+            <TextField
+              label="Business Email"
+              fullWidth
+              name="clientEmail"
+              value={formData.clientEmail}
+              onChange={handleChange}
+              multiline
+            />
+          </Grid>
+        </Grid>
+        <div className="formtitle ticketHeading">
+          <Typography variant="h5">Sale Department</Typography>
+        </div>
         <Grid container spacing={2}>
-          <Grid item xs={6}>
+          <Grid item xs={3}>
+            <TextField
+              label="Assignor"
+              fullWidth
+              name="assignor"
+              value={formData.assignor}
+              onChange={handleChange}
+              disabled
+            />
+          </Grid>
+          <Grid item xs={3}>
+            <TextField
+              label="Support Person"
+              fullWidth
+              name="supportPerson"
+              value={formData.supportPerson}
+              onChange={handleChange}
+            />
+          </Grid>
+          <Grid item xs={3}>
+            <TextField
+              label="Closer Person"
+              fullWidth
+              name="closer"
+              value={formData.closer}
+              onChange={handleChange}
+            />
+          </Grid>
+          <Grid item xs={3}>
+            <TextField
+              label="Fronter"
+              fullWidth
+              name="fronter"
+              value={formData.fronter}
+              onChange={handleChange}
+            />
+          </Grid>
+        </Grid>
+        <div className="formtitle ticketHeading">
+          <Typography variant="h5">Social Media Form</Typography>
+        </div>
+        <Grid container spacing={2}>
+          <Grid item xs={2}>
             <TextField
               label="Priority Level"
               fullWidth
@@ -162,7 +295,7 @@ const SocialMediaForm = () => {
               <MenuItem value="High">High</MenuItem>
             </TextField>
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={2}>
             <TextField
               label="Select Department"
               fullWidth
@@ -178,17 +311,8 @@ const SocialMediaForm = () => {
               ))}
             </TextField>
           </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="Assignor"
-              fullWidth
-              name="assignor"
-              value={formData.assignor}
-              onChange={handleChange}
-              disabled
-            />
-          </Grid>
-          <Grid item xs={6}>
+
+          <Grid item xs={2}>
             <TextField
               label="Deadline"
               fullWidth
@@ -199,10 +323,7 @@ const SocialMediaForm = () => {
               defaultValue={new Date()}
             />
           </Grid>
-        </Grid>
-
-        <Grid container spacing={2}>
-          <Grid item xs={6}>
+          <Grid item xs={2}>
             <TextField
               label="Price"
               fullWidth
@@ -211,7 +332,7 @@ const SocialMediaForm = () => {
               onChange={handleChange}
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={2}>
             <TextField
               label="Advance"
               fullWidth
@@ -220,7 +341,7 @@ const SocialMediaForm = () => {
               onChange={handleChange}
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={2}>
             <TextField
               label="Remaining Price"
               fullWidth
@@ -232,12 +353,11 @@ const SocialMediaForm = () => {
             />
           </Grid>
         </Grid>
-
         <div className="ticketHeading">
           <Typography variant="h5">Business Details</Typography>
         </div>
-        <Grid container spacing={2}>
-          <Grid item xs={6}>
+        <Grid container spacing={3}>
+          <Grid item xs={3}>
             <TextField
               label="Service name"
               fullWidth
@@ -247,59 +367,8 @@ const SocialMediaForm = () => {
               multiline
             />
           </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="Service description"
-              fullWidth
-              name="serviceDescription"
-              value={formData.serviceDescription}
-              onChange={handleChange}
-              multiline
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="Service quantity"
-              fullWidth
-              name="serviceQuantity"
-              value={formData.serviceQuantity}
-              onChange={handleChange}
-              multiline
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="Service price"
-              fullWidth
-              name="servicePrice"
-              value={formData.servicePrice}
-              onChange={handleChange}
-              multiline
-            />
-          </Grid>
 
-          <Grid item xs={6}>
-            <TextField
-              label="Client/Business Name"
-              fullWidth
-              name="clientName"
-              value={formData.clientName}
-              onChange={handleChange}
-              multiline
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="Business Email"
-              fullWidth
-              name="clientEmail"
-              value={formData.clientEmail}
-              onChange={handleChange}
-              multiline
-            />
-          </Grid>
-
-          <Grid item xs={6}>
+          <Grid item xs={3}>
             <TextField
               label="Business Number"
               fullWidth
@@ -310,7 +379,7 @@ const SocialMediaForm = () => {
             />
           </Grid>
 
-          <Grid item xs={6}>
+          <Grid item xs={3}>
             <TextField
               label="Business Hours"
               fullWidth
@@ -320,7 +389,7 @@ const SocialMediaForm = () => {
               multiline
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={3}>
             <TextField
               label="Login Credentials"
               fullWidth
@@ -330,7 +399,7 @@ const SocialMediaForm = () => {
               multiline
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={3}>
             <TextField
               label="Website URL"
               fullWidth
@@ -340,7 +409,7 @@ const SocialMediaForm = () => {
               multiline
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={3}>
             <TextField
               label="Country"
               fullWidth
@@ -350,7 +419,7 @@ const SocialMediaForm = () => {
               multiline
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={3}>
             <TextField
               label="State"
               fullWidth
@@ -360,7 +429,7 @@ const SocialMediaForm = () => {
               multiline
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={3}>
             <TextField
               label="ZipCode"
               fullWidth
@@ -370,7 +439,7 @@ const SocialMediaForm = () => {
               multiline
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={3}>
             <TextField
               label="Street"
               fullWidth
@@ -380,7 +449,7 @@ const SocialMediaForm = () => {
               multiline
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={3}>
             <TextField
               label="Social Profile"
               fullWidth
@@ -390,9 +459,9 @@ const SocialMediaForm = () => {
               multiline
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={3}>
             <TextField
-              label="GMB Url"
+              label="GMB URL"
               fullWidth
               name="gmbUrl"
               value={formData.gmbUrl}
@@ -400,17 +469,16 @@ const SocialMediaForm = () => {
               multiline
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={3}>
             <TextField
               label="Work Status"
               fullWidth
               name="workStatus"
               value={formData.workStatus}
               onChange={handleChange}
-              multiline
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={3}>
             <TextField
               label="Social Media Accounts"
               fullWidth
@@ -420,7 +488,7 @@ const SocialMediaForm = () => {
               multiline
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={3}>
             <TextField
               label="Page Admin Access"
               fullWidth
@@ -430,7 +498,7 @@ const SocialMediaForm = () => {
               multiline
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={3}>
             <TextField
               label="Likes/Followers"
               fullWidth
@@ -440,7 +508,7 @@ const SocialMediaForm = () => {
               multiline
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={3}>
             <TextField
               label="Notes"
               fullWidth
