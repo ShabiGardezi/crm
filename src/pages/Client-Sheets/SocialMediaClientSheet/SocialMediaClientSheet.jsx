@@ -21,15 +21,14 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import SearchIcon from "@mui/icons-material/Search";
 import InputBase from "@mui/material/InputBase";
-import Header from "../Header";
-import DisplayTicketDetails from "../Tickets/DisplayTicketDetails";
+import Header from "../../Header";
+import DisplayTicketDetails from "../../Tickets/DisplayTicketDetails";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import ActiveNotActiveCard from "../Client-Sheets/ActiveNotActiveCard";
+import ActiveNotActiveCard from "../ActiveNotActiveCard";
 import axios from "axios";
-import OneTimeServiceClientsCard from "./OneTimeClientCard";
-import "../../styles/Home/TicketCard.css";
+import "../../../styles/Home/TicketCard.css";
 
-export default function LocalSeoSheet() {
+export default function SocialMediaClientSheet(props) {
   const user = JSON.parse(localStorage.getItem("user"));
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -38,26 +37,6 @@ export default function LocalSeoSheet() {
   const [reportingDates, setReportingDates] = useState({});
   const [isTicketDetailsOpen, setIsTicketDetailsOpen] = useState(false);
   const [selectedTicketDetails, setSelectedTicketDetails] = useState(null);
-  const [ticketData, setTicketData] = useState([]);
-  useEffect(() => {
-    // Make an HTTP GET request to fetch tickets except "Monthly SEO"
-    axios
-      .get(
-        `http://localhost:5000/api/tickets/tickets-except-monthly-seo/${user._id}`
-      )
-      .then((response) => {
-        if (response.status === 200) {
-          console.log(response);
-          // Set the fetched data to the state variable
-          setTicketData(response.data.payload);
-        } else {
-          console.error(response.data.message);
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching tickets except Monthly SEO: ", error);
-      });
-  }, []);
 
   function TablePaginationActions(props) {
     const theme = useTheme();
@@ -333,12 +312,40 @@ export default function LocalSeoSheet() {
       status: temp,
     });
   };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // console.log(user.role);
+        // console.log(props.department);
+        let url = "";
+        if (user.role === "admin" || user.department.name === "Sales") {
+          url = `http://localhost:5000/api/tickets?departmentId=${props.department._id}`;
+        } else {
+          url = `http://localhost:5000/api/tickets?departmentId=${user?.department?._id}`;
+        }
+        const response = await fetch(url);
+        if (response.ok) {
+          const data = await response.json();
+
+          setTickets(data.payload);
+          data.payload.forEach((ticket) => {
+            fetchReportingDate(ticket._id);
+          });
+        } else {
+          console.error("Error fetching data");
+        }
+      } catch (error) {
+        console.error("Error fetching data", error);
+      }
+    };
+
+    fetchData();
+  }, []);
   return (
     <>
       <Header />
       <div className="cards">
         <ActiveNotActiveCard />
-        <OneTimeServiceClientsCard />
       </div>
       <TableContainer component={Paper}>
         <div>
@@ -367,20 +374,17 @@ export default function LocalSeoSheet() {
             <TableRow>
               <TableCell>Business Name</TableCell>
               <TableCell>Sales Person</TableCell>
-              <TableCell>Work Status</TableCell>
               <TableCell>Active/Not Active</TableCell>
               <TableCell>Subscription Date</TableCell>
               <TableCell>Reporting Date</TableCell>
+              <TableCell>No. Of Reviews</TableCell>
               <TableCell>Details</TableCell>
               <TableCell>Notes</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {(rowsPerPage > 0
-              ? tickets.slice(
-                  page * rowsPerPage,
-                  page * rowsPerPage + rowsPerPage
-                )
+              ? tickets.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               : tickets
             ).map((ticket) => (
               <TableRow key={ticket._id}>
@@ -392,11 +396,6 @@ export default function LocalSeoSheet() {
                 {ticket.TicketDetails && (
                   <TableCell style={{ width: 160 }} align="left">
                     {ticket.TicketDetails.assignor}
-                  </TableCell>
-                )}
-                {ticket.businessdetails && (
-                  <TableCell style={{ width: 160 }} align="left">
-                    {ticket.businessdetails.workStatus}
                   </TableCell>
                 )}
                 <TableCell style={{ width: 160 }} align="left">
@@ -423,6 +422,11 @@ export default function LocalSeoSheet() {
                 >
                   {new Date(ticket.reportingDate).toLocaleDateString()}
                 </TableCell>
+                {ticket.businessdetails && (
+                  <TableCell style={{ width: 160 }} align="left">
+                    {ticket.businessdetails.noOfreviews}
+                  </TableCell>
+                )}
                 <TableCell style={{ width: 160 }} align="left">
                   <IconButton onClick={() => fetchTicketDetails(ticket._id)}>
                     <VisibilityIcon />

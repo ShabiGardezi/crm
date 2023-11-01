@@ -26,10 +26,11 @@ import LocalSeoSheet from "./pages/Client-Sheets/LocalSeoClients/LocalSeoClient"
 import AddClient from "./pages/AddClient/AddClient";
 import TableCustomized from "./pages/Client-Sheets/SingleWebSeoClient";
 import MonthlySeoClients from "./pages/Client-Sheets/MonthlySeoClient";
+import SocialMediaClientSheet from "./pages/Client-Sheets/SocialMediaClientSheet/SocialMediaClientSheet";
 
 function App() {
   const user = JSON.parse(localStorage.getItem("user"));
-
+  console.log(user);
   return (
     <div className="App">
       <Toaster />
@@ -70,7 +71,14 @@ function App() {
         <Route path="/localseo_clients" element={<LocalSeoSheet />} />
         <Route path="/add_clients" element={<AddClient />} />
         <Route path="/one_time_service_clients" element={<TableCustomized />} />
-        <Route path="/monthly_service_clients" element={<MonthlySeoClients />} />
+        <Route
+          path="/monthly_service_clients"
+          element={<MonthlySeoClients />}
+        />
+        <Route
+          path="/social_media_client"
+          element={<SocialMediaClientSheet />}
+        />
       </Routes>
     </div>
   );

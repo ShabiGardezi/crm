@@ -26,20 +26,13 @@ const SocialMediaForm = () => {
     webUrl: "",
     price: "",
     advanceprice: "",
-    serviceName: "",
     clientName: "",
     street: "",
     WebsiteURL: "",
-    country: "",
-    state: "",
-    zipcode: "",
-    businessNumber: "",
     clientEmail: "",
-    businessHours: "",
     socialProfile: "",
     gmbUrl: "",
-    facebook: "",
-    gmb: "",
+    facebookURL: "",
     noOfreviewsGMB: "",
     logincredentials: "",
     notes: "",
@@ -74,7 +67,7 @@ const SocialMediaForm = () => {
     try {
       // Make an Axios POST request to your backend API
       const selectedDepartment = departments.find(
-        (department) => department.name === formData.department
+        (department) => department.name === "Social Media Management"
       );
 
       // Set majorAssignee to the department's ID
@@ -87,24 +80,14 @@ const SocialMediaForm = () => {
         assignorDepartment: user.department._id,
         businessdetails: {
           clientName: formData.clientName,
-          street: formData.street,
           WebsiteURL: formData.WebsiteURL,
-          country: formData.country,
-          state: formData.state,
-          zipcode: formData.zipcode,
-          businessNumber: formData.businessNumber,
           clientEmail: formData.clientEmail,
-          businessHours: formData.businessHours,
           socialProfile: formData.socialProfile,
           gmbUrl: formData.gmbUrl,
-          facebook: formData.facebook,
-          gmb: formData.gmb,
+          facebookURL: formData.facebookURL,
           noOfreviewsGMB: formData.noOfreviewsGMB,
           logincredentials: formData.logincredentials,
           notes: formData.notes,
-          supportPerson: formData.supportPerson,
-          fronter: formData.fronter,
-          closer: formData.closer,
           noOfreviews: formData.noOfreviews,
         },
         Services: {
@@ -118,6 +101,9 @@ const SocialMediaForm = () => {
         TicketDetails: {
           assignor: formData.assignor,
           priority: formData.priorityLevel,
+          supportPerson: formData.supportPerson,
+          fronter: formData.fronter,
+          closer: formData.closer,
         },
       });
       // Handle the response as needed (e.g., show a success message)
@@ -167,22 +153,18 @@ const SocialMediaForm = () => {
         `http://localhost:5000/api/client/details/${clientName}`
       );
       setSelectedClient(response.data);
+      console.log(response.data);
       setFormData({
         ...formData,
         businessNumber: response.data.businessNumber,
         clientEmail: response.data.clientEmail,
         clientName: response.data.clientName,
-        country: response.data.country,
-        state: response.data.state,
-        street: response.data.street,
-        zipcode: response.data.zipcode,
         socialProfile: response.data.socialProfile,
-        businessHours: response.data.businessHours,
-        facebook: response.data.facebook,
-        gmb: response.data.gmb,
+        facebookURL: response.data.facebookURL,
         gmbUrl: response.data.gmbUrl,
         noOfreviewsGMB: response.data.noOfreviewsGMB,
         WebsiteURL: response.data.WebsiteURL,
+        noOfreviews: response.data.noOfreviews,
       });
       setClientSuggestions([]);
     } catch (error) {
@@ -192,7 +174,6 @@ const SocialMediaForm = () => {
   return (
     <div className="styleform">
       <Header />
-
       <form onSubmit={handleSubmit}>
         <div className="ticketHeading">
           <Typography variant="h5">Customers</Typography>
@@ -370,13 +351,12 @@ const SocialMediaForm = () => {
               multiline
             />
           </Grid>
-
           <Grid item xs={3}>
             <TextField
-              label="Facebook"
+              label="Facebook URL"
               fullWidth
-              name="facebook"
-              value={formData.facebook}
+              name="facebookURL"
+              value={formData.facebookURL}
               onChange={handleChange}
             />
           </Grid>
@@ -392,11 +372,12 @@ const SocialMediaForm = () => {
           </Grid>
           <Grid item xs={3}>
             <TextField
-              label="GMB"
+              label="GMB URL"
               fullWidth
-              name="gmb"
-              value={formData.gmb}
+              name="gmbUrl"
+              value={formData.gmbUrl}
               onChange={handleChange}
+              multiline
             />
           </Grid>
           <Grid item xs={3}>
@@ -409,17 +390,6 @@ const SocialMediaForm = () => {
               multiline
             />
           </Grid>
-          <Grid item xs={3}>
-            <TextField
-              label="GMB URL"
-              fullWidth
-              name="gmbUrl"
-              value={formData.gmbUrl}
-              onChange={handleChange}
-              multiline
-            />
-          </Grid>
-
           <Grid item xs={3}>
             <TextField
               label="Website URL"
@@ -440,7 +410,6 @@ const SocialMediaForm = () => {
               multiline
             />
           </Grid>
-
           <Grid item xs={3}>
             <TextField
               label="Likes/Followers"
