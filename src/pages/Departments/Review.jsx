@@ -38,12 +38,15 @@ const SocialMediaForm = () => {
     businessHours: "",
     socialProfile: "",
     gmbUrl: "",
-    workStatus: "",
-    SocialMediaAccounts: "",
+    facebook: "",
+    gmb: "",
+    noOfreviewsGMB: "",
+    logincredentials: "",
     notes: "",
     supportPerson: "",
     closer: "",
     fronter: "",
+    noOfreviews: "",
   });
   console.log(formData);
   const handleChange = (event) => {
@@ -94,12 +97,15 @@ const SocialMediaForm = () => {
           businessHours: formData.businessHours,
           socialProfile: formData.socialProfile,
           gmbUrl: formData.gmbUrl,
-          workStatus: formData.workStatus,
-          SocialMediaAccounts: formData.SocialMediaAccounts,
+          facebook: formData.facebook,
+          gmb: formData.gmb,
+          noOfreviewsGMB: formData.noOfreviewsGMB,
+          logincredentials: formData.logincredentials,
           notes: formData.notes,
           supportPerson: formData.supportPerson,
           fronter: formData.fronter,
           closer: formData.closer,
+          noOfreviews: formData.noOfreviews,
         },
         Services: {
           serviceName: formData.serviceName,
@@ -172,8 +178,10 @@ const SocialMediaForm = () => {
         zipcode: response.data.zipcode,
         socialProfile: response.data.socialProfile,
         businessHours: response.data.businessHours,
-        workStatus: response.data.workStatus,
+        facebook: response.data.facebook,
+        gmb: response.data.gmb,
         gmbUrl: response.data.gmbUrl,
+        noOfreviewsGMB: response.data.noOfreviewsGMB,
         WebsiteURL: response.data.WebsiteURL,
       });
       setClientSuggestions([]);
@@ -294,9 +302,10 @@ const SocialMediaForm = () => {
               label="Select Department"
               fullWidth
               name="department"
-              value={formData.department}
+              value={"Customer Reviews Management"}
               onChange={handleChange}
               select
+              disabled
             >
               {departments?.map((d) => (
                 <MenuItem key={d._id} value={d.name}>
@@ -364,81 +373,38 @@ const SocialMediaForm = () => {
 
           <Grid item xs={3}>
             <TextField
-              label="Business Number"
+              label="Facebook"
               fullWidth
-              name="businessNumber"
-              value={formData.businessNumber}
+              name="facebook"
+              value={formData.facebook}
               onChange={handleChange}
-              multiline
-            />
-          </Grid>
-
-          <Grid item xs={3}>
-            <TextField
-              label="Business Hours"
-              fullWidth
-              name="businessHours"
-              value={formData.businessHours}
-              onChange={handleChange}
-              multiline
             />
           </Grid>
           <Grid item xs={3}>
             <TextField
-              label="Website URL"
+              label="No. Of FB Reviews"
               fullWidth
-              name="WebsiteURL"
-              value={formData.WebsiteURL}
+              name="noOfreviews"
+              value={formData.noOfreviews}
               onChange={handleChange}
               multiline
             />
           </Grid>
           <Grid item xs={3}>
             <TextField
-              label="Country"
+              label="GMB"
               fullWidth
-              name="country"
-              value={formData.country}
+              name="gmb"
+              value={formData.gmb}
               onChange={handleChange}
-              multiline
             />
           </Grid>
           <Grid item xs={3}>
             <TextField
-              label="State"
+              label="No.Of GMB Reviews"
               fullWidth
-              name="state"
-              value={formData.state}
-              onChange={handleChange}
-              multiline
-            />
-          </Grid>
-          <Grid item xs={3}>
-            <TextField
-              label="ZipCode"
-              fullWidth
-              name="zipcode"
-              value={formData.zipcode}
-              onChange={handleChange}
-              multiline
-            />
-          </Grid>
-          <Grid item xs={3}>
-            <TextField
-              label="Street"
-              fullWidth
-              name="street"
-              value={formData.street}
-              onChange={handleChange}
-              multiline
-            />
-          </Grid>
-          <Grid item xs={3}>
-            <TextField
-              label="Social Profile"
-              fullWidth
-              name="socialProfile"
-              value={formData.socialProfile}
+              name="noOfreviewsGMB"
+              value={formData.noOfreviewsGMB}
               onChange={handleChange}
               multiline
             />
@@ -453,26 +419,44 @@ const SocialMediaForm = () => {
               multiline
             />
           </Grid>
+
           <Grid item xs={3}>
             <TextField
-              label="Work Status"
+              label="Website URL"
               fullWidth
-              name="workStatus"
-              value={formData.workStatus}
+              name="WebsiteURL"
+              value={formData.WebsiteURL}
               onChange={handleChange}
-              select
-            >
-              <MenuItem value="facebook">Facebook</MenuItem>
-              <MenuItem value="GMB">GMB</MenuItem>
-              <MenuItem value="AllSocialMedia">All</MenuItem>
-            </TextField>
+              multiline
+            />
           </Grid>
           <Grid item xs={3}>
             <TextField
-              label="Social Media Accounts"
+              label="Social Profile"
               fullWidth
-              name="SocialMediaAccounts"
-              value={formData.SocialMediaAccounts}
+              name="socialProfile"
+              value={formData.socialProfile}
+              onChange={handleChange}
+              multiline
+            />
+          </Grid>
+
+          <Grid item xs={3}>
+            <TextField
+              label="Likes/Followers"
+              fullWidth
+              name="LikesFollowers"
+              value={formData.LikesFollowers}
+              onChange={handleChange}
+              multiline
+            />
+          </Grid>
+          <Grid item xs={3}>
+            <TextField
+              label="Login Credentials"
+              fullWidth
+              name="logincredentials"
+              value={formData.logincredentials}
               onChange={handleChange}
               multiline
             />

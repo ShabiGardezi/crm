@@ -289,13 +289,19 @@ const Header = () => {
                     <ListItemText primary="Local SEO" />
                   </ListItem>
                 </Link>
-                <ListItem button>
-                  {/* Paid Marketing */}
+                {/* <ListItem button>
                   <ListItemText primary="Paid Marketing" />
                 </ListItem>
                 <ListItem button>
-                  {/* Wordpress */}
                   <ListItemText primary="Wordpress" />
+                </ListItem> */}
+                <ListItem button>
+                  {/* Social Media */}
+                  <ListItemText primary="Social Media" />
+                </ListItem>{" "}
+                <ListItem button>
+                  {/* Customer Reviews */}
+                  <ListItemText primary="Customer Reviews" />
                 </ListItem>
               </div>
             )}

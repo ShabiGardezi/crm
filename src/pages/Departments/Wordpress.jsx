@@ -160,8 +160,9 @@ const WordPress = () => {
               label="Select Department"
               fullWidth
               name="department"
-              value={formData.department}
+              value={"Wordpress Development"}
               onChange={handleChange}
+              disabled
               select
             >
               {departments?.map((d) => (

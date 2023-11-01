@@ -147,7 +147,7 @@ const PaidMarketing = () => {
               label="Select Department"
               fullWidth
               name="department"
-              value={formData.department}
+              value={"Paid Marketing"}
               onChange={handleChange}
               select
             >

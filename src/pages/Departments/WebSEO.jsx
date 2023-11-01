@@ -335,8 +335,9 @@ const WebSeoForm = () => {
               label="Select Department"
               fullWidth
               name="department"
-              value={formData.department}
+              value={"Website SEO"}
               onChange={handleChange}
+              disabled
               select
             >
               {departments?.map((d) => (

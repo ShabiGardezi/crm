@@ -22,3 +22,8 @@ h6.MuiTypography-root.MuiTypography-h6.css-2ulfj5-MuiTypography-root {
   align-items: center;
   position: relative;
 }
+.selectdepartment {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

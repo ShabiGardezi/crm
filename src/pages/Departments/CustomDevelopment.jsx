@@ -154,8 +154,9 @@ const CustomDevelopment = () => {
               label="Select Department"
               fullWidth
               name="department"
-              value={formData.department}
+              value={"Custom Development"}
               onChange={handleChange}
+              disabled
               select
             >
               {departments?.map((d) => (

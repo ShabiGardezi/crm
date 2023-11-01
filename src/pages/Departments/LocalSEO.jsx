@@ -301,8 +301,9 @@ const LocalSEOForm = () => {
               label="Select Department"
               fullWidth
               name="department"
-              value={formData.department}
+              value={"Local SEO / GMB Optimization"}
               onChange={handleChange}
+              disabled
               select
             >
               {departments?.map((d) => (

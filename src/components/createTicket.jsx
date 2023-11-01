@@ -38,14 +38,14 @@ function CreateTicketCard() {
   const handleDepartmentSelect = (departmentId) => {
     // Define a mapping of department names to their respective routes
     const departmentRoutes = {
-      "Local SEO / GMB Optimization": "/localseoform",
-      "Wordpress Development": "/wordpressform",
-      "Website SEO": "/webseoform",
-      "Custom Development": "/customdevelopment",
-      "Paid Marketing": "/paidmarketingform",
-      "Social Media Management": "/socialmediaform",
-      "Customer Reviews Management": "/reviewsform",
-      Sales: "/sales",
+      "Local SEO / GMB Optimization": "/department/localseoform",
+      "Wordpress Development": "/department/wordpressform",
+      "Website SEO": "/department/webseoform",
+      "Custom Development": "/department/customdevelopment",
+      "Paid Marketing": "/department/paidmarketingform",
+      "Social Media Management": "/department/socialmediaform",
+      "Customer Reviews Management": "/department/reviewsform",
+      Sales: "/department/sales",
     };
 
     // Get the route for the selected department
@@ -65,26 +65,28 @@ function CreateTicketCard() {
             Please select the department to create a ticket
           </Typography>
         </div>
-        <FormControl variant="outlined" fullWidth margin="normal">
-          <InputLabel id="department-label">Department</InputLabel>
-          <Select
-            labelId="department-label"
-            id="department"
-            name="department"
-            value={formData.department}
-            label="Department"
-          >
-            {departments?.map((d) => (
-              <MenuItem
-                key={d._id}
-                value={d._id}
-                onClick={() => handleDepartmentSelect(d.name)}
-              >
-                {d.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        <div className="selectdepartment">
+          <FormControl variant="outlined" fullWidth margin="normal">
+            <InputLabel id="department-label">Department</InputLabel>
+            <Select
+              labelId="department-label"
+              id="department"
+              name="department"
+              value={formData.department}
+              label="Department"
+            >
+              {departments?.map((d) => (
+                <MenuItem
+                  key={d._id}
+                  value={d._id}
+                  onClick={() => handleDepartmentSelect(d.name)}
+                >
+                  {d.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </div>
       </CardContent>
     </div>
   );
