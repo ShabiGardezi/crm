@@ -13,21 +13,29 @@ export default function DisplayTicketDetails({
   ticketDetails,
 }) {
   const renderFields = (data) => {
-    return Object.entries(data).map(([key, value]) => (
-      <div key={key} className="displayFields">
-        <Typography variant="subtitle2">{key}:</Typography>
-        <div>
-          <Typography>{value}</Typography>
+    if (data && typeof data === "object") {
+      return Object.entries(data).map(([key, value]) => (
+        <div key={key} className="displayFields">
+          <Typography variant="subtitle2">{key}:</Typography>
+          <div>
+            <Typography>{value}</Typography>
+          </div>
         </div>
-      </div>
-    ));
+      ));
+    } else {
+      return null; // Return nothing if data is undefined or not an object
+    }
   };
+
+  if (!ticketDetails) {
+    return null; // Handle the case where ticketDetails is undefined
+  }
 
   return (
     <div>
       <Dialog open={open} onClose={handleClose} scroll="paper" fullWidth>
         <DialogTitle id="scroll-dialog-title" style={{ textAlign: "center" }}>
-          Ticket Assigned To {ticketDetails.majorAssignee.name}
+          Ticket Assigned To {ticketDetails.majorAssignee?.name}
         </DialogTitle>
         <DialogContent dividers>
           <div style={{ maxHeight: "400px", overflowY: "auto" }}>
