@@ -40,6 +40,7 @@ const SocialMediaForm = () => {
     closer: "",
     fronter: "",
     noOfreviews: "",
+    LikesFollowers: "",
   });
   console.log(formData);
   const handleChange = (event) => {
@@ -89,6 +90,7 @@ const SocialMediaForm = () => {
           logincredentials: formData.logincredentials,
           notes: formData.notes,
           noOfreviews: formData.noOfreviews,
+          LikesFollowers: formData.LikesFollowers,
         },
         Services: {
           serviceName: formData.serviceName,
@@ -162,9 +164,7 @@ const SocialMediaForm = () => {
         socialProfile: response.data.socialProfile,
         facebookURL: response.data.facebookURL,
         gmbUrl: response.data.gmbUrl,
-        noOfreviewsGMB: response.data.noOfreviewsGMB,
         WebsiteURL: response.data.WebsiteURL,
-        noOfreviews: response.data.noOfreviews,
       });
       setClientSuggestions([]);
     } catch (error) {

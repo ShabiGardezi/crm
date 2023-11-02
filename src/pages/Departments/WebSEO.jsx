@@ -104,7 +104,7 @@ const WebSeoForm = () => {
     event.preventDefault(); // Prevent the default form submission behavior
     try {
       const selectedDepartment = departments.find(
-        (department) => department.name === formData.department
+        (department) => department.name === "Website SEO"
       );
 
       // Set majorAssignee to the department's ID

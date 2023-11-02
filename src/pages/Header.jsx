@@ -293,7 +293,7 @@ const Header = () => {
                 <ListItem button>
                   <ListItemText primary="Wordpress" />
                 </ListItem> */}
-                <Link to="/media_reviews_client">
+                <Link to="/social_media_client">
                   <ListItem button>
                     {/* Social Media */}
                     <ListItemText primary="Social Media" />

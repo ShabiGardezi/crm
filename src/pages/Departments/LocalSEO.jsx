@@ -80,7 +80,7 @@ const LocalSEOForm = () => {
     try {
       // Find the selected department object
       const selectedDepartment = departments.find(
-        (department) => department.name === formData.department
+        (department) => department.name === "Local SEO / GMB Optimization"
       );
 
       // Set majorAssignee to the department's ID

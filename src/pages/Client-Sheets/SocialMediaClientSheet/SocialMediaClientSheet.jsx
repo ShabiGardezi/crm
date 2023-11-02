@@ -27,6 +27,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import ActiveNotActiveCard from "../ActiveNotActiveCard";
 import axios from "axios";
 import "../../../styles/Home/TicketCard.css";
+import CardsSocialMediaTrack from "./CardsSocialMedia/CardsSocialMediaTrack";
 
 export default function SocialMediaClientSheet(props) {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -347,6 +348,7 @@ export default function SocialMediaClientSheet(props) {
       <div className="cards">
         <ActiveNotActiveCard />
       </div>
+      <CardsSocialMediaTrack />
       <TableContainer component={Paper}>
         <div>
           <div
@@ -384,7 +386,10 @@ export default function SocialMediaClientSheet(props) {
           </TableHead>
           <TableBody>
             {(rowsPerPage > 0
-              ? tickets.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              ? tickets.slice(
+                  page * rowsPerPage,
+                  page * rowsPerPage + rowsPerPage
+                )
               : tickets
             ).map((ticket) => (
               <TableRow key={ticket._id}>

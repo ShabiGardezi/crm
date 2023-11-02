@@ -27,6 +27,9 @@ import AddClient from "./pages/AddClient/AddClient";
 import TableCustomized from "./pages/Client-Sheets/SingleWebSeoClient";
 import MonthlySeoClients from "./pages/Client-Sheets/MonthlySeoClient";
 import SocialMediaClientSheet from "./pages/Client-Sheets/SocialMediaClientSheet/SocialMediaClientSheet";
+import GmbReviewSheet from "./pages/Client-Sheets/SocialMediaClientSheet/GmbReviewSheet";
+import FbReviewSheet from "./pages/Client-Sheets/SocialMediaClientSheet/FacebookReviews";
+import LikesFollowersSocialMedia from "./pages/Client-Sheets/SocialMediaClientSheet/LikesFollowersSocialMedia";
 
 function App() {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -71,6 +74,12 @@ function App() {
         <Route path="/localseo_clients" element={<LocalSeoSheet />} />
         <Route path="/add_clients" element={<AddClient />} />
         <Route path="/one_time_service_clients" element={<TableCustomized />} />
+        <Route path="/gmb_reviews_sheet" element={<GmbReviewSheet />} />
+        <Route path="/fb_reviews_sheet" element={<FbReviewSheet />} />
+        <Route
+          path="/social_meida_likes_followers"
+          element={<LikesFollowersSocialMedia />}
+        />
         <Route
           path="/monthly_service_clients"
           element={<MonthlySeoClients />}
