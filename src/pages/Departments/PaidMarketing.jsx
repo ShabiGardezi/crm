@@ -14,6 +14,9 @@ const PaidMarketing = () => {
   const user = JSON.parse(localStorage.getItem("user"));
   const [departments, setDepartments] = useState([]);
   const [remainingPrice, setRemainingPrice] = useState(0); // Initialize remainingPrice
+  const [clientSuggestions, setClientSuggestions] = useState([]);
+  const [selectedClient, setSelectedClient] = useState(null);
+  const [ShowBudgetPrice, setShowBudgetPrice] = useState(null);
 
   const [formData, setFormData] = useState({
     priorityLevel: "",
@@ -27,12 +30,13 @@ const PaidMarketing = () => {
     serviceQuantity: "",
     servicePrice: "",
     adAccountAccess: "",
-    dailyBudget: "",
+    budget: "",
     location: "",
     website: "",
     notes: "",
     clientName: "",
     clientEmail: "",
+    selectedBudget: "",
   });
 
   const handleChange = (event) => {
@@ -45,7 +49,13 @@ const PaidMarketing = () => {
     } else if (name === "advanceprice") {
       updatedAdvancePrice = parseFloat(value) || 0;
     }
-
+    if (
+      (name === "budget" && value === "dailyBudget") ||
+      "weeklyBudget" ||
+      "monthlyBudget"
+    ) {
+      setShowBudgetPrice(true);
+    }
     const remaining = updatedPrice - updatedAdvancePrice;
     setRemainingPrice(remaining);
 
@@ -62,7 +72,7 @@ const PaidMarketing = () => {
       // Make an Axios request here (replace "/api/submit" with your actual API endpoint)
       console.log(formData);
       const selectedDepartment = departments.find(
-        (department) => department.name === formData.department
+        (department) => department.name === "Paid Marketing"
       );
 
       // Set majorAssignee to the department's ID
@@ -79,18 +89,17 @@ const PaidMarketing = () => {
           location: formData.location,
           website: formData.website,
           adAccountAccess: formData.adAccountAccess,
-          dailyBudget: formData.dailyBudget,
+          budget: formData.budget,
           notes: formData.notes,
+          selectedBudget: formData.selectedBudget,
         },
         Services: {
           serviceName: formData.serviceName,
-          serviceDescription: formData.serviceDescription,
-          serviceQuantity: formData.serviceQuantity,
-          servicePrice: formData.servicePrice,
         },
         quotation: {
           price: formData.price,
           advanceprice: formData.advanceprice,
+          remainingPrice: formData.remainingPrice,
         },
         TicketDetails: {
           assignor: formData.assignor,
@@ -107,6 +116,28 @@ const PaidMarketing = () => {
       console.error("Error:", error);
     }
   };
+  const handleClientSelection = async (clientName) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5000/api/client/details/${clientName}`
+      );
+      setSelectedClient(response.data);
+      console.log(response.data);
+      setFormData({
+        ...formData,
+        businessNumber: response.data.businessNumber,
+        clientEmail: response.data.clientEmail,
+        clientName: response.data.clientName,
+        socialProfile: response.data.socialProfile,
+        facebookURL: response.data.facebookURL,
+        gmbUrl: response.data.gmbUrl,
+        WebsiteURL: response.data.WebsiteURL,
+      });
+      setClientSuggestions([]);
+    } catch (error) {
+      console.error("Error fetching client details:", error);
+    }
+  };
   useEffect(() => {
     const fetchDepartments = async () => {
       try {
@@ -120,15 +151,116 @@ const PaidMarketing = () => {
     };
     fetchDepartments();
   }, []);
+  // Function to fetch suggestions as the user types
+  const fetchSuggestions = async (query) => {
+    if (query.trim() === "") {
+      setClientSuggestions([]);
+      return;
+    }
+    try {
+      const response = await axios.get(
+        `http://localhost:5000/api/client/suggestions?query=${query}`
+      );
+      setClientSuggestions(response.data);
+    } catch (error) {
+      console.log(error);
+      console.error("Error fetching suggestions:", error);
+    }
+  };
   return (
     <div className="styleform">
       <Header />
-      <div className="formtitle">
-        <Typography variant="h5">Paid Marketing Form</Typography>
-      </div>
       <form onSubmit={handleSubmit}>
+        <div className="ticketHeading">
+          <Typography variant="h5">Customers</Typography>
+        </div>
+        <Grid container spacing={3}>
+          <Grid item xs={5}>
+            <TextField
+              label="Client/Business Name"
+              fullWidth
+              name="clientName"
+              value={formData.clientName}
+              onChange={handleChange}
+              multiline
+              onInput={(e) => fetchSuggestions(e.target.value)}
+            />
+
+            {/* Display client suggestions as a dropdown */}
+            {clientSuggestions.length > 0 && (
+              <div className="scrollable-suggestions">
+                <ul>
+                  {clientSuggestions.map((client, index) => (
+                    <li
+                      key={index}
+                      onClick={() => handleClientSelection(client.clientName)}
+                      className="pointer-cursor" // Apply the CSS class here
+                    >
+                      {client.clientName}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </Grid>
+          <Grid item xs={5}>
+            <TextField
+              label="Business Email"
+              fullWidth
+              name="clientEmail"
+              value={formData.clientEmail}
+              onChange={handleChange}
+              multiline
+            />
+          </Grid>
+        </Grid>
+        <div className="formtitle ticketHeading">
+          <Typography variant="h5">Sale Department</Typography>
+        </div>
         <Grid container spacing={2}>
-          <Grid item xs={6}>
+          <Grid item xs={3}>
+            <TextField
+              label="Assignor"
+              fullWidth
+              name="assignor"
+              value={formData.assignor}
+              onChange={handleChange}
+              disabled
+            />
+          </Grid>
+          <Grid item xs={3}>
+            <TextField
+              label="Support Person"
+              fullWidth
+              name="supportPerson"
+              value={formData.supportPerson}
+              onChange={handleChange}
+            />
+          </Grid>
+          <Grid item xs={3}>
+            <TextField
+              label="Closer Person"
+              fullWidth
+              name="closer"
+              value={formData.closer}
+              onChange={handleChange}
+            />
+          </Grid>
+          <Grid item xs={3}>
+            <TextField
+              label="Fronter"
+              fullWidth
+              name="fronter"
+              value={formData.fronter}
+              onChange={handleChange}
+            />
+          </Grid>
+        </Grid>
+        <div className="formtitle ticketHeading">
+          <Typography variant="h5">Paid Marketing Form</Typography>
+        </div>
+        <Grid container spacing={2}>
+          <Grid item xs={2}>
             <TextField
               label="Priority Level"
               fullWidth
@@ -142,7 +274,7 @@ const PaidMarketing = () => {
               <MenuItem value="High">High</MenuItem>
             </TextField>
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={3}>
             <TextField
               label="Select Department"
               fullWidth
@@ -158,17 +290,8 @@ const PaidMarketing = () => {
               ))}
             </TextField>
           </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="Assignor"
-              fullWidth
-              name="assignor"
-              value={formData.assignor}
-              onChange={handleChange}
-              disabled
-            />
-          </Grid>
-          <Grid item xs={6}>
+
+          <Grid item xs={2}>
             <TextField
               label="Deadline"
               fullWidth
@@ -179,10 +302,7 @@ const PaidMarketing = () => {
               defaultValue={new Date()}
             />
           </Grid>
-        </Grid>
-
-        <Grid container spacing={2}>
-          <Grid item xs={6}>
+          <Grid item xs={1}>
             <TextField
               label="Price"
               fullWidth
@@ -191,7 +311,7 @@ const PaidMarketing = () => {
               onChange={handleChange}
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={1}>
             <TextField
               label="Advance"
               fullWidth
@@ -200,7 +320,7 @@ const PaidMarketing = () => {
               onChange={handleChange}
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={2}>
             <TextField
               label="Remaining Price"
               fullWidth
@@ -212,9 +332,11 @@ const PaidMarketing = () => {
             />
           </Grid>
         </Grid>
-
+        <div className="ticketHeading">
+          <Typography variant="h5">Business Details</Typography>
+        </div>
         <Grid container spacing={2}>
-          <Grid item xs={6}>
+          <Grid item xs={2}>
             <TextField
               label="Service name"
               fullWidth
@@ -224,82 +346,7 @@ const PaidMarketing = () => {
               multiline
             />
           </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="Service description"
-              fullWidth
-              name="serviceDescription"
-              value={formData.serviceDescription}
-              onChange={handleChange}
-              multiline
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="Service quantity"
-              fullWidth
-              name="serviceQuantity"
-              value={formData.serviceQuantity}
-              onChange={handleChange}
-              multiline
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="Service price"
-              fullWidth
-              name="servicePrice"
-              value={formData.servicePrice}
-              onChange={handleChange}
-              multiline
-            />
-          </Grid>
-        </Grid>
-        <div className="ticketHeading">
-          <Typography variant="h5">Business Details</Typography>
-        </div>
-        <Grid container spacing={2}>
-          <Grid item xs={6}>
-            <TextField
-              label="Client Name"
-              fullWidth
-              name="clientName"
-              value={formData.clientName}
-              onChange={handleChange}
-              multiline
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="Business Email"
-              fullWidth
-              name="clientEmail"
-              value={formData.clientEmail}
-              onChange={handleChange}
-              multiline
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="Ad Account Access"
-              fullWidth
-              name="adAccountAccess"
-              value={formData.adAccountAccess}
-              onChange={handleChange}
-              multiline
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="Daily Budget"
-              fullWidth
-              name="dailyBudget"
-              value={formData.dailyBudget}
-              onChange={handleChange}
-              multiline
-            />
-          </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={2}>
             <TextField
               label="Location"
               fullWidth
@@ -309,9 +356,44 @@ const PaidMarketing = () => {
               multiline
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={3}>
             <TextField
-              label="Website"
+              label="Ad Account Access"
+              fullWidth
+              name="adAccountAccess"
+              value={formData.adAccountAccess}
+              onChange={handleChange}
+              multiline
+            />
+          </Grid>
+          <Grid item xs={2}>
+            <TextField
+              label="Budget"
+              fullWidth
+              name="budget"
+              value={formData.budget}
+              onChange={handleChange}
+              select
+            >
+              <MenuItem value="dailyBudget">Daily</MenuItem>
+              <MenuItem value="weeklyBudget">Weekly</MenuItem>
+              <MenuItem value="monthlyBudget">Monthly</MenuItem>
+            </TextField>
+          </Grid>
+          {ShowBudgetPrice && (
+            <Grid item xs={2}>
+              <TextField
+                label="Budget Price"
+                fullWidth
+                name="selectedBudget"
+                value={formData.selectedBudget}
+                onChange={handleChange}
+              />
+            </Grid>
+          )}
+          <Grid item xs={2}>
+            <TextField
+              label="Website URL"
               fullWidth
               name="website"
               value={formData.website}
@@ -319,9 +401,9 @@ const PaidMarketing = () => {
               multiline
             />
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={2}>
             <TextField
-              label="Notes"
+              label="Clients Objective"
               fullWidth
               name="notes"
               value={formData.notes}

@@ -402,7 +402,6 @@ const WebSeoForm = () => {
               multiline
             />
           </Grid>
-
           <Grid item xs={2}>
             <TextField
               label="Service Location"
@@ -493,7 +492,6 @@ const WebSeoForm = () => {
               multiline
             />
           </Grid>
-
           <Grid item xs={2}>
             <TextField
               label="Social Profile"

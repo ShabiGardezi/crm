@@ -472,7 +472,7 @@ export default function WebSeoSheet(props) {
           </TableHead>
           <TableBody>
             {tickets
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((ticket) => (
                 <TableRow key={ticket._id}>
                   {ticket.businessdetails && (
