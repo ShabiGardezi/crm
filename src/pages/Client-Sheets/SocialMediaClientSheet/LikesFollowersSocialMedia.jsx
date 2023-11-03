@@ -348,10 +348,10 @@ export default function LikesFollowersSocialMedia(props) {
       <Header />
       <div className="cards">
         <ActiveNotActiveCard />
-        <CardsSocialMediaTrack />
       </div>
+      <CardsSocialMediaTrack />
       <div className="ticketHeading">
-        <Typography variant="h5">Facebook Reviews</Typography>
+        <Typography variant="h5">Likes & Followers</Typography>
       </div>
       <TableContainer component={Paper}>
         <div>

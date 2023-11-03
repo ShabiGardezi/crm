@@ -348,8 +348,8 @@ export default function FbReviewSheet(props) {
       <Header />
       <div className="cards">
         <ActiveNotActiveCard />
-        <CardsSocialMediaTrack />
       </div>
+      <CardsSocialMediaTrack />
       <div className="ticketHeading">
         <Typography variant="h5">Facebook Reviews</Typography>
       </div>

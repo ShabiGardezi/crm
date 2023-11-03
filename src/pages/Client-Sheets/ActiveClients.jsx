@@ -29,6 +29,7 @@ import axios from "axios";
 import OneTimeServiceClientsCard from "./OneTimeClientCard";
 import DisplayTicketDetails from "../Tickets/DisplayTicketDetails";
 import "../../styles/Home/TicketCard.css";
+import CardsSocialMediaTrack from "./SocialMediaClientSheet/CardsSocialMedia/CardsSocialMediaTrack";
 
 export default function ActiveClients() {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -372,6 +373,10 @@ export default function ActiveClients() {
           <OneTimeServiceClientsCard />
         )}
       </div>
+      {(user?.department._id === "651ada78819ff0aec6af1381" ||
+        user?.department._id === "651ada98819ff0aec6af1382") && (
+        <CardsSocialMediaTrack />
+      )}
       <TableContainer component={Paper}>
         <div>
           <div
