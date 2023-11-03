@@ -33,14 +33,14 @@ const SocialMediaForm = () => {
     socialProfile: "",
     gmbUrl: "",
     facebookURL: "",
-    noOfreviewsGMB: "",
+    noOfreviewsGMB: "0",
     logincredentials: "",
     notes: "",
     supportPerson: "",
     closer: "",
     fronter: "",
-    noOfreviews: "",
-    LikesFollowers: "",
+    noOfFbreviews: "0",
+    LikesFollowers: "0",
   });
   console.log(formData);
   const handleChange = (event) => {
@@ -89,7 +89,7 @@ const SocialMediaForm = () => {
           noOfreviewsGMB: formData.noOfreviewsGMB,
           logincredentials: formData.logincredentials,
           notes: formData.notes,
-          noOfreviews: formData.noOfreviews,
+          noOfFbreviews: formData.noOfFbreviews,
           LikesFollowers: formData.LikesFollowers,
         },
         Services: {
@@ -261,7 +261,7 @@ const SocialMediaForm = () => {
           </Grid>
         </Grid>
         <div className="formtitle ticketHeading">
-          <Typography variant="h5">Customer Reviews Form</Typography>
+          <Typography variant="h5">Social Media Form</Typography>
         </div>
         <Grid container spacing={2}>
           <Grid item xs={2}>
@@ -364,8 +364,8 @@ const SocialMediaForm = () => {
             <TextField
               label="No. Of FB Reviews"
               fullWidth
-              name="noOfreviews"
-              value={formData.noOfreviews}
+              name="noOfFbreviews"
+              value={formData.noOfFbreviews}
               onChange={handleChange}
               multiline
             />

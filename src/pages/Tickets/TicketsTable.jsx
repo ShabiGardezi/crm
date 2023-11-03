@@ -249,6 +249,14 @@ export default function TableTicket() {
               <TableCell>Assignor Department</TableCell>
               <TableCell>Assignee Department</TableCell>
               <TableCell>Deadline</TableCell>
+              {(user?.department._id === "651ada78819ff0aec6af1381" ||
+                user?.department._id === "651ada98819ff0aec6af1382") && (
+                <>
+                  <TableCell>No. Of FB Reviews</TableCell>
+                  <TableCell>No. Of GMB Reviews</TableCell>
+                  <TableCell>Likes/Followers</TableCell>
+                </>
+              )}
               <TableCell>Details</TableCell>
               <TableCell>Status</TableCell>
             </TableRow>
@@ -281,6 +289,21 @@ export default function TableTicket() {
                   <TableCell style={{ width: 160 }} align="left">
                     {ticket.dueDate}
                   </TableCell>
+                  {(user?.department._id === "651ada78819ff0aec6af1381" ||
+                    user?.department._id === "651ada98819ff0aec6af1382") && (
+                    <>
+                      <TableCell style={{ width: 160 }} align="left">
+                        {ticket.businessdetails.noOfFbreviews}
+                      </TableCell>
+                      <TableCell style={{ width: 160 }} align="left">
+                        {ticket.businessdetails.noOfreviewsGMB}
+                      </TableCell>
+                      <TableCell style={{ width: 160 }} align="left">
+                        {ticket.businessdetails.LikesFollowers}
+                      </TableCell>
+                    </>
+                  )}
+
                   <TableCell style={{ width: 160 }} align="left">
                     <IconButton
                       onClick={() => fetchTicketDetails(ticket._id)} // Fetch ticket details on click

@@ -298,6 +298,45 @@ export default function SocialMediaClientSheet(props) {
       });
   };
 
+  // Function to handle LikesFollowers edit and update
+  const handlelikesfollowersEdit = (ticketId, editLikesFollowers) => {
+    // Make an API request to update the notes in the database
+    fetch("http://localhost:5000/api/tickets/likesfollowers-update", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ticketId,
+        LikesFollowers: editLikesFollowers,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.payload) {
+          // If the update is successful, update the local state with the edited notes
+          const updatedTickets = tickets.map((ticket) => {
+            if (ticket._id === ticketId) {
+              return {
+                ...ticket,
+                businessdetails: {
+                  ...ticket.businessdetails,
+                  LikesFollowers: editLikesFollowers,
+                },
+              };
+            }
+            return ticket;
+          });
+          setTickets(updatedTickets);
+        } else {
+          console.error("Error updating LikesFollowers");
+        }
+      })
+      .catch((error) => {
+        console.error("Error updating LikesFollowers", error);
+      });
+  };
+
   const handleClick = (ticket) => {
     let temp = "";
     if (ticket.ActiveNotActive === "Active") {
@@ -379,7 +418,9 @@ export default function SocialMediaClientSheet(props) {
               <TableCell>Active/Not Active</TableCell>
               <TableCell>Subscription Date</TableCell>
               <TableCell>Reporting Date</TableCell>
-              <TableCell>No. Of Reviews</TableCell>
+              <TableCell>No. Of FB Reviews</TableCell>
+              <TableCell>No. Of GMB Reviews</TableCell>
+              <TableCell>Likes/Followers</TableCell>
               <TableCell>Details</TableCell>
               <TableCell>Notes</TableCell>
             </TableRow>
@@ -429,7 +470,24 @@ export default function SocialMediaClientSheet(props) {
                 </TableCell>
                 {ticket.businessdetails && (
                   <TableCell style={{ width: 160 }} align="left">
-                    {ticket.businessdetails.noOfreviews}
+                    {ticket.businessdetails.noOfreviewsGMB}
+                  </TableCell>
+                )}
+                {ticket.businessdetails && (
+                  <TableCell style={{ width: 160 }} align="left">
+                    {ticket.businessdetails.noOfFbreviews}
+                  </TableCell>
+                )}{" "}
+                {ticket.businessdetails && (
+                  <TableCell
+                    style={{ width: 160 }}
+                    align="left"
+                    contentEditable={true}
+                    onBlur={(e) =>
+                      handlelikesfollowersEdit(ticket._id, e.target.innerText)
+                    }
+                  >
+                    {ticket.businessdetails.LikesFollowers}
                   </TableCell>
                 )}
                 <TableCell style={{ width: 160 }} align="left">
