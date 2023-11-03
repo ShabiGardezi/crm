@@ -17,6 +17,7 @@ const PaidMarketing = () => {
   const [clientSuggestions, setClientSuggestions] = useState([]);
   const [selectedClient, setSelectedClient] = useState(null);
   const [ShowBudgetPrice, setShowBudgetPrice] = useState(null);
+  const [ShowPlatform, setShowPlatform] = useState(null);
 
   const [formData, setFormData] = useState({
     priorityLevel: "",
@@ -37,6 +38,8 @@ const PaidMarketing = () => {
     clientName: "",
     clientEmail: "",
     selectedBudget: "",
+    platform: "",
+    selectedPlatform: "",
   });
 
   const handleChange = (event) => {
@@ -55,10 +58,16 @@ const PaidMarketing = () => {
       "monthlyBudget"
     ) {
       setShowBudgetPrice(true);
+    } else {
+      setShowBudgetPrice(false);
+    }
+    if (name === "platform" && value === "other") {
+      setShowPlatform(true);
+    } else {
+      setShowPlatform(false);
     }
     const remaining = updatedPrice - updatedAdvancePrice;
     setRemainingPrice(remaining);
-
     setFormData({
       ...formData,
       [name]: value,
@@ -92,6 +101,8 @@ const PaidMarketing = () => {
           budget: formData.budget,
           notes: formData.notes,
           selectedBudget: formData.selectedBudget,
+          platform: formData.platform,
+          selectedPlatform: formData.selectedPlatform,
         },
         Services: {
           serviceName: formData.serviceName,
@@ -393,6 +404,31 @@ const PaidMarketing = () => {
           )}
           <Grid item xs={2}>
             <TextField
+              label="Platform"
+              fullWidth
+              name="platform"
+              value={formData.platform}
+              onChange={handleChange}
+              select
+            >
+              <MenuItem value="fb">Facebook</MenuItem>
+              <MenuItem value="google">Google</MenuItem>
+              <MenuItem value="other">Other</MenuItem>
+            </TextField>
+          </Grid>
+          {ShowPlatform && (
+            <Grid item xs={2}>
+              <TextField
+                label="Platform Name"
+                fullWidth
+                name="selectedPlatform"
+                value={formData.selectedPlatform}
+                onChange={handleChange}
+              />
+            </Grid>
+          )}
+          <Grid item xs={2}>
+            <TextField
               label="Website URL"
               fullWidth
               name="website"
@@ -401,7 +437,7 @@ const PaidMarketing = () => {
               multiline
             />
           </Grid>
-          <Grid item xs={2}>
+          <Grid item xs={3}>
             <TextField
               label="Clients Objective"
               fullWidth
