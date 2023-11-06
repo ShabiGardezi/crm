@@ -608,6 +608,99 @@ export default function NotActiveClients() {
             </TableFooter>
           </Table>
         )}
+        {/* Paid Marketing */}
+        {user?.department._id === "651ada3c819ff0aec6af1380" && (
+          <Table sx={{ minWidth: 800 }} aria-label="custom pagination table">
+            <TableHead>
+              <TableRow>
+                <TableCell>Business Name</TableCell>
+                <TableCell>Sales Person</TableCell>
+                <TableCell>Active/Not Active</TableCell>
+                <TableCell>Subscription Date</TableCell>
+                <TableCell>Ad Platfrom</TableCell>
+                <TableCell>Budget</TableCell>
+                <TableCell>Details</TableCell>
+                <TableCell>Notes</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {tickets.map((ticket) => (
+                <TableRow key={ticket._id}>
+                  {ticket.businessdetails && (
+                    <TableCell component="th" scope="row">
+                      {ticket.businessdetails.clientName}
+                    </TableCell>
+                  )}
+                  {ticket.TicketDetails && (
+                    <TableCell style={{ width: 160 }} align="left">
+                      {ticket.TicketDetails.assignor}
+                    </TableCell>
+                  )}
+                  <TableCell style={{ width: 160 }} align="left">
+                    <FormControl>
+                      <Select
+                        value={ticket.ActiveNotActive || "Active"}
+                        onClick={() => handleClick(ticket)}
+                      >
+                        <MenuItem value="Active">Active</MenuItem>
+                        <MenuItem value="Not Active">Not Active</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </TableCell>
+                  <TableCell style={{ width: 160 }} align="left">
+                    {new Date(ticket.createdAt).toLocaleDateString()}
+                  </TableCell>
+                  <TableCell style={{ width: 160 }} align="left">
+                    {ticket.businessdetails.platform}
+                  </TableCell>
+                  <TableCell style={{ width: 160 }} align="left">
+                    {ticket.businessdetails.selectedBudget}
+                  </TableCell>
+                  <TableCell style={{ width: 160 }} align="left">
+                    <IconButton onClick={() => fetchTicketDetails(ticket._id)}>
+                      <VisibilityIcon />
+                    </IconButton>
+                  </TableCell>
+                  <TableCell
+                    style={{ width: 180, whiteSpace: "pre-line" }} // Apply the white-space property here
+                    align="left"
+                    contentEditable={true}
+                    onBlur={(e) =>
+                      handleNotesEdit(ticket._id, e.target.innerText)
+                    }
+                  >
+                    {ticket.businessdetails.notes}
+                  </TableCell>
+                </TableRow>
+              ))}
+              {emptyRows > 0 && (
+                <TableRow style={{ height: 53 * emptyRows }}>
+                  <TableCell colSpan={8} />
+                </TableRow>
+              )}
+            </TableBody>
+            <TableFooter>
+              <TableRow>
+                <TablePagination
+                  rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
+                  colSpan={8}
+                  count={tickets.length}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  SelectProps={{
+                    inputProps: {
+                      "aria-label": "rows per page",
+                    },
+                    native: true,
+                  }}
+                  onPageChange={handleChangePage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                  ActionsComponent={TablePaginationActions}
+                />
+              </TableRow>
+            </TableFooter>
+          </Table>
+        )}
       </TableContainer>
       {selectedTicketDetails && (
         <DisplayTicketDetails

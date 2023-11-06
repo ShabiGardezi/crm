@@ -27,13 +27,10 @@ const PaidMarketing = () => {
     advanceprice: "",
     remainingPrice: "",
     serviceName: "",
-    serviceDescription: "",
-    serviceQuantity: "",
-    servicePrice: "",
     adAccountAccess: "",
     budget: "",
     location: "",
-    website: "",
+    WebsiteURL: "",
     notes: "",
     clientName: "",
     clientEmail: "",
@@ -63,8 +60,6 @@ const PaidMarketing = () => {
     }
     if (name === "platform" && value === "other") {
       setShowPlatform(true);
-    } else {
-      setShowPlatform(false);
     }
     const remaining = updatedPrice - updatedAdvancePrice;
     setRemainingPrice(remaining);
@@ -96,7 +91,7 @@ const PaidMarketing = () => {
           clientName: formData.clientName,
           clientEmail: formData.clientEmail,
           location: formData.location,
-          website: formData.website,
+          WebsiteURL: formData.WebsiteURL,
           adAccountAccess: formData.adAccountAccess,
           budget: formData.budget,
           notes: formData.notes,
@@ -136,12 +131,8 @@ const PaidMarketing = () => {
       console.log(response.data);
       setFormData({
         ...formData,
-        businessNumber: response.data.businessNumber,
         clientEmail: response.data.clientEmail,
         clientName: response.data.clientName,
-        socialProfile: response.data.socialProfile,
-        facebookURL: response.data.facebookURL,
-        gmbUrl: response.data.gmbUrl,
         WebsiteURL: response.data.WebsiteURL,
       });
       setClientSuggestions([]);
@@ -431,8 +422,8 @@ const PaidMarketing = () => {
             <TextField
               label="Website URL"
               fullWidth
-              name="website"
-              value={formData.website}
+              name="WebsiteURL"
+              value={formData.WebsiteURL}
               onChange={handleChange}
               multiline
             />

@@ -21,17 +21,14 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import SearchIcon from "@mui/icons-material/Search";
 import InputBase from "@mui/material/InputBase";
-import Header from "../Header";
-import Button from "@mui/material/Button";
+import Header from "../../Header";
+import DisplayTicketDetails from "../../Tickets/DisplayTicketDetails";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import ActiveNotSctiveCard from "./ActiveNotActiveCard";
+import ActiveNotActiveCard from "../ActiveNotActiveCard";
 import axios from "axios";
-import OneTimeServiceClientsCard from "./OneTimeClientCard";
-import DisplayTicketDetails from "../Tickets/DisplayTicketDetails";
-import "../../styles/Home/TicketCard.css";
-import CardsSocialMediaTrack from "./SocialMediaClientSheet/CardsSocialMedia/CardsSocialMediaTrack";
+import "../../../styles/Home/TicketCard.css";
 
-export default function ActiveClients() {
+export default function PaidMarketingClientSheet(props) {
   const user = JSON.parse(localStorage.getItem("user"));
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -150,10 +147,6 @@ export default function ActiveClients() {
     setIsTicketDetailsOpen(false);
   };
 
-  const clearSelectedTicketDetails = () => {
-    setSelectedTicketDetails(null);
-  };
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -162,13 +155,8 @@ export default function ActiveClients() {
         );
         if (response.ok) {
           const data = await response.json();
-
-          // Filter only the tickets with an "Active" status
-          const activeTickets = data.payload.filter(
-            (ticket) => ticket.ActiveNotActive === "Active"
-          );
-
-          setTickets(activeTickets);
+          console.log(data);
+          setTickets(data.payload);
           data.payload.forEach((ticket) => {
             fetchReportingDate(ticket._id);
           });
@@ -270,45 +258,6 @@ export default function ActiveClients() {
     updateReportingDate(ticketId, newReportingDate);
   };
 
-  // Function to handle the "Recurring" button click
-  const handleRecurringClick = (ticketId) => {
-    // Get the current reporting date
-    const currentReportingDate = new Date(reportingDates[ticketId]);
-
-    // Calculate one month later date
-    const oneMonthLaterDate = new Date(
-      currentReportingDate.getFullYear(),
-      currentReportingDate.getMonth() + 1,
-      currentReportingDate.getDate()
-    );
-
-    // Make an API request to update the reporting date in the database
-    fetch("http://localhost:5000/api/tickets/reportingDate-update", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        ticketId,
-        reportingDate: oneMonthLaterDate.toISOString(),
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.payload) {
-          // If the update is successful, update the local state with the new reporting date
-          setReportingDates((prevReportingDates) => ({
-            ...prevReportingDates,
-            [ticketId]: oneMonthLaterDate.toISOString(),
-          }));
-        } else {
-          console.error("Error updating reporting date");
-        }
-      })
-      .catch((error) => {
-        console.error("Error updating reporting date", error);
-      });
-  };
   // Function to handle notes edit and update
   const handleNotesEdit = (ticketId, editedNotes) => {
     // Make an API request to update the notes in the database
@@ -363,20 +312,41 @@ export default function ActiveClients() {
       status: temp,
     });
   };
-  console.log(tickets);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // console.log(user.role);
+        // console.log(props.department);
+        let url = "";
+        if (user.role === "admin" || user.department.name === "Sales") {
+          url = `http://localhost:5000/api/tickets?departmentId=${props.department._id}`;
+        } else {
+          url = `http://localhost:5000/api/tickets?departmentId=${user?.department?._id}`;
+        }
+        const response = await fetch(url);
+        if (response.ok) {
+          const data = await response.json();
+
+          setTickets(data.payload);
+          data.payload.forEach((ticket) => {
+            fetchReportingDate(ticket._id);
+          });
+        } else {
+          console.error("Error fetching data");
+        }
+      } catch (error) {
+        console.error("Error fetching data", error);
+      }
+    };
+
+    fetchData();
+  }, []);
   return (
     <>
       <Header />
       <div className="cards">
-        <ActiveNotSctiveCard />
-        {user?.department._id === "65195c8f504d80e8f11b0d15" && (
-          <OneTimeServiceClientsCard />
-        )}
+        <ActiveNotActiveCard />
       </div>
-      {(user?.department._id === "651ada78819ff0aec6af1381" ||
-        user?.department._id === "651ada98819ff0aec6af1382") && (
-        <CardsSocialMediaTrack />
-      )}
       <TableContainer component={Paper}>
         <div>
           <div
@@ -399,197 +369,106 @@ export default function ActiveClients() {
             />
           </div>
         </div>
-        {/* Social Media / Customer Reviews Management and Reviews */}
-        {(user?.department._id === "651ada78819ff0aec6af1381" ||
-          user?.department._id === "651ada98819ff0aec6af1382") && (
-          <Table sx={{ minWidth: 800 }} aria-label="custom pagination table">
-            <TableHead>
-              <TableRow>
-                <TableCell>Business Name</TableCell>
-                <TableCell>Sales Person</TableCell>
-                <TableCell>Active/Not Active</TableCell>
-                <TableCell>Subscription Date</TableCell>
-                <TableCell>Reporting Date</TableCell>
-                <TableCell>Details</TableCell>
-                <TableCell>Notes</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {tickets.map((ticket) => (
-                <TableRow key={ticket._id}>
-                  {ticket.businessdetails && (
-                    <TableCell component="th" scope="row">
-                      {ticket.businessdetails.clientName}
-                    </TableCell>
-                  )}
-                  {ticket.TicketDetails && (
-                    <TableCell style={{ width: 160 }} align="left">
-                      {ticket.TicketDetails.assignor}
-                    </TableCell>
-                  )}
+        <Table sx={{ minWidth: 800 }} aria-label="custom pagination table">
+          <TableHead>
+            <TableRow>
+              <TableCell>Business Name</TableCell>
+              <TableCell>Sales Person</TableCell>
+              <TableCell>Active/Not Active</TableCell>
+              <TableCell>Subscription Date</TableCell>
+              <TableCell>Reporting Date</TableCell>
+              <TableCell>Details</TableCell>
+              <TableCell>Notes</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {(rowsPerPage > 0
+              ? tickets.slice(
+                  page * rowsPerPage,
+                  page * rowsPerPage + rowsPerPage
+                )
+              : tickets
+            ).map((ticket) => (
+              <TableRow key={ticket._id}>
+                {ticket.businessdetails && (
+                  <TableCell component="th" scope="row">
+                    {ticket.businessdetails.clientName}
+                  </TableCell>
+                )}
+                {ticket.TicketDetails && (
+                  <TableCell style={{ width: 160 }} align="left">
+                    {ticket.TicketDetails.assignor}
+                  </TableCell>
+                )}
+                <TableCell style={{ width: 160 }} align="left">
+                  <FormControl>
+                    <Select
+                      value={ticket.ActiveNotActive || "Active"}
+                      onClick={() => handleClick(ticket)}
+                    >
+                      <MenuItem value="Active">Active</MenuItem>
+                      <MenuItem value="Not Active">Not Active</MenuItem>
+                    </Select>
+                  </FormControl>
+                </TableCell>
+                <TableCell style={{ width: 160 }} align="left">
+                  {new Date(ticket.createdAt).toLocaleDateString()}
+                </TableCell>
+                <TableCell
+                  style={{ width: 160 }}
+                  align="left"
+                  contentEditable={true}
+                  onBlur={(e) =>
+                    handleReportingDateEdit(ticket._id, e.target.innerText)
+                  }
+                >
+                  {new Date(ticket.reportingDate).toLocaleDateString()}
+                </TableCell>
 
-                  <TableCell style={{ width: 160 }} align="left">
-                    <FormControl>
-                      <Select
-                        value={ticket.ActiveNotActive || "Active"}
-                        onClick={() => handleClick(ticket)}
-                      >
-                        <MenuItem value="Active">Active</MenuItem>
-                        <MenuItem value="Not Active">Not Active</MenuItem>
-                      </Select>
-                    </FormControl>
-                  </TableCell>
-                  <TableCell style={{ width: 160 }} align="left">
-                    {new Date(ticket.createdAt).toLocaleDateString()}
-                  </TableCell>
-                  <TableCell
-                    style={{ width: 160 }}
-                    align="left"
-                    contentEditable={true}
-                    onBlur={(e) =>
-                      handleReportingDateEdit(ticket._id, e.target.innerText)
-                    }
-                  >
-                    {new Date(ticket.reportingDate).toLocaleDateString()}
-                  </TableCell>
-                  <TableCell style={{ width: 160 }} align="left">
-                    <IconButton onClick={() => fetchTicketDetails(ticket._id)}>
-                      <VisibilityIcon />
-                    </IconButton>
-                  </TableCell>
-                  <TableCell
-                    style={{ width: 180, whiteSpace: "pre-line" }} // Apply the white-space property here
-                    align="left"
-                    contentEditable={true}
-                    onBlur={(e) =>
-                      handleNotesEdit(ticket._id, e.target.innerText)
-                    }
-                  >
-                    {ticket.businessdetails.notes}
-                  </TableCell>
-                </TableRow>
-              ))}
-              {emptyRows > 0 && (
-                <TableRow style={{ height: 53 * emptyRows }}>
-                  <TableCell colSpan={8} />
-                </TableRow>
-              )}
-            </TableBody>
-            <TableFooter>
-              <TableRow>
-                <TablePagination
-                  rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
-                  colSpan={8}
-                  count={tickets.length}
-                  rowsPerPage={rowsPerPage}
-                  page={page}
-                  SelectProps={{
-                    inputProps: {
-                      "aria-label": "rows per page",
-                    },
-                    native: true,
-                  }}
-                  onPageChange={handleChangePage}
-                  onRowsPerPageChange={handleChangeRowsPerPage}
-                  ActionsComponent={TablePaginationActions}
-                />
+                <TableCell style={{ width: 160 }} align="left">
+                  <IconButton onClick={() => fetchTicketDetails(ticket._id)}>
+                    <VisibilityIcon />
+                  </IconButton>
+                </TableCell>
+                <TableCell
+                  style={{ width: 180, whiteSpace: "pre-line" }} // Apply the white-space property here
+                  align="left"
+                  contentEditable={true}
+                  onBlur={(e) =>
+                    handleNotesEdit(ticket._id, e.target.innerText)
+                  }
+                >
+                  {ticket.businessdetails.notes}
+                </TableCell>
               </TableRow>
-            </TableFooter>
-          </Table>
-        )}
-        {/* Paid Marketing */}
-        {user?.department._id === "651ada3c819ff0aec6af1380" && (
-          <Table sx={{ minWidth: 800 }} aria-label="custom pagination table">
-            <TableHead>
-              <TableRow>
-                <TableCell>Business Name</TableCell>
-                <TableCell>Sales Person</TableCell>
-                <TableCell>Active/Not Active</TableCell>
-                <TableCell>Subscription Date</TableCell>
-                <TableCell>Ad Platfrom</TableCell>
-                <TableCell>Budget</TableCell>
-                <TableCell>Details</TableCell>
-                <TableCell>Notes</TableCell>
+            ))}
+            {emptyRows > 0 && (
+              <TableRow style={{ height: 53 * emptyRows }}>
+                <TableCell colSpan={8} />
               </TableRow>
-            </TableHead>
-            <TableBody>
-              {tickets.map((ticket) => (
-                <TableRow key={ticket._id}>
-                  {ticket.businessdetails && (
-                    <TableCell component="th" scope="row">
-                      {ticket.businessdetails.clientName}
-                    </TableCell>
-                  )}
-                  {ticket.TicketDetails && (
-                    <TableCell style={{ width: 160 }} align="left">
-                      {ticket.TicketDetails.assignor}
-                    </TableCell>
-                  )}
-                  <TableCell style={{ width: 160 }} align="left">
-                    <FormControl>
-                      <Select
-                        value={ticket.ActiveNotActive || "Active"}
-                        onClick={() => handleClick(ticket)}
-                      >
-                        <MenuItem value="Active">Active</MenuItem>
-                        <MenuItem value="Not Active">Not Active</MenuItem>
-                      </Select>
-                    </FormControl>
-                  </TableCell>
-                  <TableCell style={{ width: 160 }} align="left">
-                    {new Date(ticket.createdAt).toLocaleDateString()}
-                  </TableCell>
-                  <TableCell style={{ width: 160 }} align="left">
-                    {ticket.businessdetails.platform}
-                  </TableCell>
-                  <TableCell style={{ width: 160 }} align="left">
-                    {ticket.businessdetails.selectedBudget}
-                  </TableCell>
-                  <TableCell style={{ width: 160 }} align="left">
-                    <IconButton onClick={() => fetchTicketDetails(ticket._id)}>
-                      <VisibilityIcon />
-                    </IconButton>
-                  </TableCell>
-                  <TableCell
-                    style={{ width: 180, whiteSpace: "pre-line" }} // Apply the white-space property here
-                    align="left"
-                    contentEditable={true}
-                    onBlur={(e) =>
-                      handleNotesEdit(ticket._id, e.target.innerText)
-                    }
-                  >
-                    {ticket.businessdetails.notes}
-                  </TableCell>
-                </TableRow>
-              ))}
-              {emptyRows > 0 && (
-                <TableRow style={{ height: 53 * emptyRows }}>
-                  <TableCell colSpan={8} />
-                </TableRow>
-              )}
-            </TableBody>
-            <TableFooter>
-              <TableRow>
-                <TablePagination
-                  rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
-                  colSpan={8}
-                  count={tickets.length}
-                  rowsPerPage={rowsPerPage}
-                  page={page}
-                  SelectProps={{
-                    inputProps: {
-                      "aria-label": "rows per page",
-                    },
-                    native: true,
-                  }}
-                  onPageChange={handleChangePage}
-                  onRowsPerPageChange={handleChangeRowsPerPage}
-                  ActionsComponent={TablePaginationActions}
-                />
-              </TableRow>
-            </TableFooter>
-          </Table>
-        )}
+            )}
+          </TableBody>
+          <TableFooter>
+            <TableRow>
+              <TablePagination
+                rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
+                colSpan={8}
+                count={tickets.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                SelectProps={{
+                  inputProps: {
+                    "aria-label": "rows per page",
+                  },
+                  native: true,
+                }}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+                ActionsComponent={TablePaginationActions}
+              />
+            </TableRow>
+          </TableFooter>
+        </Table>
       </TableContainer>
       {selectedTicketDetails && (
         <DisplayTicketDetails

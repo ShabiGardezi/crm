@@ -294,6 +294,12 @@ const Header = () => {
                     <ListItemText primary="Social Media/Customer Reviews" />
                   </ListItem>
                 </Link>
+                <Link to="/paid_marketing_sheet">
+                  <ListItem button>
+                    {/* Paid Marketing */}
+                    <ListItemText primary="Paid Marketing" />
+                  </ListItem>
+                </Link>
               </div>
             )}
             <ListItem button onClick={toggleDepartment}>

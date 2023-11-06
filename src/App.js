@@ -30,6 +30,7 @@ import SocialMediaClientSheet from "./pages/Client-Sheets/SocialMediaClientSheet
 import GmbReviewSheet from "./pages/Client-Sheets/SocialMediaClientSheet/GmbReviewSheet";
 import FbReviewSheet from "./pages/Client-Sheets/SocialMediaClientSheet/FacebookReviews";
 import LikesFollowersSocialMedia from "./pages/Client-Sheets/SocialMediaClientSheet/LikesFollowersSocialMedia";
+import PaidMarketingClientSheet from "./pages/Client-Sheets/PaidMarketingClientSheet/PaidMarketingClientSheet";
 
 function App() {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -76,6 +77,10 @@ function App() {
         <Route path="/one_time_service_clients" element={<TableCustomized />} />
         <Route path="/gmb_reviews_sheet" element={<GmbReviewSheet />} />
         <Route path="/fb_reviews_sheet" element={<FbReviewSheet />} />
+        <Route
+          path="/paid_marketing_sheet"
+          element={<PaidMarketingClientSheet />}
+        />
         <Route
           path="/social_meida_likes_followers"
           element={<LikesFollowersSocialMedia />}
