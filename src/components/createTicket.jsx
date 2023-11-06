@@ -43,7 +43,7 @@ function CreateTicketCard() {
       "Website SEO": "/department/webseoform",
       "Custom Development": "/department/customdevelopment",
       "Paid Marketing": "/department/paidmarketingform",
-      "Social Media Management": "/department/socialmediaform",
+      "Social Media / Customer Reviews Management": "/department/socialmediaform",
       "Customer Reviews Management": "/department/reviewsform",
       Sales: "/department/sales",
     };

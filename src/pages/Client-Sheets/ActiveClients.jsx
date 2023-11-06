@@ -399,7 +399,7 @@ export default function ActiveClients() {
             />
           </div>
         </div>
-        {/* Social Media Management and Reviews */}
+        {/* Social Media / Customer Reviews Management and Reviews */}
         {(user?.department._id === "651ada78819ff0aec6af1381" ||
           user?.department._id === "651ada98819ff0aec6af1382") && (
           <Table sx={{ minWidth: 800 }} aria-label="custom pagination table">

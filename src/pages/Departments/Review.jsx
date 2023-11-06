@@ -68,7 +68,7 @@ const ReviewsForm = () => {
     try {
       // Make an Axios POST request to your backend API
       const selectedDepartment = departments.find(
-        (department) => department.name === "Social Media Management"
+        (department) => department.name === "Social Media / Customer Reviews Management"
       );
 
       // Set majorAssignee to the department's ID
@@ -284,7 +284,7 @@ const ReviewsForm = () => {
               label="Select Department"
               fullWidth
               name="department"
-              value={"Social Media Management"}
+              value={"Social Media / Customer Reviews Management"}
               onChange={handleChange}
               select
               disabled

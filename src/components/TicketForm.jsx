@@ -54,7 +54,7 @@
 //           {department === "Website SEO" && <WebsiteSEOBusinessDetails />}
 //           {department === "Custom Development" && <CustomDevBusinessDetails />}
 //           {department === "Paid Marketing" && <PaidMarketingBusinessDetails />}
-//           {department === "Social Media Management" && (
+//           {department === "Social Media / Customer Reviews Management" && (
 //             <SocialMediaBusinessDetails />
 //           )}
 //           {department === "Local SEO / GMB Optimization" && (

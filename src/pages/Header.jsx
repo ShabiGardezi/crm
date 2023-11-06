@@ -132,8 +132,9 @@ const Header = () => {
       "Website SEO": "/department/webseoform",
       "Custom Development": "/department/customdevelopment",
       "Paid Marketing": "/department/paidmarketingform",
-      "Social Media Management": "/department/socialmediaform",
-      "Customer Reviews Management": "/department/reviewsform",
+      "Social Media / Customer Reviews Management":
+        "/department/socialmediaform",
+      // "Customer Reviews Management": "/department/reviewsform",
       Sales: "/department/sales",
     };
 
@@ -287,22 +288,10 @@ const Header = () => {
                     <ListItemText primary="Local SEO" />
                   </ListItem>
                 </Link>
-                {/* <ListItem button>
-                  <ListItemText primary="Paid Marketing" />
-                </ListItem>
-                <ListItem button>
-                  <ListItemText primary="Wordpress" />
-                </ListItem> */}
                 <Link to="/social_media_client">
                   <ListItem button>
-                    {/* Social Media */}
-                    <ListItemText primary="Social Media" />
-                  </ListItem>
-                </Link>
-                <Link to="media_reviews_client">
-                  <ListItem button>
-                    {/* Customer Reviews */}
-                    <ListItemText primary="Customer Reviews" />
+                    {/* Social Media/ Customer Reviews */}
+                    <ListItemText primary="Social Media/Customer Reviews" />
                   </ListItem>
                 </Link>
               </div>
