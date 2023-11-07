@@ -300,6 +300,12 @@ const Header = () => {
                     <ListItemText primary="Paid Marketing" />
                   </ListItem>
                 </Link>
+                <Link to="/website_sheet">
+                  <ListItem button>
+                    {/* Paid Marketing */}
+                    <ListItemText primary="Wordpress/E-Commerce" />
+                  </ListItem>
+                </Link>
               </div>
             )}
             <ListItem button onClick={toggleDepartment}>

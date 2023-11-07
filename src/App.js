@@ -31,6 +31,9 @@ import GmbReviewSheet from "./pages/Client-Sheets/SocialMediaClientSheet/GmbRevi
 import FbReviewSheet from "./pages/Client-Sheets/SocialMediaClientSheet/FacebookReviews";
 import LikesFollowersSocialMedia from "./pages/Client-Sheets/SocialMediaClientSheet/LikesFollowersSocialMedia";
 import PaidMarketingClientSheet from "./pages/Client-Sheets/PaidMarketingClientSheet/PaidMarketingClientSheet";
+import WordpressClientSheet from "./pages/ClientHistory/WordpressClientSheet/WordpressClientSheet";
+import ActiveWebsiteClients from "./pages/ClientHistory/WordpressClientSheet/ActiveWesbiteClients";
+import InActiveWebsiteClients from "./pages/ClientHistory/WordpressClientSheet/NotActiveWebsiteClients";
 
 function App() {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -77,6 +80,15 @@ function App() {
         <Route path="/one_time_service_clients" element={<TableCustomized />} />
         <Route path="/gmb_reviews_sheet" element={<GmbReviewSheet />} />
         <Route path="/fb_reviews_sheet" element={<FbReviewSheet />} />
+        <Route path="/website_sheet" element={<WordpressClientSheet />} />
+        <Route
+          path="/active_website_clients"
+          element={<ActiveWebsiteClients />}
+        />
+        <Route
+          path="/inactive_website_clients"
+          element={<InActiveWebsiteClients />}
+        />
         <Route
           path="/paid_marketing_sheet"
           element={<PaidMarketingClientSheet />}
