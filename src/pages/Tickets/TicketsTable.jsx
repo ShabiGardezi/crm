@@ -248,6 +248,7 @@ export default function TableTicket() {
               <TableCell>Assignor</TableCell>
               <TableCell>Assignor Department</TableCell>
               <TableCell>Assignee Department</TableCell>
+              <TableCell>Created At</TableCell>
               <TableCell>Deadline</TableCell>
               {(user?.department._id === "651ada78819ff0aec6af1381" ||
                 user?.department._id === "651ada98819ff0aec6af1382") && (
@@ -286,6 +287,9 @@ export default function TableTicket() {
                       {ticket.majorAssignee.name}
                     </TableCell>
                   )}
+                  <TableCell style={{ width: 160 }} align="left">
+                    {new Date(ticket.createdAt).toISOString().substr(0, 10)}
+                  </TableCell>
                   <TableCell style={{ width: 160 }} align="left">
                     {ticket.dueDate}
                   </TableCell>

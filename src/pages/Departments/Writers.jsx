@@ -248,6 +248,7 @@ const WritersForm = () => {
               <MenuItem value="LocalSeo">Local Seo</MenuItem>
               <MenuItem value="WebSeo">Web Seo</MenuItem>
               <MenuItem value="Reviews">Reviews</MenuItem>
+              <MenuItem value="Wordpress">Wordpress</MenuItem>
             </TextField>
           </Grid>
           <Grid item xs={2}>
@@ -326,6 +327,58 @@ const WritersForm = () => {
                   onChange={handleChange}
                   multiline
                 />
+              </Grid>
+              <Grid item xs={2}>
+                <TextField
+                  label="Website URL"
+                  fullWidth
+                  name="WebsiteURL"
+                  value={formData.WebsiteURL}
+                  onChange={handleChange}
+                  multiline
+                />
+              </Grid>
+              <Grid item xs={2}>
+                <TextField
+                  label="Referral URL"
+                  fullWidth
+                  name="ReferralWebsite"
+                  value={formData.ReferralWebsite}
+                  onChange={handleChange}
+                  multiline
+                />
+              </Grid>
+              <Grid item xs={2}>
+                <TextField
+                  label="Notes"
+                  fullWidth
+                  name="notes"
+                  value={formData.notes}
+                  onChange={handleChange}
+                  multiline
+                />
+              </Grid>
+            </Grid>
+          </>
+        )}
+        {selectedDepartments === "Wordpress" && (
+          <>
+            <div className="ticketHeading">
+              <Typography variant="h5">Business Details</Typography>
+            </div>
+            <Grid container spacing={2}>
+              <Grid item xs={2}>
+                <TextField
+                  label="Work Nature"
+                  fullWidth
+                  name="workStatus"
+                  value={formData.workStatus}
+                  onChange={handleChange}
+                  select
+                >
+                  <MenuItem value="OnePage">One-Page</MenuItem>
+                  <MenuItem value="FullWebsite">Full Website</MenuItem>
+                </TextField>
               </Grid>
               <Grid item xs={2}>
                 <TextField
