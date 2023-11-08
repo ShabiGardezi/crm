@@ -130,11 +130,12 @@ const Header = () => {
       "Local SEO / GMB Optimization": "/department/localseoform",
       "Wordpress Development": "/department/wordpressform",
       "Website SEO": "/department/webseoform",
+      Writers: "/department/writersform",
       "Custom Development": "/department/customdevelopment",
       "Paid Marketing": "/department/paidmarketingform",
       "Social Media / Customer Reviews Management":
         "/department/socialmediaform",
-      // "Customer Reviews Management": "/department/reviewsform",
+      // "Customer Reviews Management": "/department/writersform",
       Sales: "/department/sales",
     };
 
@@ -303,7 +304,7 @@ const Header = () => {
                 <Link to="/website_sheet">
                   <ListItem button>
                     {/* Paid Marketing */}
-                    <ListItemText primary="Wordpress/E-Commerce" />
+                    <ListItemText primary="Wordpress / E-Commerce" />
                   </ListItem>
                 </Link>
               </div>

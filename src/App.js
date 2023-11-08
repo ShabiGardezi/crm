@@ -34,6 +34,7 @@ import PaidMarketingClientSheet from "./pages/Client-Sheets/PaidMarketingClientS
 import WordpressClientSheet from "./pages/ClientHistory/WordpressClientSheet/WordpressClientSheet";
 import ActiveWebsiteClients from "./pages/ClientHistory/WordpressClientSheet/ActiveWesbiteClients";
 import InActiveWebsiteClients from "./pages/ClientHistory/WordpressClientSheet/NotActiveWebsiteClients";
+import WritersForm from "./pages/Departments/Writers";
 
 function App() {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -60,6 +61,7 @@ function App() {
           element={<CustomDevelopment />}
         />
         <Route path="/department/wordpressform" element={<WordPress />} />
+        <Route path="/department/writersform" element={<WritersForm />} />
         <Route path="/department/reviewsform" element={<Reviews />} />
         <Route
           path="/department/paidmarketingform"
