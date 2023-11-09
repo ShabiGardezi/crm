@@ -17,7 +17,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import InputBase from "@mui/material/InputBase";
 import WritersFilteredCards from "./WritersFilteredCards";
 
-export default function LocalSeoWritersTickets() {
+export default function WebSeoWritersTickets() {
   const user = JSON.parse(localStorage.getItem("user"));
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -138,11 +138,9 @@ export default function LocalSeoWritersTickets() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {console.log("tickets", tickets)}
-
             {tickets
               .filter(
-                (ticket) => ticket.businessdetails.departmentName === "LocalSeo"
+                (ticket) => ticket.businessdetails.departmentName === "WebSeo"
               )
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((ticket) => (

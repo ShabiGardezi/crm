@@ -64,12 +64,12 @@ const WritersFilteredCards = () => {
           </Link>
         </div>
         <div className="col-6">
-          <Link to="/inactive_website_clients">
+          <Link to="/reviews_writer_tickets">
             <TicketCard heading="Reviews" />
           </Link>
         </div>
         <div className="col-6">
-          <Link to="/inactive_website_clients">
+          <Link to="/wordpress_writer_tickets">
             <TicketCard heading="Wordpress" />
           </Link>
         </div>

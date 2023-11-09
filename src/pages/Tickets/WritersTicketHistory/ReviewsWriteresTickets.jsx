@@ -17,7 +17,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import InputBase from "@mui/material/InputBase";
 import WritersFilteredCards from "./WritersFilteredCards";
 
-export default function LocalSeoWritersTickets() {
+export default function ReviewsWriteresTickets() {
   const user = JSON.parse(localStorage.getItem("user"));
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -130,7 +130,6 @@ export default function LocalSeoWritersTickets() {
               <TableCell>Client Name</TableCell>
               <TableCell>Assignor</TableCell>
               <TableCell>Work Type</TableCell>
-              <TableCell>Qunatity</TableCell>
               <TableCell>Created At</TableCell>
               <TableCell>Deadline</TableCell>
               <TableCell>Details</TableCell>
@@ -138,11 +137,9 @@ export default function LocalSeoWritersTickets() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {console.log("tickets", tickets)}
-
             {tickets
               .filter(
-                (ticket) => ticket.businessdetails.departmentName === "LocalSeo"
+                (ticket) => ticket.businessdetails.departmentName === "Reviews"
               )
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((ticket) => (
@@ -156,9 +153,6 @@ export default function LocalSeoWritersTickets() {
                   </TableCell>
                   <TableCell style={{ width: 160 }} align="left">
                     {ticket.businessdetails.workStatus}
-                  </TableCell>
-                  <TableCell style={{ width: 160 }} align="left">
-                    {ticket.businessdetails.quantity}
                   </TableCell>
                   <TableCell style={{ width: 160 }} align="left">
                     {new Date(ticket.createdAt).toISOString().substr(0, 10)}
