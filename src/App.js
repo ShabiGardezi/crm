@@ -37,6 +37,7 @@ import InActiveWebsiteClients from "./pages/ClientHistory/WordpressClientSheet/N
 import WritersForm from "./pages/Departments/Writers";
 import WritersTicketHistory from "./pages/Tickets/WritersTicketHistory/WritersTicketHistory";
 import LocalSeoWritersTickets from "./pages/Tickets/WritersTicketHistory/LocalSeoTickets";
+import WebSeoWritersTickets from "./pages/Tickets/WritersTicketHistory/WebSeoWritersTickets";
 
 function App() {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -79,6 +80,7 @@ function App() {
         <Route path="/open_tickets" element={<ShowOpenTickets />} />
         <Route path="/close_tickets" element={<ShowCloseTickets />} />
         <Route path="/local_seo_tickets" element={<LocalSeoWritersTickets />} />
+        <Route path="/web_seo_tickets" element={<WebSeoWritersTickets />} />
         <Route path="/active_clients" element={<ActiveClients />} />
         <Route path="/notactive_clients" element={<NotActiveClients />} />
         <Route path="/webseo_clients" element={<WebSeoClients />} />
