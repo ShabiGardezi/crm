@@ -24,7 +24,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import InputBase from "@mui/material/InputBase";
 import DisplayTicketDetails from "./DisplayTicketDetails";
 
-export default function TableTicket() {
+export default function TicketsTable() {
   const user = JSON.parse(localStorage.getItem("user"));
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);

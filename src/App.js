@@ -35,10 +35,11 @@ import WordpressClientSheet from "./pages/ClientHistory/WordpressClientSheet/Wor
 import ActiveWebsiteClients from "./pages/ClientHistory/WordpressClientSheet/ActiveWesbiteClients";
 import InActiveWebsiteClients from "./pages/ClientHistory/WordpressClientSheet/NotActiveWebsiteClients";
 import WritersForm from "./pages/Departments/Writers";
+import WritersTicketHistory from "./pages/Tickets/WritersTicketHistory/WritersTicketHistory";
+import LocalSeoWritersTickets from "./pages/Tickets/WritersTicketHistory/LocalSeoTickets";
 
 function App() {
   const user = JSON.parse(localStorage.getItem("user"));
-  console.log(user);
   return (
     <div className="App">
       <Toaster />
@@ -69,11 +70,15 @@ function App() {
         />
         <Route path="/ticketlist" element={<TicketList />} />
         <Route path="/todo" element={<UserToDo showHeader={true} />} />
-        <Route path="/info" element={<FormDataDisplay />} />
-        <Route path="/history" element={<CustomPaginationActionsTable />} />
+        {user.department._id === "654bc9d114e9ed66948b4a01" ? (
+          <Route path="/history" element={<WritersTicketHistory />} />
+        ) : (
+          <Route path="/history" element={<CustomPaginationActionsTable />} />
+        )}
         <Route path="/tickets_created" element={<TicketCreatedTable />} />
         <Route path="/open_tickets" element={<ShowOpenTickets />} />
         <Route path="/close_tickets" element={<ShowCloseTickets />} />
+        <Route path="/local_seo_tickets" element={<LocalSeoWritersTickets />} />
         <Route path="/active_clients" element={<ActiveClients />} />
         <Route path="/notactive_clients" element={<NotActiveClients />} />
         <Route path="/webseo_clients" element={<WebSeoClients />} />

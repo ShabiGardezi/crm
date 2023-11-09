@@ -32,6 +32,7 @@ const WordPress = () => {
     keywords: "",
     webUrl: "",
     loginCredentials: "",
+    priorityLevel: "",
     price: "",
     advanceprice: "",
     remainingPrice: "",

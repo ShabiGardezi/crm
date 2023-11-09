@@ -135,7 +135,6 @@ const Header = () => {
       "Paid Marketing": "/department/paidmarketingform",
       "Social Media / Customer Reviews Management":
         "/department/socialmediaform",
-      // "Customer Reviews Management": "/department/writersform",
       Sales: "/department/sales",
     };
 

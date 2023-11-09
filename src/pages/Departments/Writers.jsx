@@ -13,13 +13,13 @@ import toast from "react-hot-toast";
 
 const WritersForm = () => {
   const user = JSON.parse(localStorage.getItem("user"));
-  console.log("user", user);
   const [departments, setDepartments] = useState([]);
   const [selectedClient, setSelectedClient] = useState(null);
   const [selectedDepartments, setSelectedDepartments] = useState("");
   const [clientSuggestions, setClientSuggestions] = useState([]);
   const [formData, setFormData] = useState({
     priorityLevel: "",
+    department: "Writers", // Initialize with "Writers"
     assignor: user?.username || "",
     dueDate: new Date().toISOString().substr(0, 10), // Initialize with the current date in yyyy-mm-dd format
     serviceName: "",
@@ -55,13 +55,19 @@ const WritersForm = () => {
       [name]: value,
       departmentName: selectedDepartments, // Add this line to update departmentName
     });
+    if (name === "department") {
+      // If the "department" field is changing, update the form data
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    }
   };
-
   const handleSubmit = async (event) => {
     event.preventDefault(); // Prevent the default form submission behavior
     try {
       const selectedDepartment = departments.find(
-        (department) => department.name === "Website SEO"
+        (department) => department.name === formData.department
       );
 
       // Set majorAssignee to the department's ID
@@ -222,12 +228,11 @@ const WritersForm = () => {
           </Grid>
           <Grid item xs={2}>
             <TextField
-              label="Select Department"
+              label="Department"
               fullWidth
               name="department"
-              value={"Writers"}
+              value={formData.department}
               onChange={handleChange}
-              disabled
               select
             >
               {departments?.map((d) => (
@@ -239,7 +244,7 @@ const WritersForm = () => {
           </Grid>
           <Grid item xs={2}>
             <TextField
-              label="Department"
+              label="Department Name"
               fullWidth
               name="departmentName"
               onChange={(e) => setSelectedDepartments(e.target.value)}
@@ -429,11 +434,11 @@ const WritersForm = () => {
                   onChange={handleChange}
                   select
                 >
-                  <MenuItem value="GMBPosting">GMB Posting</MenuItem>
-                  <MenuItem value="ProductDescription">
+                  <MenuItem value="GMB Posting">GMB Posting</MenuItem>
+                  <MenuItem value="Product Description">
                     Product Description
                   </MenuItem>
-                  <MenuItem value="BusinessDescription">
+                  <MenuItem value="Business Description">
                     Business Description
                   </MenuItem>
                   <MenuItem value="Blog">Blog</MenuItem>
