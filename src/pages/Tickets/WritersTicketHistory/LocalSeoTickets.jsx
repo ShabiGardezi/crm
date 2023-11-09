@@ -97,6 +97,80 @@ export default function LocalSeoWritersTickets() {
       }
     }
   };
+  const handleNotesEdit = (ticketId, editedNotes) => {
+    // Make an API request to update the notes in the database
+    fetch("http://localhost:5000/api/tickets/notes-update", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ticketId,
+        notes: editedNotes,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.payload) {
+          // If the update is successful, update the local state with the edited notes
+          const updatedTickets = tickets.map((ticket) => {
+            if (ticket._id === ticketId) {
+              return {
+                ...ticket,
+                businessdetails: {
+                  ...ticket.businessdetails,
+                  notes: editedNotes,
+                },
+              };
+            }
+            return ticket;
+          });
+          setTickets(updatedTickets);
+        } else {
+          console.error("Error updating notes");
+        }
+      })
+      .catch((error) => {
+        console.error("Error updating notes", error);
+      });
+  };
+  const handleKeywordsEdit = (ticketId, editedKeywords) => {
+    // Make an API request to update the notes in the database
+    fetch("http://localhost:5000/api/tickets/keywords-update", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ticketId,
+        Keywords: editedKeywords,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.payload) {
+          // If the update is successful, update the local state with the edited notes
+          const updatedTickets = tickets.map((ticket) => {
+            if (ticket._id === ticketId) {
+              return {
+                ...ticket,
+                businessdetails: {
+                  ...ticket.businessdetails,
+                  Keywords: editedKeywords,
+                },
+              };
+            }
+            return ticket;
+          });
+          setTickets(updatedTickets);
+        } else {
+          console.error("Error updating keywords");
+        }
+      })
+      .catch((error) => {
+        console.error("Error updating keywords", error);
+      });
+  };
   return (
     <div>
       <Header />
@@ -135,6 +209,8 @@ export default function LocalSeoWritersTickets() {
               <TableCell>Deadline</TableCell>
               <TableCell>Details</TableCell>
               <TableCell>Status</TableCell>
+              <TableCell>Keywords</TableCell>
+              <TableCell>Notes</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -173,6 +249,26 @@ export default function LocalSeoWritersTickets() {
                   </TableCell>
                   <TableCell style={{ width: 160 }} align="left">
                     {ticket.status}
+                  </TableCell>
+                  <TableCell
+                    style={{ width: 180, whiteSpace: "pre-line" }} // Apply the white-space property here
+                    align="left"
+                    contentEditable={true}
+                    onBlur={(e) =>
+                      handleKeywordsEdit(ticket._id, e.target.innerText)
+                    }
+                  >
+                    {ticket.businessdetails.Keywords}
+                  </TableCell>
+                  <TableCell
+                    style={{ width: 180, whiteSpace: "pre-line" }} // Apply the white-space property here
+                    align="left"
+                    contentEditable={true}
+                    onBlur={(e) =>
+                      handleNotesEdit(ticket._id, e.target.innerText)
+                    }
+                  >
+                    {ticket.businessdetails.notes}
                   </TableCell>
                 </TableRow>
               ))}
