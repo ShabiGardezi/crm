@@ -276,31 +276,31 @@ const Header = () => {
             {/* Step 4: Add sub-items for "Client History" dropdown */}
             {isClientHistoryOpen && (
               <div className="client-history-dropdown">
-                <Link to="/webseo_clients">
+                <Link to="/webseo_clients?depId=65195c8f504d80e8f11b0d15">
                   <ListItem button>
                     {/* Web SEO */}
                     <ListItemText primary="Web SEO" />
                   </ListItem>
                 </Link>
-                <Link to="/localseo_clients">
+                <Link to="/localseo_clients?depId=65195c4b504d80e8f11b0d13">
                   <ListItem button>
                     {/* Local SEO */}
                     <ListItemText primary="Local SEO" />
                   </ListItem>
                 </Link>
-                <Link to="/social_media_client">
+                <Link to="/social_media_client?depId=651ada78819ff0aec6af1381">
                   <ListItem button>
                     {/* Social Media/ Customer Reviews */}
                     <ListItemText primary="Social Media/Customer Reviews" />
                   </ListItem>
                 </Link>
-                <Link to="/paid_marketing_sheet">
+                <Link to="/paid_marketing_sheet?depId=651ada3c819ff0aec6af1380">
                   <ListItem button>
                     {/* Paid Marketing */}
                     <ListItemText primary="Paid Marketing" />
                   </ListItem>
                 </Link>
-                <Link to="/website_sheet">
+                <Link to="/website_sheet?depId=65195c81504d80e8f11b0d14">
                   <ListItem button>
                     {/* Paid Marketing */}
                     <ListItemText primary="Wordpress / E-Commerce" />

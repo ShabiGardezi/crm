@@ -32,6 +32,7 @@ import DisplayTicketDetails from "../../Tickets/DisplayTicketDetails";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import ActiveNotActiveCard from "../ActiveNotActiveCard";
 import axios from "axios";
+import { useLocation } from "react-router-dom";
 export default function LocalSeoSheet() {
   const user = JSON.parse(localStorage.getItem("user"));
   const [page, setPage] = React.useState(0);
@@ -213,12 +214,14 @@ export default function LocalSeoSheet() {
   const clearSelectedTicketDetails = () => {
     setSelectedTicketDetails(null);
   };
-
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const param1 = params.get("depId");
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/tickets?departmentId=${user?.department?._id}`
+          `http://localhost:5000/api/tickets?departmentId=${param1}`
         );
         if (response.ok) {
           const data = await response.json();
@@ -418,6 +421,13 @@ export default function LocalSeoSheet() {
       status: temp,
     });
   };
+  if (
+    param1 !== user?.department?._id &&
+    param1 !== "653fcae0b825ef1379dd5ad5" &&
+    user.role !== "admin"
+  ) {
+    return "unAuthorized";
+  }
   return (
     <>
       <Header />

@@ -34,6 +34,7 @@ import ActiveNotSctiveCard from "./ActiveNotActiveCard";
 import axios from "axios";
 import OneTimeServiceClientsCard from "./OneTimeClientCard";
 import "../../styles/Home/TicketCard.css";
+import { useLocation } from "react-router-dom";
 
 export default function WebSeoSheet(props) {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -216,18 +217,17 @@ export default function WebSeoSheet(props) {
   const clearSelectedTicketDetails = () => {
     setSelectedTicketDetails(null);
   };
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const param1 = params.get("depId");
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // console.log(user.role);
-        // console.log(props.department);
         let url = "";
-        if (user.role === "admin" || user.department.name === "Sales") {
-          url = `http://localhost:5000/api/tickets?departmentId=${props.department._id}`;
-        } else {
-          url = `http://localhost:5000/api/tickets?departmentId=${user?.department?._id}`;
-        }
+
+        url = `http://localhost:5000/api/tickets?departmentId=${param1}`;
+
         const response = await fetch(url);
         if (response.ok) {
           const data = await response.json();
@@ -427,6 +427,13 @@ export default function WebSeoSheet(props) {
       status: temp,
     });
   };
+  if (
+    param1 !== user?.department?._id &&
+    param1 !== "653fcae0b825ef1379dd5ad5" &&
+    user.role !== "admin"
+  ) {
+    return "unAuthorized";
+  }
   return (
     <>
       <Header />
