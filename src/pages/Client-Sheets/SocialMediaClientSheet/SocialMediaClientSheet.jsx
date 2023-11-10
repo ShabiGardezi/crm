@@ -155,7 +155,7 @@ export default function SocialMediaClientSheet(props) {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/tickets?departmentId=${param1}`
+          `http://localhost:5000/api/tickets?departmentId=${param1}&salesDep=true`
         );
         if (response.ok) {
           const data = await response.json();

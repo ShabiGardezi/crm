@@ -27,6 +27,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import axios from "axios";
 import "../../../styles/Home/TicketCard.css";
 import WebisteClientCards from "./Cards";
+import { useLocation } from "react-router-dom";
 export default function WordpressClientSheet(props) {
   const user = JSON.parse(localStorage.getItem("user"));
   const [page, setPage] = React.useState(0);
@@ -145,12 +146,14 @@ export default function WordpressClientSheet(props) {
   const closeTicketDetailsModal = () => {
     setIsTicketDetailsOpen(false);
   };
-
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const param1 = params.get("depId");
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/tickets?departmentId=${user?.department?._id}`
+          `http://localhost:5000/api/tickets?departmentId=${param1}&salesDep=true`
         );
         if (response.ok) {
           const data = await response.json();
@@ -338,6 +341,13 @@ export default function WordpressClientSheet(props) {
 
     fetchData();
   }, []);
+  if (
+    param1 !== user?.department?._id &&
+    param1 !== "653fcae0b825ef1379dd5ad5" &&
+    user.role !== "admin"
+  ) {
+    return "unAuthorized";
+  }
   return (
     <>
       <Header />

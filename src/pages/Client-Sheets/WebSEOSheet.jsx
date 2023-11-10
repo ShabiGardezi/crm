@@ -226,7 +226,7 @@ export default function WebSeoSheet(props) {
       try {
         let url = "";
 
-        url = `http://localhost:5000/api/tickets?departmentId=${param1}`;
+        url = `http://localhost:5000/api/tickets?departmentId=${param1}&salesDep=true`;
 
         const response = await fetch(url);
         if (response.ok) {
