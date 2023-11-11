@@ -157,7 +157,7 @@ const Header = () => {
   return (
     <>
       <CssBaseline />
-      <AppBar position="static">
+      <AppBar position="static" style= {{backgroundColor: '#1976d2'}}>
         <Toolbar>
           <IconButton
             edge="start"
