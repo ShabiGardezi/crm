@@ -1,8 +1,14 @@
+.signup-form{
+  border: 1px solid rgba(0, 91, 234, 1);
+  border-radius: 8px;
+  text-align: center;
+  background-color: rgba(189, 181, 181, 0.658);
+}
+
 .MuiFormControl-root.MuiFormControl-fullWidth {
   margin-top: 30px;
 }
 .btn-signup {
-  width: 30%;
   margin-top: 30px;
   font: bold 15px/24px "Mona Sans", "Helvetica Neue", Helvetica, Arial,
     sans-serif;
