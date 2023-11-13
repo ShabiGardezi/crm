@@ -1,7 +1,4 @@
 import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
-import { useTheme } from "@mui/material/styles";
-import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -12,19 +9,15 @@ import TableRow from "@mui/material/TableRow";
 import TableHead from "@mui/material/TableHead";
 import Paper from "@mui/material/Paper";
 import IconButton from "@mui/material/IconButton";
-import FirstPageIcon from "@mui/icons-material/FirstPage";
-import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
-import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
-import LastPageIcon from "@mui/icons-material/LastPage";
 import Header from "../../Header";
 import TicketCards from "../../../Layout/Home/TicketCard";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import DisplayTicketDetails from "../DisplayTicketDetails";
 import SearchIcon from "@mui/icons-material/Search";
 import InputBase from "@mui/material/InputBase";
-import WritersFilteredCards from "./WritersFilteredCards";
+import DesignersFilteredCard from "./DesignersFilteredCard";
 
-export default function WebSeoWriterTickets() {
+export default function ReviewsDesignersTickets() {
   const user = JSON.parse(localStorage.getItem("user"));
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -104,11 +97,48 @@ export default function WebSeoWriterTickets() {
       }
     }
   };
+  const handleNotesEdit = (ticketId, editedNotes) => {
+    // Make an API request to update the notes in the database
+    fetch("http://localhost:5000/api/tickets/notes-update", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ticketId,
+        notes: editedNotes,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.payload) {
+          // If the update is successful, update the local state with the edited notes
+          const updatedTickets = tickets.map((ticket) => {
+            if (ticket._id === ticketId) {
+              return {
+                ...ticket,
+                businessdetails: {
+                  ...ticket.businessdetails,
+                  notes: editedNotes,
+                },
+              };
+            }
+            return ticket;
+          });
+          setTickets(updatedTickets);
+        } else {
+          console.error("Error updating notes");
+        }
+      })
+      .catch((error) => {
+        console.error("Error updating notes", error);
+      });
+  };
   return (
     <div>
       <Header />
       <TicketCards />
-      <WritersFilteredCards />
+      <DesignersFilteredCard />
       <TableContainer component={Paper}>
         <div>
           <div
@@ -136,17 +166,18 @@ export default function WebSeoWriterTickets() {
             <TableRow>
               <TableCell>Client Name</TableCell>
               <TableCell>Assignor</TableCell>
-              <TableCell>Assignor Department</TableCell>
-              <TableCell>Assignee Department</TableCell>
-              <TableCell>Work Type</TableCell>
-              <TableCell>Qunatity</TableCell>
+              <TableCell>Created At</TableCell>
               <TableCell>Deadline</TableCell>
               <TableCell>Details</TableCell>
               <TableCell>Status</TableCell>
+              <TableCell>Notes</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {tickets
+              .filter(
+                (ticket) => ticket.businessdetails.departmentName === "Reviews"
+              )
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((ticket) => (
                 <TableRow key={ticket._id}>
@@ -158,16 +189,7 @@ export default function WebSeoWriterTickets() {
                     {ticket.TicketDetails.assignor}
                   </TableCell>
                   <TableCell style={{ width: 160 }} align="left">
-                    {ticket.assignorDepartment.name}
-                  </TableCell>
-                  <TableCell style={{ width: 160 }} align="left">
-                    {ticket.majorAssignee.name}
-                  </TableCell>
-                  <TableCell style={{ width: 160 }} align="left">
-                    {ticket.businessdetails.workStatus}
-                  </TableCell>
-                  <TableCell style={{ width: 160 }} align="left">
-                    {ticket.businessdetails.quantity}
+                    {new Date(ticket.createdAt).toISOString().substr(0, 10)}
                   </TableCell>
                   <TableCell style={{ width: 160 }} align="left">
                     {ticket.dueDate}
@@ -179,6 +201,16 @@ export default function WebSeoWriterTickets() {
                   </TableCell>
                   <TableCell style={{ width: 160 }} align="left">
                     {ticket.status}
+                  </TableCell>
+                  <TableCell
+                    style={{ width: 180, whiteSpace: "pre-line" }} // Apply the white-space property here
+                    align="left"
+                    contentEditable={true}
+                    onBlur={(e) =>
+                      handleNotesEdit(ticket._id, e.target.innerText)
+                    }
+                  >
+                    {ticket.businessdetails.notes}
                   </TableCell>
                 </TableRow>
               ))}
