@@ -15,7 +15,6 @@ import TicketList from "./pages/TicketList";
 import UserToDo from "./components/UserToDo";
 import CustomDevelopment from "./pages/Departments/CustomDevelopment";
 import CustomPaginationActionsTable from "./pages/Tickets/TicketHistory";
-import FormDataDisplay from "./pages/FormSections/FormDataDisplay";
 import TicketCreatedTable from "./pages/Tickets/TicketCreated";
 import ShowOpenTickets from "./pages/Tickets/ShowOpenTickets";
 import ShowCloseTickets from "./pages/Tickets/ShowCloseTickets";

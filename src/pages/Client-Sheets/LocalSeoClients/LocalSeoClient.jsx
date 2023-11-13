@@ -62,7 +62,7 @@ export default function LocalSeoSheet() {
 
   // Function to handle form field changes
   const handlePriceChange = (event) => {
-    const { name, value } = event.target;
+    const { value } = event.target;
 
     // Convert the input value to a float, or 0 if it's not a valid number
     const updatedPrice = parseFloat(value) || 0;
@@ -77,7 +77,7 @@ export default function LocalSeoSheet() {
   };
 
   const handleAdvancePriceChange = (event) => {
-    const { name, value } = event.target;
+    const {  value } = event.target;
 
     // Convert the input value to a float, or 0 if it's not a valid number
     const updatedPrice = parseFloat(price) || 0;
