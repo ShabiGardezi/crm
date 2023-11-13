@@ -16,28 +16,23 @@ const TicketCard = ({ heading, counter, onClick }) => {
   );
 };
 
-const WritersFilteredCards = () => {
+const DesignersFilteredCard = () => {
   const user = JSON.parse(localStorage.getItem("user"));
   return (
     <>
       <div className="filterticketscard">
         <div className="col-6">
-          <Link to="/local_seo_tickets">
-            <TicketCard heading="Local SEO" />
-          </Link>
-        </div>
-        <div className="col-6">
-          <Link to="/web_seo_tickets">
+          <Link to="/webseo_designer_tickets">
             <TicketCard heading="Web SEO" />
           </Link>
         </div>
         <div className="col-6">
-          <Link to="/reviews_writer_tickets">
+          <Link to="/reviews_designer_tickets">
             <TicketCard heading="Reviews" />
           </Link>
         </div>
         <div className="col-6">
-          <Link to="/wordpress_writer_tickets">
+          <Link to="/wordpress_designer_tickets">
             <TicketCard heading="Wordpress" />
           </Link>
         </div>
@@ -46,4 +41,4 @@ const WritersFilteredCards = () => {
   );
 };
 
-export default WritersFilteredCards;
+export default DesignersFilteredCard;

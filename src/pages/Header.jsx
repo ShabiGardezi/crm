@@ -232,14 +232,14 @@ const Header = () => {
                 <ListItemText primary="Home" />
               </ListItem>
             </Link>
-            <Link to="/info">
+            {/* <Link to="/info">
               <ListItem button>
                 <ListItemIcon>
                   <Assignment />
                 </ListItemIcon>
                 <ListItemText primary="My Tasks" />
               </ListItem>
-            </Link>
+            </Link> */}
             <Link to="/todo">
               <ListItem button>
                 <ListItemIcon>

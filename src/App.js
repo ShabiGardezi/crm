@@ -15,7 +15,6 @@ import TicketList from "./pages/TicketList";
 import UserToDo from "./components/UserToDo";
 import CustomDevelopment from "./pages/Departments/CustomDevelopment";
 import CustomPaginationActionsTable from "./pages/Tickets/TicketHistory";
-import FormDataDisplay from "./pages/FormSections/FormDataDisplay";
 import TicketCreatedTable from "./pages/Tickets/TicketCreated";
 import ShowOpenTickets from "./pages/Tickets/ShowOpenTickets";
 import ShowCloseTickets from "./pages/Tickets/ShowCloseTickets";
@@ -40,9 +39,15 @@ import LocalSeoWritersTickets from "./pages/Tickets/WritersTicketHistory/LocalSe
 import WebSeoWritersTickets from "./pages/Tickets/WritersTicketHistory/WebSeoWritersTickets";
 import WordpressWritersTickets from "./pages/Tickets/WritersTicketHistory/WordpressWritersTickets";
 import ReviewsWriteresTickets from "./pages/Tickets/WritersTicketHistory/ReviewsWriteresTickets";
+import DesignersForm from "./pages/Departments/Designers";
+import DesignersTicketHistory from "./pages/Tickets/DesignersTicketHistory/DesignersTicketHistory";
+import ReviewsDesignersTickets from "./pages/Tickets/DesignersTicketHistory/ReviewsDesignersTickets";
+import WebseoDesignerTickets from "./pages/Tickets/DesignersTicketHistory/webseo_designer_tickets";
+import WordpressDesignersTickets from "./pages/Tickets/DesignersTicketHistory/wordpress_designer_tickets";
 
 function App() {
   const user = JSON.parse(localStorage.getItem("user"));
+  console.log(user.department._id);
   return (
     <div className="App">
       <Toaster />
@@ -56,6 +61,7 @@ function App() {
         <Route path="/home" element={<Home />} />
         <Route path="/department/webseoform" element={<WebSeoForm />} />
         <Route path="/department/localseoform" element={<LocalSeoForm />} />
+        <Route path="/department/designersform" element={<DesignersForm />} />
         <Route
           path="/department/socialmediaform"
           element={<SocialMediaForm />}
@@ -73,11 +79,29 @@ function App() {
         />
         <Route path="/ticketlist" element={<TicketList />} />
         <Route path="/todo" element={<UserToDo showHeader={true} />} />
-        {user?.department._id === "654bc9d114e9ed66948b4a01" ? (
+        {user?.department?._id === "654bc9d114e9ed66948b4a01" && (
           <Route path="/history" element={<WritersTicketHistory />} />
-        ) : (
+        )}
+        {user?.department?._id === "6552574254f8868c177cfb83" && (
+          <Route path="/history" element={<DesignersTicketHistory />} />
+        )}
+        {(!user?.department?._id ||
+          (user?.department?._id !== "654bc9d114e9ed66948b4a01" &&
+            user?.department?._id !== "6552574254f8868c177cfb83")) && (
           <Route path="/history" element={<CustomPaginationActionsTable />} />
         )}
+        <Route
+          path="/reviews_designer_tickets"
+          element={<ReviewsDesignersTickets />}
+        />
+        <Route
+          path="/webseo_designer_tickets"
+          element={<WebseoDesignerTickets />}
+        />
+        <Route
+          path="/wordpress_designer_tickets"
+          element={<WordpressDesignersTickets />}
+        />
         <Route path="/tickets_created" element={<TicketCreatedTable />} />
         <Route path="/open_tickets" element={<ShowOpenTickets />} />
         <Route path="/close_tickets" element={<ShowCloseTickets />} />
