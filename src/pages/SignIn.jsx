@@ -79,7 +79,7 @@ const SignIn = () => {
                         />
                     </div>
                 </Grid>
-                <Grid className="signin-form" item xs={12} md={6}>
+                <Grid className="signIn-form" item xs={12} md={6}>
                     <Typography variant="h4" style={{marginTop:"15px"}}>Sign In</Typography>
 
                     <form onSubmit={handleLogin}>

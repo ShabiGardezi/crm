@@ -1,4 +1,4 @@
-.signup-form{
+.signUp-form{
   border: 1px solid rgba(0, 91, 234, 1);
   border-radius: 8px;
   text-align: center;
@@ -10,8 +10,7 @@
 }
 .btn-signup {
   margin-top: 30px;
-  font: bold 15px/24px "Mona Sans", "Helvetica Neue", Helvetica, Arial,
-    sans-serif;
+  font: bold 15px/24px "Mona Sans", "Helvetica Neue", Helvetica, Arial;
 }
 h4.MuiTypography-root.MuiTypography-h4.MuiTypography-gutterBottom.MuiTypography-alignCenter {
   font: bold 15px/24px "Mona Sans", "Helvetica Neue", Helvetica, Arial,

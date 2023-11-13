@@ -91,7 +91,7 @@ const SignUp = () => {
                             />
                         </div>
                     </Grid>
-                    <Grid className = "signup-form" item xs={12} sm={6}>
+                    <Grid className = "signUp-form" item xs={12} sm={6}>
                         <Typography variant="h4" align="center" gutterBottom style={{marginTop:"20px"}}>
                             Sign Up
                         </Typography>
