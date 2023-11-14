@@ -1,7 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useTheme } from "@mui/material/styles";
-import PropTypes from "prop-types";
-import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -12,21 +9,16 @@ import TableRow from "@mui/material/TableRow";
 import TableHead from "@mui/material/TableHead";
 import Paper from "@mui/material/Paper";
 import IconButton from "@mui/material/IconButton";
-import FirstPageIcon from "@mui/icons-material/FirstPage";
-import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
-import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
-import LastPageIcon from "@mui/icons-material/LastPage";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import SearchIcon from "@mui/icons-material/Search";
-import InputBase from "@mui/material/InputBase";
 import Header from "../../Header";
 import DisplayTicketDetails from "../../Tickets/DisplayTicketDetails";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import axios from "axios";
 import WebisteClientCards from "./Cards";
 import TablePaginationActions from "../../Tickets/TicketsTablePagination/TicketsPagination";
+import SearchBar from "../../SearchIcon/SearchIcon";
 export default function InActiveWebsiteClients() {
   const user = JSON.parse(localStorage.getItem("user"));
   const [page, setPage] = React.useState(0);
@@ -38,90 +30,20 @@ export default function InActiveWebsiteClients() {
   const [isTicketDetailsOpen, setIsTicketDetailsOpen] = useState(false);
   const [selectedTicketDetails, setSelectedTicketDetails] = useState(null);
 
-  // function TablePaginationActions(props) {
-  //   const theme = useTheme();
-  //   const { count, page, rowsPerPage, onPageChange } = props;
-
-  //   const handleFirstPageButtonClick = (event) => {
-  //     onPageChange(event, 0);
-  //   };
-
-  //   const handleBackButtonClick = (event) => {
-  //     onPageChange(event, page - 1);
-  //   };
-
-  //   const handleNextButtonClick = (event) => {
-  //     onPageChange(event, page + 1);
-  //   };
-
-  //   const handleLastPageButtonClick = (event) => {
-  //     onPageChange(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
-  //   };
-
-  //   return (
-  //     <Box sx={{ flexShrink: 0, ml: 2.5 }}>
-  //       <IconButton
-  //         onClick={handleFirstPageButtonClick}
-  //         disabled={page === 0}
-  //         aria-label="first page"
-  //       >
-  //         {theme.direction === "rtl" ? <LastPageIcon /> : <FirstPageIcon />}
-  //       </IconButton>
-  //       <IconButton
-  //         onClick={handleBackButtonClick}
-  //         disabled={page === 0}
-  //         aria-label="previous page"
-  //       >
-  //         {theme.direction === "rtl" ? (
-  //           <KeyboardArrowRight />
-  //         ) : (
-  //           <KeyboardArrowLeft />
-  //         )}
-  //       </IconButton>
-  //       <IconButton
-  //         onClick={handleNextButtonClick}
-  //         disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-  //         aria-label="next page"
-  //       >
-  //         {theme.direction === "rtl" ? (
-  //           <KeyboardArrowLeft />
-  //         ) : (
-  //           <KeyboardArrowRight />
-  //         )}
-  //       </IconButton>
-  //       <IconButton
-  //         onClick={handleLastPageButtonClick}
-  //         disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-  //         aria-label="last page"
-  //       >
-  //         {theme.direction === "rtl" ? <FirstPageIcon /> : <LastPageIcon />}
-  //       </IconButton>
-  //     </Box>
-  //   );
-  // }
-
-  // TablePaginationActions.propTypes = {
-  //   count: PropTypes.number.isRequired,
-  //   onPageChange: PropTypes.func.isRequired,
-  //   page: PropTypes.number.isRequired,
-  //   rowsPerPage: PropTypes.number.isRequired,
-  // };
   <TablePaginationActions />;
-  const handleSearch = async (e) => {
-    if (e.key === "Enter" && searchQuery) {
-      try {
-        const response = await fetch(
-          `http://localhost:5000/api/tickets/client-search?searchString=${searchQuery}`
-        );
-        if (response.ok) {
-          const data = await response.json();
-          setTickets(data.payload);
-        } else {
-          console.error("Error fetching search results");
-        }
-      } catch (error) {
-        console.error("Error fetching search results", error);
+  const handleSearch = async (searchQuery) => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/tickets/client-search?searchString=${searchQuery}`
+      );
+      if (response.ok) {
+        const data = await response.json();
+        setTickets(data.payload);
+      } else {
+        console.error("Error fetching search results");
       }
+    } catch (error) {
+      console.error("Error fetching search results", error);
     }
   };
 
@@ -360,34 +282,13 @@ export default function InActiveWebsiteClients() {
       status: temp,
     });
   };
-  //   console.log(tickets);
   return (
     <>
       <Header />
       <div className="cards">{<WebisteClientCards />}</div>
 
       <TableContainer component={Paper}>
-        <div>
-          <div
-            className="search"
-            style={{
-              display: "flex",
-              justifyContent: "flex-end",
-              alignItems: "center",
-              marginTop: "3%",
-            }}
-          >
-            <div className="searchIcon">
-              <SearchIcon />
-            </div>
-            <InputBase
-              placeholder="Search Client..."
-              inputProps={{ "aria-label": "search" }}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onKeyPress={handleSearch}
-            />
-          </div>
-        </div>
+        <SearchBar onSearch={handleSearch} />
         {/* Paid Marketing */}
         <Table sx={{ minWidth: 800 }} aria-label="custom pagination table">
           <TableHead>

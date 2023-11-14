@@ -12,8 +12,6 @@ import IconButton from "@mui/material/IconButton";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import SearchIcon from "@mui/icons-material/Search";
-import InputBase from "@mui/material/InputBase";
 import Header from "../Header";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import ActiveNotSctiveCard from "./ActiveNotActiveCard";
@@ -23,6 +21,7 @@ import DisplayTicketDetails from "../Tickets/DisplayTicketDetails";
 import "../../styles/Home/TicketCard.css";
 import CardsSocialMediaTrack from "./SocialMediaClientSheet/CardsSocialMedia/CardsSocialMediaTrack";
 import TablePaginationActions from "../Tickets/TicketsTablePagination/TicketsPagination";
+import SearchBar from "../SearchIcon/SearchIcon";
 
 export default function ActiveClients() {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -35,21 +34,19 @@ export default function ActiveClients() {
   const [selectedTicketDetails, setSelectedTicketDetails] = useState(null);
 
   <TablePaginationActions />;
-  const handleSearch = async (e) => {
-    if (e.key === "Enter" && searchQuery) {
-      try {
-        const response = await fetch(
-          `http://localhost:5000/api/tickets/client-search?searchString=${searchQuery}`
-        );
-        if (response.ok) {
-          const data = await response.json();
-          setTickets(data.payload);
-        } else {
-          console.error("Error fetching search results");
-        }
-      } catch (error) {
-        console.error("Error fetching search results", error);
+  const handleSearch = async (searchQuery) => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/tickets/client-search?searchString=${searchQuery}`
+      );
+      if (response.ok) {
+        const data = await response.json();
+        setTickets(data.payload);
+      } else {
+        console.error("Error fetching search results");
       }
+    } catch (error) {
+      console.error("Error fetching search results", error);
     }
   };
 
@@ -288,7 +285,6 @@ export default function ActiveClients() {
       status: temp,
     });
   };
-  console.log(tickets);
   return (
     <>
       <Header />
@@ -298,32 +294,13 @@ export default function ActiveClients() {
           <OneTimeServiceClientsCard />
         )}
       </div>
+      {/* Social Media / Customer Reviews Management and Reviews */}
       {(user?.department._id === "651ada78819ff0aec6af1381" ||
         user?.department._id === "651ada98819ff0aec6af1382") && (
         <CardsSocialMediaTrack />
       )}
       <TableContainer component={Paper}>
-        <div>
-          <div
-            className="search"
-            style={{
-              display: "flex",
-              justifyContent: "flex-end",
-              alignItems: "center",
-              marginTop: "3%",
-            }}
-          >
-            <div className="searchIcon">
-              <SearchIcon />
-            </div>
-            <InputBase
-              placeholder="Search Client..."
-              inputProps={{ "aria-label": "search" }}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onKeyPress={handleSearch}
-            />
-          </div>
-        </div>
+        <SearchBar onSearch={handleSearch} />
         {/* Social Media / Customer Reviews Management and Reviews */}
         {(user?.department._id === "651ada78819ff0aec6af1381" ||
           user?.department._id === "651ada98819ff0aec6af1382") && (
