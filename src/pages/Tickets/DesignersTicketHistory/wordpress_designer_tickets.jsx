@@ -171,6 +171,7 @@ export default function WordpressDesignersTickets() {
               <TableCell>Deadline</TableCell>
               <TableCell>Details</TableCell>
               <TableCell>Status</TableCell>
+              <TableCell>Notes</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
