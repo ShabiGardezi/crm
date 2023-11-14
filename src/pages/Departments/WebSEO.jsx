@@ -116,6 +116,9 @@ const WebSeoForm = () => {
         created_by: user._id,
         assignorDepartment: user.department._id,
         businessdetails: {
+          serviceName: formData.serviceName,
+          serviceQuantity: formData.serviceQuantity,
+          servicePrice: formData.servicePrice,
           SearchConsoleAccess: formData.SearchConsoleAccess,
           GoogleAnalyticsAccess: formData.GoogleAnalyticsAccess,
           LoginCredentials: formData.LoginCredentials,
@@ -139,12 +142,6 @@ const WebSeoForm = () => {
           supportPerson: formData.supportPerson,
           onceService: formData.onceService,
           noOfBacklinks: formData.noOfBacklinks,
-        },
-        Services: {
-          serviceName: formData.serviceName,
-          // serviceDescription: formData.serviceDescription,
-          serviceQuantity: formData.serviceQuantity,
-          servicePrice: formData.servicePrice,
         },
         quotation: {
           price: formData.price,

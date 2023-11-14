@@ -68,7 +68,8 @@ const ReviewsForm = () => {
     try {
       // Make an Axios POST request to your backend API
       const selectedDepartment = departments.find(
-        (department) => department.name === "Social Media / Customer Reviews Management"
+        (department) =>
+          department.name === "Social Media / Customer Reviews Management"
       );
 
       // Set majorAssignee to the department's ID
@@ -81,6 +82,7 @@ const ReviewsForm = () => {
         assignorDepartment: user.department._id,
         businessdetails: {
           clientName: formData.clientName,
+          serviceName: formData.serviceName,
           WebsiteURL: formData.WebsiteURL,
           clientEmail: formData.clientEmail,
           socialProfile: formData.socialProfile,
@@ -90,9 +92,6 @@ const ReviewsForm = () => {
           logincredentials: formData.logincredentials,
           notes: formData.notes,
           noOfreviews: formData.noOfreviews,
-        },
-        Services: {
-          serviceName: formData.serviceName,
         },
         quotation: {
           price: formData.price,

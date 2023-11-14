@@ -6,6 +6,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Typography from "@mui/material/Typography";
+import "../../styles/Tickets/ticketInfo.css";
 
 export default function DisplayTicketDetails({
   open,
@@ -45,11 +46,11 @@ export default function DisplayTicketDetails({
               </Typography>
 
               {renderFields(ticketDetails.TicketDetails)}
-              <Typography variant="h5" style={{ textAlign: "center" }}>
+              {/* <Typography variant="h5" style={{ textAlign: "center" }}>
                 Services
               </Typography>
 
-              {renderFields(ticketDetails.Services)}
+              {renderFields(ticketDetails.Services)} */}
               <Typography variant="h5" style={{ textAlign: "center" }}>
                 Business Details
               </Typography>

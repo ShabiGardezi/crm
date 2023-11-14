@@ -81,6 +81,7 @@ const WritersForm = () => {
         businessdetails: {
           clientName: formData.clientName,
           ownerName: formData.ownerName,
+          serviceName: formData.serviceName,
           street: formData.street,
           WebsiteURL: formData.WebsiteURL,
           country: formData.country,
@@ -96,9 +97,6 @@ const WritersForm = () => {
           serviceAreas: formData.serviceAreas,
           gmbUrl: formData.gmbUrl,
           quantity: formData.quantity,
-        },
-        Services: {
-          serviceName: formData.serviceName,
         },
         TicketDetails: {
           assignor: formData.assignor,

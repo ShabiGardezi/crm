@@ -91,7 +91,6 @@ const DesignersForm = () => {
           colors: formData.colors,
           imgsize: formData.imgsize,
         },
-        Services: {},
         TicketDetails: {
           assignor: formData.assignor,
           priority: formData.priorityLevel,

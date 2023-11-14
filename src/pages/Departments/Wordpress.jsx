@@ -123,6 +123,8 @@ const WordPress = () => {
         assignorDepartment: user.department._id,
         businessdetails: {
           clientName: formData.clientName,
+          serviceName: formData.serviceName,
+          serviceDescription: formData.serviceDescription,
           street: formData.street,
           gmbUrl: formData.gmbUrl,
           country: formData.country,
@@ -140,10 +142,7 @@ const WordPress = () => {
           socialProfile: formData.socialProfile,
           websiteType: formData.websiteType,
         },
-        Services: {
-          serviceName: formData.serviceName,
-          serviceDescription: formData.serviceDescription,
-        },
+
         quotation: {
           price: formData.price,
           advanceprice: formData.advanceprice,

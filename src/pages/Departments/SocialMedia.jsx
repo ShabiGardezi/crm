@@ -82,6 +82,7 @@ const SocialMediaForm = () => {
         assignorDepartment: user.department._id,
         businessdetails: {
           clientName: formData.clientName,
+          serviceName: formData.serviceName,
           WebsiteURL: formData.WebsiteURL,
           clientEmail: formData.clientEmail,
           socialProfile: formData.socialProfile,
@@ -92,9 +93,6 @@ const SocialMediaForm = () => {
           notes: formData.notes,
           noOfFbreviews: formData.noOfFbreviews,
           LikesFollowers: formData.LikesFollowers,
-        },
-        Services: {
-          serviceName: formData.serviceName,
         },
         quotation: {
           price: formData.price,

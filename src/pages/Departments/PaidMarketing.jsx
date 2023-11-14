@@ -98,8 +98,6 @@ const PaidMarketing = () => {
           selectedBudget: formData.selectedBudget,
           platform: formData.platform,
           selectedPlatform: formData.selectedPlatform,
-        },
-        Services: {
           serviceName: formData.serviceName,
         },
         quotation: {
