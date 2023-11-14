@@ -28,6 +28,7 @@ import axios from "axios";
 import "../../../styles/Home/TicketCard.css";
 import WebisteClientCards from "./Cards";
 import { useLocation } from "react-router-dom";
+import TablePaginationActions from "../../Tickets/TicketsTablePagination/TicketsPagination";
 export default function WordpressClientSheet(props) {
   const user = JSON.parse(localStorage.getItem("user"));
   const [page, setPage] = React.useState(0);
@@ -106,7 +107,7 @@ export default function WordpressClientSheet(props) {
   //   page: PropTypes.number.isRequired,
   //   rowsPerPage: PropTypes.number.isRequired,
   // };
-
+  <TablePaginationActions />;
   const handleSearch = async (e) => {
     if (e.key === "Enter" && searchQuery) {
       try {
