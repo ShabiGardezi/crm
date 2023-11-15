@@ -131,6 +131,7 @@ const Header = () => {
       "Wordpress Development": "/department/wordpressform",
       "Website SEO": "/department/webseoform",
       Writers: "/department/writersform",
+      Designers: "/department/designersform",
       "Custom Development": "/department/customdevelopment",
       "Paid Marketing": "/department/paidmarketingform",
       "Social Media / Customer Reviews Management":
@@ -157,7 +158,7 @@ const Header = () => {
   return (
     <>
       <CssBaseline />
-      <AppBar position="static" style= {{backgroundColor: '#1976d2'}}>
+      <AppBar position="static" style={{ backgroundColor: "#1976d2" }}>
         <Toolbar>
           <IconButton
             edge="start"

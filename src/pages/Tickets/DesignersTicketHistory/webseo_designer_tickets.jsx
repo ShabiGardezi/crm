@@ -170,8 +170,8 @@ export default function WebseoDesignerTickets() {
               <TableCell>Created At</TableCell>
               <TableCell>Deadline</TableCell>
               <TableCell>Details</TableCell>
-              <TableCell>Notes</TableCell>
               <TableCell>Status</TableCell>
+              <TableCell>Notes</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
