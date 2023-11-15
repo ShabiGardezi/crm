@@ -2,38 +2,29 @@ import React, { useState, useEffect } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableFooter from "@mui/material/TableFooter";
-import TablePagination from "@mui/material/TablePagination";
+import InputBase from "@mui/material/InputBase";
+import SearchIcon from "@mui/icons-material/Search";
 import TableRow from "@mui/material/TableRow";
 import TableHead from "@mui/material/TableHead";
-import Paper from "@mui/material/Paper";
 import IconButton from "@mui/material/IconButton";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import Header from "../Header";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import ActiveNotSctiveCard from "./ActiveNotActiveCard";
 import axios from "axios";
-import OneTimeServiceClientsCard from "./OneTimeClientCard";
-import DisplayTicketDetails from "../Tickets/DisplayTicketDetails";
 import "../../styles/Home/TicketCard.css";
-import CardsSocialMediaTrack from "./SocialMediaClientSheet/CardsSocialMedia/CardsSocialMediaTrack";
-import TablePaginationActions from "../Tickets/TicketsTablePagination/TicketsPagination";
-import LocalSeoActiveClients from "../ActiveClients/LocalSeoActiveClients";
-import SocialMedia_ReviewsActiveClients from "../ActiveClients/SocialMedia_ReviewsActiveClients";
-import PaidMarketingActiveClient from "../ActiveClients/PaidMarketingActiveClient";
-import ActiveWebsiteClients from "../ActiveClients/ActiveWesbiteClients";
-export default function ActiveClients() {
+import DisplayTicketDetails from "../Tickets/DisplayTicketDetails";
+
+const PaidMarketingActiveClient = () => {
   const user = JSON.parse(localStorage.getItem("user"));
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [tickets, setTickets] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const [reportingDates, setReportingDates] = useState({});
   const [isTicketDetailsOpen, setIsTicketDetailsOpen] = useState(false);
   const [selectedTicketDetails, setSelectedTicketDetails] = useState(null);
-  <TablePaginationActions />;
+
   // Function to fetch ticket details by ID
   const fetchTicketDetails = async (ticketId) => {
     try {
@@ -50,6 +41,30 @@ export default function ActiveClients() {
     } catch (error) {
       console.error("Error fetching ticket details", error);
     }
+  };
+  const handleSearch = async (e) => {
+    if (e.key === "Enter" && searchQuery) {
+      try {
+        const response = await fetch(
+          `http://localhost:5000/api/tickets/client-search?searchString=${searchQuery}`
+        );
+        if (response.ok) {
+          const data = await response.json();
+          setTickets(data.payload);
+        } else {
+          console.error("Error fetching search results");
+        }
+      } catch (error) {
+        console.error("Error fetching search results", error);
+      }
+    }
+  };
+  const closeTicketDetailsModal = () => {
+    setIsTicketDetailsOpen(false);
+  };
+
+  const clearSelectedTicketDetails = () => {
+    setSelectedTicketDetails(null);
   };
 
   useEffect(() => {
@@ -119,15 +134,6 @@ export default function ActiveClients() {
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - tickets.length) : 0;
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
-
   // Function to handle notes edit and update
   const handleNotesEdit = (ticketId, editedNotes) => {
     // Make an API request to update the notes in the database
@@ -182,36 +188,105 @@ export default function ActiveClients() {
       status: temp,
     });
   };
+
   return (
-    <>
-      <Header />
-      <div className="cards">
-        <ActiveNotSctiveCard />
-        {user?.department._id === "65195c8f504d80e8f11b0d15" && (
-          <OneTimeServiceClientsCard />
-        )}
+    <div>
+      <div
+        className="search"
+        style={{
+          display: "flex",
+          justifyContent: "flex-end",
+          alignItems: "center",
+          marginTop: "3%",
+        }}
+      >
+        <div className="searchIcon">
+          <SearchIcon />
+        </div>
+        <InputBase
+          placeholder="Search Clients..."
+          inputProps={{ "aria-label": "search" }}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          onKeyPress={handleSearch}
+        />
       </div>
-      {/* Social Media / Customer Reviews Management and Reviews */}
-      {(user?.department._id === "651ada78819ff0aec6af1381" ||
-        user?.department._id === "651ada98819ff0aec6af1382") && (
-        <CardsSocialMediaTrack />
+      <Table sx={{ minWidth: 800 }} aria-label="custom pagination table">
+        <TableHead>
+          <TableRow>
+            <TableCell>Business Name</TableCell>
+            <TableCell>Sales Person</TableCell>
+            <TableCell>Active/Not Active</TableCell>
+            <TableCell>Subscription Date</TableCell>
+            <TableCell>Ad Platfrom</TableCell>
+            <TableCell>Budget</TableCell>
+            <TableCell>Details</TableCell>
+            <TableCell>Notes</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {tickets.map((ticket) => (
+            <TableRow key={ticket._id}>
+              {ticket.businessdetails && (
+                <TableCell component="th" scope="row">
+                  {ticket.businessdetails.clientName}
+                </TableCell>
+              )}
+              {ticket.TicketDetails && (
+                <TableCell style={{ width: 160 }} align="left">
+                  {ticket.TicketDetails.assignor}
+                </TableCell>
+              )}
+              <TableCell style={{ width: 160 }} align="left">
+                <FormControl>
+                  <Select
+                    value={ticket.ActiveNotActive || "Active"}
+                    onClick={() => handleClick(ticket)}
+                  >
+                    <MenuItem value="Active">Active</MenuItem>
+                    <MenuItem value="Not Active">Not Active</MenuItem>
+                  </Select>
+                </FormControl>
+              </TableCell>
+              <TableCell style={{ width: 160 }} align="left">
+                {new Date(ticket.createdAt).toLocaleDateString()}
+              </TableCell>
+              <TableCell style={{ width: 160 }} align="left">
+                {ticket.businessdetails.platform}
+              </TableCell>
+              <TableCell style={{ width: 160 }} align="left">
+                {ticket.businessdetails.selectedBudget}
+              </TableCell>
+              <TableCell style={{ width: 160 }} align="left">
+                <IconButton onClick={() => fetchTicketDetails(ticket._id)}>
+                  <VisibilityIcon />
+                </IconButton>
+              </TableCell>
+              <TableCell
+                style={{ width: 180, whiteSpace: "pre-line" }} // Apply the white-space property here
+                align="left"
+                contentEditable={true}
+                onBlur={(e) => handleNotesEdit(ticket._id, e.target.innerText)}
+              >
+                {ticket.businessdetails.notes}
+              </TableCell>
+            </TableRow>
+          ))}
+          {emptyRows > 0 && (
+            <TableRow style={{ height: 53 * emptyRows }}>
+              <TableCell colSpan={8} />
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+      {selectedTicketDetails && (
+        <DisplayTicketDetails
+          open={isTicketDetailsOpen}
+          handleClose={closeTicketDetailsModal}
+          ticketDetails={selectedTicketDetails}
+        />
       )}
-      <TableContainer component={Paper}>
-        {/* Social Media / Customer Reviews Management and Reviews */}
-        {(user?.department._id === "651ada78819ff0aec6af1381" ||
-          user?.department._id === "651ada98819ff0aec6af1382") && (
-          <SocialMedia_ReviewsActiveClients />
-        )}
-        {/* Paid Marketing */}
-        {user?.department._id === "651ada3c819ff0aec6af1380" && (
-          <PaidMarketingActiveClient />
-        )}
-        {/* Local Seo & Web Seo */}
-        {(user?.department._id === "65195c4b504d80e8f11b0d13" ||
-          user?.department._id === "65195c8f504d80e8f11b0d15") && (
-          <LocalSeoActiveClients />
-        )}
-      </TableContainer>
-    </>
+    </div>
   );
-}
+};
+
+export default PaidMarketingActiveClient;

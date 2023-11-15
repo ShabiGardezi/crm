@@ -21,11 +21,11 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import SearchIcon from "@mui/icons-material/Search";
 import InputBase from "@mui/material/InputBase";
-import Header from "../../Header";
+import Header from "../Header";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import axios from "axios";
-import DisplayTicketDetails from "../../Tickets/DisplayTicketDetails";
-import WebisteClientCards from "./Cards";
+import DisplayTicketDetails from "../Tickets/DisplayTicketDetails";
+import WebisteClientCards from "../ClientHistory/WordpressClientSheet/Cards";
 
 export default function ActiveWebsiteClients() {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -36,75 +36,6 @@ export default function ActiveWebsiteClients() {
   const [reportingDates, setReportingDates] = useState({});
   const [isTicketDetailsOpen, setIsTicketDetailsOpen] = useState(false);
   const [selectedTicketDetails, setSelectedTicketDetails] = useState(null);
-
-  // function TablePaginationActions(props) {
-  //   const theme = useTheme();
-  //   const { count, page, rowsPerPage, onPageChange } = props;
-
-  //   const handleFirstPageButtonClick = (event) => {
-  //     onPageChange(event, 0);
-  //   };
-
-  //   const handleBackButtonClick = (event) => {
-  //     onPageChange(event, page - 1);
-  //   };
-
-  //   const handleNextButtonClick = (event) => {
-  //     onPageChange(event, page + 1);
-  //   };
-
-  //   const handleLastPageButtonClick = (event) => {
-  //     onPageChange(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
-  //   };
-
-  //   return (
-  //     <Box sx={{ flexShrink: 0, ml: 2.5 }}>
-  //       <IconButton
-  //         onClick={handleFirstPageButtonClick}
-  //         disabled={page === 0}
-  //         aria-label="first page"
-  //       >
-  //         {theme.direction === "rtl" ? <LastPageIcon /> : <FirstPageIcon />}
-  //       </IconButton>
-  //       <IconButton
-  //         onClick={handleBackButtonClick}
-  //         disabled={page === 0}
-  //         aria-label="previous page"
-  //       >
-  //         {theme.direction === "rtl" ? (
-  //           <KeyboardArrowRight />
-  //         ) : (
-  //           <KeyboardArrowLeft />
-  //         )}
-  //       </IconButton>
-  //       <IconButton
-  //         onClick={handleNextButtonClick}
-  //         disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-  //         aria-label="next page"
-  //       >
-  //         {theme.direction === "rtl" ? (
-  //           <KeyboardArrowLeft />
-  //         ) : (
-  //           <KeyboardArrowRight />
-  //         )}
-  //       </IconButton>
-  //       <IconButton
-  //         onClick={handleLastPageButtonClick}
-  //         disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-  //         aria-label="last page"
-  //       >
-  //         {theme.direction === "rtl" ? <FirstPageIcon /> : <LastPageIcon />}
-  //       </IconButton>
-  //     </Box>
-  //   );
-  // }
-
-  // TablePaginationActions.propTypes = {
-  //   count: PropTypes.number.isRequired,
-  //   onPageChange: PropTypes.func.isRequired,
-  //   page: PropTypes.number.isRequired,
-  //   rowsPerPage: PropTypes.number.isRequired,
-  // };
 
   const handleSearch = async (e) => {
     if (e.key === "Enter" && searchQuery) {
@@ -265,46 +196,6 @@ export default function ActiveWebsiteClients() {
     // Call the updateReportingDate function
     updateReportingDate(ticketId, newReportingDate);
   };
-
-  // Function to handle the "Recurring" button click
-  const handleRecurringClick = (ticketId) => {
-    // Get the current reporting date
-    const currentReportingDate = new Date(reportingDates[ticketId]);
-
-    // Calculate one month later date
-    const oneMonthLaterDate = new Date(
-      currentReportingDate.getFullYear(),
-      currentReportingDate.getMonth() + 1,
-      currentReportingDate.getDate()
-    );
-
-    // Make an API request to update the reporting date in the database
-    fetch("http://localhost:5000/api/tickets/reportingDate-update", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        ticketId,
-        reportingDate: oneMonthLaterDate.toISOString(),
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.payload) {
-          // If the update is successful, update the local state with the new reporting date
-          setReportingDates((prevReportingDates) => ({
-            ...prevReportingDates,
-            [ticketId]: oneMonthLaterDate.toISOString(),
-          }));
-        } else {
-          console.error("Error updating reporting date");
-        }
-      })
-      .catch((error) => {
-        console.error("Error updating reporting date", error);
-      });
-  };
   // Function to handle notes edit and update
   const handleNotesEdit = (ticketId, editedNotes) => {
     // Make an API request to update the notes in the database
@@ -387,7 +278,6 @@ export default function ActiveWebsiteClients() {
             />
           </div>
         </div>
-        {/* Social Media / Customer Reviews Management and Reviews */}
         <Table sx={{ minWidth: 800 }} aria-label="custom pagination table">
           <TableHead>
             <TableRow>

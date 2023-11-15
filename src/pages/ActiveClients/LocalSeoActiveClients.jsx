@@ -2,47 +2,57 @@ import React, { useState, useEffect } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
+import InputBase from "@mui/material/InputBase";
+import SearchIcon from "@mui/icons-material/Search";
 import TableFooter from "@mui/material/TableFooter";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import TableHead from "@mui/material/TableHead";
-import Paper from "@mui/material/Paper";
 import IconButton from "@mui/material/IconButton";
+import { Button } from "@mui/material";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import Header from "../../Header";
-import DisplayTicketDetails from "../../Tickets/DisplayTicketDetails";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import axios from "axios";
-import WebisteClientCards from "./Cards";
-import TablePaginationActions from "../../Tickets/TicketsTablePagination/TicketsPagination";
-import SearchBar from "../../SearchIcon/SearchIcon";
-export default function InActiveWebsiteClients() {
+import "../../styles/Home/TicketCard.css";
+import TablePaginationActions from "../Tickets/TicketsTablePagination/TicketsPagination";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  TextField,
+  DialogActions,
+} from "@mui/material";
+import DisplayTicketDetails from "../Tickets/DisplayTicketDetails";
+export default function LocalSeoActiveClients({ onSearch }) {
   const user = JSON.parse(localStorage.getItem("user"));
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [tickets, setTickets] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [openRecurringDialog, setOpenRecurringDialog] = useState(false);
   const [reportingDates, setReportingDates] = useState({});
   const [isTicketDetailsOpen, setIsTicketDetailsOpen] = useState(false);
   const [selectedTicketDetails, setSelectedTicketDetails] = useState(null);
+  const [price, setPrice] = useState("");
+  const [advancePrice, setAdvancePrice] = useState("");
+  const [remainingPrice, setRemainingPrice] = useState("");
+  // Function to open the recurring dialog and reset state values
+  const handleRecurringDialogOpen = () => {
+    setOpenRecurringDialog(true);
+    setPrice(""); // Set price to an empty string or 0 if needed
+    setAdvancePrice(""); // Set advancePrice to an empty string or 0 if needed
+    setRemainingPrice(""); // Set remainingPrice to an empty string or 0 if needed
+  };
 
-  <TablePaginationActions />;
-  const handleSearch = async (searchQuery) => {
-    try {
-      const response = await fetch(
-        `http://localhost:5000/api/tickets/client-search?searchString=${searchQuery}`
-      );
-      if (response.ok) {
-        const data = await response.json();
-        setTickets(data.payload);
-      } else {
-        console.error("Error fetching search results");
-      }
-    } catch (error) {
-      console.error("Error fetching search results", error);
-    }
+  // Function to close the recurring dialog
+  const handleRecurringDialogClose = () => {
+    setOpenRecurringDialog(false);
+  };
+  // Function to handle submission of recurring data
+  const handleRecurringSubmit = () => {
+    setOpenRecurringDialog(false);
   };
 
   // Function to fetch ticket details by ID
@@ -62,7 +72,23 @@ export default function InActiveWebsiteClients() {
       console.error("Error fetching ticket details", error);
     }
   };
-
+  const handleSearch = async (e) => {
+    if (e.key === "Enter" && searchQuery) {
+      try {
+        const response = await fetch(
+          `http://localhost:5000/api/tickets/client-search?searchString=${searchQuery}`
+        );
+        if (response.ok) {
+          const data = await response.json();
+          setTickets(data.payload);
+        } else {
+          console.error("Error fetching search results");
+        }
+      } catch (error) {
+        console.error("Error fetching search results", error);
+      }
+    }
+  };
   const closeTicketDetailsModal = () => {
     setIsTicketDetailsOpen(false);
   };
@@ -82,7 +108,7 @@ export default function InActiveWebsiteClients() {
 
           // Filter only the tickets with an "Active" status
           const activeTickets = data.payload.filter(
-            (ticket) => ticket.ActiveNotActive === "Not Active"
+            (ticket) => ticket.ActiveNotActive === "Active"
           );
 
           setTickets(activeTickets);
@@ -147,6 +173,40 @@ export default function InActiveWebsiteClients() {
     setPage(0);
   };
 
+  // Function to handle form field changes
+  const handlePriceChange = (event) => {
+    const { value } = event.target;
+
+    // Convert the input value to a float, or 0 if it's not a valid number
+    const updatedPrice = parseFloat(value) || 0;
+    const updatedAdvancePrice = parseFloat(advancePrice) || 0;
+
+    // Calculate the remaining price
+    const remaining = updatedPrice - updatedAdvancePrice;
+
+    // Update the state variables for price and remaining price
+    setPrice(updatedPrice);
+    setRemainingPrice(remaining);
+  };
+
+  const handleAdvancePriceChange = (event) => {
+    const { value } = event.target;
+
+    // Convert the input value to a float, or 0 if it's not a valid number
+    const updatedPrice = parseFloat(price) || 0;
+    const updatedAdvancePrice = parseFloat(value) || 0;
+
+    // Calculate the remaining price
+    const remaining = updatedPrice - updatedAdvancePrice;
+
+    // Update the state variables for advance price and remaining price
+    setAdvancePrice(updatedAdvancePrice);
+    setRemainingPrice(remaining);
+  };
+
+  const handleRemainingPriceChange = (event) => {
+    setRemainingPrice(event.target.value);
+  };
   // Function to update reporting date
   const updateReportingDate = async (ticketId, newReportingDate) => {
     try {
@@ -282,25 +342,45 @@ export default function InActiveWebsiteClients() {
   };
   return (
     <>
-      <Header />
-      <div className="cards">{<WebisteClientCards />}</div>
-
-      <TableContainer component={Paper}>
-        <SearchBar onSearch={handleSearch} />
-        {/* Paid Marketing */}
-        <Table sx={{ minWidth: 800 }} aria-label="custom pagination table">
-          <TableHead>
-            <TableRow>
-              <TableCell>Business Name</TableCell>
-              <TableCell>Sales Person</TableCell>
-              <TableCell>Active/Not Active</TableCell>
-              <TableCell>Subscription Date</TableCell>
-              <TableCell>Details</TableCell>
-              <TableCell>Notes</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {tickets.map((ticket) => (
+      <div>
+        <div
+          className="search"
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            alignItems: "center",
+            marginTop: "3%",
+          }}
+        >
+          <div className="searchIcon">
+            <SearchIcon />
+          </div>
+          <InputBase
+            placeholder="Search Clients..."
+            inputProps={{ "aria-label": "search" }}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyPress={handleSearch}
+          />
+        </div>
+      </div>
+      <Table sx={{ minWidth: 800 }} aria-label="custom pagination table">
+        <TableHead>
+          <TableRow>
+            <TableCell>Business Name</TableCell>
+            <TableCell>Sales Person</TableCell>
+            <TableCell>Work Type</TableCell>
+            <TableCell>Active/Not Active</TableCell>
+            <TableCell>Subscription Date</TableCell>
+            <TableCell>Reporting Date</TableCell>
+            <TableCell>Details</TableCell>
+            <TableCell>Notes</TableCell>
+            <TableCell>Recurring</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {tickets
+            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            .map((ticket) => (
               <TableRow key={ticket._id}>
                 {ticket.businessdetails && (
                   <TableCell component="th" scope="row">
@@ -310,6 +390,11 @@ export default function InActiveWebsiteClients() {
                 {ticket.TicketDetails && (
                   <TableCell style={{ width: 160 }} align="left">
                     {ticket.TicketDetails.assignor}
+                  </TableCell>
+                )}
+                {ticket.businessdetails && (
+                  <TableCell style={{ width: 160 }} align="left">
+                    {ticket.businessdetails.workStatus}
                   </TableCell>
                 )}
                 <TableCell style={{ width: 160 }} align="left">
@@ -326,6 +411,16 @@ export default function InActiveWebsiteClients() {
                 <TableCell style={{ width: 160 }} align="left">
                   {new Date(ticket.createdAt).toLocaleDateString()}
                 </TableCell>
+                <TableCell
+                  style={{ width: 160 }}
+                  align="left"
+                  contentEditable={true}
+                  onBlur={(e) =>
+                    handleReportingDateEdit(ticket._id, e.target.innerText)
+                  }
+                >
+                  {new Date(ticket.reportingDate).toLocaleDateString()}
+                </TableCell>
                 <TableCell style={{ width: 160 }} align="left">
                   <IconButton onClick={() => fetchTicketDetails(ticket._id)}>
                     <VisibilityIcon />
@@ -341,36 +436,83 @@ export default function InActiveWebsiteClients() {
                 >
                   {ticket.businessdetails.notes}
                 </TableCell>
+                <TableCell>
+                  <Button
+                    style={{ backgroundColor: "red" }}
+                    variant="contained"
+                    color="primary"
+                    onClick={() => {
+                      handleRecurringDialogOpen();
+                      handleRecurringClick(ticket._id);
+                    }}
+                  >
+                    Recurring
+                  </Button>
+                  {/* Recurring Dialog */}
+                  <Dialog
+                    open={openRecurringDialog}
+                    onClose={handleRecurringDialogClose}
+                  >
+                    <DialogTitle>Recurring Details</DialogTitle>
+                    <DialogContent>
+                      <TextField
+                        label="Price"
+                        value={price}
+                        onChange={handlePriceChange}
+                        fullWidth
+                      />
+                      <TextField
+                        label="Advance Price"
+                        value={advancePrice}
+                        onChange={handleAdvancePriceChange}
+                        fullWidth
+                      />
+                      <TextField
+                        label="Remaining Price"
+                        value={remainingPrice}
+                        onChange={handleRemainingPriceChange}
+                        fullWidth
+                      />
+                    </DialogContent>
+                    <DialogActions>
+                      <Button onClick={handleRecurringDialogClose}>
+                        Cancel
+                      </Button>
+                      <Button onClick={handleRecurringSubmit} color="primary">
+                        Save
+                      </Button>
+                    </DialogActions>
+                  </Dialog>
+                </TableCell>
               </TableRow>
             ))}
-            {emptyRows > 0 && (
-              <TableRow style={{ height: 53 * emptyRows }}>
-                <TableCell colSpan={8} />
-              </TableRow>
-            )}
-          </TableBody>
-          <TableFooter>
-            <TableRow>
-              <TablePagination
-                rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
-                colSpan={8}
-                count={tickets.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                SelectProps={{
-                  inputProps: {
-                    "aria-label": "rows per page",
-                  },
-                  native: true,
-                }}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-                ActionsComponent={TablePaginationActions}
-              />
+          {emptyRows > 0 && (
+            <TableRow style={{ height: 53 * emptyRows }}>
+              <TableCell colSpan={8} />
             </TableRow>
-          </TableFooter>
-        </Table>
-      </TableContainer>
+          )}
+        </TableBody>
+        <TableFooter>
+          <TableRow>
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
+              colSpan={8}
+              count={tickets.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              SelectProps={{
+                inputProps: {
+                  "aria-label": "rows per page",
+                },
+                native: true,
+              }}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+              ActionsComponent={TablePaginationActions}
+            />
+          </TableRow>
+        </TableFooter>
+      </Table>
       {selectedTicketDetails && (
         <DisplayTicketDetails
           open={isTicketDetailsOpen}

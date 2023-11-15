@@ -22,7 +22,6 @@ import ActiveClients from "./pages/Client-Sheets/ActiveClients";
 import NotActiveClients from "./pages/Client-Sheets/NotActiveClients";
 import WebSeoClients from "./pages/ClientHistory/WebSeoClients";
 import LocalSeoSheet from "./pages/Client-Sheets/LocalSeoClients/LocalSeoClient";
-import AddClient from "./pages/AddClient/AddClient";
 import TableCustomized from "./pages/Client-Sheets/SingleWebSeoClient";
 import MonthlySeoClients from "./pages/Client-Sheets/MonthlySeoClient";
 import SocialMediaClientSheet from "./pages/Client-Sheets/SocialMediaClientSheet/SocialMediaClientSheet";
@@ -31,7 +30,7 @@ import FbReviewSheet from "./pages/Client-Sheets/SocialMediaClientSheet/Facebook
 import LikesFollowersSocialMedia from "./pages/Client-Sheets/SocialMediaClientSheet/LikesFollowersSocialMedia";
 import PaidMarketingClientSheet from "./pages/Client-Sheets/PaidMarketingClientSheet/PaidMarketingClientSheet";
 import WordpressClientSheet from "./pages/ClientHistory/WordpressClientSheet/WordpressClientSheet";
-import ActiveWebsiteClients from "./pages/ClientHistory/WordpressClientSheet/ActiveWesbiteClients";
+import ActiveWebsiteClients from "./pages/ActiveClients/ActiveWesbiteClients";
 import InActiveWebsiteClients from "./pages/ClientHistory/WordpressClientSheet/NotActiveWebsiteClients";
 import WritersForm from "./pages/Departments/Writers";
 import WritersTicketHistory from "./pages/Tickets/WritersTicketHistory/WritersTicketHistory";
@@ -119,7 +118,6 @@ function App() {
         <Route path="/notactive_clients" element={<NotActiveClients />} />
         <Route path="/webseo_clients" element={<WebSeoClients />} />
         <Route path="/localseo_clients" element={<LocalSeoSheet />} />
-        <Route path="/add_clients" element={<AddClient />} />
         <Route path="/one_time_service_clients" element={<TableCustomized />} />
         <Route path="/gmb_reviews_sheet" element={<GmbReviewSheet />} />
         <Route path="/fb_reviews_sheet" element={<FbReviewSheet />} />
