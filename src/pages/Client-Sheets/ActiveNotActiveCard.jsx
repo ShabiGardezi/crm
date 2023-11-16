@@ -21,6 +21,7 @@ const TicketCard = ({ heading, counter }) => {
 };
 
 const ClientsCard = () => {
+  const apiUrl = process.env.REACT_APP_API_URL;
   const user = JSON.parse(localStorage.getItem("user"));
   const [activeCount, setActiveCount] = useState(0);
   const [notActiveCount, setNotActiveCount] = useState(0);
@@ -30,7 +31,7 @@ const ClientsCard = () => {
       try {
         // Fetch the ticket data
         const response = await axios.get(
-          `http://localhost:5000/api/tickets?departmentId=${user?.department?._id}`
+          `${apiUrl}/api/tickets?departmentId=${user?.department?._id}`
         );
 
         // Set the ticket data in state

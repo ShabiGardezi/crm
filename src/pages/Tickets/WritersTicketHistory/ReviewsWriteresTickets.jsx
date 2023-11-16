@@ -18,6 +18,7 @@ import InputBase from "@mui/material/InputBase";
 import WritersFilteredCards from "./WritersFilteredCards";
 
 export default function ReviewsWriteresTickets() {
+  const apiUrl = process.env.REACT_APP_API_URL;
   const user = JSON.parse(localStorage.getItem("user"));
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -29,9 +30,7 @@ export default function ReviewsWriteresTickets() {
   // Function to fetch ticket details by ID
   const fetchTicketDetails = async (ticketId) => {
     try {
-      const response = await fetch(
-        `http://localhost:5000/api/tickets/${ticketId}`
-      );
+      const response = await fetch(`${apiUrl}/api/tickets/${ticketId}`);
       if (response.ok) {
         const data = await response.json();
         setSelectedTicketDetails(data.payload);
@@ -54,7 +53,7 @@ export default function ReviewsWriteresTickets() {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/tickets/notStarted?departmentId=${user?.department?._id}`
+          `${apiUrl}/api/tickets/notStarted?departmentId=${user?.department?._id}`
         );
         if (response.ok) {
           const data = await response.json();
@@ -84,7 +83,7 @@ export default function ReviewsWriteresTickets() {
     if (e.key === "Enter" && searchQuery) {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/tickets/client-search?searchString=${searchQuery}`
+          `${apiUrl}/api/tickets/client-search?searchString=${searchQuery}`
         );
         if (response.ok) {
           const data = await response.json();
@@ -99,7 +98,7 @@ export default function ReviewsWriteresTickets() {
   };
   const handleNotesEdit = (ticketId, editedNotes) => {
     // Make an API request to update the notes in the database
-    fetch("http://localhost:5000/api/tickets/notes-update", {
+    fetch(`${apiUrl}/api/tickets/notes-update`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -182,7 +181,6 @@ export default function ReviewsWriteresTickets() {
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((ticket) => (
                 <TableRow key={ticket._id}>
-                  {console.log(tickets)}
                   <TableCell component="th" scope="row">
                     {ticket.businessdetails.clientName}
                   </TableCell>

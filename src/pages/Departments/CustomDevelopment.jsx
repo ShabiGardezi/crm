@@ -12,6 +12,7 @@ import Header from "../Header";
 import toast from "react-hot-toast";
 
 const CustomDevelopment = () => {
+  const apiUrl = process.env.REACT_APP_API_URL;
   const user = JSON.parse(localStorage.getItem("user"));
   const [departments, setDepartments] = useState([]);
   const [remainingPrice, setRemainingPrice] = useState(0); // Initialize remainingPrice
@@ -60,7 +61,6 @@ const CustomDevelopment = () => {
       remainingPrice: remaining, // Update remainingPrice in formData
     });
   };
-  console.log(formData);
   const handleSubmit = async (event) => {
     event.preventDefault(); // Prevent the default form submission behavior
     try {
@@ -71,7 +71,7 @@ const CustomDevelopment = () => {
       // Set majorAssignee to the department's ID
       const majorAssignee = selectedDepartment ? selectedDepartment._id : null;
 
-      const response = await axios.post(`http://localhost:5000/api/tickets`, {
+      const response = await axios.post(`${apiUrl}/api/tickets`, {
         dueDate: formData.dueDate,
         majorAssignee: majorAssignee,
         created_by: user._id,
@@ -118,7 +118,7 @@ const CustomDevelopment = () => {
     const fetchDepartments = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/departments`
+          `${apiUrl}/api/departments`
         );
         setDepartments(response.data.payload);
       } catch (error) {

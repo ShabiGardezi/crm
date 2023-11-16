@@ -5,13 +5,13 @@ import "../../styles/ToDoList/ToDoList.css";
 import axios from "axios";
 
 const ToDos = () => {
+  const apiUrl = process.env.REACT_APP_API_URL;
   const { TODO, handleToggleToDo, deleteToDo, deleteAll } = useToDos();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const todosData = searchParams.get("todos");
 
   let filterToDo = TODO;
-  console.log("TODO", TODO);
   if (todosData === "active") {
     filterToDo = TODO.filter((todo) => !todo.completed);
   } else if (todosData === "completed") {
@@ -19,10 +19,9 @@ const ToDos = () => {
   }
 
   const handleDeleteTodo = async (noteId) => {
-    console.log("noteId", noteId);
     try {
       // Send a DELETE request to your server
-      await axios.delete(`http://localhost:5000/api/notes/${noteId}`);
+      await axios.delete(`${apiUrl}/api/notes/${noteId}`);
       deleteToDo(noteId);
     } catch (error) {
       console.error("Error deleting note:", error);
@@ -32,17 +31,12 @@ const ToDos = () => {
   const handleDeleteAll = async () => {
     try {
       // Send a DELETE request to delete all todos
-      await axios.delete("http://localhost:5000/api/notes/all");
+      await axios.delete(`${apiUrl}/api/notes/all`);
       // Assuming "deleteAll" function in your context clears the TODO state
       deleteAll();
     } catch (error) {
       console.error("Error deleting all todos:", error);
     }
-  };
-
-  const handleTabClick = (tab) => {
-    // Navigate to the appropriate URL when a tab is clicked
-    navigate(`/todo?todos=${tab}`);
   };
 
   return (

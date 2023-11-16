@@ -23,6 +23,7 @@ import DisplayTicketDetails from "./DisplayTicketDetails";
 import SearchIcon from "@mui/icons-material/Search";
 <TablePagination />;
 export default function ShowOpenTickets() {
+  const apiUrl = process.env.REACT_APP_API_URL;
   const user = JSON.parse(localStorage.getItem("user"));
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -36,7 +37,7 @@ export default function ShowOpenTickets() {
   const fetchTicketDetails = async (ticketId) => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/tickets/${ticketId}`
+        `${apiUrl}/api/tickets/${ticketId}`
       );
       if (response.ok) {
         const data = await response.json();
@@ -60,7 +61,7 @@ export default function ShowOpenTickets() {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/tickets/notStarted?departmentId=${user?.department?._id}`
+          `${apiUrl}/api/tickets/notStarted?departmentId=${user?.department?._id}`
         );
         if (response.ok) {
           const data = await response.json();
@@ -90,7 +91,7 @@ export default function ShowOpenTickets() {
     if (e.key === "Enter" && searchQuery) {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/tickets/client-search?searchString=${searchQuery}`
+          `${apiUrl}/api/tickets/client-search?searchString=${searchQuery}`
         );
         if (response.ok) {
           const data = await response.json();
@@ -112,7 +113,7 @@ export default function ShowOpenTickets() {
     const updateTicketStatus = async (ticketId, status) => {
       try {
         const response = await fetch(
-          "http://localhost:5000/api/tickets/status-update",
+          `${apiUrl}/api/tickets/status-update`,
           {
             method: "PUT",
             headers: {
@@ -138,7 +139,7 @@ export default function ShowOpenTickets() {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/tickets?departmentId=${user?.department?._id}`
+          `${apiUrl}/api/tickets?departmentId=${user?.department?._id}`
         );
         if (response.ok) {
           const data = await response.json();

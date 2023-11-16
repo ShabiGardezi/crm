@@ -13,6 +13,7 @@ import Header from "../Header";
 import toast from "react-hot-toast";
 
 const ReviewsForm = () => {
+  const apiUrl = process.env.REACT_APP_API_URL;
   const user = JSON.parse(localStorage.getItem("user"));
   const [departments, setDepartments] = useState([]);
   const [remainingPrice, setRemainingPrice] = useState(0); // Initialize remainingPrice
@@ -20,6 +21,7 @@ const ReviewsForm = () => {
   const [clientSuggestions, setClientSuggestions] = useState([]);
 
   const [formData, setFormData] = useState({
+    
     priorityLevel: "",
     assignor: user?.username || "",
     dueDate: new Date().toISOString().substr(0, 10), // Initialize with the current date in yyyy-mm-dd format
@@ -42,7 +44,6 @@ const ReviewsForm = () => {
     fronter: "",
     noOfreviews: "",
   });
-  console.log(formData);
   const handleChange = (event) => {
     const { name, value } = event.target;
     let updatedPrice = parseFloat(formData.price) || 0;
@@ -75,7 +76,7 @@ const ReviewsForm = () => {
       // Set majorAssignee to the department's ID
       const majorAssignee = selectedDepartment ? selectedDepartment._id : null;
 
-      const response = await axios.post(`http://localhost:5000/api/tickets`, {
+      const response = await axios.post(`${apiUrl}/api/tickets`, {
         dueDate: formData.dueDate,
         majorAssignee: majorAssignee,
         created_by: user._id,
@@ -121,7 +122,7 @@ const ReviewsForm = () => {
     const fetchDepartments = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/departments`
+          `${apiUrl}/api/departments`
         );
         setDepartments(response.data.payload);
       } catch (error) {
@@ -138,7 +139,7 @@ const ReviewsForm = () => {
     }
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/client/suggestions?query=${query}`
+        `${apiUrl}/api/client/suggestions?query=${query}`
       );
       setClientSuggestions(response.data);
     } catch (error) {
@@ -150,10 +151,9 @@ const ReviewsForm = () => {
   const handleClientSelection = async (clientName) => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/client/details/${clientName}`
+        `${apiUrl}/api/client/details/${clientName}`
       );
       setSelectedClient(response.data);
-      console.log(response.data);
       setFormData({
         ...formData,
         businessNumber: response.data.businessNumber,

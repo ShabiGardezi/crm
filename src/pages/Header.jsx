@@ -50,6 +50,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Header = () => {
+  const apiUrl = process.env.REACT_APP_API_URL;
   const [isCreateModalOpen, setCreateModalOpen] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
@@ -70,7 +71,7 @@ const Header = () => {
     const fetchDepartments = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/departments`
+          `${apiUrl}/api/departments`
         );
         setDepartments(response.data.payload);
       } catch (error) {
@@ -114,7 +115,7 @@ const Header = () => {
 
   const handleLogout = async () => {
     try {
-      await axios.post("http://localhost:5000/api/user/logout");
+      await axios.post(`${apiUrl}/api/user/logout`);
       console.log("Logout successful");
       navigate("/signin");
       localStorage.removeItem("authToken");

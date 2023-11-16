@@ -4,17 +4,13 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
-import store from "./store";
-import { Provider } from "react-redux";
 // ReactDOM.createRoot was introduced in React 18, so we need to remove it and call ReactDOM.render directly.
 const root = document.getElementById("root");
 ReactDOM.render(
   <React.StrictMode>
-    <Provider store={store}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </Provider>
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
   </React.StrictMode>,
   root
 );

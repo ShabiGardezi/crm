@@ -11,7 +11,6 @@ import WordPress from "./pages/Departments/Wordpress";
 import Reviews from "./pages/Departments/Review";
 import PaidMarketing from "./pages/Departments/PaidMarketing";
 import { Toaster } from "react-hot-toast";
-import TicketList from "./pages/TicketList";
 import UserToDo from "./components/UserToDo";
 import CustomDevelopment from "./pages/Departments/CustomDevelopment";
 import CustomPaginationActionsTable from "./pages/Tickets/TicketHistory";
@@ -46,7 +45,6 @@ import WordpressDesignersTickets from "./pages/Tickets/DesignersTicketHistory/wo
 
 function App() {
   const user = JSON.parse(localStorage.getItem("user"));
-  console.log(user.department._id);
   return (
     <div className="App">
       <Toaster />
@@ -76,7 +74,6 @@ function App() {
           path="/department/paidmarketingform"
           element={<PaidMarketing />}
         />
-        <Route path="/ticketlist" element={<TicketList />} />
         <Route path="/todo" element={<UserToDo showHeader={true} />} />
         {user?.department?._id === "654bc9d114e9ed66948b4a01" && (
           <Route path="/history" element={<WritersTicketHistory />} />

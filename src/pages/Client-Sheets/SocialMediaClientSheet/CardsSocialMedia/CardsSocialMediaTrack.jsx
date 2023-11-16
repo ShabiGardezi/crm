@@ -19,6 +19,7 @@ const TicketCard = ({ heading, counter, onClick }) => {
 };
 
 const CardsSocialMediaTrack = () => {
+  const apiUrl = process.env.REACT_APP_API_URL;
   const user = JSON.parse(localStorage.getItem("user"));
   const [openTicketsCounter, setOpenTicketsCounter] = useState(0);
   const [completedTicketsCounter, setCompletedTicketsCounter] = useState(0);
@@ -28,12 +29,12 @@ const CardsSocialMediaTrack = () => {
       try {
         // Fetch the count of open tickets
         const openResponse = await axios.get(
-          `http://localhost:5000/api/tickets/notStarted-count?departmentId=${user?.department?._id}`
+          `${apiUrl}/api/tickets/notStarted-count?departmentId=${user?.department?._id}`
         );
 
         // Fetch the count of completed tickets
         const completedResponse = await axios.get(
-          `http://localhost:5000/api/tickets/completed-count?departmentId=${user?.department?._id}`
+          `${apiUrl}/api/tickets/completed-count?departmentId=${user?.department?._id}`
         );
 
         // Extract the counts from the API response

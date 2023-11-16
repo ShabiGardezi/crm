@@ -20,13 +20,14 @@ const TicketCard = ({ heading, counter }) => {
 };
 
 function OneTimeServiceClientsCard() {
+  const apiUrl = process.env.REACT_APP_API_URL;
   const [monthlySeoCount, setMonthlySeoCount] = useState(0);
   const [oneTimeServiceCount, setOneTimeServiceCount] = useState(0);
 
   // Fetch the count of one-time service clients when the component mounts
   useEffect(() => {
     fetch(
-      "http://localhost:5000/api/tickets/tickets-count-except-monthly-seo/65195c8f504d80e8f11b0d15"
+      `${apiUrl}/api/tickets/tickets-count-except-monthly-seo/65195c8f504d80e8f11b0d15`
     )
       .then((response) => response.json())
       .then((data) => {
@@ -40,7 +41,7 @@ function OneTimeServiceClientsCard() {
         console.error("Error fetching one-time service clients count", error);
       });
     // Make an API request to fetch the count of Monthly SEO clients
-    fetch("http://localhost:5000/api/tickets/tickets-count-monthly-seo")
+    fetch(`${apiUrl}/api/tickets/tickets-count-monthly-seo`)
       .then((response) => response.json())
       .then((data) => {
         if (data.count) {

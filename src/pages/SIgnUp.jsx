@@ -17,6 +17,7 @@ import "../styles/SignUp.css";
 import Header from "./Header";
 
 const SignUp = () => {
+    const apiUrl = process.env.REACT_APP_API_URL;
     const [formData, setFormData] = useState({
         username: "",
         email: "",
@@ -31,7 +32,7 @@ const SignUp = () => {
         const fetchDepartments = async () => {
             try {
                 const response = await axios.get(
-                    `http://localhost:5000/api/departments`
+                    `${apiUrl}/api/departments`
                 );
                 setDepartments(response.data.payload);
             } catch (error) {
@@ -62,7 +63,7 @@ const SignUp = () => {
                 department,
             };
             const response = await axios.post(
-                "http://localhost:5000/api/user/signup",
+                `${apiUrl}/api/user/signup`,
                 {
                     ...userData,
                 }

@@ -12,6 +12,7 @@ import Header from "../Header";
 import toast from "react-hot-toast";
 
 const DesignersForm = () => {
+  const apiUrl = process.env.REACT_APP_API_URL;
   const user = JSON.parse(localStorage.getItem("user"));
   const [departments, setDepartments] = useState([]);
   const [selectedClient, setSelectedClient] = useState(null);
@@ -71,7 +72,7 @@ const DesignersForm = () => {
       // Set majorAssignee to the department's ID
       const majorAssignee = selectedDepartment ? selectedDepartment._id : null;
 
-      const response = await axios.post(`http://localhost:5000/api/tickets`, {
+      const response = await axios.post(`${apiUrl}/api/tickets`, {
         dueDate: formData.dueDate,
         majorAssignee: majorAssignee,
         created_by: user._id,
@@ -111,7 +112,7 @@ const DesignersForm = () => {
     const fetchDepartments = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/departments`
+          `${apiUrl}/api/departments`
         );
         setDepartments(response.data.payload);
       } catch (error) {
@@ -128,7 +129,7 @@ const DesignersForm = () => {
     }
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/client/suggestions?query=${query}`
+        `${apiUrl}/api/client/suggestions?query=${query}`
       );
       setClientSuggestions(response.data);
     } catch (error) {
@@ -140,7 +141,7 @@ const DesignersForm = () => {
   const handleClientSelection = async (clientName) => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/client/details/${clientName}`
+        `${apiUrl}/api/client/details/${clientName}`
       );
       setSelectedClient(response.data);
       setFormData({

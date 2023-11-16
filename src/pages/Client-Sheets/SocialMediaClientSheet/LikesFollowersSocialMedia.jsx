@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useTheme } from "@mui/material/styles";
-import PropTypes from "prop-types";
 import { Typography } from "@mui/material";
-import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -13,10 +10,6 @@ import TableRow from "@mui/material/TableRow";
 import TableHead from "@mui/material/TableHead";
 import Paper from "@mui/material/Paper";
 import IconButton from "@mui/material/IconButton";
-import FirstPageIcon from "@mui/icons-material/FirstPage";
-import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
-import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
-import LastPageIcon from "@mui/icons-material/LastPage";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
@@ -32,6 +25,7 @@ import CardsSocialMediaTrack from "./CardsSocialMedia/CardsSocialMediaTrack";
 import TablePaginationActions from "../../Tickets/TicketsTablePagination/TicketsPagination";
 
 export default function LikesFollowersSocialMedia(props) {
+  const apiUrl = process.env.REACT_APP_API_URL;
   const user = JSON.parse(localStorage.getItem("user"));
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -41,80 +35,12 @@ export default function LikesFollowersSocialMedia(props) {
   const [isTicketDetailsOpen, setIsTicketDetailsOpen] = useState(false);
   const [selectedTicketDetails, setSelectedTicketDetails] = useState(null);
 
-  // function TablePaginationActions(props) {
-  //   const theme = useTheme();
-  //   const { count, page, rowsPerPage, onPageChange } = props;
-
-  //   const handleFirstPageButtonClick = (event) => {
-  //     onPageChange(event, 0);
-  //   };
-
-  //   const handleBackButtonClick = (event) => {
-  //     onPageChange(event, page - 1);
-  //   };
-
-  //   const handleNextButtonClick = (event) => {
-  //     onPageChange(event, page + 1);
-  //   };
-
-  //   const handleLastPageButtonClick = (event) => {
-  //     onPageChange(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
-  //   };
-
-  //   return (
-  //     <Box sx={{ flexShrink: 0, ml: 2.5 }}>
-  //       <IconButton
-  //         onClick={handleFirstPageButtonClick}
-  //         disabled={page === 0}
-  //         aria-label="first page"
-  //       >
-  //         {theme.direction === "rtl" ? <LastPageIcon /> : <FirstPageIcon />}
-  //       </IconButton>
-  //       <IconButton
-  //         onClick={handleBackButtonClick}
-  //         disabled={page === 0}
-  //         aria-label="previous page"
-  //       >
-  //         {theme.direction === "rtl" ? (
-  //           <KeyboardArrowRight />
-  //         ) : (
-  //           <KeyboardArrowLeft />
-  //         )}
-  //       </IconButton>
-  //       <IconButton
-  //         onClick={handleNextButtonClick}
-  //         disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-  //         aria-label="next page"
-  //       >
-  //         {theme.direction === "rtl" ? (
-  //           <KeyboardArrowLeft />
-  //         ) : (
-  //           <KeyboardArrowRight />
-  //         )}
-  //       </IconButton>
-  //       <IconButton
-  //         onClick={handleLastPageButtonClick}
-  //         disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-  //         aria-label="last page"
-  //       >
-  //         {theme.direction === "rtl" ? <FirstPageIcon /> : <LastPageIcon />}
-  //       </IconButton>
-  //     </Box>
-  //   );
-  // }
-
-  // TablePaginationActions.propTypes = {
-  //   count: PropTypes.number.isRequired,
-  //   onPageChange: PropTypes.func.isRequired,
-  //   page: PropTypes.number.isRequired,
-  //   rowsPerPage: PropTypes.number.isRequired,
-  // };
   <TablePaginationActions />;
   const handleSearch = async (e) => {
     if (e.key === "Enter" && searchQuery) {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/tickets/client-search?searchString=${searchQuery}`
+          `${apiUrl}/api/tickets/client-search?searchString=${searchQuery}`
         );
         if (response.ok) {
           const data = await response.json();
@@ -131,9 +57,7 @@ export default function LikesFollowersSocialMedia(props) {
   // Function to fetch ticket details by ID
   const fetchTicketDetails = async (ticketId) => {
     try {
-      const response = await fetch(
-        `http://localhost:5000/api/tickets/${ticketId}`
-      );
+      const response = await fetch(`${apiUrl}/api/tickets/${ticketId}`);
       if (response.ok) {
         const data = await response.json();
         setSelectedTicketDetails(data.payload);
@@ -154,11 +78,10 @@ export default function LikesFollowersSocialMedia(props) {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/tickets?departmentId=${user?.department?._id}`
+          `${apiUrl}/api/tickets?departmentId=${user?.department?._id}`
         );
         if (response.ok) {
           const data = await response.json();
-          console.log(data);
           setTickets(data.payload);
           data.payload.forEach((ticket) => {
             fetchReportingDate(ticket._id);
@@ -177,7 +100,7 @@ export default function LikesFollowersSocialMedia(props) {
   const fetchReportingDate = async (ticketId) => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/tickets/reporting-date/${ticketId}`
+        `${apiUrl}/api/tickets/reporting-date/${ticketId}`
       );
       if (response.ok) {
         const data = await response.json();
@@ -225,7 +148,7 @@ export default function LikesFollowersSocialMedia(props) {
   const updateReportingDate = async (ticketId, newReportingDate) => {
     try {
       const response = await fetch(
-        "http://localhost:5000/api/tickets/reportingDate-update",
+        `${apiUrl}/api/tickets/reportingDate-update`,
         {
           method: "PUT",
           headers: {
@@ -264,7 +187,7 @@ export default function LikesFollowersSocialMedia(props) {
   // Function to handle notes edit and update
   const handleNotesEdit = (ticketId, editedNotes) => {
     // Make an API request to update the notes in the database
-    fetch("http://localhost:5000/api/tickets/notes-update", {
+    fetch(`${apiUrl}/api/tickets/notes-update`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -310,7 +233,7 @@ export default function LikesFollowersSocialMedia(props) {
       return p;
     });
     setTickets(newState);
-    axios.put("http://localhost:5000/api/tickets/active-status/update", {
+    axios.put(`${apiUrl}/api/tickets/active-status/update`, {
       ticketId: ticket._id,
       status: temp,
     });
@@ -322,9 +245,9 @@ export default function LikesFollowersSocialMedia(props) {
         // console.log(props.department);
         let url = "";
         if (user.role === "admin" || user.department.name === "Sales") {
-          url = `http://localhost:5000/api/tickets?departmentId=${props.department._id}`;
+          url = `${apiUrl}/api/tickets?departmentId=${props.department._id}`;
         } else {
-          url = `http://localhost:5000/api/tickets?departmentId=${user?.department?._id}`;
+          url = `${apiUrl}/api/tickets?departmentId=${user?.department?._id}`;
         }
         const response = await fetch(url);
         if (response.ok) {

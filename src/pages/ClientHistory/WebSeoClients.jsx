@@ -3,6 +3,7 @@ import WebSeoSheet from "../Client-Sheets/WebSEOSheet";
 import axios from "axios";
 
 const WebSeoClients = () => {
+  const apiUrl = process.env.REACT_APP_API_URL;
   const [department, setDepartment] = useState();
   const [show, setshow] = useState(false);
   useEffect(() => {
@@ -10,7 +11,7 @@ const WebSeoClients = () => {
       try {
         setshow(false);
         const response = await axios.get(
-          `http://localhost:5000/api/departments`
+          `${apiUrl}/api/departments`
         );
         const web_seo_department = response.data.payload.find(
           (d) => d.name === "Website SEO"

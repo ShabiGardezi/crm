@@ -20,6 +20,7 @@ import toast, {Toaster} from "react-hot-toast";
 const theme = createTheme();
 
 const SignIn = () => {
+    const apiUrl = process.env.REACT_APP_API_URL;
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [rememberMe, setRememberMe] = useState(false);
@@ -43,7 +44,7 @@ const SignIn = () => {
 
         try {
             const response = await axios.post(
-                `http://localhost:5000/api/user/signin`,
+                `${apiUrl}/api/user/signin`,
                 {email, password}
             );
             localStorage.setItem("user", JSON.stringify(response.data.payload));

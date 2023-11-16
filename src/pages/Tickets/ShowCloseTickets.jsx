@@ -21,6 +21,7 @@ import TablePaginationActions from "./TicketsTablePagination/TicketsPagination";
 const rows = [].sort((a, b) => (a.clientName < b.clientName ? -1 : 1));
 
 export default function ShowCloseTickets() {
+  const apiUrl = process.env.REACT_APP_API_URL;
   const user = JSON.parse(localStorage.getItem("user"));
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -38,7 +39,7 @@ export default function ShowCloseTickets() {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/tickets/completed?departmentId=${user?.department?._id}`
+          `${apiUrl}/api/tickets/completed?departmentId=${user?.department?._id}`
         );
         if (response.ok) {
           const data = await response.json();
@@ -57,7 +58,7 @@ export default function ShowCloseTickets() {
   const fetchTicketDetails = async (ticketId) => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/tickets/${ticketId}`
+        `${apiUrl}/api/tickets/${ticketId}`
       );
       if (response.ok) {
         const data = await response.json();
@@ -85,7 +86,7 @@ export default function ShowCloseTickets() {
     if (e.key === "Enter" && searchQuery) {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/tickets/client-search?searchString=${searchQuery}`
+          `${apiUrl}/api/tickets/client-search?searchString=${searchQuery}`
         );
         if (response.ok) {
           const data = await response.json();

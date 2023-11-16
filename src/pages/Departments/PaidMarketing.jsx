@@ -11,6 +11,7 @@ import axios from "axios";
 import Header from "../Header";
 import toast from "react-hot-toast";
 const PaidMarketing = () => {
+  const apiUrl = process.env.REACT_APP_API_URL;
   const user = JSON.parse(localStorage.getItem("user"));
   const [departments, setDepartments] = useState([]);
   const [remainingPrice, setRemainingPrice] = useState(0); // Initialize remainingPrice
@@ -74,7 +75,6 @@ const PaidMarketing = () => {
     event.preventDefault(); // Prevent the default form submission behavior
     try {
       // Make an Axios request here (replace "/api/submit" with your actual API endpoint)
-      console.log(formData);
       const selectedDepartment = departments.find(
         (department) => department.name === "Paid Marketing"
       );
@@ -82,7 +82,7 @@ const PaidMarketing = () => {
       // Set majorAssignee to the department's ID
       const majorAssignee = selectedDepartment ? selectedDepartment._id : null;
 
-      const response = await axios.post(`http://localhost:5000/api/tickets`, {
+      const response = await axios.post(`${apiUrl}/api/tickets`, {
         dueDate: formData.dueDate,
         majorAssignee: majorAssignee,
         created_by: user._id,
@@ -123,10 +123,9 @@ const PaidMarketing = () => {
   const handleClientSelection = async (clientName) => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/client/details/${clientName}`
+        `${apiUrl}/api/client/details/${clientName}`
       );
       setSelectedClient(response.data);
-      console.log(response.data);
       setFormData({
         ...formData,
         clientEmail: response.data.clientEmail,
@@ -142,7 +141,7 @@ const PaidMarketing = () => {
     const fetchDepartments = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/departments`
+          `${apiUrl}/api/departments`
         );
         setDepartments(response.data.payload);
       } catch (error) {
@@ -159,7 +158,7 @@ const PaidMarketing = () => {
     }
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/client/suggestions?query=${query}`
+        `${apiUrl}/api/client/suggestions?query=${query}`
       );
       setClientSuggestions(response.data);
     } catch (error) {

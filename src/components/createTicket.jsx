@@ -14,6 +14,7 @@ import "../styles/Forms/formsCommon.css";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 function CreateTicketCard() {
+  const apiUrl = process.env.REACT_APP_API_URL;
   const [formData, setFormData] = useState({
     department: "",
   });
@@ -24,9 +25,7 @@ function CreateTicketCard() {
   useEffect(() => {
     const fetchDepartments = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:5000/api/departments`
-        );
+        const response = await axios.get(`${apiUrl}/api/departments`);
         setDepartments(response.data.payload);
       } catch (error) {
         console.log(error);
@@ -43,7 +42,8 @@ function CreateTicketCard() {
       "Website SEO": "/department/webseoform",
       "Custom Development": "/department/customdevelopment",
       "Paid Marketing": "/department/paidmarketingform",
-      "Social Media / Customer Reviews Management": "/department/socialmediaform",
+      "Social Media / Customer Reviews Management":
+        "/department/socialmediaform",
       "Customer Reviews Management": "/department/reviewsform",
       Sales: "/department/sales",
     };

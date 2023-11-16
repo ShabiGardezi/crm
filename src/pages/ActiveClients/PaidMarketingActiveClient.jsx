@@ -16,6 +16,7 @@ import "../../styles/Home/TicketCard.css";
 import DisplayTicketDetails from "../Tickets/DisplayTicketDetails";
 
 const PaidMarketingActiveClient = () => {
+  const apiUrl = process.env.REACT_APP_API_URL;
   const user = JSON.parse(localStorage.getItem("user"));
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -28,9 +29,7 @@ const PaidMarketingActiveClient = () => {
   // Function to fetch ticket details by ID
   const fetchTicketDetails = async (ticketId) => {
     try {
-      const response = await fetch(
-        `http://localhost:5000/api/tickets/${ticketId}`
-      );
+      const response = await fetch(`${apiUrl}/api/tickets/${ticketId}`);
       if (response.ok) {
         const data = await response.json();
         setSelectedTicketDetails(data.payload);
@@ -46,7 +45,7 @@ const PaidMarketingActiveClient = () => {
     if (e.key === "Enter" && searchQuery) {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/tickets/client-search?searchString=${searchQuery}`
+          `${apiUrl}/api/tickets/client-search?searchString=${searchQuery}`
         );
         if (response.ok) {
           const data = await response.json();
@@ -71,7 +70,7 @@ const PaidMarketingActiveClient = () => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/tickets?departmentId=${user?.department?._id}`
+          `${apiUrl}/api/tickets?departmentId=${user?.department?._id}`
         );
         if (response.ok) {
           const data = await response.json();
@@ -99,7 +98,7 @@ const PaidMarketingActiveClient = () => {
   const fetchReportingDate = async (ticketId) => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/tickets/reporting-date/${ticketId}`
+        `${apiUrl}/api/tickets/reporting-date/${ticketId}`
       );
       if (response.ok) {
         const data = await response.json();
@@ -137,7 +136,7 @@ const PaidMarketingActiveClient = () => {
   // Function to handle notes edit and update
   const handleNotesEdit = (ticketId, editedNotes) => {
     // Make an API request to update the notes in the database
-    fetch("http://localhost:5000/api/tickets/notes-update", {
+    fetch(`${apiUrl}/api/tickets/notes-update`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -183,7 +182,7 @@ const PaidMarketingActiveClient = () => {
       return p;
     });
     setTickets(newState);
-    axios.put("http://localhost:5000/api/tickets/active-status/update", {
+    axios.put(`${apiUrl}/api/tickets/active-status/update`, {
       ticketId: ticket._id,
       status: temp,
     });

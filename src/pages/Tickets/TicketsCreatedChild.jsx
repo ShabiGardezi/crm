@@ -15,6 +15,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import InputBase from "@mui/material/InputBase";
 import TablePaginationActions from "./TicketsTablePagination/TicketsPagination";
 export default function TicketsCreatedChildComponent() {
+  const apiUrl = process.env.REACT_APP_API_URL;
   const user = JSON.parse(localStorage.getItem("user"));
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -32,7 +33,7 @@ export default function TicketsCreatedChildComponent() {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/tickets/created?departmentId=${user?.department?._id}`
+          `${apiUrl}/api/tickets/created?departmentId=${user?.department?._id}`
         );
         if (response.ok) {
           const data = await response.json();
@@ -55,7 +56,7 @@ export default function TicketsCreatedChildComponent() {
   const fetchTicketDetails = async (ticketId) => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/tickets/${ticketId}`
+        `${apiUrl}/api/tickets/${ticketId}`
       );
       if (response.ok) {
         const data = await response.json();
@@ -72,7 +73,7 @@ export default function TicketsCreatedChildComponent() {
     if (e.key === "Enter" && searchQuery) {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/tickets/client-search?searchString=${searchQuery}`
+          `${apiUrl}/api/tickets/client-search?searchString=${searchQuery}`
         );
         if (response.ok) {
           const data = await response.json();

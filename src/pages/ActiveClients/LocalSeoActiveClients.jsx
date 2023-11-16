@@ -25,7 +25,8 @@ import {
   DialogActions,
 } from "@mui/material";
 import DisplayTicketDetails from "../Tickets/DisplayTicketDetails";
-export default function LocalSeoActiveClients({ onSearch }) {
+export default function LocalSeoActiveClients() {
+  const apiUrl = process.env.REACT_APP_API_URL;
   const user = JSON.parse(localStorage.getItem("user"));
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -58,9 +59,7 @@ export default function LocalSeoActiveClients({ onSearch }) {
   // Function to fetch ticket details by ID
   const fetchTicketDetails = async (ticketId) => {
     try {
-      const response = await fetch(
-        `http://localhost:5000/api/tickets/${ticketId}`
-      );
+      const response = await fetch(`${apiUrl}/api/tickets/${ticketId}`);
       if (response.ok) {
         const data = await response.json();
         setSelectedTicketDetails(data.payload);
@@ -76,7 +75,7 @@ export default function LocalSeoActiveClients({ onSearch }) {
     if (e.key === "Enter" && searchQuery) {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/tickets/client-search?searchString=${searchQuery}`
+          `${apiUrl}/api/tickets/client-search?searchString=${searchQuery}`
         );
         if (response.ok) {
           const data = await response.json();
@@ -101,7 +100,7 @@ export default function LocalSeoActiveClients({ onSearch }) {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/tickets?departmentId=${user?.department?._id}`
+          `${apiUrl}/api/tickets?departmentId=${user?.department?._id}`
         );
         if (response.ok) {
           const data = await response.json();
@@ -129,7 +128,7 @@ export default function LocalSeoActiveClients({ onSearch }) {
   const fetchReportingDate = async (ticketId) => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/tickets/reporting-date/${ticketId}`
+        `${apiUrl}/api/tickets/reporting-date/${ticketId}`
       );
       if (response.ok) {
         const data = await response.json();
@@ -211,7 +210,7 @@ export default function LocalSeoActiveClients({ onSearch }) {
   const updateReportingDate = async (ticketId, newReportingDate) => {
     try {
       const response = await fetch(
-        "http://localhost:5000/api/tickets/reportingDate-update",
+        `${apiUrl}/api/tickets/reportingDate-update`,
         {
           method: "PUT",
           headers: {
@@ -260,7 +259,7 @@ export default function LocalSeoActiveClients({ onSearch }) {
     );
 
     // Make an API request to update the reporting date in the database
-    fetch("http://localhost:5000/api/tickets/reportingDate-update", {
+    fetch(`${apiUrl}/api/tickets/reportingDate-update`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -289,7 +288,7 @@ export default function LocalSeoActiveClients({ onSearch }) {
   // Function to handle notes edit and update
   const handleNotesEdit = (ticketId, editedNotes) => {
     // Make an API request to update the notes in the database
-    fetch("http://localhost:5000/api/tickets/notes-update", {
+    fetch(`${apiUrl}/api/tickets/notes-update`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -335,7 +334,7 @@ export default function LocalSeoActiveClients({ onSearch }) {
       return p;
     });
     setTickets(newState);
-    axios.put("http://localhost:5000/api/tickets/active-status/update", {
+    axios.put(`${apiUrl}/api/tickets/active-status/update`, {
       ticketId: ticket._id,
       status: temp,
     });

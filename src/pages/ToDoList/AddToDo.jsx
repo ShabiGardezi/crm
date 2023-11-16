@@ -4,6 +4,7 @@ import axios from "axios";
 import "../../styles/ToDoList/ToDoList.css";
 
 const AddToDo = () => {
+  const apiUrl = process.env.REACT_APP_API_URL;
   const { handleAddToDo } = useToDos();
   const [note, setNote] = useState("");
   const [userId, setUserId] = useState(""); // Initialize userId state
@@ -19,7 +20,7 @@ const AddToDo = () => {
 
   const addToDoItem = async (userId, note) => {
     try {
-      const response = await axios.post("http://localhost:5000/api/notes", {
+      const response = await axios.post(`${apiUrl}/api/notes`, {
         userId: userId,
         note: note,
       });

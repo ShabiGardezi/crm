@@ -21,6 +21,7 @@ const TicketCard = ({ heading, counter }) => {
 };
 
 const FilterTickets = () => {
+  const apiUrl = process.env.REACT_APP_API_URL;
   const user = JSON.parse(localStorage.getItem("user"));
   const [createdTickets, setCreatedTickets] = useState(0); // State for created tickets count
   const [assignedTickets, setAssignedTickets] = useState(0); // State for assigned tickets count
@@ -30,12 +31,12 @@ const FilterTickets = () => {
       try {
         // Fetch the count of tickets created by the department
         const createdResponse = await axios.get(
-          `http://localhost:5000/api/tickets/created-count?departmentId=${user?.department?._id}`
+          `${apiUrl}/api/tickets/created-count?departmentId=${user?.department?._id}`
         );
 
         // Fetch the count of tickets assigned to the department
         const assignedResponse = await axios.get(
-          `http://localhost:5000/api/tickets/assigned-count?departmentId=${user?.department?._id}`
+          `${apiUrl}/api/tickets/assigned-count?departmentId=${user?.department?._id}`
         );
         // Extract the counts from the API response
         const createdCount = createdResponse.data.payload;

@@ -4,7 +4,6 @@ import { Grid, Box, Button, Typography, Avatar } from "@mui/material";
 import logo from "../assests/Rank-BPO-PVT-LTD-LOGO-02 copy.png";
 import employee from "../assests/Employee.png";
 import admin from "../assests/Admin.png";
-import sales from "../assests/Sales.png";
 import "../styles/Login.css";
 import { useNavigate } from "react-router-dom";
 const theme = createTheme();

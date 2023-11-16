@@ -24,6 +24,7 @@ import "../../styles/Home/TicketCard.css";
 import TablePaginationActions from "../Tickets/TicketsTablePagination/TicketsPagination";
 
 export default function LocalSeoSheet() {
+  const apiUrl = process.env.REACT_APP_API_URL;
   const user = JSON.parse(localStorage.getItem("user"));
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -36,12 +37,9 @@ export default function LocalSeoSheet() {
   useEffect(() => {
     // Make an HTTP GET request to fetch tickets except "Monthly SEO"
     axios
-      .get(
-        `http://localhost:5000/api/tickets/tickets-except-monthly-seo/${user._id}`
-      )
+      .get(`${apiUrl}/api/tickets/tickets-except-monthly-seo/${user._id}`)
       .then((response) => {
         if (response.status === 200) {
-          console.log(response);
           // Set the fetched data to the state variable
           setTicketData(response.data.payload);
         } else {
@@ -58,7 +56,7 @@ export default function LocalSeoSheet() {
     if (e.key === "Enter" && searchQuery) {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/tickets/client-search?searchString=${searchQuery}`
+          `${apiUrl}/api/tickets/client-search?searchString=${searchQuery}`
         );
         if (response.ok) {
           const data = await response.json();
@@ -75,9 +73,7 @@ export default function LocalSeoSheet() {
   // Function to fetch ticket details by ID
   const fetchTicketDetails = async (ticketId) => {
     try {
-      const response = await fetch(
-        `http://localhost:5000/api/tickets/${ticketId}`
-      );
+      const response = await fetch(`${apiUrl}/api/tickets/${ticketId}`);
       if (response.ok) {
         const data = await response.json();
         setSelectedTicketDetails(data.payload);
@@ -98,11 +94,10 @@ export default function LocalSeoSheet() {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/tickets?departmentId=${user?.department?._id}`
+          `${apiUrl}/api/tickets?departmentId=${user?.department?._id}`
         );
         if (response.ok) {
           const data = await response.json();
-          console.log(data);
           setTickets(data.payload);
           data.payload.forEach((ticket) => {
             fetchReportingDate(ticket._id);
@@ -121,7 +116,7 @@ export default function LocalSeoSheet() {
   const fetchReportingDate = async (ticketId) => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/tickets/reporting-date/${ticketId}`
+        `${apiUrl}/api/tickets/reporting-date/${ticketId}`
       );
       if (response.ok) {
         const data = await response.json();
@@ -169,7 +164,7 @@ export default function LocalSeoSheet() {
   const updateReportingDate = async (ticketId, newReportingDate) => {
     try {
       const response = await fetch(
-        "http://localhost:5000/api/tickets/reportingDate-update",
+        `${apiUrl}/api/tickets/reportingDate-update`,
         {
           method: "PUT",
           headers: {
@@ -208,7 +203,7 @@ export default function LocalSeoSheet() {
   // Function to handle notes edit and update
   const handleNotesEdit = (ticketId, editedNotes) => {
     // Make an API request to update the notes in the database
-    fetch("http://localhost:5000/api/tickets/notes-update", {
+    fetch(`${apiUrl}/api/tickets/notes-update`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -254,7 +249,7 @@ export default function LocalSeoSheet() {
       return p;
     });
     setTickets(newState);
-    axios.put("http://localhost:5000/api/tickets/active-status/update", {
+    axios.put(`${apiUrl}/api/tickets/active-status/update`, {
       ticketId: ticket._id,
       status: temp,
     });
