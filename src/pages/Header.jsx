@@ -70,16 +70,27 @@ const Header = () => {
   useEffect(() => {
     const fetchDepartments = async () => {
       try {
-        const response = await axios.get(
-          `${apiUrl}/api/departments`
+        const response = await axios.get(`${apiUrl}/api/departments`);
+        console.log(response);
+        const departmentToExclude = "Sales";
+
+        const departmentsBeforeFilter = response.data.payload;
+        console.log("Departments before filter:", departmentsBeforeFilter);
+
+        const filteredDepartments = response.data.payload.filter(
+          (department) => department.name !== departmentToExclude
         );
-        setDepartments(response.data.payload);
+
+        console.log("Filtered Departments:", filteredDepartments);
+
+        setDepartments(filteredDepartments);
       } catch (error) {
         console.log(error);
       }
     };
     fetchDepartments();
   }, []);
+
   useEffect(() => {
     const handleOutsideClick = (e) => {
       // Check if the click occurred outside the menu
@@ -137,7 +148,7 @@ const Header = () => {
       "Paid Marketing": "/department/paidmarketingform",
       "Social Media / Customer Reviews Management":
         "/department/socialmediaform",
-      Sales: "/department/sales",
+      // Sales: "/department/sales",
     };
 
     // Get the route for the selected department
