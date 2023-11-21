@@ -49,7 +49,7 @@ function App() {
     <div className="App">
       <Toaster />
       <Routes>
-        <Route path="/" element={<Login />} />
+        <Route path="/" element={<SignIn />} />
         <Route path="/signin" element={<SignIn />} />
         <Route
           path="/signup"
