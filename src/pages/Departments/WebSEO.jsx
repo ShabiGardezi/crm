@@ -156,7 +156,6 @@ const WebSeoForm = () => {
       toast.success("Form submitted successfully!");
 
       // Handle the response as needed (e.g., show a success message)
-      console.log("Success:", response);
     } catch (error) {
       toast.error("An error occurred. Please try again.");
 

@@ -71,17 +71,11 @@ const Header = () => {
     const fetchDepartments = async () => {
       try {
         const response = await axios.get(`${apiUrl}/api/departments`);
-        console.log(response);
         const departmentToExclude = "Sales";
-
-        const departmentsBeforeFilter = response.data.payload;
-        console.log("Departments before filter:", departmentsBeforeFilter);
 
         const filteredDepartments = response.data.payload.filter(
           (department) => department.name !== departmentToExclude
         );
-
-        console.log("Filtered Departments:", filteredDepartments);
 
         setDepartments(filteredDepartments);
       } catch (error) {
@@ -127,7 +121,6 @@ const Header = () => {
   const handleLogout = async () => {
     try {
       await axios.post(`${apiUrl}/api/user/logout`);
-      console.log("Logout successful");
       navigate("/signin");
       localStorage.removeItem("authToken");
     } catch (error) {

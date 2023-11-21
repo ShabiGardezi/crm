@@ -135,30 +135,30 @@ export default function ShowOpenTickets() {
 
     updateTicketStatus(ticketId, newStatus);
   };
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(
-          `${apiUrl}/api/tickets?departmentId=${user?.department?._id}`
-        );
-        if (response.ok) {
-          const data = await response.json();
-          const initialStatus = data.payload.reduce((status, ticket) => {
-            status[ticket._id] = ticket.status || "Not Started Yet";
-            return status;
-          }, {});
-          setTickets(data.payload);
-          setSelectedStatus(initialStatus);
-        } else {
-          console.error("Error fetching data");
-        }
-      } catch (error) {
-        console.error("Error fetching data", error);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await fetch(
+  //         `${apiUrl}/api/tickets?departmentId=${user?.department?._id}`
+  //       );
+  //       if (response.ok) {
+  //         const data = await response.json();
+  //         const initialStatus = data.payload.reduce((status, ticket) => {
+  //           status[ticket._id] = ticket.status || "Not Started Yet";
+  //           return status;
+  //         }, {});
+  //         setTickets(data.payload);
+  //         setSelectedStatus(initialStatus);
+  //       } else {
+  //         console.error("Error fetching data");
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching data", error);
+  //     }
+  //   };
 
-    fetchData();
-  }, []);
+  //   fetchData();
+  // }, []);
   return (
     <div>
       <Header />

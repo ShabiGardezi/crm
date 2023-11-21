@@ -56,16 +56,13 @@ export default function TicketsTable() {
 
     const updateTicketStatus = async (ticketId, status) => {
       try {
-        const response = await fetch(
-          `${apiUrl}/api/tickets/status-update`,
-          {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ ticketId, status }),
-          }
-        );
+        const response = await fetch(`${apiUrl}/api/tickets/status-update`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ ticketId, status }),
+        });
 
         if (response.ok) {
           // Status updated successfully
@@ -83,9 +80,7 @@ export default function TicketsTable() {
   // Function to fetch ticket details by ID
   const fetchTicketDetails = async (ticketId) => {
     try {
-      const response = await fetch(
-        `${apiUrl}/api/tickets/${ticketId}`
-      );
+      const response = await fetch(`${apiUrl}/api/tickets/${ticketId}`);
       if (response.ok) {
         const data = await response.json();
         setSelectedTicketDetails(data.payload);
@@ -108,20 +103,16 @@ export default function TicketsTable() {
     setSelectedTicketDetails(null);
   };
 
+  // Fetch data from the API when the component mounts
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `${apiUrl}/api/tickets?departmentId=${user?.department?._id}`
+          `${apiUrl}/api/tickets/notStarted?departmentId=${user?.department?._id}`
         );
         if (response.ok) {
           const data = await response.json();
-          const initialStatus = data.payload.reduce((status, ticket) => {
-            status[ticket._id] = ticket.status || "Not Started Yet";
-            return status;
-          }, {});
           setTickets(data.payload);
-          setSelectedStatus(initialStatus);
         } else {
           console.error("Error fetching data");
         }
@@ -129,7 +120,6 @@ export default function TicketsTable() {
         console.error("Error fetching data", error);
       }
     };
-
     fetchData();
   }, []);
 

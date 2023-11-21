@@ -82,16 +82,16 @@ export default function NotActiveClients() {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `${apiUrl}/api/tickets?departmentId=${user?.department?._id}`
+          `${apiUrl}/api/tickets?departmentId=${user?.department?._id}&salesDep=true`
         );
         if (response.ok) {
           const data = await response.json();
 
-          // Filter only the tickets with an "Active" status
+          // Filter only the tickets with an "Not Active" status
           const activeTickets = data.payload.filter(
             (ticket) => ticket.ActiveNotActive === "Not Active"
           );
-
+          console.log(activeTickets);
           setTickets(activeTickets);
           data.payload.forEach((ticket) => {
             fetchReportingDate(ticket._id);

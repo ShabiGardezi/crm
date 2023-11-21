@@ -33,15 +33,17 @@ export default function LocalSeoSheet() {
   const [reportingDates, setReportingDates] = useState({});
   const [isTicketDetailsOpen, setIsTicketDetailsOpen] = useState(false);
   const [selectedTicketDetails, setSelectedTicketDetails] = useState(null);
-  const [ticketData, setTicketData] = useState([]);
+  console.log(tickets);
   useEffect(() => {
     // Make an HTTP GET request to fetch tickets except "Monthly SEO"
     axios
-      .get(`${apiUrl}/api/tickets/tickets-except-monthly-seo/${user._id}`)
+      .get(
+        `${apiUrl}/api/tickets/tickets-except-monthly-seo/${user._id}&salesDep=true`
+      )
       .then((response) => {
         if (response.status === 200) {
           // Set the fetched data to the state variable
-          setTicketData(response.data.payload);
+          setTickets(response.data.payload);
         } else {
           console.error(response.data.message);
         }
@@ -90,28 +92,28 @@ export default function LocalSeoSheet() {
     setIsTicketDetailsOpen(false);
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(
-          `${apiUrl}/api/tickets?departmentId=${user?.department?._id}`
-        );
-        if (response.ok) {
-          const data = await response.json();
-          setTickets(data.payload);
-          data.payload.forEach((ticket) => {
-            fetchReportingDate(ticket._id);
-          });
-        } else {
-          console.error("Error fetching data");
-        }
-      } catch (error) {
-        console.error("Error fetching data", error);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await fetch(
+  //         `${apiUrl}/api/tickets?departmentId=${user?.department?._id}`
+  //       );
+  //       if (response.ok) {
+  //         const data = await response.json();
+  //         setTickets(data.payload);
+  //         data.payload.forEach((ticket) => {
+  //           fetchReportingDate(ticket._id);
+  //         });
+  //       } else {
+  //         console.error("Error fetching data");
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching data", error);
+  //     }
+  //   };
 
-    fetchData();
-  }, []);
+  //   fetchData();
+  // }, []);
 
   const fetchReportingDate = async (ticketId) => {
     try {

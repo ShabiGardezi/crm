@@ -1,7 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useTheme } from "@mui/material/styles";
-import PropTypes from "prop-types";
-import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -12,10 +9,6 @@ import TableRow from "@mui/material/TableRow";
 import TableHead from "@mui/material/TableHead";
 import Paper from "@mui/material/Paper";
 import IconButton from "@mui/material/IconButton";
-import FirstPageIcon from "@mui/icons-material/FirstPage";
-import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
-import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
-import LastPageIcon from "@mui/icons-material/LastPage";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
@@ -29,6 +22,8 @@ import ActiveNotActiveCard from "../Client-Sheets/ActiveNotActiveCard";
 import axios from "axios";
 import OneTimeServiceClientsCard from "./OneTimeClientCard";
 import TablePaginationActions from "../Tickets/TicketsTablePagination/TicketsPagination";
+import { useLocation } from "react-router-dom";
+
 export default function MonthlySeoClients() {
   const apiUrl = process.env.REACT_APP_API_URL;
   const user = JSON.parse(localStorage.getItem("user"));
@@ -39,7 +34,6 @@ export default function MonthlySeoClients() {
   const [reportingDates, setReportingDates] = useState({});
   const [isTicketDetailsOpen, setIsTicketDetailsOpen] = useState(false);
   const [selectedTicketDetails, setSelectedTicketDetails] = useState(null);
-  const [ticketData, setTicketData] = useState([]);
   const [monthlySeoTickets, setMonthlySeoTickets] = useState([]); // New state for monthly SEO tickets
 
   <TablePaginationActions />;
@@ -80,45 +74,53 @@ export default function MonthlySeoClients() {
   const closeTicketDetailsModal = () => {
     setIsTicketDetailsOpen(false);
   };
-
   // Function to fetch the Monthly SEO tickets
-  const fetchMonthlySeoTickets = async () => {
-    try {
-      const response = await fetch(`${apiUrl}/api/tickets/monthly-seo-tickets`);
-      if (response.ok) {
-        const data = await response.json();
-        setMonthlySeoTickets(data.payload);
-      } else {
-        console.error("Error fetching Monthly SEO tickets");
-      }
-    } catch (error) {
-      console.error("Error fetching Monthly SEO tickets", error);
-    }
-  };
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchMonthlySeoTickets = async () => {
       try {
         const response = await fetch(
-          `${apiUrl}/api/tickets?departmentId=${user?.department?._id}`
+          `${apiUrl}/api/tickets/monthly-seo-tickets`
         );
         if (response.ok) {
           const data = await response.json();
-          setTickets(data.payload);
-          data.payload.forEach((ticket) => {
-            fetchReportingDate(ticket._id);
-          });
+          setMonthlySeoTickets(data.payload);
         } else {
-          console.error("Error fetching data");
+          console.error("Error fetching Monthly SEO tickets");
         }
       } catch (error) {
-        console.error("Error fetching data", error);
+        console.error("Error fetching Monthly SEO tickets", error);
       }
     };
-
-    fetchData();
-    // Fetch Monthly SEO Tickets
     fetchMonthlySeoTickets();
   }, []);
+
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const param1 = params.get("depId");
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await fetch(
+  //         `${apiUrl}/api/tickets?departmentId=${param1}salesDep=true`
+  //       );
+  //       if (response.ok) {
+  //         const data = await response.json();
+  //         setTickets(data.payload);
+  //         data.payload.forEach((ticket) => {
+  //           fetchReportingDate(ticket._id);
+  //         });
+  //       } else {
+  //         console.error("Error fetching data");
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching data", error);
+  //     }
+  //   };
+
+  //   fetchData();
+  //   // Fetch Monthly SEO Tickets
+  //   fetchMonthlySeoTickets();
+  // }, []);
 
   const fetchReportingDate = async (ticketId) => {
     try {

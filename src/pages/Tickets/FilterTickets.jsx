@@ -41,6 +41,7 @@ const FilterTickets = () => {
         // Extract the counts from the API response
         const createdCount = createdResponse.data.payload;
         const assignedCount = assignedResponse.data.payload;
+
         // Set the counts in state
         setCreatedTickets(createdCount);
         setAssignedTickets(assignedCount);
