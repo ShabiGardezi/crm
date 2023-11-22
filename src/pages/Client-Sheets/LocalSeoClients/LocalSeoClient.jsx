@@ -27,6 +27,7 @@ import ActiveNotActiveCard from "../ActiveNotActiveCard";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
 import TablePaginationActions from "../../Tickets/TicketsTablePagination/TicketsPagination";
+import UnauthorizedError from "../../../components/Error_401";
 export default function LocalSeoSheet() {
   const apiUrl = process.env.REACT_APP_API_URL;
   const user = JSON.parse(localStorage.getItem("user"));
@@ -349,7 +350,7 @@ export default function LocalSeoSheet() {
     param1 !== "653fcae0b825ef1379dd5ad5" &&
     user.role !== "admin"
   ) {
-    return "unAuthorized";
+    return <UnauthorizedError />;
   }
   return (
     <>

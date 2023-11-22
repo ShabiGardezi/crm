@@ -98,11 +98,6 @@ export default function TicketsTable() {
     setIsTicketDetailsOpen(false);
   };
 
-  // Function to clear selected ticket details
-  const clearSelectedTicketDetails = () => {
-    setSelectedTicketDetails(null);
-  };
-
   // Fetch data from the API when the component mounts
   useEffect(() => {
     const fetchData = async () => {

@@ -22,6 +22,7 @@ import axios from "axios";
 import "../../../styles/Home/TicketCard.css";
 import { useLocation } from "react-router-dom";
 import TablePaginationActions from "../../Tickets/TicketsTablePagination/TicketsPagination";
+import UnauthorizedError from "../../../components/Error_401";
 
 export default function PaidMarketingClientSheet(props) {
   const apiUrl = process.env.REACT_APP_API_URL;
@@ -273,7 +274,7 @@ export default function PaidMarketingClientSheet(props) {
     param1 !== "653fcae0b825ef1379dd5ad5" &&
     user.role !== "admin"
   ) {
-    return "unAuthorized";
+    return <UnauthorizedError />;
   }
   return (
     <>

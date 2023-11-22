@@ -21,6 +21,7 @@ const WebSeoForm = () => {
   const [showMonthlyBlogs, setShowMonthlyBlogs] = useState(false); // Initialize as hidden
   const [clientSuggestions, setClientSuggestions] = useState([]);
   const [formData, setFormData] = useState({
+    department: "Website SEO",
     priorityLevel: "",
     assignor: user?.username || "",
     dueDate: new Date().toISOString().substr(0, 10), // Initialize with the current date in yyyy-mm-dd format
@@ -104,7 +105,7 @@ const WebSeoForm = () => {
     event.preventDefault(); // Prevent the default form submission behavior
     try {
       const selectedDepartment = departments.find(
-        (department) => department.name === "Website SEO"
+        (department) => department.name === formData.department
       );
 
       // Set majorAssignee to the department's ID
@@ -329,7 +330,7 @@ const WebSeoForm = () => {
               label="Select Department"
               fullWidth
               name="department"
-              value={"Website SEO"}
+              value={formData.department}
               onChange={handleChange}
               disabled
               select

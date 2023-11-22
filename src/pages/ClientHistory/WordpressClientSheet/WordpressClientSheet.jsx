@@ -22,6 +22,7 @@ import "../../../styles/Home/TicketCard.css";
 import WebisteClientCards from "./Cards";
 import { useLocation } from "react-router-dom";
 import TablePaginationActions from "../../Tickets/TicketsTablePagination/TicketsPagination";
+import UnauthorizedError from "../../../components/Error_401";
 export default function WordpressClientSheet(props) {
   const apiUrl = process.env.REACT_APP_API_URL;
   const user = JSON.parse(localStorage.getItem("user"));
@@ -55,9 +56,7 @@ export default function WordpressClientSheet(props) {
   // Function to fetch ticket details by ID
   const fetchTicketDetails = async (ticketId) => {
     try {
-      const response = await fetch(
-        `${apiUrl}/api/tickets/${ticketId}`
-      );
+      const response = await fetch(`${apiUrl}/api/tickets/${ticketId}`);
       if (response.ok) {
         const data = await response.json();
         setSelectedTicketDetails(data.payload);
@@ -272,7 +271,7 @@ export default function WordpressClientSheet(props) {
     param1 !== "653fcae0b825ef1379dd5ad5" &&
     user.role !== "admin"
   ) {
-    return "unAuthorized";
+    return <UnauthorizedError />;
   }
   return (
     <>

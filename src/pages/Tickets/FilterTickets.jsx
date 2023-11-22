@@ -24,7 +24,6 @@ const FilterTickets = () => {
   const apiUrl = process.env.REACT_APP_API_URL;
   const user = JSON.parse(localStorage.getItem("user"));
   const [createdTickets, setCreatedTickets] = useState(0); // State for created tickets count
-  const [assignedTickets, setAssignedTickets] = useState(0); // State for assigned tickets count
 
   useEffect(() => {
     const fetchData = async () => {
@@ -33,18 +32,10 @@ const FilterTickets = () => {
         const createdResponse = await axios.get(
           `${apiUrl}/api/tickets/created-count?departmentId=${user?.department?._id}`
         );
-
-        // Fetch the count of tickets assigned to the department
-        const assignedResponse = await axios.get(
-          `${apiUrl}/api/tickets/assigned-count?departmentId=${user?.department?._id}`
-        );
         // Extract the counts from the API response
         const createdCount = createdResponse.data.payload;
-        const assignedCount = assignedResponse.data.payload;
-
         // Set the counts in state
         setCreatedTickets(createdCount);
-        setAssignedTickets(assignedCount);
       } catch (error) {
         console.log(error);
       }
@@ -61,11 +52,6 @@ const FilterTickets = () => {
       <div className="col-6">
         <Link to="/tickets_created">
           <TicketCard heading="Created Tickets" counter={createdTickets} />
-        </Link>
-      </div>
-      <div className="col-6">
-        <Link to="/history">
-          <TicketCard heading="Assigned Tickets" counter={assignedTickets} />
         </Link>
       </div>
     </div>

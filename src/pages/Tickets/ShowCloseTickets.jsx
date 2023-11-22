@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { MenuItem, FormControl, Select } from "@mui/material";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -29,6 +30,7 @@ export default function ShowCloseTickets() {
   const [isTicketDetailsOpen, setIsTicketDetailsOpen] = useState(false);
   const [selectedTicketDetails, setSelectedTicketDetails] = useState(null); // Step 1
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedStatus, setSelectedStatus] = useState("");
 
   // Function to close the ticket details modal
   const closeTicketDetailsModal = () => {
@@ -57,9 +59,7 @@ export default function ShowCloseTickets() {
   // Function to fetch ticket details by ID
   const fetchTicketDetails = async (ticketId) => {
     try {
-      const response = await fetch(
-        `${apiUrl}/api/tickets/${ticketId}`
-      );
+      const response = await fetch(`${apiUrl}/api/tickets/${ticketId}`);
       if (response.ok) {
         const data = await response.json();
         setSelectedTicketDetails(data.payload);
@@ -98,6 +98,34 @@ export default function ShowCloseTickets() {
         console.error("Error fetching search results", error);
       }
     }
+  };
+  const handleStatusChange = async (event, ticketId) => {
+    const newSelectedStatus = { ...selectedStatus };
+    const newStatus = event.target.value;
+    newSelectedStatus[ticketId] = newStatus;
+    setSelectedStatus(newSelectedStatus);
+
+    const updateTicketStatus = async (ticketId, status) => {
+      try {
+        const response = await fetch(`${apiUrl}/api/tickets/status-update`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ ticketId, status }),
+        });
+
+        if (response.ok) {
+          // Status updated successfully
+        } else {
+          console.error("Error updating status");
+        }
+      } catch (error) {
+        console.error("Error updating status", error);
+      }
+    };
+
+    updateTicketStatus(ticketId, newStatus);
   };
   return (
     <div>
@@ -165,7 +193,19 @@ export default function ShowCloseTickets() {
                     </IconButton>
                   </TableCell>
                   <TableCell style={{ width: 160 }} align="left">
-                    {ticket.status}
+                    <FormControl>
+                      <Select
+                        value={selectedStatus[ticket._id] || "Completed"}
+                        onChange={(e) => handleStatusChange(e, ticket._id)}
+                      >
+                        <MenuItem value="Not Started Yet">
+                          Not Started Yet
+                        </MenuItem>
+                        <MenuItem value="In Progress">In Progress</MenuItem>
+                        <MenuItem value="Pending">Pending</MenuItem>
+                        <MenuItem value="Completed">Completed</MenuItem>
+                      </Select>
+                    </FormControl>
                   </TableCell>
                 </TableRow>
               ))}

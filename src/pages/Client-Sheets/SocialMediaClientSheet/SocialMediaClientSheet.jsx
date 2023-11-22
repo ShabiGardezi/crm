@@ -23,6 +23,7 @@ import "../../../styles/Home/TicketCard.css";
 import CardsSocialMediaTrack from "./CardsSocialMedia/CardsSocialMediaTrack";
 import { useLocation } from "react-router-dom";
 import TablePaginationActions from "../../Tickets/TicketsTablePagination/TicketsPagination";
+import UnauthorizedError from "../../../components/Error_401";
 
 export default function SocialMediaClientSheet(props) {
   const apiUrl = process.env.REACT_APP_API_URL;
@@ -313,7 +314,7 @@ export default function SocialMediaClientSheet(props) {
     param1 !== "653fcae0b825ef1379dd5ad5" &&
     user.role !== "admin"
   ) {
-    return "unAuthorized";
+    return <UnauthorizedError />;
   }
   return (
     <>

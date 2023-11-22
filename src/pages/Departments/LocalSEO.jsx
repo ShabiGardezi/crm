@@ -18,12 +18,12 @@ const LocalSEOForm = () => {
   const [clientSuggestions, setClientSuggestions] = useState([]);
   const [selectedClient, setSelectedClient] = useState(null);
   const [formData, setFormData] = useState({
+    department: "Local SEO / GMB Optimization",
     priorityLevel: "",
     assignor: user?.username || "",
     dueDate: new Date().toISOString().substr(0, 10), // Initialize with the current date in yyyy-mm-dd format
     keywords: "",
     supportPerson: "",
-
     webUrl: "",
     loginCredentials: "",
     price: "",
@@ -42,7 +42,6 @@ const LocalSEOForm = () => {
     gmbUrl: "",
     workStatus: "",
     notes: "",
-    department: "",
     fronter: "",
     closer: "",
   });
@@ -61,8 +60,6 @@ const LocalSEOForm = () => {
     const remaining = updatedPrice - updatedAdvancePrice;
     setRemainingPrice(remaining);
     if (name === "workStatus") {
-      // Log the selected value for debugging
-
       // Update the state
       setFormData({
         ...formData,
@@ -80,7 +77,7 @@ const LocalSEOForm = () => {
     try {
       // Find the selected department object
       const selectedDepartment = departments.find(
-        (department) => department.name === "Local SEO / GMB Optimization"
+        (department) => department.name === formData.department
       );
 
       // Set majorAssignee to the department's ID
@@ -133,9 +130,7 @@ const LocalSEOForm = () => {
   useEffect(() => {
     const fetchDepartments = async () => {
       try {
-        const response = await axios.get(
-          `${apiUrl}/api/departments`
-        );
+        const response = await axios.get(`${apiUrl}/api/departments`);
         setDepartments(response.data.payload);
       } catch (error) {
         console.log(error);
@@ -301,7 +296,7 @@ const LocalSEOForm = () => {
               label="Select Department"
               fullWidth
               name="department"
-              value={"Local SEO / GMB Optimization"}
+              value={formData.department}
               onChange={handleChange}
               disabled
               select

@@ -59,7 +59,7 @@ const PaidMarketing = () => {
     } else {
       setShowBudgetPrice(false);
     }
-    if (name === "platform" && value === "other") {
+    if (name === "platform" && value === "Other") {
       setShowPlatform(true);
     }
     const remaining = updatedPrice - updatedAdvancePrice;
@@ -401,7 +401,7 @@ const PaidMarketing = () => {
             >
               <MenuItem value="fb">Facebook</MenuItem>
               <MenuItem value="google">Google</MenuItem>
-              <MenuItem value="other">Other</MenuItem>
+              <MenuItem value="Other">Other</MenuItem>
             </TextField>
           </Grid>
           {ShowPlatform && (

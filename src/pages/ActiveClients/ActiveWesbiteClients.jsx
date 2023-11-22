@@ -69,10 +69,6 @@ export default function ActiveWebsiteClients() {
     setIsTicketDetailsOpen(false);
   };
 
-  const clearSelectedTicketDetails = () => {
-    setSelectedTicketDetails(null);
-  };
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -246,7 +242,6 @@ export default function ActiveWebsiteClients() {
     <>
       <Header />
       <div className="cards">{<WebisteClientCards />}</div>
-
       <TableContainer component={Paper}>
         <div>
           <div

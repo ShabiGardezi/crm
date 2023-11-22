@@ -31,7 +31,7 @@ const WebisteClientCards = () => {
       try {
         // Fetch the ticket data
         const response = await axios.get(
-          `${apiUrl}/api/tickets?departmentId=${user?.department?._id}`
+          `${apiUrl}/api/tickets?departmentId=${user?.department?._id}&salesDep=true`
         );
 
         // Set the ticket data in state

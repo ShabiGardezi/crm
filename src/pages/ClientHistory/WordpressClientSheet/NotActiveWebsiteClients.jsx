@@ -25,7 +25,6 @@ export default function InActiveWebsiteClients() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [tickets, setTickets] = useState([]);
-  const [reportingDates, setReportingDates] = useState({});
   const [isTicketDetailsOpen, setIsTicketDetailsOpen] = useState(false);
   const [selectedTicketDetails, setSelectedTicketDetails] = useState(null);
 
@@ -49,9 +48,7 @@ export default function InActiveWebsiteClients() {
   // Function to fetch ticket details by ID
   const fetchTicketDetails = async (ticketId) => {
     try {
-      const response = await fetch(
-        `${apiUrl}/api/tickets/${ticketId}`
-      );
+      const response = await fetch(`${apiUrl}/api/tickets/${ticketId}`);
       if (response.ok) {
         const data = await response.json();
         setSelectedTicketDetails(data.payload);
@@ -68,15 +65,11 @@ export default function InActiveWebsiteClients() {
     setIsTicketDetailsOpen(false);
   };
 
-  const clearSelectedTicketDetails = () => {
-    setSelectedTicketDetails(null);
-  };
-
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `${apiUrl}/api/tickets?departmentId=${user?.department?._id}`
+          `${apiUrl}/api/tickets?departmentId=${user?.department?._id}&salesDep=true`
         );
         if (response.ok) {
           const data = await response.json();
@@ -87,9 +80,6 @@ export default function InActiveWebsiteClients() {
           );
 
           setTickets(activeTickets);
-          data.payload.forEach((ticket) => {
-            fetchReportingDate(ticket._id);
-          });
         } else {
           console.error("Error fetching data");
         }
@@ -100,42 +90,6 @@ export default function InActiveWebsiteClients() {
 
     fetchData();
   }, []);
-
-  const fetchReportingDate = async (ticketId) => {
-    try {
-      const response = await fetch(
-        `${apiUrl}/api/tickets/reporting-date/${ticketId}`
-      );
-      if (response.ok) {
-        const data = await response.json();
-        if (data.payload) {
-          setReportingDates((prevReportingDates) => ({
-            ...prevReportingDates,
-            [ticketId]: data.payload,
-          }));
-        } else {
-          // Set the reporting date to one month later than createdAt
-          const createdAtDate = new Date(
-            tickets.find((ticket) => ticket._id === ticketId).createdAt
-          );
-          const oneMonthLaterDate = new Date(
-            createdAtDate.getFullYear(),
-            createdAtDate.getMonth() + 1,
-            createdAtDate.getDate()
-          );
-          setReportingDates((prevReportingDates) => ({
-            ...prevReportingDates,
-            [ticketId]: oneMonthLaterDate.toISOString(),
-          }));
-        }
-      } else {
-        console.error("Error fetching reporting date");
-      }
-    } catch (error) {
-      console.error("Error fetching reporting date", error);
-    }
-  };
-
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - tickets.length) : 0;
 
@@ -146,86 +100,6 @@ export default function InActiveWebsiteClients() {
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
-  };
-
-  // Function to update reporting date
-  const updateReportingDate = async (ticketId, newReportingDate) => {
-    try {
-      const response = await fetch(
-        `${apiUrl}/api/tickets/reportingDate-update`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            ticketId,
-            reportingDate: newReportingDate.toISOString(),
-          }),
-        }
-      );
-
-      if (response.ok) {
-        // Reporting Date updated successfully
-        // Update the state to display the updated date
-        setReportingDates((prevReportingDates) => ({
-          ...prevReportingDates,
-          [ticketId]: newReportingDate.toISOString(),
-        }));
-      } else {
-        console.error("Error updating reporting date");
-      }
-    } catch (error) {
-      console.error("Error updating reporting date", error);
-    }
-  };
-  // Function to handle reporting date edit
-  const handleReportingDateEdit = (ticketId, editedDate) => {
-    // Convert the edited content back to a date format
-    const newReportingDate = new Date(editedDate);
-
-    // Call the updateReportingDate function
-    updateReportingDate(ticketId, newReportingDate);
-  };
-
-  // Function to handle the "Recurring" button click
-  const handleRecurringClick = (ticketId) => {
-    // Get the current reporting date
-    const currentReportingDate = new Date(reportingDates[ticketId]);
-
-    // Calculate one month later date
-    const oneMonthLaterDate = new Date(
-      currentReportingDate.getFullYear(),
-      currentReportingDate.getMonth() + 1,
-      currentReportingDate.getDate()
-    );
-
-    // Make an API request to update the reporting date in the database
-    fetch(`${apiUrl}/api/tickets/reportingDate-update`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        ticketId,
-        reportingDate: oneMonthLaterDate.toISOString(),
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.payload) {
-          // If the update is successful, update the local state with the new reporting date
-          setReportingDates((prevReportingDates) => ({
-            ...prevReportingDates,
-            [ticketId]: oneMonthLaterDate.toISOString(),
-          }));
-        } else {
-          console.error("Error updating reporting date");
-        }
-      })
-      .catch((error) => {
-        console.error("Error updating reporting date", error);
-      });
   };
   // Function to handle notes edit and update
   const handleNotesEdit = (ticketId, editedNotes) => {

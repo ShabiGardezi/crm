@@ -193,9 +193,7 @@ const WordPress = () => {
   useEffect(() => {
     const fetchDepartments = async () => {
       try {
-        const response = await axios.get(
-          `${apiUrl}/api/departments`
-        );
+        const response = await axios.get(`${apiUrl}/api/departments`);
         setDepartments(response.data.payload);
       } catch (error) {
         console.log(error);
@@ -331,8 +329,10 @@ const WordPress = () => {
               label="Department"
               fullWidth
               name="department"
+              value={formData.department}
               onChange={handleChange}
               select
+              disabled
             >
               {departments?.map((d) => (
                 <MenuItem key={d._id} value={d.name}>
@@ -663,21 +663,6 @@ const WordPress = () => {
                   onChange={handleChange}
                   multiline
                 />
-              </Grid>
-              <Grid item xs={2}>
-                <TextField
-                  label="Website-Type"
-                  fullWidth
-                  name="websiteType"
-                  value={selectedWebsiteType}
-                  onChange={handleChange}
-                  select
-                >
-                  <MenuItem value="Ecommerce">Ecommerce</MenuItem>
-                  <MenuItem value="Redeisgn">Redeisgn</MenuItem>
-                  <MenuItem value="One-Page">One-Page</MenuItem>
-                  <MenuItem value="Full">Full</MenuItem>
-                </TextField>
               </Grid>
               <Grid item xs={2}>
                 <TextField

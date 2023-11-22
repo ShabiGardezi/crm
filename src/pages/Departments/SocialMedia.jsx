@@ -21,6 +21,7 @@ const SocialMediaForm = () => {
   const [clientSuggestions, setClientSuggestions] = useState([]);
 
   const [formData, setFormData] = useState({
+    department: "Social Media / Customer Reviews Management",
     priorityLevel: "",
     assignor: user?.username || "",
     dueDate: new Date().toISOString().substr(0, 10), // Initialize with the current date in yyyy-mm-dd format
@@ -68,8 +69,7 @@ const SocialMediaForm = () => {
     try {
       // Make an Axios POST request to your backend API
       const selectedDepartment = departments.find(
-        (department) =>
-          department.name === "Social Media / Customer Reviews Management"
+        (department) => department.name === formData.department
       );
 
       // Set majorAssignee to the department's ID
@@ -121,9 +121,7 @@ const SocialMediaForm = () => {
   useEffect(() => {
     const fetchDepartments = async () => {
       try {
-        const response = await axios.get(
-          `${apiUrl}/api/departments`
-        );
+        const response = await axios.get(`${apiUrl}/api/departments`);
         setDepartments(response.data.payload);
       } catch (error) {
         console.log(error);
@@ -283,7 +281,7 @@ const SocialMediaForm = () => {
               label="Select Department"
               fullWidth
               name="department"
-              value={"Social Media / Customer Reviews Management"}
+              value={formData.department}
               onChange={handleChange}
               select
               disabled
