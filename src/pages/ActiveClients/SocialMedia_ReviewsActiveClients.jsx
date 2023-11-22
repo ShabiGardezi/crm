@@ -66,10 +66,6 @@ const SocialMedia_ReviewsActiveClients = () => {
     setIsTicketDetailsOpen(false);
   };
 
-  const clearSelectedTicketDetails = () => {
-    setSelectedTicketDetails(null);
-  };
-
   useEffect(() => {
     const fetchData = async () => {
       try {

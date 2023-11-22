@@ -243,8 +243,6 @@ export default function PaidMarketingClientSheet(props) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // console.log(user.role);
-        // console.log(props.department);
         let url = "";
         if (user.role === "admin" || user.department.name === "Sales") {
           url = `${apiUrl}/api/tickets?departmentId=${props.department._id}`;

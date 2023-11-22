@@ -135,10 +135,6 @@ export default function LocalSeoSheet() {
   const closeTicketDetailsModal = () => {
     setIsTicketDetailsOpen(false);
   };
-
-  const clearSelectedTicketDetails = () => {
-    setSelectedTicketDetails(null);
-  };
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const param1 = params.get("depId");

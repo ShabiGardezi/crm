@@ -78,7 +78,7 @@ export default function LikesFollowersSocialMedia(props) {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `${apiUrl}/api/tickets?departmentId=${user?.department?._id}`
+          `${apiUrl}/api/tickets?departmentId=${user?.department?._id}&salesDep=true`
         );
         if (response.ok) {
           const data = await response.json();
@@ -95,7 +95,7 @@ export default function LikesFollowersSocialMedia(props) {
     };
 
     fetchData();
-  }, []);
+  }, [0]);
 
   const fetchReportingDate = async (ticketId) => {
     try {

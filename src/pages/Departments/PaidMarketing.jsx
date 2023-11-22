@@ -19,8 +19,10 @@ const PaidMarketing = () => {
   const [selectedClient, setSelectedClient] = useState(null);
   const [ShowBudgetPrice, setShowBudgetPrice] = useState(null);
   const [ShowPlatform, setShowPlatform] = useState(null);
+  console.log(user);
 
   const [formData, setFormData] = useState({
+    department: "Paid Marketing",
     priorityLevel: "",
     assignor: user?.username || "",
     dueDate: new Date().toISOString().substr(0, 10), // Initialize with the current date in yyyy-mm-dd format
@@ -76,7 +78,7 @@ const PaidMarketing = () => {
     try {
       // Make an Axios request here (replace "/api/submit" with your actual API endpoint)
       const selectedDepartment = departments.find(
-        (department) => department.name === "Paid Marketing"
+        (department) => department.name === formData.department
       );
 
       // Set majorAssignee to the department's ID
@@ -140,9 +142,7 @@ const PaidMarketing = () => {
   useEffect(() => {
     const fetchDepartments = async () => {
       try {
-        const response = await axios.get(
-          `${apiUrl}/api/departments`
-        );
+        const response = await axios.get(`${apiUrl}/api/departments`);
         setDepartments(response.data.payload);
       } catch (error) {
         console.log(error);
@@ -278,9 +278,10 @@ const PaidMarketing = () => {
               label="Select Department"
               fullWidth
               name="department"
-              value={"Paid Marketing"}
+              value={formData.department}
               onChange={handleChange}
               select
+              disabled
             >
               {departments?.map((d) => (
                 <MenuItem key={d._id} value={d.name}>
@@ -399,8 +400,8 @@ const PaidMarketing = () => {
               onChange={handleChange}
               select
             >
-              <MenuItem value="fb">Facebook</MenuItem>
-              <MenuItem value="google">Google</MenuItem>
+              <MenuItem value="Fb">Facebook</MenuItem>
+              <MenuItem value="Google">Google</MenuItem>
               <MenuItem value="Other">Other</MenuItem>
             </TextField>
           </Grid>

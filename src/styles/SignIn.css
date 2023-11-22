@@ -1,9 +1,5 @@
 .signIn-form {
-  margin-top: 100px;
-  border: 1px solid rgba(0, 91, 234, 1);
-  border-radius: 8px;
   text-align: center;
-  background-color: rgba(189, 181, 181, 0.658);
 }
 .MuiGrid-root.signin-form.MuiGrid-item.MuiGrid-grid-xs-2.MuiGrid-grid-md-6 {
   margin-top: 100px;

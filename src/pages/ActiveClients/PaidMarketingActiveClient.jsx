@@ -61,16 +61,11 @@ const PaidMarketingActiveClient = () => {
   const closeTicketDetailsModal = () => {
     setIsTicketDetailsOpen(false);
   };
-
-  const clearSelectedTicketDetails = () => {
-    setSelectedTicketDetails(null);
-  };
-
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `${apiUrl}/api/tickets?departmentId=${user?.department?._id}`
+          `${apiUrl}/api/tickets?departmentId=${user?.department?._id}&salesDep=true`
         );
         if (response.ok) {
           const data = await response.json();
