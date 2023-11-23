@@ -116,6 +116,7 @@ const LocalSEOForm = () => {
           assignor: formData.assignor,
           priority: formData.priorityLevel,
         },
+        payment_history: parseInt(formData.advanceprice),
       });
 
       // Handle the response as needed (e.g., show a success message)

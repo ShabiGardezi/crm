@@ -28,6 +28,7 @@ import axios from "axios";
 import { useLocation } from "react-router-dom";
 import TablePaginationActions from "../../Tickets/TicketsTablePagination/TicketsPagination";
 import UnauthorizedError from "../../../components/Error_401";
+import { Typography } from "antd";
 export default function LocalSeoSheet() {
   const apiUrl = process.env.REACT_APP_API_URL;
   const user = JSON.parse(localStorage.getItem("user"));
@@ -42,6 +43,8 @@ export default function LocalSeoSheet() {
   const [price, setPrice] = useState("");
   const [advancePrice, setAdvancePrice] = useState("");
   const [remainingPrice, setRemainingPrice] = useState("");
+  const [ticketSelected, setTicketSelected] = useState();
+  const [paymentRecieved, setPaymentRecieved] = useState(0);
   // Function to open the recurring dialog and reset state values
   const handleRecurringDialogOpen = () => {
     setOpenRecurringDialog(true);
@@ -91,9 +94,16 @@ export default function LocalSeoSheet() {
   };
 
   // Function to handle submission of recurring data
-  const handleRecurringSubmit = () => {
+  const handleRecurringSubmit = async () => {
     // You can send the price, advancePrice, and remainingPrice to your backend or perform other actions here.
     // Don't forget to close the dialog afterward.
+    try {
+      const response = await axios.post(
+        `${apiUrl}/api/tickets/update_payment_history`,
+        { ticketId: ticketSelected._id, payment: remainingPrice }
+      );
+    } catch (error) {}
+
     setOpenRecurringDialog(false);
   };
 
@@ -348,6 +358,7 @@ export default function LocalSeoSheet() {
   ) {
     return <UnauthorizedError />;
   }
+
   return (
     <>
       <Header />
@@ -455,6 +466,14 @@ export default function LocalSeoSheet() {
                       onClick={() => {
                         handleRecurringDialogOpen();
                         handleRecurringClick(ticket._id);
+                        setTicketSelected(ticket);
+                        setPaymentRecieved(() => {
+                          let payment = 0;
+                          ticket.payment_history.forEach((p) => {
+                            payment = payment + p.payment;
+                          });
+                          return payment;
+                        });
                       }}
                     >
                       Recurring
@@ -466,7 +485,28 @@ export default function LocalSeoSheet() {
                     >
                       <DialogTitle>Recurring Details</DialogTitle>
                       <DialogContent>
-                        <TextField
+                        <ul>
+                          {ticketSelected &&
+                            ticketSelected?.payment_history.map((p) => {
+                              return (
+                                <>
+                                  <li>{p.payment}</li>
+                                  <li>{p.date}</li>
+                                </>
+                              );
+                            })}
+                        </ul>
+                        <Typography>
+                          total payment : {ticket.quotation.price}
+                        </Typography>
+                        <Typography>
+                          payment received :{paymentRecieved}
+                        </Typography>
+                        <Typography>
+                          pending payment :
+                          {ticket.quotation.price - paymentRecieved}
+                        </Typography>
+                        {/* <TextField
                           label="Price"
                           value={price}
                           onChange={handlePriceChange}
@@ -477,7 +517,7 @@ export default function LocalSeoSheet() {
                           value={advancePrice}
                           onChange={handleAdvancePriceChange}
                           fullWidth
-                        />
+                        /> */}
                         <TextField
                           label="Remaining Price"
                           value={remainingPrice}
