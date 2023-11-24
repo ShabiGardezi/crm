@@ -197,6 +197,10 @@ export default function InActiveWebsiteClients() {
                           ticket.ActiveNotActive === "Active"
                             ? "#28a745"
                             : "#dc3545", // set background color for Select
+                        color:
+                          ticket.ActiveNotActive === "Active"
+                            ? "white"
+                            : "black",
                       }}
                     >
                       <MenuItem value="Active">Active</MenuItem>

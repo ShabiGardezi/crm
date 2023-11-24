@@ -29,7 +29,6 @@ export default function NotActiveClients() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [tickets, setTickets] = useState([]);
-  const [selectedStatus, setSelectedStatus] = useState({});
   const [searchQuery, setSearchQuery] = useState("");
   const [reportingDates, setReportingDates] = useState({});
   const [isTicketDetailsOpen, setIsTicketDetailsOpen] = useState(false);
@@ -359,6 +358,10 @@ export default function NotActiveClients() {
                             ticket.ActiveNotActive === "Active"
                               ? "#28a745"
                               : "#dc3545", // set background color for Select
+                          color:
+                            ticket.ActiveNotActive === "Active"
+                              ? "white"
+                              : "black",
                         }}
                       >
                         <MenuItem value="Active">Active</MenuItem>

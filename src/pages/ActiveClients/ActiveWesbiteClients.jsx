@@ -290,12 +290,7 @@ export default function ActiveWebsiteClients() {
                   </TableCell>
                 )}
 
-                <TableCell
-                  style={{
-                    width: 160,
-                  }}
-                  align="left"
-                >
+                <TableCell style={{ width: 160 }} align="left">
                   <FormControl>
                     <Select
                       value={ticket.ActiveNotActive || "Active"}

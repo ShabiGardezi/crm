@@ -289,7 +289,7 @@ export default function SocialMediaClientSheet(props) {
         if (user.role === "admin" || user.department.name === "Sales") {
           url = `${apiUrl}/api/tickets?departmentId=${props.department._id}`;
         } else {
-          url = `${apiUrl}/api/tickets?departmentId=${user?.department?._id}`;
+          url = `${apiUrl}/api/tickets?departmentId=${user?.department?._id}&salesDep=true`;
         }
         const response = await fetch(url);
         if (response.ok) {
@@ -389,6 +389,10 @@ export default function SocialMediaClientSheet(props) {
                           ticket.ActiveNotActive === "Active"
                             ? "#28a745"
                             : "#dc3545", // set background color for Select
+                        color:
+                          ticket.ActiveNotActive === "Active"
+                            ? "white"
+                            : "black",
                       }}
                     >
                       <MenuItem value="Active">Active</MenuItem>

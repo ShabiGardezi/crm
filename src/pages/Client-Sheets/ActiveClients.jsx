@@ -30,10 +30,11 @@ export default function ActiveClients() {
       )}
       <TableContainer component={Paper}>
         {/* Social Media / Customer Reviews Management and Reviews */}
-        {(user?.department._id === "651ada78819ff0aec6af1381" ||
-          user?.department._id === "651ada98819ff0aec6af1382") && (
-          <SocialMedia_ReviewsActiveClients />
-        )}
+        {user?.department._id === "651ada78819ff0aec6af1381" ||
+          user?.department._id === "651ada98819ff0aec6af1382" ||
+          (user?.department._id === "651b3409819ff0aec6af1387" && (
+            <SocialMedia_ReviewsActiveClients />
+          ))}
         {/* Paid Marketing */}
         {user?.department._id === "651ada3c819ff0aec6af1380" && (
           <PaidMarketingActiveClient />

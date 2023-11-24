@@ -18,6 +18,7 @@ import axios from "axios";
 import "../../styles/Home/TicketCard.css";
 import TablePaginationActions from "../Tickets/TicketsTablePagination/TicketsPagination";
 import DisplayTicketDetails from "../Tickets/DisplayTicketDetails";
+import { useLocation } from "react-router-dom";
 
 const SocialMedia_ReviewsActiveClients = () => {
   const apiUrl = process.env.REACT_APP_API_URL;
@@ -65,12 +66,14 @@ const SocialMedia_ReviewsActiveClients = () => {
   const closeTicketDetailsModal = () => {
     setIsTicketDetailsOpen(false);
   };
-
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const param1 = params.get("depId");
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `${apiUrl}/api/tickets?departmentId=${user?.department?._id}&salesDep=true`
+          `${apiUrl}/api/tickets?departmentId=${param1}&salesDep=true`
         );
         if (response.ok) {
           const data = await response.json();
@@ -293,6 +296,8 @@ const SocialMedia_ReviewsActiveClients = () => {
                         ticket.ActiveNotActive === "Active"
                           ? "#28a745"
                           : "#dc3545", // set background color for Select
+                      color:
+                        ticket.ActiveNotActive === "Active" ? "white" : "black",
                     }}
                   >
                     <MenuItem value="Active">Active</MenuItem>

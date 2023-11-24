@@ -240,6 +240,8 @@ const PaidMarketingActiveClient = () => {
                         ticket.ActiveNotActive === "Active"
                           ? "#28a745"
                           : "#dc3545", // set background color for Select
+                      color:
+                        ticket.ActiveNotActive === "Active" ? "white" : "black", // set text color for better visibility
                     }}
                   >
                     <MenuItem value="Active">Active</MenuItem>
