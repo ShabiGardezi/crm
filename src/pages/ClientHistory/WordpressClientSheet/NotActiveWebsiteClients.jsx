@@ -192,6 +192,12 @@ export default function InActiveWebsiteClients() {
                     <Select
                       value={ticket.ActiveNotActive || "Active"}
                       onClick={() => handleClick(ticket)}
+                      style={{
+                        backgroundColor:
+                          ticket.ActiveNotActive === "Active"
+                            ? "#28a745"
+                            : "#dc3545", // set background color for Select
+                      }}
                     >
                       <MenuItem value="Active">Active</MenuItem>
                       <MenuItem value="Not Active">Not Active</MenuItem>

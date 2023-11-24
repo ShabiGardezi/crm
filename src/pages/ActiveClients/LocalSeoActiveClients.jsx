@@ -396,6 +396,12 @@ export default function LocalSeoActiveClients() {
                     <Select
                       value={ticket.ActiveNotActive || "Active"}
                       onClick={() => handleClick(ticket)}
+                      style={{
+                        backgroundColor:
+                          ticket.ActiveNotActive === "Active"
+                            ? "#28a745"
+                            : "#dc3545", // set background color for Select
+                      }}
                     >
                       <MenuItem value="Active">Active</MenuItem>
                       <MenuItem value="Not Active">Not Active</MenuItem>
@@ -448,7 +454,7 @@ export default function LocalSeoActiveClients() {
                     onClose={handleRecurringDialogClose}
                   >
                     <DialogTitle>Recurring Details</DialogTitle>
-                    <DialogContent>
+                    {/* <DialogContent>
                       <TextField
                         label="Price"
                         value={price}
@@ -467,7 +473,7 @@ export default function LocalSeoActiveClients() {
                         onChange={handleRemainingPriceChange}
                         fullWidth
                       />
-                    </DialogContent>
+                    </DialogContent> */}
                     <DialogActions>
                       <Button onClick={handleRecurringDialogClose}>
                         Cancel
