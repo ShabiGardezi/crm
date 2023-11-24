@@ -95,8 +95,6 @@ export default function LocalSeoSheet() {
 
   // Function to handle submission of recurring data
   const handleRecurringSubmit = async () => {
-    // You can send the price, advancePrice, and remainingPrice to your backend or perform other actions here.
-    // Don't forget to close the dialog afterward.
     try {
       const response = await axios.post(
         `${apiUrl}/api/tickets/update_payment_history`,
