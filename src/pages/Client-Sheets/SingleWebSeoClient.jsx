@@ -33,7 +33,6 @@ export default function LocalSeoSheet() {
   const [reportingDates, setReportingDates] = useState({});
   const [isTicketDetailsOpen, setIsTicketDetailsOpen] = useState(false);
   const [selectedTicketDetails, setSelectedTicketDetails] = useState(null);
-  console.log(tickets);
   useEffect(() => {
     // Make an HTTP GET request to fetch tickets except "Monthly SEO"
     axios
