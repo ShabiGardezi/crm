@@ -351,7 +351,7 @@ export default function LocalSeoSheet() {
   };
   if (
     param1 !== user?.department?._id &&
-    param1 !== "653fcae0b825ef1379dd5ad5" &&
+    param1 !== "651b3409819ff0aec6af1387" &&
     user.role !== "admin"
   ) {
     return <UnauthorizedError />;
@@ -360,7 +360,9 @@ export default function LocalSeoSheet() {
   return (
     <>
       <Header />
-      <ActiveNotActiveCard />
+      {user?.department._id !== "651b3409819ff0aec6af1387" && (
+        <ActiveNotActiveCard />
+      )}
       <TableContainer component={Paper}>
         <div>
           <div

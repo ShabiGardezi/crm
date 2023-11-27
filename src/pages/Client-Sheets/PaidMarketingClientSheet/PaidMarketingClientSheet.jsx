@@ -269,7 +269,7 @@ export default function PaidMarketingClientSheet(props) {
   }, []);
   if (
     param1 !== user?.department?._id &&
-    param1 !== "653fcae0b825ef1379dd5ad5" &&
+    param1 !== "651b3409819ff0aec6af1387" &&
     user.role !== "admin"
   ) {
     return <UnauthorizedError />;
@@ -278,7 +278,9 @@ export default function PaidMarketingClientSheet(props) {
     <>
       <Header />
       <div className="cards">
-        <ActiveNotActiveCard />
+        {user?.department._id !== "651b3409819ff0aec6af1387" && (
+          <ActiveNotActiveCard />
+        )}
       </div>
       <TableContainer component={Paper}>
         <div>

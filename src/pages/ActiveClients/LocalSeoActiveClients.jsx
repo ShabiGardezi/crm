@@ -91,6 +91,7 @@ export default function LocalSeoActiveClients() {
   const closeTicketDetailsModal = () => {
     setIsTicketDetailsOpen(false);
   };
+
   useEffect(() => {
     const fetchData = async () => {
       try {

@@ -9,7 +9,6 @@ import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import TableHead from "@mui/material/TableHead";
 import IconButton from "@mui/material/IconButton";
-import { Button } from "@mui/material";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
@@ -73,7 +72,7 @@ const SocialMedia_ReviewsActiveClients = () => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `${apiUrl}/api/tickets?departmentId=${param1}&salesDep=true`
+          `${apiUrl}/api/tickets?departmentId=${user?.department?._id}&salesDep=true`
         );
         if (response.ok) {
           const data = await response.json();

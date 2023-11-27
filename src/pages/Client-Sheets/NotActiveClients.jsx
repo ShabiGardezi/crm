@@ -18,7 +18,7 @@ import Header from "../Header";
 import Button from "@mui/material/Button";
 import DisplayTicketDetails from "../Tickets/DisplayTicketDetails";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import ActiveNotSctiveCard from "./ActiveNotActiveCard";
+import ActiveNotActiveCard from "./ActiveNotActiveCard";
 import axios from "axios";
 import OneTimeServiceClientsCard from "./OneTimeClientCard";
 import CardsSocialMediaTrack from "./SocialMediaClientSheet/CardsSocialMedia/CardsSocialMediaTrack";
@@ -76,12 +76,13 @@ export default function NotActiveClients() {
   const clearSelectedTicketDetails = () => {
     setSelectedTicketDetails(null);
   };
+  const depart_id = "651ada78819ff0aec6af1381" || "651b3409819ff0aec6af1387";
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `${apiUrl}/api/tickets?departmentId=${user?.department?._id}&salesDep=true`
+          `${apiUrl}/api/tickets?departmentId=${depart_id}&salesDep=true`
         );
         if (response.ok) {
           const data = await response.json();
@@ -290,7 +291,7 @@ export default function NotActiveClients() {
   return (
     <>
       <Header />
-      <ActiveNotSctiveCard />
+      <ActiveNotActiveCard />
       {(user?.department._id === "651ada78819ff0aec6af1381" ||
         user?.department._id === "651ada98819ff0aec6af1382") && (
         <CardsSocialMediaTrack />
@@ -428,120 +429,127 @@ export default function NotActiveClients() {
           </Table>
         )}
         {/* Local SEO / GMB Optimization && Website SEO */}
-        {(user?.department._id === "65195c4b504d80e8f11b0d13" ||
-          user?.department._id === "65195c8f504d80e8f11b0d15") && (
-          <Table sx={{ minWidth: 800 }} aria-label="custom pagination table">
-            <TableHead>
-              <TableRow>
-                <TableCell>Business Name</TableCell>
-                <TableCell>Sales Person</TableCell>
-                <TableCell>Work Status</TableCell>
-                <TableCell>Active/Not Active</TableCell>
-                <TableCell>Subscription Date</TableCell>
-                <TableCell>Reporting Date</TableCell>
-                <TableCell>Details</TableCell>
-                <TableCell>Notes</TableCell>
-                <TableCell>Recurring</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {tickets.map((ticket) => (
-                <TableRow key={ticket._id}>
-                  {ticket.businessdetails && (
-                    <TableCell component="th" scope="row">
-                      {ticket.businessdetails.clientName}
-                    </TableCell>
-                  )}
-                  {ticket.TicketDetails && (
+        {user?.department._id === "65195c4b504d80e8f11b0d13" ||
+          (user?.department._id === "65195c8f504d80e8f11b0d15" && (
+            <Table sx={{ minWidth: 800 }} aria-label="custom pagination table">
+              <TableHead>
+                <TableRow>
+                  <TableCell>Business Name</TableCell>
+                  <TableCell>Sales Person</TableCell>
+                  <TableCell>Work Status</TableCell>
+                  <TableCell>Active/Not Active</TableCell>
+                  <TableCell>Subscription Date</TableCell>
+                  <TableCell>Reporting Date</TableCell>
+                  <TableCell>Details</TableCell>
+                  <TableCell>Notes</TableCell>
+                  <TableCell>Recurring</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {tickets.map((ticket) => (
+                  <TableRow key={ticket._id}>
+                    {ticket.businessdetails && (
+                      <TableCell component="th" scope="row">
+                        {ticket.businessdetails.clientName}
+                      </TableCell>
+                    )}
+                    {ticket.TicketDetails && (
+                      <TableCell style={{ width: 160 }} align="left">
+                        {ticket.TicketDetails.assignor}
+                      </TableCell>
+                    )}
+                    {ticket.businessdetails && (
+                      <TableCell style={{ width: 160 }} align="left">
+                        {ticket.businessdetails.workStatus}
+                      </TableCell>
+                    )}
                     <TableCell style={{ width: 160 }} align="left">
-                      {ticket.TicketDetails.assignor}
+                      <FormControl>
+                        <Select
+                          value={ticket.ActiveNotActive || "Active"}
+                          onClick={() => handleClick(ticket)}
+                        >
+                          <MenuItem value="Active">Active</MenuItem>
+                          <MenuItem value="Not Active">Not Active</MenuItem>
+                        </Select>
+                      </FormControl>
                     </TableCell>
-                  )}
-                  {ticket.businessdetails && (
                     <TableCell style={{ width: 160 }} align="left">
-                      {ticket.businessdetails.workStatus}
+                      {new Date(ticket.createdAt).toLocaleDateString()}
                     </TableCell>
-                  )}
-                  <TableCell style={{ width: 160 }} align="left">
-                    <FormControl>
-                      <Select
-                        value={ticket.ActiveNotActive || "Active"}
-                        onClick={() => handleClick(ticket)}
-                      >
-                        <MenuItem value="Active">Active</MenuItem>
-                        <MenuItem value="Not Active">Not Active</MenuItem>
-                      </Select>
-                    </FormControl>
-                  </TableCell>
-                  <TableCell style={{ width: 160 }} align="left">
-                    {new Date(ticket.createdAt).toLocaleDateString()}
-                  </TableCell>
-                  <TableCell
-                    style={{ width: 160 }}
-                    align="left"
-                    contentEditable={true}
-                    onBlur={(e) =>
-                      handleReportingDateEdit(ticket._id, e.target.innerText)
-                    }
-                  >
-                    {new Date(ticket.reportingDate).toLocaleDateString()}
-                  </TableCell>
-                  <TableCell style={{ width: 160 }} align="left">
-                    <IconButton onClick={() => fetchTicketDetails(ticket._id)}>
-                      <VisibilityIcon />
-                    </IconButton>
-                  </TableCell>
-                  <TableCell
-                    style={{ width: 180, whiteSpace: "pre-line" }} // Apply the white-space property here
-                    align="left"
-                    contentEditable={true}
-                    onBlur={(e) =>
-                      handleNotesEdit(ticket._id, e.target.innerText)
-                    }
-                  >
-                    {ticket.businessdetails.notes}
-                  </TableCell>
-
-                  <TableCell>
-                    <Button
-                      style={{ backgroundColor: "red" }}
-                      variant="contained"
-                      color="primary"
-                      onClick={() => handleRecurringClick(ticket._id)}
+                    <TableCell
+                      style={{ width: 160 }}
+                      align="left"
+                      contentEditable={true}
+                      onBlur={(e) =>
+                        handleReportingDateEdit(ticket._id, e.target.innerText)
+                      }
                     >
-                      Recurring
-                    </Button>
-                  </TableCell>
+                      {new Date(ticket.reportingDate).toLocaleDateString()}
+                    </TableCell>
+                    <TableCell style={{ width: 160 }} align="left">
+                      <IconButton
+                        onClick={() => fetchTicketDetails(ticket._id)}
+                      >
+                        <VisibilityIcon />
+                      </IconButton>
+                    </TableCell>
+                    <TableCell
+                      style={{ width: 180, whiteSpace: "pre-line" }} // Apply the white-space property here
+                      align="left"
+                      contentEditable={true}
+                      onBlur={(e) =>
+                        handleNotesEdit(ticket._id, e.target.innerText)
+                      }
+                    >
+                      {ticket.businessdetails.notes}
+                    </TableCell>
+
+                    <TableCell>
+                      <Button
+                        style={{ backgroundColor: "red" }}
+                        variant="contained"
+                        color="primary"
+                        onClick={() => handleRecurringClick(ticket._id)}
+                      >
+                        Recurring
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+                {emptyRows > 0 && (
+                  <TableRow style={{ height: 53 * emptyRows }}>
+                    <TableCell colSpan={8} />
+                  </TableRow>
+                )}
+              </TableBody>
+              <TableFooter>
+                <TableRow>
+                  <TablePagination
+                    rowsPerPageOptions={[
+                      5,
+                      10,
+                      25,
+                      { label: "All", value: -1 },
+                    ]}
+                    colSpan={8}
+                    count={tickets.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    SelectProps={{
+                      inputProps: {
+                        "aria-label": "rows per page",
+                      },
+                      native: true,
+                    }}
+                    onPageChange={handleChangePage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                    ActionsComponent={TablePaginationActions}
+                  />
                 </TableRow>
-              ))}
-              {emptyRows > 0 && (
-                <TableRow style={{ height: 53 * emptyRows }}>
-                  <TableCell colSpan={8} />
-                </TableRow>
-              )}
-            </TableBody>
-            <TableFooter>
-              <TableRow>
-                <TablePagination
-                  rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
-                  colSpan={8}
-                  count={tickets.length}
-                  rowsPerPage={rowsPerPage}
-                  page={page}
-                  SelectProps={{
-                    inputProps: {
-                      "aria-label": "rows per page",
-                    },
-                    native: true,
-                  }}
-                  onPageChange={handleChangePage}
-                  onRowsPerPageChange={handleChangeRowsPerPage}
-                  ActionsComponent={TablePaginationActions}
-                />
-              </TableRow>
-            </TableFooter>
-          </Table>
-        )}
+              </TableFooter>
+            </Table>
+          ))}
         {/* Paid Marketing */}
         {user?.department._id === "651ada3c819ff0aec6af1380" && (
           <Table sx={{ minWidth: 800 }} aria-label="custom pagination table">

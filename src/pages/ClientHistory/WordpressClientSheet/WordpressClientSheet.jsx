@@ -20,6 +20,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import axios from "axios";
 import "../../../styles/Home/TicketCard.css";
 import WebisteClientCards from "./Cards";
+import ActiveNotActiveCard from "../../Client-Sheets/ActiveNotActiveCard";
 import { useLocation } from "react-router-dom";
 import TablePaginationActions from "../../Tickets/TicketsTablePagination/TicketsPagination";
 import UnauthorizedError from "../../../components/Error_401";
@@ -268,7 +269,7 @@ export default function WordpressClientSheet(props) {
   }, []);
   if (
     param1 !== user?.department?._id &&
-    param1 !== "653fcae0b825ef1379dd5ad5" &&
+    param1 !== "651b3409819ff0aec6af1387" &&
     user.role !== "admin"
   ) {
     return <UnauthorizedError />;
@@ -276,7 +277,11 @@ export default function WordpressClientSheet(props) {
   return (
     <>
       <Header />
-      <div className="cards">{<WebisteClientCards />}</div>
+      <div className="cards">
+        {user?.department._id !== "651b3409819ff0aec6af1387" && (
+          <ActiveNotActiveCard />
+        )}
+      </div>
       <TableContainer component={Paper}>
         <div>
           <div
