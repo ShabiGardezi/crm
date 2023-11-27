@@ -495,27 +495,43 @@ export default function LocalSeoSheet() {
                     >
                       <DialogTitle>Recurring Details</DialogTitle>
                       <DialogContent>
+                        <Typography>Payment History </Typography>
                         <ul>
                           {ticketSelected &&
                             ticketSelected?.payment_history.map((p) => {
                               return (
-                                <>
-                                  <li>{p.payment}</li>
-                                  <li>{p.date}</li>
-                                </>
+                                <div
+                                  className="payment"
+                                  style={{
+                                    display: "flex",
+                                    justifyContent: "space-between",
+                                  }}
+                                >
+                                  <li>
+                                    {new Date(p.date).toLocaleDateString()}
+                                  </li>
+                                  <li>{`$${p.payment}`}</li>
+                                </div>
                               );
                             })}
                         </ul>
+                        {console.log(ticketSelected)}
                         <Typography>
-                          total payment : {ticket.quotation.price}
+                          total payment : {`$${ticket.quotation.price}`}
                         </Typography>
                         <Typography>
-                          payment received :{paymentRecieved}
+                          payment received : {`$${paymentRecieved}`}
                         </Typography>
                         <Typography>
-                          pending payment :
-                          {ticket.quotation.price - paymentRecieved}
+                          {ticket.quotation.price - paymentRecieved >= 0
+                            ? `pending payment: $ ${
+                                ticket.quotation.price - paymentRecieved
+                              }`
+                            : `Advance Received: $ ${
+                                ticket.quotation.price - paymentRecieved
+                              }`}
                         </Typography>
+
                         {/* <TextField
                           label="Price"
                           value={price}

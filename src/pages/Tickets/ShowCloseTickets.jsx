@@ -127,6 +127,28 @@ export default function ShowCloseTickets() {
 
     updateTicketStatus(ticketId, newStatus);
   };
+  useEffect(() => {
+    // Check if the user's department id is equal to the specified value
+    if (user?.department?._id === "651b3409819ff0aec6af1387") {
+      const fetchData = async () => {
+        try {
+          const response = await fetch(
+            `${apiUrl}/api/tickets/completedTickets?departmentId=${user?.department?._id}`
+          );
+          if (response.ok) {
+            const data = await response.json();
+            setTickets(data.payload);
+          } else {
+            console.error("Error fetching data");
+          }
+        } catch (error) {
+          console.error("Error fetching data", error);
+        }
+      };
+      fetchData();
+    }
+  }, [user?.department?._id]); // Include user.department._id in the dependency array
+
   return (
     <div>
       <Header />

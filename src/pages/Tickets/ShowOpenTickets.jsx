@@ -36,9 +36,7 @@ export default function ShowOpenTickets() {
   // Function to fetch ticket details by ID
   const fetchTicketDetails = async (ticketId) => {
     try {
-      const response = await fetch(
-        `${apiUrl}/api/tickets/${ticketId}`
-      );
+      const response = await fetch(`${apiUrl}/api/tickets/${ticketId}`);
       if (response.ok) {
         const data = await response.json();
         setSelectedTicketDetails(data.payload);
@@ -75,6 +73,27 @@ export default function ShowOpenTickets() {
     };
     fetchData();
   }, []);
+  useEffect(() => {
+    // Check if the user's department id is equal to the specified value
+    if (user?.department?._id === "651b3409819ff0aec6af1387") {
+      const fetchData = async () => {
+        try {
+          const response = await fetch(
+            `${apiUrl}/api/tickets/openTickets?departmentId=${user?.department?._id}`
+          );
+          if (response.ok) {
+            const data = await response.json();
+            setTickets(data.payload);
+          } else {
+            console.error("Error fetching data");
+          }
+        } catch (error) {
+          console.error("Error fetching data", error);
+        }
+      };
+      fetchData();
+    }
+  }, [user?.department?._id]); // Include user.department._id in the dependency array
 
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - tickets.length) : 0;
@@ -112,16 +131,13 @@ export default function ShowOpenTickets() {
 
     const updateTicketStatus = async (ticketId, status) => {
       try {
-        const response = await fetch(
-          `${apiUrl}/api/tickets/status-update`,
-          {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ ticketId, status }),
-          }
-        );
+        const response = await fetch(`${apiUrl}/api/tickets/status-update`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ ticketId, status }),
+        });
 
         if (response.ok) {
           // Status updated successfully

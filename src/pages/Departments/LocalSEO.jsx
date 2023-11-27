@@ -299,7 +299,6 @@ const LocalSEOForm = () => {
               name="department"
               value={formData.department}
               onChange={handleChange}
-              disabled
               select
             >
               {departments?.map((d) => (

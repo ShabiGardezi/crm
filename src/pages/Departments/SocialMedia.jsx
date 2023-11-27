@@ -284,7 +284,6 @@ const SocialMediaForm = () => {
               value={formData.department}
               onChange={handleChange}
               select
-              disabled
             >
               {departments?.map((d) => (
                 <MenuItem key={d._id} value={d.name}>

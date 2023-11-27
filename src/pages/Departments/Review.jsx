@@ -21,7 +21,6 @@ const ReviewsForm = () => {
   const [clientSuggestions, setClientSuggestions] = useState([]);
 
   const [formData, setFormData] = useState({
-    
     priorityLevel: "",
     assignor: user?.username || "",
     dueDate: new Date().toISOString().substr(0, 10), // Initialize with the current date in yyyy-mm-dd format
@@ -121,9 +120,7 @@ const ReviewsForm = () => {
   useEffect(() => {
     const fetchDepartments = async () => {
       try {
-        const response = await axios.get(
-          `${apiUrl}/api/departments`
-        );
+        const response = await axios.get(`${apiUrl}/api/departments`);
         setDepartments(response.data.payload);
       } catch (error) {
         console.log(error);
@@ -286,7 +283,6 @@ const ReviewsForm = () => {
               value={"Social Media / Customer Reviews Management"}
               onChange={handleChange}
               select
-              disabled
             >
               {departments?.map((d) => (
                 <MenuItem key={d._id} value={d.name}>

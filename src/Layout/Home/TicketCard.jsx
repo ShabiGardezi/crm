@@ -27,15 +27,19 @@ const TicketCards = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch the count of open tickets
-        const openResponse = await axios.get(
-          `${apiUrl}/api/tickets/notStarted-count?departmentId=${user?.department?._id}`
-        );
+        let openTicketsEndpoint = `${apiUrl}/api/tickets/notStarted-count?departmentId=${user?.department?._id}`;
+        let completedTicketsEndpoint = `${apiUrl}/api/tickets/completed-count?departmentId=${user?.department?._id}`;
 
-        // Fetch the count of completed tickets
-        const completedResponse = await axios.get(
-          `${apiUrl}/api/tickets/completed-count?departmentId=${user?.department?._id}`
-        );
+        // Check if user's department id is equal to the specified value
+        if (user?.department?._id === "651b3409819ff0aec6af1387") {
+          // If yes, update the endpoints
+          openTicketsEndpoint = `${apiUrl}/api/tickets/openTickets-count?departmentId=${user?.department?._id}`;
+          completedTicketsEndpoint = `${apiUrl}/api/tickets/completedTickets-count?departmentId=${user?.department?._id}`;
+        }
+
+        // Fetch the count of open or completed tickets based on the endpoints
+        const openResponse = await axios.get(openTicketsEndpoint);
+        const completedResponse = await axios.get(completedTicketsEndpoint);
 
         // Extract the counts from the API response
         const openCount = openResponse.data.payload;
@@ -50,7 +54,7 @@ const TicketCards = () => {
     };
 
     fetchData();
-  }, []);
+  }, [user?.department?._id]); // Include user.department._id in the dependency array
 
   return (
     <>
