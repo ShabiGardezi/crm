@@ -28,7 +28,7 @@ export default function PaidMarketingClientSheet(props) {
   const apiUrl = process.env.REACT_APP_API_URL;
   const user = JSON.parse(localStorage.getItem("user"));
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [tickets, setTickets] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [reportingDates, setReportingDates] = useState({});
@@ -396,9 +396,9 @@ export default function PaidMarketingClientSheet(props) {
           <TableFooter>
             <TableRow>
               <TablePagination
-                rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
+                rowsPerPageOptions={[10, 15, 25, { label: "All", value: -1 }]}
                 colSpan={8}
-                count={tickets.length}
+                count={tickets?.length ?? 0} // Ensure tickets and tickets.length are defined
                 rowsPerPage={rowsPerPage}
                 page={page}
                 SelectProps={{

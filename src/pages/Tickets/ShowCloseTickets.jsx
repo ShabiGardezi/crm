@@ -242,7 +242,7 @@ export default function ShowCloseTickets() {
               <TablePagination
                 rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
                 colSpan={6} // Adjusted to match the number of columns
-                count={rows.length}
+                count={tickets?.length ?? 0} // Ensure tickets and tickets.length are defined
                 rowsPerPage={rowsPerPage}
                 page={page}
                 SelectProps={{

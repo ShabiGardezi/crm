@@ -55,9 +55,7 @@ export default function TicketsCreatedChildComponent() {
   // Function to fetch ticket details by ID
   const fetchTicketDetails = async (ticketId) => {
     try {
-      const response = await fetch(
-        `${apiUrl}/api/tickets/${ticketId}`
-      );
+      const response = await fetch(`${apiUrl}/api/tickets/${ticketId}`);
       if (response.ok) {
         const data = await response.json();
         setSelectedTicketDetails(data.payload);
@@ -176,7 +174,7 @@ export default function TicketsCreatedChildComponent() {
                 <TablePagination
                   rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
                   colSpan={6} // Adjusted to match the number of columns
-                  count={tickets.length}
+                  count={tickets?.length ?? 0} // Ensure tickets and tickets.length are defined
                   rowsPerPage={rowsPerPage}
                   page={page}
                   SelectProps={{

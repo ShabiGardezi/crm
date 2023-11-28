@@ -343,7 +343,7 @@ const SocialMedia_ReviewsActiveClients = () => {
             <TablePagination
               rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
               colSpan={8}
-              count={tickets.length}
+              count={tickets?.length ?? 0} // Ensure tickets and tickets.length are defined
               rowsPerPage={rowsPerPage}
               page={page}
               SelectProps={{

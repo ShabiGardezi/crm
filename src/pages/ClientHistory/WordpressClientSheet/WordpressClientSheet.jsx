@@ -19,7 +19,6 @@ import DisplayTicketDetails from "../../Tickets/DisplayTicketDetails";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import axios from "axios";
 import "../../../styles/Home/TicketCard.css";
-import WebisteClientCards from "./Cards";
 import ActiveNotActiveCard from "../../Client-Sheets/ActiveNotActiveCard";
 import { useLocation } from "react-router-dom";
 import TablePaginationActions from "../../Tickets/TicketsTablePagination/TicketsPagination";
@@ -28,7 +27,7 @@ export default function WordpressClientSheet(props) {
   const apiUrl = process.env.REACT_APP_API_URL;
   const user = JSON.parse(localStorage.getItem("user"));
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [tickets, setTickets] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [reportingDates, setReportingDates] = useState({});
@@ -396,9 +395,9 @@ export default function WordpressClientSheet(props) {
           <TableFooter>
             <TableRow>
               <TablePagination
-                rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
+                rowsPerPageOptions={[10, 15, 25, { label: "All", value: -1 }]}
                 colSpan={8}
-                count={tickets.length}
+                count={tickets?.length ?? 0} // Ensure tickets and tickets.length are defined
                 rowsPerPage={rowsPerPage}
                 page={page}
                 SelectProps={{

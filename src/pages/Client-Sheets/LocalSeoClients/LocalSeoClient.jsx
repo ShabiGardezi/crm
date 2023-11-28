@@ -33,7 +33,7 @@ export default function LocalSeoSheet() {
   const apiUrl = process.env.REACT_APP_API_URL;
   const user = JSON.parse(localStorage.getItem("user"));
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [tickets, setTickets] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [reportingDates, setReportingDates] = useState({});
@@ -96,6 +96,18 @@ export default function LocalSeoSheet() {
   // Function to handle submission of recurring data
   const handleRecurringSubmit = async () => {
     try {
+      const currentReportingDate = new Date(reportingDates[ticketSelected._id]);
+      const oneMonthLaterDate = new Date(
+        currentReportingDate.getFullYear(),
+        currentReportingDate.getMonth() + 1,
+        currentReportingDate.getDate()
+      );
+
+      // Update the reporting date using the `api/tickets/reportingDate-update` endpoint
+      await axios.put(`${apiUrl}/api/tickets/reportingDate-update`, {
+        ticketId: ticketSelected._id,
+        reportingDate: oneMonthLaterDate.toISOString(),
+      });
       const response = await axios.post(
         `${apiUrl}/api/tickets/update_payment_history`,
         { ticketId: ticketSelected._id, payment: remainingPrice }
@@ -475,7 +487,6 @@ export default function LocalSeoSheet() {
                       color="primary"
                       onClick={() => {
                         handleRecurringDialogOpen();
-                        handleRecurringClick(ticket._id);
                         setTicketSelected(ticket);
                         setPaymentRecieved(() => {
                           let payment = 0;
@@ -495,13 +506,22 @@ export default function LocalSeoSheet() {
                     >
                       <DialogTitle>Recurring Details</DialogTitle>
                       <DialogContent>
-                        <Typography>Payment History </Typography>
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            fontWeight: "bold",
+                          }}
+                        >
+                          <Typography>Date </Typography>
+                          <Typography>Payment History </Typography>
+                          <Typography>Work Type </Typography>
+                        </div>
                         <ul>
                           {ticketSelected &&
                             ticketSelected?.payment_history.map((p) => {
                               return (
                                 <div
-                                  className="payment"
                                   style={{
                                     display: "flex",
                                     justifyContent: "space-between",
@@ -511,39 +531,23 @@ export default function LocalSeoSheet() {
                                     {new Date(p.date).toLocaleDateString()}
                                   </li>
                                   <li>{`$${p.payment}`}</li>
+                                  <li>{ticket.businessdetails.workStatus}</li>
                                 </div>
                               );
                             })}
                         </ul>
-                        {console.log(ticketSelected)}
                         <Typography>
-                          total payment : {`$${ticket.quotation.price}`}
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              fontWeight: "bold",
+                            }}
+                          >
+                            <li>payment received :</li>
+                            <li>{`$${paymentRecieved}`}</li>
+                          </div>
                         </Typography>
-                        <Typography>
-                          payment received : {`$${paymentRecieved}`}
-                        </Typography>
-                        <Typography>
-                          {ticket.quotation.price - paymentRecieved >= 0
-                            ? `pending payment: $ ${
-                                ticket.quotation.price - paymentRecieved
-                              }`
-                            : `Advance Received: $ ${
-                                ticket.quotation.price - paymentRecieved
-                              }`}
-                        </Typography>
-
-                        {/* <TextField
-                          label="Price"
-                          value={price}
-                          onChange={handlePriceChange}
-                          fullWidth
-                        />
-                        <TextField
-                          label="Advance Price"
-                          value={advancePrice}
-                          onChange={handleAdvancePriceChange}
-                          fullWidth
-                        /> */}
                         <TextField
                           label="Remaining Price"
                           value={remainingPrice}
@@ -572,7 +576,7 @@ export default function LocalSeoSheet() {
           <TableFooter>
             <TableRow>
               <TablePagination
-                rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
+                rowsPerPageOptions={[15, 20, 25, { label: "All", value: -1 }]}
                 colSpan={8}
                 count={tickets.length}
                 rowsPerPage={rowsPerPage}
