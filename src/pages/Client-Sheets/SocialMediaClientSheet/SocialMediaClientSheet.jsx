@@ -18,6 +18,7 @@ import Header from "../../Header";
 import DisplayTicketDetails from "../../Tickets/DisplayTicketDetails";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import ActiveNotActiveCard from "../ActiveNotActiveCard";
+import { Typography } from "@mui/material";
 import axios from "axios";
 import "../../../styles/Home/TicketCard.css";
 import CardsSocialMediaTrack from "./CardsSocialMedia/CardsSocialMediaTrack";
@@ -326,6 +327,12 @@ export default function SocialMediaClientSheet(props) {
       </div>
       {user?.department._id !== "651b3409819ff0aec6af1387" && (
         <CardsSocialMediaTrack />
+      )}
+
+      {user?.department._id === "651b3409819ff0aec6af1387" && (
+        <Typography variant="h4">
+          Social Media & Customer Reviews Client Sheet{" "}
+        </Typography>
       )}
       <TableContainer component={Paper}>
         <div>

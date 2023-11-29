@@ -259,7 +259,9 @@ export default function LocalSeoSheet() {
     <>
       <Header />
       <div className="cards">
-        <ActiveNotActiveCard />
+        {user?.department._id !== "651b3409819ff0aec6af1387" && (
+          <ActiveNotActiveCard />
+        )}
         <OneTimeServiceClientsCard />
       </div>
       <TableContainer component={Paper}>

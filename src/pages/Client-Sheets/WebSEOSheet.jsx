@@ -30,8 +30,9 @@ import "../../styles/Home/TicketCard.css";
 import { useLocation } from "react-router-dom";
 import TablePaginationActions from "../Tickets/TicketsTablePagination/TicketsPagination";
 import UnauthorizedError from "../../components/Error_401";
+import { Typography } from "@mui/material";
 
-export default function WebSeoSheet(props) {
+export default function WebSeoSheet() {
   const apiUrl = process.env.REACT_APP_API_URL;
   const user = JSON.parse(localStorage.getItem("user"));
   const [page, setPage] = React.useState(0);
@@ -42,15 +43,13 @@ export default function WebSeoSheet(props) {
   const [isTicketDetailsOpen, setIsTicketDetailsOpen] = useState(false);
   const [selectedTicketDetails, setSelectedTicketDetails] = useState(null);
   const [openRecurringDialog, setOpenRecurringDialog] = useState(false);
-  const [price, setPrice] = useState("");
-  const [advancePrice, setAdvancePrice] = useState("");
+  const [ticketSelected, setTicketSelected] = useState();
   const [remainingPrice, setRemainingPrice] = useState("");
+  const [paymentRecieved, setPaymentRecieved] = useState(0);
+
   // Function to open the recurring dialog and reset state values
   const handleRecurringDialogOpen = () => {
     setOpenRecurringDialog(true);
-    setPrice(""); // Set price to an empty string or 0 if needed
-    setAdvancePrice(""); // Set advancePrice to an empty string or 0 if needed
-    setRemainingPrice(""); // Set remainingPrice to an empty string or 0 if needed
   };
 
   // Function to close the recurring dialog
@@ -58,45 +57,31 @@ export default function WebSeoSheet(props) {
     setOpenRecurringDialog(false);
   };
 
-  // Function to handle form field changes
-  const handlePriceChange = (event) => {
-    const { name, value } = event.target;
-
-    // Convert the input value to a float, or 0 if it's not a valid number
-    const updatedPrice = parseFloat(value) || 0;
-    const updatedAdvancePrice = parseFloat(advancePrice) || 0;
-
-    // Calculate the remaining price
-    const remaining = updatedPrice - updatedAdvancePrice;
-
-    // Update the state variables for price and remaining price
-    setPrice(updatedPrice);
-    setRemainingPrice(remaining);
-  };
-
-  const handleAdvancePriceChange = (event) => {
-    const { name, value } = event.target;
-
-    // Convert the input value to a float, or 0 if it's not a valid number
-    const updatedPrice = parseFloat(price) || 0;
-    const updatedAdvancePrice = parseFloat(value) || 0;
-
-    // Calculate the remaining price
-    const remaining = updatedPrice - updatedAdvancePrice;
-
-    // Update the state variables for advance price and remaining price
-    setAdvancePrice(updatedAdvancePrice);
-    setRemainingPrice(remaining);
-  };
-
   const handleRemainingPriceChange = (event) => {
     setRemainingPrice(event.target.value);
   };
 
   // Function to handle submission of recurring data
-  const handleRecurringSubmit = () => {
-    // You can send the price, advancePrice, and remainingPrice to your backend or perform other actions here.
-    // Don't forget to close the dialog afterward.
+  const handleRecurringSubmit = async () => {
+    try {
+      const currentReportingDate = new Date(reportingDates[ticketSelected._id]);
+      const oneMonthLaterDate = new Date(
+        currentReportingDate.getFullYear(),
+        currentReportingDate.getMonth() + 1,
+        currentReportingDate.getDate()
+      );
+
+      // Update the reporting date using the `api/tickets/reportingDate-update` endpoint
+      await axios.put(`${apiUrl}/api/tickets/reportingDate-update`, {
+        ticketId: ticketSelected._id,
+        reportingDate: oneMonthLaterDate.toISOString(),
+      });
+      const response = await axios.post(
+        `${apiUrl}/api/tickets/update_payment_history`,
+        { ticketId: ticketSelected._id, payment: remainingPrice }
+      );
+    } catch (error) {}
+
     setOpenRecurringDialog(false);
   };
 
@@ -358,7 +343,42 @@ export default function WebSeoSheet(props) {
     user.role !== "admin"
   )
     return <UnauthorizedError />;
-
+  const handleRemainingEdit = (ticketId, remaining) => {
+    // Make an API request to update the notes in the database
+    fetch(`${apiUrl}/api/tickets/remaining-update`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ticketId,
+        remaining: remaining,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.payload) {
+          const updatedTickets = tickets.map((ticket) => {
+            if (ticket._id === ticketId) {
+              return {
+                ...ticket,
+                quotation: {
+                  ...ticket.quotation,
+                  remainingPrice: remaining,
+                },
+              };
+            }
+            return ticket;
+          });
+          setTickets(updatedTickets);
+        } else {
+          console.error("Error updating notes");
+        }
+      })
+      .catch((error) => {
+        console.error("Error updating notes", error);
+      });
+  };
   return (
     <>
       <Header />
@@ -368,6 +388,9 @@ export default function WebSeoSheet(props) {
         )}
         <OneTimeServiceClientsCard />
       </div>
+      {user?.department._id === "651b3409819ff0aec6af1387" && (
+        <Typography variant="h4">Website SEO Client Sheet</Typography>
+      )}
       <TableContainer component={Paper}>
         <div>
           <div
@@ -480,7 +503,14 @@ export default function WebSeoSheet(props) {
                       color="primary"
                       onClick={() => {
                         handleRecurringDialogOpen();
-                        handleRecurringClick(ticket._id);
+                        setTicketSelected(ticket);
+                        setPaymentRecieved(() => {
+                          let payment = 0;
+                          ticket.payment_history.forEach((p) => {
+                            payment = payment + p.payment;
+                          });
+                          return payment;
+                        });
                       }}
                     >
                       Recurring
@@ -490,22 +520,82 @@ export default function WebSeoSheet(props) {
                       open={openRecurringDialog}
                       onClose={handleRecurringDialogClose}
                     >
-                      <DialogTitle>Recurring Details</DialogTitle>
-                      <DialogContent>
-                        <TextField
-                          label="Price"
-                          value={price}
-                          onChange={handlePriceChange}
-                          fullWidth
+                      <DialogTitle style={{ textAlign: "center" }}>
+                        {ticketSelected
+                          ? `Payment History - ${ticketSelected.businessdetails.clientName}`
+                          : "Payment History"}
+                      </DialogTitle>
+                      <DialogContent
+                        style={{ overflowY: "auto", maxHeight: "500px" }}
+                      >
+                        <table style={{ width: "100%" }}>
+                          <thead>
+                            <tr>
+                              <th>Date</th>
+                              <th>Work Type</th>
+                              <th>Received</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {ticketSelected &&
+                              ticketSelected?.payment_history.map((p) => (
+                                <tr key={p.date}>
+                                  <td style={{ textAlign: "center" }}>
+                                    {new Date(p.date).toLocaleDateString()}
+                                  </td>
+                                  <td style={{ textAlign: "center" }}>
+                                    {ticket.businessdetails.workStatus}
+                                  </td>
+                                  <td
+                                    style={{ textAlign: "center" }}
+                                  >{`$${p.payment}`}</td>
+                                </tr>
+                              ))}
+                          </tbody>
+                        </table>
+                        <hr
+                          style={{
+                            marginTop: "16px",
+                            marginBottom: "16px",
+                            border: "0",
+                            borderTop: "2px solid #eee",
+                          }}
                         />
+
+                        <Typography>
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              fontWeight: "bold",
+                            }}
+                          >
+                            <div>Payment Received:</div>
+                            <div>{`$${paymentRecieved}`}</div>
+                          </div>
+                        </Typography>
+                        <Typography>
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              fontWeight: "bold",
+                            }}
+                          >
+                            <div>Remaining Charges:</div>
+                            <div
+                              contentEditable={true}
+                              onBlur={(e) =>
+                                handleRemainingEdit(
+                                  ticket._id,
+                                  e.target.innerText
+                                )
+                              }
+                            >{`${ticket.quotation.remainingPrice}`}</div>
+                          </div>
+                        </Typography>
                         <TextField
-                          label="Advance Price"
-                          value={advancePrice}
-                          onChange={handleAdvancePriceChange}
-                          fullWidth
-                        />
-                        <TextField
-                          label="Remaining Price"
+                          label="Payment Received"
                           value={remainingPrice}
                           onChange={handleRemainingPriceChange}
                           fullWidth

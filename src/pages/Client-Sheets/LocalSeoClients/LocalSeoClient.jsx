@@ -40,53 +40,18 @@ export default function LocalSeoSheet() {
   const [isTicketDetailsOpen, setIsTicketDetailsOpen] = useState(false);
   const [selectedTicketDetails, setSelectedTicketDetails] = useState(null);
   const [openRecurringDialog, setOpenRecurringDialog] = useState(false);
-  const [price, setPrice] = useState("");
-  const [advancePrice, setAdvancePrice] = useState("");
   const [remainingPrice, setRemainingPrice] = useState("");
   const [ticketSelected, setTicketSelected] = useState();
   const [paymentRecieved, setPaymentRecieved] = useState(0);
   // Function to open the recurring dialog and reset state values
   const handleRecurringDialogOpen = () => {
     setOpenRecurringDialog(true);
-    setPrice(""); // Set price to an empty string or 0 if needed
-    setAdvancePrice(""); // Set advancePrice to an empty string or 0 if needed
-    setRemainingPrice(""); // Set remainingPrice to an empty string or 0 if needed
+    // setRemainingPrice("");
   };
 
   // Function to close the recurring dialog
   const handleRecurringDialogClose = () => {
     setOpenRecurringDialog(false);
-  };
-
-  // Function to handle form field changes
-  const handlePriceChange = (event) => {
-    const { value } = event.target;
-
-    // Convert the input value to a float, or 0 if it's not a valid number
-    const updatedPrice = parseFloat(value) || 0;
-    const updatedAdvancePrice = parseFloat(advancePrice) || 0;
-
-    // Calculate the remaining price
-    const remaining = updatedPrice - updatedAdvancePrice;
-
-    // Update the state variables for price and remaining price
-    setPrice(updatedPrice);
-    setRemainingPrice(remaining);
-  };
-
-  const handleAdvancePriceChange = (event) => {
-    const { value } = event.target;
-
-    // Convert the input value to a float, or 0 if it's not a valid number
-    const updatedPrice = parseFloat(price) || 0;
-    const updatedAdvancePrice = parseFloat(value) || 0;
-
-    // Calculate the remaining price
-    const remaining = updatedPrice - updatedAdvancePrice;
-
-    // Update the state variables for advance price and remaining price
-    setAdvancePrice(updatedAdvancePrice);
-    setRemainingPrice(remaining);
   };
 
   const handleRemainingPriceChange = (event) => {
@@ -268,45 +233,6 @@ export default function LocalSeoSheet() {
     updateReportingDate(ticketId, newReportingDate);
   };
 
-  // Function to handle the "Recurring" button click
-  const handleRecurringClick = (ticketId) => {
-    // Get the current reporting date
-    const currentReportingDate = new Date(reportingDates[ticketId]);
-
-    // Calculate one month later date
-    const oneMonthLaterDate = new Date(
-      currentReportingDate.getFullYear(),
-      currentReportingDate.getMonth() + 1,
-      currentReportingDate.getDate()
-    );
-
-    // Make an API request to update the reporting date in the database
-    fetch(`${apiUrl}/api/tickets/reportingDate-update`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        ticketId,
-        reportingDate: oneMonthLaterDate.toISOString(),
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.payload) {
-          // If the update is successful, update the local state with the new reporting date
-          setReportingDates((prevReportingDates) => ({
-            ...prevReportingDates,
-            [ticketId]: oneMonthLaterDate.toISOString(),
-          }));
-        } else {
-          console.error("Error updating reporting date");
-        }
-      })
-      .catch((error) => {
-        console.error("Error updating reporting date", error);
-      });
-  };
   // Function to handle notes edit and update
   const handleNotesEdit = (ticketId, editedNotes) => {
     // Make an API request to update the notes in the database
@@ -331,6 +257,42 @@ export default function LocalSeoSheet() {
                 businessdetails: {
                   ...ticket.businessdetails,
                   notes: editedNotes,
+                },
+              };
+            }
+            return ticket;
+          });
+          setTickets(updatedTickets);
+        } else {
+          console.error("Error updating notes");
+        }
+      })
+      .catch((error) => {
+        console.error("Error updating notes", error);
+      });
+  };
+  const handleRemainingEdit = (ticketId, remaining) => {
+    // Make an API request to update the notes in the database
+    fetch(`${apiUrl}/api/tickets/remaining-update`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ticketId,
+        remaining: remaining,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.payload) {
+          const updatedTickets = tickets.map((ticket) => {
+            if (ticket._id === ticketId) {
+              return {
+                ...ticket,
+                quotation: {
+                  ...ticket.quotation,
+                  remainingPrice: remaining,
                 },
               };
             }
@@ -374,6 +336,11 @@ export default function LocalSeoSheet() {
       <Header />
       {user?.department._id !== "651b3409819ff0aec6af1387" && (
         <ActiveNotActiveCard />
+      )}
+      {user?.department._id === "651b3409819ff0aec6af1387" && (
+        <Typography variant="h4">
+          Local SEO/ GMB OPTIMIZATION Client Sheet
+        </Typography>
       )}
       <TableContainer component={Paper}>
         <div>
@@ -504,38 +471,48 @@ export default function LocalSeoSheet() {
                       open={openRecurringDialog}
                       onClose={handleRecurringDialogClose}
                     >
-                      <DialogTitle>Recurring Details</DialogTitle>
-                      <DialogContent>
-                        <div
-                          style={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            fontWeight: "bold",
-                          }}
-                        >
-                          <Typography>Date </Typography>
-                          <Typography>Payment History </Typography>
-                          <Typography>Work Type </Typography>
-                        </div>
-                        <ul>
-                          {ticketSelected &&
-                            ticketSelected?.payment_history.map((p) => {
-                              return (
-                                <div
-                                  style={{
-                                    display: "flex",
-                                    justifyContent: "space-between",
-                                  }}
-                                >
-                                  <li>
+                      <DialogTitle style={{ textAlign: "center" }}>
+                        {ticketSelected
+                          ? `Payment History - ${ticketSelected.businessdetails.clientName}`
+                          : "Payment History"}
+                      </DialogTitle>
+                      <DialogContent
+                        style={{ overflowY: "auto", maxHeight: "500px" }}
+                      >
+                        <table style={{ width: "100%" }}>
+                          <thead>
+                            <tr>
+                              <th>Date</th>
+                              <th>Work Type</th>
+                              <th>Received</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {ticketSelected &&
+                              ticketSelected?.payment_history.map((p) => (
+                                <tr key={p.date}>
+                                  <td style={{ textAlign: "center" }}>
                                     {new Date(p.date).toLocaleDateString()}
-                                  </li>
-                                  <li>{`$${p.payment}`}</li>
-                                  <li>{ticket.businessdetails.workStatus}</li>
-                                </div>
-                              );
-                            })}
-                        </ul>
+                                  </td>
+                                  <td style={{ textAlign: "center" }}>
+                                    {ticket.businessdetails.workStatus}
+                                  </td>
+                                  <td
+                                    style={{ textAlign: "center" }}
+                                  >{`$${p.payment}`}</td>
+                                </tr>
+                              ))}
+                          </tbody>
+                        </table>
+                        <hr
+                          style={{
+                            marginTop: "16px",
+                            marginBottom: "16px",
+                            border: "0",
+                            borderTop: "2px solid #eee",
+                          }}
+                        />
+
                         <Typography>
                           <div
                             style={{
@@ -544,12 +521,32 @@ export default function LocalSeoSheet() {
                               fontWeight: "bold",
                             }}
                           >
-                            <li>payment received :</li>
-                            <li>{`$${paymentRecieved}`}</li>
+                            <div>Payment Received:</div>
+                            <div>{`$${paymentRecieved}`}</div>
+                          </div>
+                        </Typography>
+                        <Typography>
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              fontWeight: "bold",
+                            }}
+                          >
+                            <div>Remaining Charges:</div>
+                            <div
+                              contentEditable={true}
+                              onBlur={(e) =>
+                                handleRemainingEdit(
+                                  ticket._id,
+                                  e.target.innerText
+                                )
+                              }
+                            >{`${ticket.quotation.remainingPrice}`}</div>
                           </div>
                         </Typography>
                         <TextField
-                          label="Remaining Price"
+                          label="Payment Received"
                           value={remainingPrice}
                           onChange={handleRemainingPriceChange}
                           fullWidth

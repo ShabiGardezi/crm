@@ -23,6 +23,7 @@ import ActiveNotActiveCard from "../../Client-Sheets/ActiveNotActiveCard";
 import { useLocation } from "react-router-dom";
 import TablePaginationActions from "../../Tickets/TicketsTablePagination/TicketsPagination";
 import UnauthorizedError from "../../../components/Error_401";
+import { Typography } from "@mui/material";
 export default function WordpressClientSheet(props) {
   const apiUrl = process.env.REACT_APP_API_URL;
   const user = JSON.parse(localStorage.getItem("user"));
@@ -281,6 +282,12 @@ export default function WordpressClientSheet(props) {
           <ActiveNotActiveCard />
         )}
       </div>
+
+      {user?.department._id === "651b3409819ff0aec6af1387" && (
+        <Typography variant="h4">
+          Wordpress & Ecommerce Client Sheet{" "}
+        </Typography>
+      )}
       <TableContainer component={Paper}>
         <div>
           <div

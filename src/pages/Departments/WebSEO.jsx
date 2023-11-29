@@ -153,6 +153,7 @@ const WebSeoForm = () => {
           assignor: formData.assignor,
           priority: formData.priorityLevel,
         },
+        payment_history: parseFloat(formData.advanceprice),
       });
       toast.success("Form submitted successfully!");
 
