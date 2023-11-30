@@ -26,7 +26,7 @@ export default function ShowOpenTickets() {
   const apiUrl = process.env.REACT_APP_API_URL;
   const user = JSON.parse(localStorage.getItem("user"));
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [tickets, setTickets] = useState([]); // State to store fetched data
   const [selectedStatus, setSelectedStatus] = useState({});
   const [isTicketDetailsOpen, setIsTicketDetailsOpen] = useState(false);
@@ -265,7 +265,7 @@ export default function ShowOpenTickets() {
             <TableFooter>
               <TableRow>
                 <TablePagination
-                  rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
+                  rowsPerPageOptions={[10, 20, 25, { label: "All", value: -1 }]}
                   colSpan={7}
                   count={tickets?.length ?? 0} // Ensure tickets and tickets.length are defined
                   rowsPerPage={rowsPerPage}

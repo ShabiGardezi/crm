@@ -22,7 +22,7 @@ export default function TicketsTable() {
   const apiUrl = process.env.REACT_APP_API_URL;
   const user = JSON.parse(localStorage.getItem("user"));
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [tickets, setTickets] = useState([]);
   const [selectedStatus, setSelectedStatus] = useState({});
   const [searchQuery, setSearchQuery] = useState("");
@@ -254,7 +254,7 @@ export default function TicketsTable() {
           <TableFooter>
             <TableRow>
               <TablePagination
-                rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
+                rowsPerPageOptions={[10, 20, 25, { label: "All", value: -1 }]}
                 colSpan={6}
                 count={tickets?.length ?? 0} // Ensure tickets and tickets.length are defined
                 rowsPerPage={rowsPerPage}

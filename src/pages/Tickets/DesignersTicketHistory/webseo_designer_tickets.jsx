@@ -21,7 +21,7 @@ export default function WebseoDesignerTickets() {
   const apiUrl = process.env.REACT_APP_API_URL;
   const user = JSON.parse(localStorage.getItem("user"));
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [tickets, setTickets] = useState([]); // State to store fetched data
   const [isTicketDetailsOpen, setIsTicketDetailsOpen] = useState(false);
   const [selectedTicketDetails, setSelectedTicketDetails] = useState(null);
@@ -225,7 +225,7 @@ export default function WebseoDesignerTickets() {
           <TableFooter>
             <TableRow>
               <TablePagination
-                rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
+                rowsPerPageOptions={[10, 20, 25, { label: "All", value: -1 }]}
                 colSpan={7}
                 count={tickets?.length ?? 0} // Ensure tickets and tickets.length are defined
                 rowsPerPage={rowsPerPage}

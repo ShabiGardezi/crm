@@ -18,7 +18,7 @@ export default function TicketsCreatedChildComponent() {
   const apiUrl = process.env.REACT_APP_API_URL;
   const user = JSON.parse(localStorage.getItem("user"));
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [tickets, setTickets] = useState([]); // State to store fetched data
   const [isTicketDetailsOpen, setIsTicketDetailsOpen] = useState(false);
   const [selectedTicketDetails, setSelectedTicketDetails] = useState(null); // Step 1
@@ -172,8 +172,8 @@ export default function TicketsCreatedChildComponent() {
             <TableFooter>
               <TableRow>
                 <TablePagination
-                  rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
-                  colSpan={6} // Adjusted to match the number of columns
+                rowsPerPageOptions={[10, 20, 25, { label: "All", value: -1 }]}
+                colSpan={6} // Adjusted to match the number of columns
                   count={tickets?.length ?? 0} // Ensure tickets and tickets.length are defined
                   rowsPerPage={rowsPerPage}
                   page={page}

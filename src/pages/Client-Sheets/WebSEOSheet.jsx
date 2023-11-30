@@ -622,9 +622,9 @@ export default function WebSeoSheet() {
           <TableFooter>
             <TableRow>
               <TablePagination
-                rowsPerPageOptions={[10, 15, 25, { label: "All", value: -1 }]}
+                rowsPerPageOptions={[10, 20, 25, { label: "All", value: -1 }]}
                 colSpan={8}
-                count={tickets?.length ?? 0} // Ensure tickets and tickets.length are defined
+                count={tickets.length} // Ensure tickets and tickets.length are defined
                 rowsPerPage={rowsPerPage}
                 page={page}
                 SelectProps={{

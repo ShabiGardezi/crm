@@ -6,3 +6,7 @@
 .client-history-dropdown .css-1rwt2y5-MuiButtonBase-root-MuiButton-root {
   color: black;
 }
+.css-hz1bth-MuiDialog-container {
+  display: block !important;
+  max-width: inherit !important;
+}

@@ -25,10 +25,11 @@ import DisplayTicketDetails from "../../Tickets/DisplayTicketDetails";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import ActiveNotActiveCard from "../ActiveNotActiveCard";
 import axios from "axios";
+import "../../../styles/clients/AddClient.css";
 import { useLocation } from "react-router-dom";
 import TablePaginationActions from "../../Tickets/TicketsTablePagination/TicketsPagination";
 import UnauthorizedError from "../../../components/Error_401";
-import { Typography } from "antd";
+import { Typography } from "@mui/material";
 export default function LocalSeoSheet() {
   const apiUrl = process.env.REACT_APP_API_URL;
   const user = JSON.parse(localStorage.getItem("user"));
@@ -573,7 +574,7 @@ export default function LocalSeoSheet() {
           <TableFooter>
             <TableRow>
               <TablePagination
-                rowsPerPageOptions={[15, 20, 25, { label: "All", value: -1 }]}
+                rowsPerPageOptions={[10, 20, 25, { label: "All", value: -1 }]}
                 colSpan={8}
                 count={tickets.length}
                 rowsPerPage={rowsPerPage}
