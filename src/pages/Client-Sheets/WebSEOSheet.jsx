@@ -27,6 +27,7 @@ import ActiveNotActiveCard from "./ActiveNotActiveCard";
 import axios from "axios";
 import OneTimeServiceClientsCard from "./OneTimeClientCard";
 import "../../styles/Home/TicketCard.css";
+import "../../styles/clients/AddClient.css";
 import { useLocation } from "react-router-dom";
 import TablePaginationActions from "../Tickets/TicketsTablePagination/TicketsPagination";
 import UnauthorizedError from "../../components/Error_401";
@@ -584,6 +585,7 @@ export default function WebSeoSheet() {
                           >
                             <div>Remaining Charges:</div>
                             <div
+                              class="remainingCharges"
                               contentEditable={true}
                               onBlur={(e) =>
                                 handleRemainingEdit(
