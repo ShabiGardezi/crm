@@ -12,3 +12,7 @@
 .css-uhb5lp {
   max-width: inherit !important;
 }
+.remainingCharges {
+  text-align: end;
+  width: 100px;
+}

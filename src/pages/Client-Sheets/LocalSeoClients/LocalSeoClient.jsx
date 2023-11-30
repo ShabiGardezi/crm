@@ -536,12 +536,7 @@ export default function LocalSeoSheet() {
                           >
                             <div>Remaining Charges:</div>
                             <div
-                              style={{
-                                border: "none",
-                                // outline: "none",
-                                width: "100px",
-                                textAlign: "end",
-                              }}
+                              className="remainingCharges"
                               contentEditable={true}
                               onBlur={(e) =>
                                 handleRemainingEdit(
