@@ -54,6 +54,7 @@ const ToDos = () => {
                 }}
               />
               <label htmlFor={`todo-${todo.id}`}> {todo.task}</label>
+              <button>Edit</button>
               {/* {todo.completed && (
                 <button
                   onClick={() => {

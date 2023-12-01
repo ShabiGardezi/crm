@@ -49,16 +49,16 @@
   .MuiPaper-root.MuiCard-root.completed-tickets-card.MuiPaper-elevation1.MuiPaper-rounded.clicked,
 .col-6
   .MuiPaper-root.MuiCard-root.open-tickets-card.MuiPaper-elevation1.MuiPaper-rounded.clicked {
-  background-color: #14a44d;
+  background-color: rgb(25, 118, 210);
   width: 100%;
 }
 .ticket-card {
   /* default style */
   width: 30%;
   margin: 10px;
-  border: 0.5px solid palegoldenrod;
+  border: 0.5px solid rgb(237, 237, 234);
 }
 
 .ticket-card.clicked {
-  background-color: #14a44d;
+  background-color: rgb(25, 118, 210);
 }

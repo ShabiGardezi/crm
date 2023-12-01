@@ -1,19 +1,20 @@
 import { useState, useEffect } from "react";
 import { useToDos } from "../../context/ToDoContext";
 import axios from "axios";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import "../../styles/ToDoList/ToDoList.css";
 
 const AddToDo = () => {
   const apiUrl = process.env.REACT_APP_API_URL;
   const { handleAddToDo } = useToDos();
   const [note, setNote] = useState("");
-  const [userId, setUserId] = useState(""); // Initialize userId state
+  const [userId, setUserId] = useState("");
+  const [selectedDate, setSelectedDate] = useState(new Date());
 
-  // Use useEffect to retrieve user ID from local storage when the component mounts
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
     if (user && user._id) {
-      // Access the user ID using _id
       setUserId(user._id);
     }
   }, []);
@@ -35,19 +36,27 @@ const AddToDo = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     handleAddToDo(note);
-    addToDoItem(userId, note); // Call the function to add the item to the database
+    addToDoItem(userId, note);
     setNote("");
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        type="text"
-        value={note}
-        onChange={(e) => setNote(e.target.value)}
-      />
-      <button type="submit">Add</button>
-    </form>
+    <>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          value={note}
+          onChange={(e) => setNote(e.target.value)}
+        />
+        <DatePicker
+          className="date"
+          selected={selectedDate}
+          onChange={(date) => setSelectedDate(date)}
+          dateFormat="yy-MM-dd"
+        />
+        <button type="submit">Add</button>
+      </form>
+    </>
   );
 };
 

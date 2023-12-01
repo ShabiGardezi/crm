@@ -42,7 +42,7 @@ main h2 .icons {
   margin-top: 2%;
 }
 nav {
-  width: 55rem;
+  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -108,7 +108,7 @@ label {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   align-items: center;
-  width: 50rem;
+  width: 100%;
   min-height: 6rem;
   border-bottom: 0.1rem solid #ccc;
 }
@@ -153,4 +153,11 @@ label {
   box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
   cursor: pointer;
   letter-spacing: 0.1rem;
+}
+input.date {
+  width: 100%;
+  margin-left: 3%;
+}
+.react-datepicker-wrapper {
+  width: 15%;
 }

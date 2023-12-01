@@ -12,7 +12,7 @@ const ToDoContext = ({ children }) => {
     setTODO((prev) => {
       const newTodos = [
         {
-          id: Math.random().toString(),
+          // id: Math.random().toString(),
           task,
           completed: false,
           createdAt: new Date(),
