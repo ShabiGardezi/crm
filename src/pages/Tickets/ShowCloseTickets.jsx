@@ -17,6 +17,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import SearchIcon from "@mui/icons-material/Search";
 import InputBase from "@mui/material/InputBase";
 import TablePaginationActions from "./TicketsTablePagination/TicketsPagination";
+import WritersFilteredCards from "./WritersTicketHistory/WritersFilteredCards";
 
 <TablePaginationActions />;
 const rows = [].sort((a, b) => (a.clientName < b.clientName ? -1 : 1));
@@ -153,6 +154,9 @@ export default function ShowCloseTickets() {
     <div>
       <Header />
       <TicketCards />
+      {user?.department?._id === "654bc9d114e9ed66948b4a01" && (
+        <WritersFilteredCards />
+      )}
       <TableContainer component={Paper}>
         <div>
           <div

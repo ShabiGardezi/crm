@@ -21,6 +21,7 @@ import TablePaginationActions from "./TicketsTablePagination/TicketsPagination";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import DisplayTicketDetails from "./DisplayTicketDetails";
 import SearchIcon from "@mui/icons-material/Search";
+import WritersFilteredCards from "./WritersTicketHistory/WritersFilteredCards";
 <TablePagination />;
 export default function ShowOpenTickets() {
   const apiUrl = process.env.REACT_APP_API_URL;
@@ -179,6 +180,9 @@ export default function ShowOpenTickets() {
     <div>
       <Header />
       <TicketCards />
+      {user?.department?._id === "654bc9d114e9ed66948b4a01" && (
+        <WritersFilteredCards />
+      )}
       <TableContainer component={Paper}>
         <div>
           <div
@@ -208,6 +212,7 @@ export default function ShowOpenTickets() {
               <TableCell>Assignor</TableCell>
               <TableCell>Assignor Department</TableCell>
               <TableCell>Assignee Department</TableCell>
+              <TableCell>Created At</TableCell>
               <TableCell>Deadline</TableCell>
               <TableCell>Details</TableCell>
               <TableCell>Status</TableCell>
@@ -229,6 +234,9 @@ export default function ShowOpenTickets() {
                   </TableCell>
                   <TableCell style={{ width: 160 }} align="left">
                     {ticket.majorAssignee.name}
+                  </TableCell>
+                  <TableCell style={{ width: 160 }} align="left">
+                    {new Date(ticket.createdAt).toISOString().substr(0, 10)}
                   </TableCell>
                   <TableCell style={{ width: 160 }} align="left">
                     {ticket.dueDate}

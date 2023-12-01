@@ -75,7 +75,8 @@ function App() {
         />
         <Route path="/todo" element={<UserToDo showHeader={true} />} />
         {user?.department?._id === "654bc9d114e9ed66948b4a01" && (
-          <Route path="/history" element={<WritersTicketHistory />} />
+          // <Route path="/history" element={<WritersTicketHistory />} />
+          <Route path="/history" element={<ShowOpenTickets />} />
         )}
         {user?.department?._id === "6552574254f8868c177cfb83" && (
           <Route path="/history" element={<DesignersTicketHistory />} />
