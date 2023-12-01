@@ -5,11 +5,21 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import FilterTickets from "../../pages/Tickets/FilterTickets";
 const TicketCard = ({ heading, counter, onClick }) => {
+  const [isClicked, setIsClicked] = useState(false);
   const cardClass =
     heading === "Open Tickets" ? "open-tickets-card" : "completed-tickets-card";
 
+  const handleClick = () => {
+    if (!isClicked) {
+      setIsClicked((prevIsClicked) => !prevIsClicked);
+    }
+  };
+
   return (
-    <Card className={cardClass} onClick={onClick}>
+    <Card
+      className={`${cardClass} ${isClicked ? "clicked" : "ticket-card"}`}
+      onClick={handleClick}
+    >
       <CardHeader title={heading} />
       <CardContent>
         <Typography variant="h6">{counter}</Typography>

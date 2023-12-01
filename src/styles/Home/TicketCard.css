@@ -45,3 +45,20 @@
   justify-content: center;
   align-items: center;
 }
+.col-6
+  .MuiPaper-root.MuiCard-root.completed-tickets-card.MuiPaper-elevation1.MuiPaper-rounded.clicked,
+.col-6
+  .MuiPaper-root.MuiCard-root.open-tickets-card.MuiPaper-elevation1.MuiPaper-rounded.clicked {
+  background-color: #14a44d;
+  width: 100%;
+}
+.ticket-card {
+  /* default style */
+  width: 30%;
+  margin: 10px;
+  border: 0.5px solid palegoldenrod;
+}
+
+.ticket-card.clicked {
+  background-color: #14a44d;
+}

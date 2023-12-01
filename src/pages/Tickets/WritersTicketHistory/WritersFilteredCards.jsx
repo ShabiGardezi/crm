@@ -1,13 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 import { Card, CardHeader, CardContent, Typography } from "@material-ui/core";
 import "../../../styles/Home/TicketCard.css";
 import { Link } from "react-router-dom";
 const TicketCard = ({ heading, counter, onClick }) => {
+  const [isClicked, setIsClicked] = useState(false);
   const cardClass =
     heading === "Open Tickets" ? "open-tickets-card" : "completed-tickets-card";
 
+  const handleClick = () => {
+    if (!isClicked) {
+      setIsClicked((prevIsClicked) => !prevIsClicked);
+    }
+  };
   return (
-    <Card className={cardClass} onClick={onClick}>
+    <Card
+      className={`${cardClass} ${isClicked ? "clicked" : "ticket-card"}`}
+      onClick={handleClick}
+    >
       <CardHeader title={heading} />
       <CardContent>
         <Typography variant="h6">{counter}</Typography>
@@ -15,7 +24,6 @@ const TicketCard = ({ heading, counter, onClick }) => {
     </Card>
   );
 };
-
 const WritersFilteredCards = () => {
   const user = JSON.parse(localStorage.getItem("user"));
   return (

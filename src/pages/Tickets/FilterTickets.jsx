@@ -5,13 +5,21 @@ import axios from "axios";
 import { Link } from "react-router-dom"; // Import the Link component
 
 const TicketCard = ({ heading, counter }) => {
+  const [isClicked, setIsClicked] = useState(false);
   const cardClass =
     heading === "Created Tickets"
       ? "open-tickets-card"
       : "completed-tickets-card";
-
+  const handleClick = () => {
+    if (!isClicked) {
+      setIsClicked((prevIsClicked) => !prevIsClicked);
+    }
+  };
   return (
-    <Card className={cardClass}>
+    <Card
+      className={`${cardClass} ${isClicked ? "clicked" : "ticket-card"}`}
+      onClick={handleClick}
+    >
       <CardHeader title={heading} />
       <CardContent>
         <Typography variant="h6">{counter}</Typography>
@@ -43,10 +51,7 @@ const FilterTickets = () => {
 
     fetchData();
   }, []); // Empty dependency array to fetch data only once
-  const cardLinkStyle = {
-    textDecoration: "none", // Remove underline
-    color: "inherit", // Inherit text color
-  };
+
   return (
     <div className="filterticketscard">
       <div className="col-6">

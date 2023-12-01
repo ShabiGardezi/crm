@@ -5,13 +5,20 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 
 const TicketCard = ({ heading, counter }) => {
+  const [isClicked, setIsClicked] = useState(false);
   const cardClass =
-    heading === "Active Clients"
-      ? "open-tickets-card"
-      : "completed-tickets-card";
+    heading === "Open Tickets" ? "open-tickets-card" : "completed-tickets-card";
 
+  const handleClick = () => {
+    if (!isClicked) {
+      setIsClicked((prevIsClicked) => !prevIsClicked);
+    }
+  };
   return (
-    <Card className={cardClass}>
+    <Card
+      className={`${cardClass} ${isClicked ? "clicked" : "ticket-card"}`}
+      onClick={handleClick}
+    >
       <CardHeader title={heading} />
       <CardContent>
         <Typography variant="h6">{counter}</Typography>
@@ -19,7 +26,6 @@ const TicketCard = ({ heading, counter }) => {
     </Card>
   );
 };
-
 const ClientsCard = () => {
   const apiUrl = process.env.REACT_APP_API_URL;
   const user = JSON.parse(localStorage.getItem("user"));
