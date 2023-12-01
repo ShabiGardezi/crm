@@ -74,7 +74,7 @@ function App() {
           element={<PaidMarketing />}
         />
         <Route path="/todo" element={<UserToDo showHeader={true} />} />
-        {user?.department?._id === "654bc9d114e9ed66948b4a01" && (
+        {/* {user?.department?._id === "654bc9d114e9ed66948b4a01" && (
           // <Route path="/history" element={<WritersTicketHistory />} />
           <Route path="/history" element={<ShowOpenTickets />} />
         )}
@@ -85,7 +85,10 @@ function App() {
           (user?.department?._id !== "654bc9d114e9ed66948b4a01" &&
             user?.department?._id !== "6552574254f8868c177cfb83")) && (
           <Route path="/history" element={<CustomPaginationActionsTable />} />
-        )}
+        )} */}
+
+        {/* This is showing ticket history of department as per login user department */}
+        <Route path="/history" element={<ShowOpenTickets />} />
         <Route
           path="/reviews_designer_tickets"
           element={<ReviewsDesignersTickets />}
@@ -99,7 +102,7 @@ function App() {
           element={<WordpressDesignersTickets />}
         />
         <Route path="/tickets_created" element={<TicketCreatedTable />} />
-        <Route path="/open_tickets" element={<ShowOpenTickets />} />
+        {/* <Route path="/open_tickets" element={<ShowOpenTickets />} /> */}
         <Route path="/close_tickets" element={<ShowCloseTickets />} />
         <Route path="/local_seo_tickets" element={<LocalSeoWritersTickets />} />
         <Route

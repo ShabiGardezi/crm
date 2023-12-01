@@ -70,7 +70,7 @@ const TicketCards = () => {
     <>
       <div className="filterticketscard">
         <div className="col-6">
-          <Link to="/open_tickets">
+          <Link to="/history">
             <TicketCard heading="Open Tickets" counter={openTicketsCounter} />
           </Link>
         </div>

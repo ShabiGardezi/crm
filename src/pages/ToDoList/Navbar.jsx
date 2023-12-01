@@ -21,13 +21,7 @@ const NavBar = () => {
   const completedCount = TODO.filter((todo) => todo.completed).length;
 
   return (
-    <nav>
-      <Link
-        className={todosData === null ? "active" : ""}
-        onClick={() => handleTabClick("all")}
-      >
-        All
-      </Link>
+    <nav style={{ display: "flex", justifyContent: "space-evenly" }}>
       <Link
         to="/todo?todos=active"
         className={todosData === "active" ? "active" : ""}
