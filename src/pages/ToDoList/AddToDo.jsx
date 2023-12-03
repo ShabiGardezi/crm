@@ -5,12 +5,13 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "../../styles/ToDoList/ToDoList.css";
 
-const AddToDo = () => {
+const AddToDo = (props) => {
   const apiUrl = process.env.REACT_APP_API_URL;
   const { handleAddToDo } = useToDos();
   const [note, setNote] = useState("");
   const [userId, setUserId] = useState("");
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const { setnotesList, notesList } = props;
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
@@ -27,6 +28,7 @@ const AddToDo = () => {
       });
       if (response.status === 200) {
         console.log("Note added:", response.data.payload);
+        setnotesList([...notesList, response.data.payload]);
       }
     } catch (error) {
       console.error("Error adding note:", error);
