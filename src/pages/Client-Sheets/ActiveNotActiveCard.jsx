@@ -2,10 +2,12 @@ import React, { useEffect, useState } from "react";
 import { Card, CardHeader, CardContent, Typography } from "@material-ui/core";
 import "../../styles/Home/TicketCard.css";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const TicketCard = ({ heading, counter }) => {
   const [isClicked, setIsClicked] = useState(false);
+  const [isSelected, setSelected] = useState(false);
+  const location = useLocation();
   const cardClass =
     heading === "Open Tickets" ? "open-tickets-card" : "completed-tickets-card";
 
@@ -14,9 +16,20 @@ const TicketCard = ({ heading, counter }) => {
       setIsClicked((prevIsClicked) => !prevIsClicked);
     }
   };
+  useEffect(() => {
+    const { pathname } = location;
+    if (pathname === "/active_clients" && heading === "Active Clients") {
+      setSelected(true);
+    } else if (
+      pathname === "/notactive_clients" &&
+      heading === "InActive Clients"
+    ) {
+      setSelected(true);
+    }
+  }, [location]);
   return (
     <Card
-      className={`${cardClass} ${isClicked ? "clicked" : "ticket-card"}`}
+      className={`${cardClass} ${isSelected ? "clicked" : "ticket-card"}`}
       onClick={handleClick}
     >
       <CardHeader title={heading} />
