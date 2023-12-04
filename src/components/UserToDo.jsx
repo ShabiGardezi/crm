@@ -51,8 +51,8 @@ const UserToDo = ({ wrapInCard, showHeader }) => {
         <div className="todolists">
           <ToDoContext>
             <Navbar />
-            <AddToDo />
-            <ToDos />
+            <AddToDo setnotesList={setnotesList} notesList={notesList} />
+            <ToDos notesList={notesList} setnotesList={setnotesList} />
           </ToDoContext>
         </div>
       </>

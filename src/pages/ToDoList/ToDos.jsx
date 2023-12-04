@@ -112,13 +112,13 @@ const ToDos = (props) => {
           );
         })}
       </ul>
-      {notesList.length > 0 && (
+      {/* {notesList.length > 0 && (
         <div className="deleteall">
           <button id="deleteAll" onClick={handleDeleteAll}>
             Delete All
           </button>
         </div>
-      )}
+      )} */}
       <div>
         <Modal
           open={open}
