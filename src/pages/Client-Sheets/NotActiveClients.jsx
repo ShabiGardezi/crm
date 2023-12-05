@@ -355,7 +355,7 @@ export default function NotActiveClients() {
                         style={{
                           backgroundColor:
                             ticket.ActiveNotActive === "Active"
-                              ? "#28a745"
+                              ? "rgb(25, 118, 210)"
                               : "#dc3545", // set background color for Select
                           color:
                             ticket.ActiveNotActive === "Active"
@@ -465,6 +465,16 @@ export default function NotActiveClients() {
                       <Select
                         value={ticket.ActiveNotActive || "Active"}
                         onClick={() => handleClick(ticket)}
+                        style={{
+                          backgroundColor:
+                            ticket.ActiveNotActive === "Active"
+                              ? "rgb(25, 118, 210)"
+                              : "#dc3545", // set background color for Select
+                          color:
+                            ticket.ActiveNotActive === "Active"
+                              ? "white"
+                              : "black",
+                        }}
                       >
                         <MenuItem value="Active">Active</MenuItem>
                         <MenuItem value="Not Active">Not Active</MenuItem>
@@ -579,6 +589,16 @@ export default function NotActiveClients() {
                       <Select
                         value={ticket.ActiveNotActive || "Active"}
                         onClick={() => handleClick(ticket)}
+                        style={{
+                          backgroundColor:
+                            ticket.ActiveNotActive === "Active"
+                              ? "rgb(25, 118, 210)"
+                              : "#dc3545", // set background color for Select
+                          color:
+                            ticket.ActiveNotActive === "Active"
+                              ? "white"
+                              : "black",
+                        }}
                       >
                         <MenuItem value="Active">Active</MenuItem>
                         <MenuItem value="Not Active">Not Active</MenuItem>
@@ -687,6 +707,16 @@ export default function NotActiveClients() {
                       <Select
                         value={ticket.ActiveNotActive || "Active"}
                         onClick={() => handleClick(ticket)}
+                        style={{
+                          backgroundColor:
+                            ticket.ActiveNotActive === "Active"
+                              ? "rgb(25, 118, 210)"
+                              : "#dc3545", // set background color for Select
+                          color:
+                            ticket.ActiveNotActive === "Active"
+                              ? "white"
+                              : "black",
+                        }}
                       >
                         <MenuItem value="Active">Active</MenuItem>
                         <MenuItem value="Not Active">Not Active</MenuItem>

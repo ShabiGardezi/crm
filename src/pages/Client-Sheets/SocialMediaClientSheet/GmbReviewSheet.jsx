@@ -344,15 +344,15 @@ export default function GmbReviewSheet(props) {
                       value={ticket.ActiveNotActive || "Active"}
                       onClick={() => handleClick(ticket)}
                       style={{
-                        backgroundColor:
-                          ticket.ActiveNotActive === "Active"
-                            ? "#28a745"
-                            : "#dc3545", // set background color for Select
-                        color:
-                          ticket.ActiveNotActive === "Active"
-                            ? "white"
-                            : "black",
-                      }}
+                          backgroundColor:
+                            ticket.ActiveNotActive === "Active"
+                              ? "rgb(25, 118, 210)"
+                              : "#dc3545", // set background color for Select
+                          color:
+                            ticket.ActiveNotActive === "Active"
+                              ? "white"
+                              : "black",
+                        }}
                     >
                       <MenuItem value="Active">Active</MenuItem>
                       <MenuItem value="Not Active">Not Active</MenuItem>
