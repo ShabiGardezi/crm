@@ -32,8 +32,10 @@ const NavBar = () => {
   if (todosData === "active") {
     filterToDo = TODO.filter((todo) => !todo.completed);
   }
-  const activeCount = notesList.filter((todo) => !todo.completed).length;
-  const completedCount = notesList.filter((todo) => todo.completed).length;
+  const activeCount = notesList.filter((note) => note.status === true).length;
+  const completedCount = notesList.filter(
+    (note) => note.status === false
+  ).length;
 
   return (
     <nav style={{ display: "flex", justifyContent: "space-evenly" }}>

@@ -1,6 +1,9 @@
 import { useState, useContext, createContext } from "react";
 import "../styles/ToDoList/ToDoList.css";
+import axios from "axios";
+
 const todosContext = createContext(null);
+const apiUrl = process.env.REACT_APP_API_URL;
 
 const ToDoContext = ({ children }) => {
   const [TODO, setTODO] = useState(() => {
@@ -25,16 +28,21 @@ const ToDoContext = ({ children }) => {
   };
 
   const handleToggleToDo = (id) => {
-    setTODO((prev) => {
-      const newTodos = prev.map((todo) => {
-        if (todo.id === id) {
-          return { ...todo, completed: !todo.completed };
-        }
-        return todo;
-      });
-      localStorage.setItem("todos", JSON.stringify(newTodos));
-      return newTodos;
-    });
+    /*      async function updateNoteStatus() {
+            const status = false;
+            try {
+                const response = await axios.put(`${apiUrl}/api/notes/update`, { id, status });
+                console.log('Updated Note:', response.data);
+            } catch (error) {
+                if (error.response) {
+                    console.error('Error response from server:', error.response.data);
+                } else if (error.request) {
+                    console.error('No response received:', error.request);
+                } else {
+                    console.error('Error setting up the request:', error.message);
+                }
+            }
+        }*/
   };
 
   const deleteToDo = (id) => {
@@ -45,7 +53,7 @@ const ToDoContext = ({ children }) => {
     });
   };
 
-  const deleteAll = () => {
+  const deleteAll = (props) => {
     setTODO([]);
     localStorage.removeItem("todos");
   };

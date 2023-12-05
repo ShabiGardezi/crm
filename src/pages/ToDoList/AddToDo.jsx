@@ -20,11 +20,13 @@ const AddToDo = (props) => {
     }
   }, []);
 
-  const addToDoItem = async (userId, note) => {
+  const addToDoItem = async (userId, note, selectedDate) => {
     try {
       const response = await axios.post(`${apiUrl}/api/notes`, {
         userId: userId,
         note: note,
+        status: true,
+        date: selectedDate.toISOString().slice(0, 10), // Format the date as yy-MM-dd
       });
       if (response.status === 200) {
         console.log("Note added:", response.data.payload);
@@ -38,13 +40,13 @@ const AddToDo = (props) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     handleAddToDo(note);
-    addToDoItem(userId, note);
+    addToDoItem(userId, note, selectedDate);
     setNote("");
   };
 
   return (
     <>
-      <form onSubmit={handleSubmit}>
+      <form style={{ textAlign: "center" }} onSubmit={handleSubmit}>
         <input
           type="text"
           value={note}
@@ -54,7 +56,7 @@ const AddToDo = (props) => {
           className="date"
           selected={selectedDate}
           onChange={(date) => setSelectedDate(date)}
-          dateFormat="yy-MM-dd"
+          dateFormat="yyyy-MM-dd"
         />
         <button type="submit">Add</button>
       </form>
