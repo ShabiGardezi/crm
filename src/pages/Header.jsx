@@ -261,15 +261,6 @@ const Header = () => {
                 <ExpandMoreIcon />
               </ListItemIcon>
             </ListItem>
-            <ListItem button onClick={toggleDepartment}>
-              <ListItemIcon>
-                <DepartmentIcon />
-              </ListItemIcon>
-              <ListItemText primary="New Ticket" />
-              <ListItemIcon style={{ marginLeft: "auto" }}>
-                <ExpandMoreIcon />
-              </ListItemIcon>
-            </ListItem>
             {/* Step 4: Add sub-items for "Client History" dropdown */}
             {isClientHistoryOpen && (
               <div className="client-history-dropdown">
@@ -305,15 +296,15 @@ const Header = () => {
                 </Link>
               </div>
             )}
-            <Link to="/history">
-              <ListItem button>
-                <ListItemIcon>
-                  <HistoryIcon />
-                </ListItemIcon>
-                <ListItemText primary="Ticket History" />
-              </ListItem>
-            </Link>
-
+            <ListItem button onClick={toggleDepartment}>
+              <ListItemIcon>
+                <DepartmentIcon />
+              </ListItemIcon>
+              <ListItemText primary="New Ticket" />
+              <ListItemIcon style={{ marginLeft: "auto" }}>
+                <ExpandMoreIcon />
+              </ListItemIcon>
+            </ListItem>
             {isDepartmentOpen && (
               <div className="client-history-dropdown">
                 {departments?.map((d) => (
@@ -333,6 +324,14 @@ const Header = () => {
                 ))}
               </div>
             )}
+            <Link to="/history">
+              <ListItem button>
+                <ListItemIcon>
+                  <HistoryIcon />
+                </ListItemIcon>
+                <ListItemText primary="Ticket History" />
+              </ListItem>
+            </Link>
 
             {user?.role === "admin" && (
               <div className="signup">
