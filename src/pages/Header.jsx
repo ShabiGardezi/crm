@@ -122,6 +122,7 @@ const Header = () => {
       await axios.post(`${apiUrl}/api/user/logout`);
       navigate("/signin");
       localStorage.removeItem("authToken");
+      localStorage.clear();
     } catch (error) {
       console.error("Logout failed", error);
     }

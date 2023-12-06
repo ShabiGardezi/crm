@@ -51,27 +51,33 @@ function App() {
           path="/signup"
           element={user?.role === "admin" ? <SignUp /> : <Navigate to="/" />}
         />
-        <Route path="/home" element={<Home />} />
-        <Route path="/department/webseoform" element={<WebSeoForm />} />
-        <Route path="/department/localseoform" element={<LocalSeoForm />} />
-        <Route path="/department/designersform" element={<DesignersForm />} />
-        <Route
-          path="/department/socialmediaform"
-          element={<SocialMediaForm />}
-        />
-        <Route
-          path="/department/customdevelopment"
-          element={<CustomDevelopment />}
-        />
-        <Route path="/department/wordpressform" element={<WordPress />} />
-        <Route path="/department/writersform" element={<WritersForm />} />
-        <Route path="/department/reviewsform" element={<Reviews />} />
-        <Route
-          path="/department/paidmarketingform"
-          element={<PaidMarketing />}
-        />
-        <Route path="/todo" element={<UserToDo showHeader={true} />} />
-        {/* {user?.department?._id === "654bc9d114e9ed66948b4a01" && (
+        {user && (
+          <>
+            {" "}
+            <Route path="/home" element={<Home />} />
+            <Route path="/department/webseoform" element={<WebSeoForm />} />
+            <Route path="/department/localseoform" element={<LocalSeoForm />} />
+            <Route
+              path="/department/designersform"
+              element={<DesignersForm />}
+            />
+            <Route
+              path="/department/socialmediaform"
+              element={<SocialMediaForm />}
+            />
+            <Route
+              path="/department/customdevelopment"
+              element={<CustomDevelopment />}
+            />
+            <Route path="/department/wordpressform" element={<WordPress />} />
+            <Route path="/department/writersform" element={<WritersForm />} />
+            <Route path="/department/reviewsform" element={<Reviews />} />
+            <Route
+              path="/department/paidmarketingform"
+              element={<PaidMarketing />}
+            />
+            <Route path="/todo" element={<UserToDo showHeader={true} />} />
+            {/* {user?.department?._id === "654bc9d114e9ed66948b4a01" && (
           // <Route path="/history" element={<WritersTicketHistory />} />
           <Route path="/history" element={<ShowOpenTickets />} />
         )}
@@ -83,66 +89,73 @@ function App() {
             user?.department?._id !== "6552574254f8868c177cfb83")) && (
           <Route path="/history" element={<CustomPaginationActionsTable />} />
         )} */}
-
-        {/* This is showing ticket history of department as per login user department */}
-        <Route path="/history" element={<ShowOpenTickets />} />
-        <Route
-          path="/reviews_designer_tickets"
-          element={<ReviewsDesignersTickets />}
-        />
-        <Route
-          path="/webseo_designer_tickets"
-          element={<WebseoDesignerTickets />}
-        />
-        <Route
-          path="/wordpress_designer_tickets"
-          element={<WordpressDesignersTickets />}
-        />
-        <Route path="/tickets_created" element={<TicketCreatedTable />} />
-        {/* <Route path="/open_tickets" element={<ShowOpenTickets />} /> */}
-        <Route path="/close_tickets" element={<ShowCloseTickets />} />
-        <Route path="/local_seo_tickets" element={<LocalSeoWritersTickets />} />
-        <Route
-          path="/reviews_writer_tickets"
-          element={<ReviewsWriteresTickets />}
-        />
-        <Route path="/web_seo_tickets" element={<WebSeoWritersTickets />} />
-        <Route
-          path="/wordpress_writer_tickets"
-          element={<WordpressWritersTickets />}
-        />
-        <Route path="/active_clients" element={<ActiveClients />} />
-        <Route path="/notactive_clients" element={<NotActiveClients />} />
-        <Route path="/webseo_clients" element={<WebSeoClients />} />
-        <Route path="/localseo_clients" element={<LocalSeoSheet />} />
-        <Route path="/one_time_service_clients" element={<TableCustomized />} />
-        <Route path="/gmb_reviews_sheet" element={<GmbReviewSheet />} />
-        <Route path="/fb_reviews_sheet" element={<FbReviewSheet />} />
-        <Route path="/website_sheet" element={<WordpressClientSheet />} />
-        <Route
-          path="/active_website_clients"
-          element={<ActiveWebsiteClients />}
-        />
-        <Route
-          path="/inactive_website_clients"
-          element={<InActiveWebsiteClients />}
-        />
-        <Route
-          path="/paid_marketing_sheet"
-          element={<PaidMarketingClientSheet />}
-        />
-        <Route
-          path="/social_meida_likes_followers"
-          element={<LikesFollowersSocialMedia />}
-        />
-        <Route
-          path="/monthly_service_clients"
-          element={<MonthlySeoClients />}
-        />
-        <Route
-          path="/social_media_client"
-          element={<SocialMediaClientSheet />}
-        />
+            {/* This is showing ticket history of department as per login user department */}
+            <Route path="/history" element={<ShowOpenTickets />} />
+            <Route
+              path="/reviews_designer_tickets"
+              element={<ReviewsDesignersTickets />}
+            />
+            <Route
+              path="/webseo_designer_tickets"
+              element={<WebseoDesignerTickets />}
+            />
+            <Route
+              path="/wordpress_designer_tickets"
+              element={<WordpressDesignersTickets />}
+            />
+            <Route path="/tickets_created" element={<TicketCreatedTable />} />
+            {/* <Route path="/open_tickets" element={<ShowOpenTickets />} /> */}
+            <Route path="/close_tickets" element={<ShowCloseTickets />} />
+            <Route
+              path="/local_seo_tickets"
+              element={<LocalSeoWritersTickets />}
+            />
+            <Route
+              path="/reviews_writer_tickets"
+              element={<ReviewsWriteresTickets />}
+            />
+            <Route path="/web_seo_tickets" element={<WebSeoWritersTickets />} />
+            <Route
+              path="/wordpress_writer_tickets"
+              element={<WordpressWritersTickets />}
+            />
+            <Route path="/active_clients" element={<ActiveClients />} />
+            <Route path="/notactive_clients" element={<NotActiveClients />} />
+            <Route path="/webseo_clients" element={<WebSeoClients />} />
+            <Route path="/localseo_clients" element={<LocalSeoSheet />} />
+            <Route
+              path="/one_time_service_clients"
+              element={<TableCustomized />}
+            />
+            <Route path="/gmb_reviews_sheet" element={<GmbReviewSheet />} />
+            <Route path="/fb_reviews_sheet" element={<FbReviewSheet />} />
+            <Route path="/website_sheet" element={<WordpressClientSheet />} />
+            <Route
+              path="/active_website_clients"
+              element={<ActiveWebsiteClients />}
+            />
+            <Route
+              path="/inactive_website_clients"
+              element={<InActiveWebsiteClients />}
+            />
+            <Route
+              path="/paid_marketing_sheet"
+              element={<PaidMarketingClientSheet />}
+            />
+            <Route
+              path="/social_meida_likes_followers"
+              element={<LikesFollowersSocialMedia />}
+            />
+            <Route
+              path="/monthly_service_clients"
+              element={<MonthlySeoClients />}
+            />
+            <Route
+              path="/social_media_client"
+              element={<SocialMediaClientSheet />}
+            />
+          </>
+        )}
       </Routes>
     </div>
   );
