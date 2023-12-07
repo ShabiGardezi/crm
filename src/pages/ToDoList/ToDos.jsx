@@ -1,13 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { useToDos } from "../../context/ToDoContext";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import "../../styles/ToDoList/ToDoList.css";
 import axios from "axios";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import { Grid, TextField } from "@mui/material";
-import deleteAll from "../../context/ToDoContext";
 const style = {
   position: "absolute",
   top: "50%",
@@ -28,7 +26,8 @@ const ToDos = (props) => {
   const handleClose = () => setOpen(false);
   const [selectedNote, setselectedNote] = useState();
   const { notesList, setnotesList } = props;
-
+  const user = JSON.parse(localStorage.getItem("user"));
+  console.log(notesList);
   let filterToDo = notesList;
   if (todosData === "active") {
     filterToDo = notesList.filter((note) => note.status === true);
@@ -56,12 +55,12 @@ const ToDos = (props) => {
   const handleDeleteAll = async () => {
     try {
       // Send a DELETE request to delete all todos
-      const response = await axios.delete(`${apiUrl}/api/notes/all`);
+      const response = await axios.delete(
+        `${apiUrl}/api/notes/all?userId=${user._id}&status=false`
+      );
 
       // Check the response status
       if (response.status === 200) {
-        // Assuming "deleteAll" function in your context clears the TODO state
-        deleteAll();
         console.log("Notes deleted successfully");
       } else {
         console.error("Failed to delete notes. Status:", response.status);
@@ -176,6 +175,14 @@ const ToDos = (props) => {
           </Button>
         </Box>
       </Modal>
+      <div
+        className="complete-btn"
+        style={{ display: "flex", justifyContent: "center", marginTop: "2%" }}
+      >
+        <Button variant="contained" color="error" onClick={handleDeleteAll}>
+          Delete Completed
+        </Button>
+      </div>
     </>
   );
 };
