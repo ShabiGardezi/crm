@@ -53,7 +53,6 @@ function App() {
         />
         {user && (
           <>
-            {" "}
             <Route path="/home" element={<Home />} />
             <Route path="/department/webseoform" element={<WebSeoForm />} />
             <Route path="/department/localseoform" element={<LocalSeoForm />} />
