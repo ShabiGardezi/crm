@@ -38,6 +38,16 @@ import DesignersForm from "./pages/Departments/Designers";
 import ReviewsDesignersTickets from "./pages/Tickets/DesignersTicketHistory/ReviewsDesignersTickets";
 import WebseoDesignerTickets from "./pages/Tickets/DesignersTicketHistory/webseo_designer_tickets";
 import WordpressDesignersTickets from "./pages/Tickets/DesignersTicketHistory/wordpress_designer_tickets";
+import LocalSeoActiveClients from "./pages/SalesClientsSheet/LocalSeoSalesSheet/ActiveLocalSeoSalesClients";
+import InActiveLocalSeoClients from "./pages/SalesClientsSheet/LocalSeoSalesSheet/InActiveLocalSeoClients";
+import ActiveWebSeoSalesClients from "./pages/SalesClientsSheet/WebSeoSalesSheet/ActiveWebSeoSalesClients";
+import InActiveWebSeoClients from "./pages/SalesClientsSheet/WebSeoSalesSheet/InActiveWebSeoClients";
+import InActiveWordpressClients from "./pages/SalesClientsSheet/WordpressSalesSheet/InActiveWordpressSalesClients";
+import ActiveWordpressSalesClients from "./pages/SalesClientsSheet/WordpressSalesSheet/ActiveWordpressSalesClients";
+import ActiveMarketingSalesClients from "./pages/SalesClientsSheet/PaidMarketingSalesSheet.jsx/ActiveMarketingSalesClients";
+import InActiveMarketingClients from "./pages/SalesClientsSheet/PaidMarketingSalesSheet.jsx/InActiveMarketingClients";
+import ActiveSocialMediaSalesClients from "./pages/SalesClientsSheet/SocialMediaSalesSheet/ActiveSocialMediaSalesClients";
+import InActiveSocialMediaSalesClients from "./pages/SalesClientsSheet/SocialMediaSalesSheet/InActiveSocialMediaSalesClients";
 
 function App() {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -76,19 +86,6 @@ function App() {
               element={<PaidMarketing />}
             />
             <Route path="/todo" element={<UserToDo showHeader={true} />} />
-            {/* {user?.department?._id === "654bc9d114e9ed66948b4a01" && (
-          // <Route path="/history" element={<WritersTicketHistory />} />
-          <Route path="/history" element={<ShowOpenTickets />} />
-        )}
-        {user?.department?._id === "6552574254f8868c177cfb83" && (
-          <Route path="/history" element={<DesignersTicketHistory />} />
-        )}
-        {(!user?.department?._id ||
-          (user?.department?._id !== "654bc9d114e9ed66948b4a01" &&
-            user?.department?._id !== "6552574254f8868c177cfb83")) && (
-          <Route path="/history" element={<CustomPaginationActionsTable />} />
-        )} */}
-            {/* This is showing ticket history of department as per login user department */}
             <Route path="/history" element={<ShowOpenTickets />} />
             <Route
               path="/reviews_designer_tickets"
@@ -103,7 +100,6 @@ function App() {
               element={<WordpressDesignersTickets />}
             />
             <Route path="/tickets_created" element={<TicketCreatedTable />} />
-            {/* <Route path="/open_tickets" element={<ShowOpenTickets />} /> */}
             <Route path="/close_tickets" element={<ShowCloseTickets />} />
             <Route
               path="/local_seo_tickets"
@@ -152,6 +148,46 @@ function App() {
             <Route
               path="/social_media_client"
               element={<SocialMediaClientSheet />}
+            />
+            <Route
+              path="/localseoactiveclients"
+              element={<LocalSeoActiveClients />}
+            />
+            <Route
+              path="/localseoInactiveclients"
+              element={<InActiveLocalSeoClients />}
+            />
+            <Route
+              path="/webseoactiveclients"
+              element={<ActiveWebSeoSalesClients />}
+            />
+            <Route
+              path="/webseoInactiveclients"
+              element={<InActiveWebSeoClients />}
+            />
+            <Route
+              path="/wordpressactiveclients"
+              element={<ActiveWordpressSalesClients />}
+            />
+            <Route
+              path="/wordpressInactiveclients"
+              element={<InActiveWordpressClients />}
+            />
+            <Route
+              path="/marketingactiveclients"
+              element={<ActiveMarketingSalesClients />}
+            />
+            <Route
+              path="/marketingInactiveclients"
+              element={<InActiveMarketingClients />}
+            />
+            <Route
+              path="/socialmedia_activeclients"
+              element={<ActiveSocialMediaSalesClients />}
+            />
+            <Route
+              path="/socialmedia_Inactiveclients"
+              element={<InActiveSocialMediaSalesClients />}
             />
           </>
         )}

@@ -32,6 +32,7 @@ import { useLocation } from "react-router-dom";
 import TablePaginationActions from "../Tickets/TicketsTablePagination/TicketsPagination";
 import UnauthorizedError from "../../components/Error_401";
 import { Typography } from "@mui/material";
+import WebSeoSalesCards from "../SalesClientsSheet/WebSeoSalesSheet/WebSeoSalesCards";
 
 export default function WebSeoSheet() {
   const apiUrl = process.env.REACT_APP_API_URL;
@@ -387,11 +388,11 @@ export default function WebSeoSheet() {
         {user?.department._id !== "651b3409819ff0aec6af1387" && (
           <ActiveNotActiveCard />
         )}
+        {user?.department._id === "651b3409819ff0aec6af1387" && (
+          <WebSeoSalesCards />
+        )}
         <OneTimeServiceClientsCard />
       </div>
-      {user?.department._id === "651b3409819ff0aec6af1387" && (
-        <Typography variant="h4">Website SEO Client Sheet</Typography>
-      )}
       <TableContainer component={Paper}>
         <div>
           <div

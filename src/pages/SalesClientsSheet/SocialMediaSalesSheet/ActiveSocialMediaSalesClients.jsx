@@ -9,50 +9,27 @@ import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import TableHead from "@mui/material/TableHead";
 import IconButton from "@mui/material/IconButton";
-import { Button } from "@mui/material";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import axios from "axios";
-import "../../styles/Home/TicketCard.css";
-import TablePaginationActions from "../Tickets/TicketsTablePagination/TicketsPagination";
-import {
-  Dialog,
-  DialogTitle,
-  DialogActions,
-} from "@mui/material";
-import DisplayTicketDetails from "../Tickets/DisplayTicketDetails";
-export default function LocalSeoActiveClients() {
+import "../../../styles/Home/TicketCard.css";
+import SocialMediaSalesCards from "./SocialMediaSalesCards";
+import TablePaginationActions from "../../Tickets/TicketsTablePagination/TicketsPagination";
+import DisplayTicketDetails from "../../Tickets/DisplayTicketDetails";
+import Header from "../../Header";
+
+const ActiveSocialMediaSalesClients = () => {
   const apiUrl = process.env.REACT_APP_API_URL;
   const user = JSON.parse(localStorage.getItem("user"));
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [tickets, setTickets] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [openRecurringDialog, setOpenRecurringDialog] = useState(false);
   const [reportingDates, setReportingDates] = useState({});
   const [isTicketDetailsOpen, setIsTicketDetailsOpen] = useState(false);
   const [selectedTicketDetails, setSelectedTicketDetails] = useState(null);
-  const [price, setPrice] = useState("");
-  const [advancePrice, setAdvancePrice] = useState("");
-  const [remainingPrice, setRemainingPrice] = useState("");
-  // Function to open the recurring dialog and reset state values
-  const handleRecurringDialogOpen = () => {
-    setOpenRecurringDialog(true);
-    setPrice(""); // Set price to an empty string or 0 if needed
-    setAdvancePrice(""); // Set advancePrice to an empty string or 0 if needed
-    setRemainingPrice(""); // Set remainingPrice to an empty string or 0 if needed
-  };
-
-  // Function to close the recurring dialog
-  const handleRecurringDialogClose = () => {
-    setOpenRecurringDialog(false);
-  };
-  // Function to handle submission of recurring data
-  const handleRecurringSubmit = () => {
-    setOpenRecurringDialog(false);
-  };
 
   // Function to fetch ticket details by ID
   const fetchTicketDetails = async (ticketId) => {
@@ -89,12 +66,12 @@ export default function LocalSeoActiveClients() {
   const closeTicketDetailsModal = () => {
     setIsTicketDetailsOpen(false);
   };
-
+  const param1 = "651ada78819ff0aec6af1381";
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `${apiUrl}/api/tickets?departmentId=${user?.department?._id}&salesDep=true`
+          `${apiUrl}/api/tickets?departmentId=${param1}&salesDep=true`
         );
         if (response.ok) {
           const data = await response.json();
@@ -166,40 +143,6 @@ export default function LocalSeoActiveClients() {
     setPage(0);
   };
 
-  // Function to handle form field changes
-  const handlePriceChange = (event) => {
-    const { value } = event.target;
-
-    // Convert the input value to a float, or 0 if it's not a valid number
-    const updatedPrice = parseFloat(value) || 0;
-    const updatedAdvancePrice = parseFloat(advancePrice) || 0;
-
-    // Calculate the remaining price
-    const remaining = updatedPrice - updatedAdvancePrice;
-
-    // Update the state variables for price and remaining price
-    setPrice(updatedPrice);
-    setRemainingPrice(remaining);
-  };
-
-  const handleAdvancePriceChange = (event) => {
-    const { value } = event.target;
-
-    // Convert the input value to a float, or 0 if it's not a valid number
-    const updatedPrice = parseFloat(price) || 0;
-    const updatedAdvancePrice = parseFloat(value) || 0;
-
-    // Calculate the remaining price
-    const remaining = updatedPrice - updatedAdvancePrice;
-
-    // Update the state variables for advance price and remaining price
-    setAdvancePrice(updatedAdvancePrice);
-    setRemainingPrice(remaining);
-  };
-
-  const handleRemainingPriceChange = (event) => {
-    setRemainingPrice(event.target.value);
-  };
   // Function to update reporting date
   const updateReportingDate = async (ticketId, newReportingDate) => {
     try {
@@ -238,46 +181,6 @@ export default function LocalSeoActiveClients() {
 
     // Call the updateReportingDate function
     updateReportingDate(ticketId, newReportingDate);
-  };
-
-  // Function to handle the "Recurring" button click
-  const handleRecurringClick = (ticketId) => {
-    // Get the current reporting date
-    const currentReportingDate = new Date(reportingDates[ticketId]);
-
-    // Calculate one month later date
-    const oneMonthLaterDate = new Date(
-      currentReportingDate.getFullYear(),
-      currentReportingDate.getMonth() + 1,
-      currentReportingDate.getDate()
-    );
-
-    // Make an API request to update the reporting date in the database
-    fetch(`${apiUrl}/api/tickets/reportingDate-update`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        ticketId,
-        reportingDate: oneMonthLaterDate.toISOString(),
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.payload) {
-          // If the update is successful, update the local state with the new reporting date
-          setReportingDates((prevReportingDates) => ({
-            ...prevReportingDates,
-            [ticketId]: oneMonthLaterDate.toISOString(),
-          }));
-        } else {
-          console.error("Error updating reporting date");
-        }
-      })
-      .catch((error) => {
-        console.error("Error updating reporting date", error);
-      });
   };
   // Function to handle notes edit and update
   const handleNotesEdit = (ticketId, editedNotes) => {
@@ -333,162 +236,105 @@ export default function LocalSeoActiveClients() {
       status: temp,
     });
   };
+
   return (
-    <>
-      <div>
-        <div
-          className="search"
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            alignItems: "center",
-            marginTop: "3%",
-          }}
-        >
-          <div className="searchIcon">
-            <SearchIcon />
-          </div>
-          <InputBase
-            placeholder="Search Clients..."
-            inputProps={{ "aria-label": "search" }}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            onKeyPress={handleSearch}
-          />
+    <div>
+      <Header />
+      <div className="cards">
+        <SocialMediaSalesCards />
+      </div>
+      <div
+        className="search"
+        style={{
+          display: "flex",
+          justifyContent: "flex-end",
+          alignItems: "center",
+          marginTop: "3%",
+        }}
+      >
+        <div className="searchIcon">
+          <SearchIcon />
         </div>
+        <InputBase
+          placeholder="Search Clients..."
+          inputProps={{ "aria-label": "search" }}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          onKeyPress={handleSearch}
+        />
       </div>
       <Table sx={{ minWidth: 800 }} aria-label="custom pagination table">
         <TableHead>
           <TableRow>
             <TableCell>Business Name</TableCell>
             <TableCell>Sales Person</TableCell>
-            <TableCell>Work Type</TableCell>
             <TableCell>Active/Not Active</TableCell>
             <TableCell>Subscription Date</TableCell>
             <TableCell>Reporting Date</TableCell>
             <TableCell>Details</TableCell>
             <TableCell>Notes</TableCell>
-            <TableCell>Recurring</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {tickets
-            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            .map((ticket) => (
-              <TableRow key={ticket._id}>
-                {ticket.businessdetails && (
-                  <TableCell component="th" scope="row">
-                    {ticket.businessdetails.clientName}
-                  </TableCell>
-                )}
-                {ticket.TicketDetails && (
-                  <TableCell style={{ width: 160 }} align="left">
-                    {ticket.TicketDetails.assignor}
-                  </TableCell>
-                )}
-                {ticket.businessdetails && (
-                  <TableCell style={{ width: 160 }} align="left">
-                    {ticket.businessdetails.workStatus}
-                  </TableCell>
-                )}
+          {tickets.map((ticket) => (
+            <TableRow key={ticket._id}>
+              {ticket.businessdetails && (
+                <TableCell component="th" scope="row">
+                  {ticket.businessdetails.clientName}
+                </TableCell>
+              )}
+              {ticket.TicketDetails && (
                 <TableCell style={{ width: 160 }} align="left">
-                  <FormControl>
-                    <Select
-                      value={ticket.ActiveNotActive || "Active"}
-                      onClick={() => handleClick(ticket)}
-                      style={{
-                        backgroundColor:
-                          ticket.ActiveNotActive === "Active"
-                            ? "rgb(25, 118, 210)"
-                            : "#dc3545", // set background color for Select
-                        color:
-                          ticket.ActiveNotActive === "Active"
-                            ? "white"
-                            : "black",
-                      }}
-                    >
-                      <MenuItem value="Active">Active</MenuItem>
-                      <MenuItem value="Not Active">Not Active</MenuItem>
-                    </Select>
-                  </FormControl>
+                  {ticket.TicketDetails.assignor}
                 </TableCell>
-                <TableCell style={{ width: 160 }} align="left">
-                  {new Date(ticket.createdAt).toLocaleDateString()}
-                </TableCell>
-                <TableCell
-                  style={{ width: 160 }}
-                  align="left"
-                  contentEditable={true}
-                  onBlur={(e) =>
-                    handleReportingDateEdit(ticket._id, e.target.innerText)
-                  }
-                >
-                  {new Date(ticket.reportingDate).toLocaleDateString()}
-                </TableCell>
-                <TableCell style={{ width: 160 }} align="left">
-                  <IconButton onClick={() => fetchTicketDetails(ticket._id)}>
-                    <VisibilityIcon />
-                  </IconButton>
-                </TableCell>
-                <TableCell
-                  style={{ width: 180, whiteSpace: "pre-line" }} // Apply the white-space property here
-                  align="left"
-                  contentEditable={true}
-                  onBlur={(e) =>
-                    handleNotesEdit(ticket._id, e.target.innerText)
-                  }
-                >
-                  {ticket.businessdetails.notes}
-                </TableCell>
-                <TableCell>
-                  <Button
-                    style={{ backgroundColor: "red" }}
-                    variant="contained"
-                    color="primary"
-                    onClick={() => {
-                      handleRecurringDialogOpen();
-                      handleRecurringClick(ticket._id);
+              )}
+
+              <TableCell style={{ width: 160 }} align="left">
+                <FormControl>
+                  <Select
+                    value={ticket.ActiveNotActive || "Active"}
+                    onClick={() => handleClick(ticket)}
+                    style={{
+                      backgroundColor:
+                        ticket.ActiveNotActive === "Active"
+                          ? "#28a745"
+                          : "#dc3545", // set background color for Select
+                      color:
+                        ticket.ActiveNotActive === "Active" ? "white" : "black",
                     }}
                   >
-                    Recurring
-                  </Button>
-                  {/* Recurring Dialog */}
-                  <Dialog
-                    open={openRecurringDialog}
-                    onClose={handleRecurringDialogClose}
-                  >
-                    <DialogTitle>Recurring Details</DialogTitle>
-                    {/* <DialogContent>
-                      <TextField
-                        label="Price"
-                        value={price}
-                        onChange={handlePriceChange}
-                        fullWidth
-                      />
-                      <TextField
-                        label="Advance Price"
-                        value={advancePrice}
-                        onChange={handleAdvancePriceChange}
-                        fullWidth
-                      />
-                      <TextField
-                        label="Remaining Price"
-                        value={remainingPrice}
-                        onChange={handleRemainingPriceChange}
-                        fullWidth
-                      />
-                    </DialogContent> */}
-                    <DialogActions>
-                      <Button onClick={handleRecurringDialogClose}>
-                        Cancel
-                      </Button>
-                      <Button onClick={handleRecurringSubmit} color="primary">
-                        Save
-                      </Button>
-                    </DialogActions>
-                  </Dialog>
-                </TableCell>
-              </TableRow>
-            ))}
+                    <MenuItem value="Active">Active</MenuItem>
+                    <MenuItem value="Not Active">Not Active</MenuItem>
+                  </Select>
+                </FormControl>
+              </TableCell>
+              <TableCell style={{ width: 160 }} align="left">
+                {new Date(ticket.createdAt).toLocaleDateString()}
+              </TableCell>
+              <TableCell
+                style={{ width: 160 }}
+                align="left"
+                contentEditable={true}
+                onBlur={(e) =>
+                  handleReportingDateEdit(ticket._id, e.target.innerText)
+                }
+              >
+                {new Date(ticket.reportingDate).toLocaleDateString()}
+              </TableCell>
+              <TableCell style={{ width: 160 }} align="left">
+                <IconButton onClick={() => fetchTicketDetails(ticket._id)}>
+                  <VisibilityIcon />
+                </IconButton>
+              </TableCell>
+              <TableCell
+                style={{ width: 180, whiteSpace: "pre-line" }} // Apply the white-space property here
+                align="left"
+                contentEditable={true}
+                onBlur={(e) => handleNotesEdit(ticket._id, e.target.innerText)}
+              >
+                {ticket.businessdetails.notes}
+              </TableCell>
+            </TableRow>
+          ))}
           {emptyRows > 0 && (
             <TableRow style={{ height: 53 * emptyRows }}>
               <TableCell colSpan={8} />
@@ -523,6 +369,8 @@ export default function LocalSeoActiveClients() {
           ticketDetails={selectedTicketDetails}
         />
       )}
-    </>
+    </div>
   );
-}
+};
+
+export default ActiveSocialMediaSalesClients;

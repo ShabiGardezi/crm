@@ -289,14 +289,16 @@ export default function NotActiveClients() {
   return (
     <>
       <Header />
-      <ActiveNotActiveCard />
-      {(user?.department._id === "651ada78819ff0aec6af1381" ||
-        user?.department._id === "651ada98819ff0aec6af1382") && (
-        <CardsSocialMediaTrack />
-      )}
-      {user?.department._id === "65195c8f504d80e8f11b0d15" && (
-        <OneTimeServiceClientsCard />
-      )}
+      <div className="cards">
+        <ActiveNotActiveCard />
+        {(user?.department._id === "651ada78819ff0aec6af1381" ||
+          user?.department._id === "651ada98819ff0aec6af1382") && (
+          <CardsSocialMediaTrack />
+        )}
+        {user?.department._id === "65195c8f504d80e8f11b0d15" && (
+          <OneTimeServiceClientsCard />
+        )}
+      </div>
       <TableContainer component={Paper}>
         <div>
           <div
@@ -319,6 +321,7 @@ export default function NotActiveClients() {
             />
           </div>
         </div>
+        {/* Social media and reviews */}
         {(user?.department._id === "651ada78819ff0aec6af1381" ||
           user?.department._id === "651ada98819ff0aec6af1382") && (
           <Table sx={{ minWidth: 800 }} aria-label="custom pagination table">

@@ -14,17 +14,13 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import SearchIcon from "@mui/icons-material/Search";
 import InputBase from "@mui/material/InputBase";
-import Header from "../../Header";
-import DisplayTicketDetails from "../../Tickets/DisplayTicketDetails";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import axios from "axios";
-import "../../../styles/Home/TicketCard.css";
-import { useLocation } from "react-router-dom";
+import SocialMediaSalesCards from "./SocialMediaSalesCards";
+import Header from "../../Header";
 import TablePaginationActions from "../../Tickets/TicketsTablePagination/TicketsPagination";
-import UnauthorizedError from "../../../components/Error_401";
-import MarketingSalesCards from "../../SalesClientsSheet/PaidMarketingSalesSheet.jsx/MarketingSalesCards";
-
-export default function PaidMarketingClientSheet(props) {
+import DisplayTicketDetails from "../../Tickets/DisplayTicketDetails";
+export default function InActiveSocialMediaSalesClients() {
   const apiUrl = process.env.REACT_APP_API_URL;
   const user = JSON.parse(localStorage.getItem("user"));
   const [page, setPage] = React.useState(0);
@@ -73,9 +69,12 @@ export default function PaidMarketingClientSheet(props) {
   const closeTicketDetailsModal = () => {
     setIsTicketDetailsOpen(false);
   };
-  const location = useLocation();
-  const params = new URLSearchParams(location.search);
-  const param1 = params.get("depId");
+
+  const clearSelectedTicketDetails = () => {
+    setSelectedTicketDetails(null);
+  };
+  const param1 = "651ada78819ff0aec6af1381";
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -84,7 +83,12 @@ export default function PaidMarketingClientSheet(props) {
         );
         if (response.ok) {
           const data = await response.json();
-          setTickets(data.payload);
+
+          // Filter only the tickets with an "Not Active" status
+          const activeTickets = data.payload.filter(
+            (ticket) => ticket.ActiveNotActive === "Not Active"
+          );
+          setTickets(activeTickets);
           data.payload.forEach((ticket) => {
             fetchReportingDate(ticket._id);
           });
@@ -186,6 +190,45 @@ export default function PaidMarketingClientSheet(props) {
     updateReportingDate(ticketId, newReportingDate);
   };
 
+  // Function to handle the "Recurring" button click
+  const handleRecurringClick = (ticketId) => {
+    // Get the current reporting date
+    const currentReportingDate = new Date(reportingDates[ticketId]);
+
+    // Calculate one month later date
+    const oneMonthLaterDate = new Date(
+      currentReportingDate.getFullYear(),
+      currentReportingDate.getMonth() + 1,
+      currentReportingDate.getDate()
+    );
+
+    // Make an API request to update the reporting date in the database
+    fetch(`${apiUrl}/api/tickets/reportingDate-update`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ticketId,
+        reportingDate: oneMonthLaterDate.toISOString(),
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.payload) {
+          // If the update is successful, update the local state with the new reporting date
+          setReportingDates((prevReportingDates) => ({
+            ...prevReportingDates,
+            [ticketId]: oneMonthLaterDate.toISOString(),
+          }));
+        } else {
+          console.error("Error updating reporting date");
+        }
+      })
+      .catch((error) => {
+        console.error("Error updating reporting date", error);
+      });
+  };
   // Function to handle notes edit and update
   const handleNotesEdit = (ticketId, editedNotes) => {
     // Make an API request to update the notes in the database
@@ -240,47 +283,11 @@ export default function PaidMarketingClientSheet(props) {
       status: temp,
     });
   };
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        let url = "";
-        if (user.role === "admin" || user.department.name === "Sales") {
-          url = `${apiUrl}/api/tickets?departmentId=${props.department._id}`;
-        } else {
-          url = `${apiUrl}/api/tickets?departmentId=${user?.department?._id}`;
-        }
-        const response = await fetch(url);
-        if (response.ok) {
-          const data = await response.json();
-
-          setTickets(data.payload);
-          data.payload.forEach((ticket) => {
-            fetchReportingDate(ticket._id);
-          });
-        } else {
-          console.error("Error fetching data");
-        }
-      } catch (error) {
-        console.error("Error fetching data", error);
-      }
-    };
-
-    fetchData();
-  }, []);
-  if (
-    param1 !== user?.department?._id &&
-    param1 !== "651b3409819ff0aec6af1387" &&
-    user.role !== "admin"
-  ) {
-    return <UnauthorizedError />;
-  }
   return (
     <>
       <Header />
       <div className="cards">
-        {user?.department._id === "651b3409819ff0aec6af1387" && (
-          <MarketingSalesCards />
-        )}
+        <SocialMediaSalesCards />
       </div>
       <TableContainer component={Paper}>
         <div>
@@ -304,6 +311,7 @@ export default function PaidMarketingClientSheet(props) {
             />
           </div>
         </div>
+        {/* Social media and reviews */}
         <Table sx={{ minWidth: 800 }} aria-label="custom pagination table">
           <TableHead>
             <TableRow>
@@ -317,13 +325,7 @@ export default function PaidMarketingClientSheet(props) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {(rowsPerPage > 0
-              ? tickets.slice(
-                  page * rowsPerPage,
-                  page * rowsPerPage + rowsPerPage
-                )
-              : tickets
-            ).map((ticket) => (
+            {tickets.map((ticket) => (
               <TableRow key={ticket._id}>
                 {ticket.businessdetails && (
                   <TableCell component="th" scope="row">
@@ -335,6 +337,7 @@ export default function PaidMarketingClientSheet(props) {
                     {ticket.TicketDetails.assignor}
                   </TableCell>
                 )}
+
                 <TableCell style={{ width: 160 }} align="left">
                   <FormControl>
                     <Select
@@ -369,7 +372,6 @@ export default function PaidMarketingClientSheet(props) {
                 >
                   {new Date(ticket.reportingDate).toLocaleDateString()}
                 </TableCell>
-
                 <TableCell style={{ width: 160 }} align="left">
                   <IconButton onClick={() => fetchTicketDetails(ticket._id)}>
                     <VisibilityIcon />

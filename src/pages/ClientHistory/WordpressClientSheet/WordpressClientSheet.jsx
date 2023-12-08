@@ -24,6 +24,7 @@ import { useLocation } from "react-router-dom";
 import TablePaginationActions from "../../Tickets/TicketsTablePagination/TicketsPagination";
 import UnauthorizedError from "../../../components/Error_401";
 import { Typography } from "@mui/material";
+import WordpressSalesCards from "../../SalesClientsSheet/WordpressSalesSheet/WordpressSalesCards";
 export default function WordpressClientSheet(props) {
   const apiUrl = process.env.REACT_APP_API_URL;
   const user = JSON.parse(localStorage.getItem("user"));
@@ -284,9 +285,7 @@ export default function WordpressClientSheet(props) {
       </div>
 
       {user?.department._id === "651b3409819ff0aec6af1387" && (
-        <Typography variant="h4">
-          Wordpress & Ecommerce Client Sheet{" "}
-        </Typography>
+        <WordpressSalesCards />
       )}
       <TableContainer component={Paper}>
         <div>
@@ -347,15 +346,15 @@ export default function WordpressClientSheet(props) {
                       value={ticket.ActiveNotActive || "Active"}
                       onClick={() => handleClick(ticket)}
                       style={{
-                          backgroundColor:
-                            ticket.ActiveNotActive === "Active"
-                              ? "rgb(25, 118, 210)"
-                              : "#dc3545", // set background color for Select
-                          color:
-                            ticket.ActiveNotActive === "Active"
-                              ? "white"
-                              : "black",
-                        }}
+                        backgroundColor:
+                          ticket.ActiveNotActive === "Active"
+                            ? "rgb(25, 118, 210)"
+                            : "#dc3545", // set background color for Select
+                        color:
+                          ticket.ActiveNotActive === "Active"
+                            ? "white"
+                            : "black",
+                      }}
                     >
                       <MenuItem value="Active">Active</MenuItem>
                       <MenuItem value="Not Active">Not Active</MenuItem>

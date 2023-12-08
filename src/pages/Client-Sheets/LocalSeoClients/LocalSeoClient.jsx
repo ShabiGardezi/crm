@@ -30,6 +30,7 @@ import { useLocation } from "react-router-dom";
 import TablePaginationActions from "../../Tickets/TicketsTablePagination/TicketsPagination";
 import UnauthorizedError from "../../../components/Error_401";
 import { Typography } from "@mui/material";
+import LocalSeoSalesCards from "../../SalesClientsSheet/LocalSeoSalesSheet/LocalSeoSalesCards";
 export default function LocalSeoSheet() {
   const apiUrl = process.env.REACT_APP_API_URL;
   const user = JSON.parse(localStorage.getItem("user"));
@@ -339,9 +340,7 @@ export default function LocalSeoSheet() {
         <ActiveNotActiveCard />
       )}
       {user?.department._id === "651b3409819ff0aec6af1387" && (
-        <Typography variant="h4">
-          Local SEO/ GMB OPTIMIZATION Client Sheet
-        </Typography>
+        <LocalSeoSalesCards />
       )}
       <TableContainer component={Paper}>
         <div>

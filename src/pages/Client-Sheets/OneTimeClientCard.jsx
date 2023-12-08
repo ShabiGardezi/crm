@@ -1,16 +1,39 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Card, Typography, CardHeader, CardContent } from "@mui/material";
 import "../../styles/Home/TicketCard.css";
 
 const TicketCard = ({ heading, counter }) => {
+  const [isClicked, setIsClicked] = useState(false);
+  const [isSelected, setSelected] = useState(false);
+  const location = useLocation();
   const cardClass =
-    heading === "Active Clients"
-      ? "open-tickets-card"
-      : "completed-tickets-card";
+    heading === "Open Tickets" ? "open-tickets-card" : "completed-tickets-card";
 
+  const handleClick = () => {
+    if (!isClicked) {
+      setIsClicked((prevIsClicked) => !prevIsClicked);
+    }
+  };
+  useEffect(() => {
+    const { pathname } = location;
+    if (
+      pathname === "/one_time_service_clients" &&
+      heading === "One-Time Service Clients"
+    ) {
+      setSelected(true);
+    } else if (
+      pathname === "/monthly_service_clients" &&
+      heading === "Monthly Clients"
+    ) {
+      setSelected(true);
+    }
+  }, [location]);
   return (
-    <Card className={cardClass}>
+    <Card
+      className={`${cardClass} ${isSelected ? "clicked" : "ticket-card"}`}
+      onClick={handleClick}
+    >
       <CardHeader title={heading} />
       <CardContent>
         <Typography variant="h6">{counter}</Typography>
@@ -18,7 +41,6 @@ const TicketCard = ({ heading, counter }) => {
     </Card>
   );
 };
-
 function OneTimeServiceClientsCard() {
   const user = JSON.parse(localStorage.getItem("user"));
   const apiUrl = process.env.REACT_APP_API_URL;

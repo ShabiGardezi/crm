@@ -14,17 +14,18 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import SearchIcon from "@mui/icons-material/Search";
 import InputBase from "@mui/material/InputBase";
+import Button from "@mui/material/Button";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import UnauthorizedError from "../../../components/Error_401";
+import axios from "axios";
+import "../../../styles/clients/AddClient.css";
+import { Typography } from "@mui/material";
 import Header from "../../Header";
 import DisplayTicketDetails from "../../Tickets/DisplayTicketDetails";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import axios from "axios";
-import "../../../styles/Home/TicketCard.css";
-import { useLocation } from "react-router-dom";
 import TablePaginationActions from "../../Tickets/TicketsTablePagination/TicketsPagination";
-import UnauthorizedError from "../../../components/Error_401";
-import MarketingSalesCards from "../../SalesClientsSheet/PaidMarketingSalesSheet.jsx/MarketingSalesCards";
-
-export default function PaidMarketingClientSheet(props) {
+import LocalSeoSalesCards from "./WordpressSalesCards";
+import SearchBar from "../../SearchIcon/SearchIcon";
+export default function ActiveWordpressSalesClients() {
   const apiUrl = process.env.REACT_APP_API_URL;
   const user = JSON.parse(localStorage.getItem("user"));
   const [page, setPage] = React.useState(0);
@@ -34,6 +35,48 @@ export default function PaidMarketingClientSheet(props) {
   const [reportingDates, setReportingDates] = useState({});
   const [isTicketDetailsOpen, setIsTicketDetailsOpen] = useState(false);
   const [selectedTicketDetails, setSelectedTicketDetails] = useState(null);
+  const [openRecurringDialog, setOpenRecurringDialog] = useState(false);
+  const [remainingPrice, setRemainingPrice] = useState("");
+  const [ticketSelected, setTicketSelected] = useState();
+  const [paymentRecieved, setPaymentRecieved] = useState(0);
+  // Function to open the recurring dialog and reset state values
+  const handleRecurringDialogOpen = () => {
+    setOpenRecurringDialog(true);
+    // setRemainingPrice("");
+  };
+
+  // Function to close the recurring dialog
+  const handleRecurringDialogClose = () => {
+    setOpenRecurringDialog(false);
+  };
+
+  const handleRemainingPriceChange = (event) => {
+    setRemainingPrice(event.target.value);
+  };
+
+  // Function to handle submission of recurring data
+  const handleRecurringSubmit = async () => {
+    try {
+      const currentReportingDate = new Date(reportingDates[ticketSelected._id]);
+      const oneMonthLaterDate = new Date(
+        currentReportingDate.getFullYear(),
+        currentReportingDate.getMonth() + 1,
+        currentReportingDate.getDate()
+      );
+
+      // Update the reporting date using the `api/tickets/reportingDate-update` endpoint
+      await axios.put(`${apiUrl}/api/tickets/reportingDate-update`, {
+        ticketId: ticketSelected._id,
+        reportingDate: oneMonthLaterDate.toISOString(),
+      });
+      const response = await axios.post(
+        `${apiUrl}/api/tickets/update_payment_history`,
+        { ticketId: ticketSelected._id, payment: remainingPrice }
+      );
+    } catch (error) {}
+
+    setOpenRecurringDialog(false);
+  };
 
   <TablePaginationActions />;
   const handleSearch = async (e) => {
@@ -73,9 +116,7 @@ export default function PaidMarketingClientSheet(props) {
   const closeTicketDetailsModal = () => {
     setIsTicketDetailsOpen(false);
   };
-  const location = useLocation();
-  const params = new URLSearchParams(location.search);
-  const param1 = params.get("depId");
+  const param1 = "65195c81504d80e8f11b0d14";
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -84,7 +125,13 @@ export default function PaidMarketingClientSheet(props) {
         );
         if (response.ok) {
           const data = await response.json();
-          setTickets(data.payload);
+
+          // Filter only the tickets with an "Active" status
+          const activeTickets = data.payload.filter(
+            (ticket) => ticket.ActiveNotActive === "Active"
+          );
+
+          setTickets(activeTickets);
           data.payload.forEach((ticket) => {
             fetchReportingDate(ticket._id);
           });
@@ -224,6 +271,42 @@ export default function PaidMarketingClientSheet(props) {
         console.error("Error updating notes", error);
       });
   };
+  const handleRemainingEdit = (ticketId, remaining) => {
+    // Make an API request to update the notes in the database
+    fetch(`${apiUrl}/api/tickets/remaining-update`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ticketId,
+        remaining: remaining,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.payload) {
+          const updatedTickets = tickets.map((ticket) => {
+            if (ticket._id === ticketId) {
+              return {
+                ...ticket,
+                quotation: {
+                  ...ticket.quotation,
+                  remainingPrice: remaining,
+                },
+              };
+            }
+            return ticket;
+          });
+          setTickets(updatedTickets);
+        } else {
+          console.error("Error updating notes");
+        }
+      })
+      .catch((error) => {
+        console.error("Error updating notes", error);
+      });
+  };
 
   const handleClick = (ticket) => {
     let temp = "";
@@ -240,33 +323,6 @@ export default function PaidMarketingClientSheet(props) {
       status: temp,
     });
   };
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        let url = "";
-        if (user.role === "admin" || user.department.name === "Sales") {
-          url = `${apiUrl}/api/tickets?departmentId=${props.department._id}`;
-        } else {
-          url = `${apiUrl}/api/tickets?departmentId=${user?.department?._id}`;
-        }
-        const response = await fetch(url);
-        if (response.ok) {
-          const data = await response.json();
-
-          setTickets(data.payload);
-          data.payload.forEach((ticket) => {
-            fetchReportingDate(ticket._id);
-          });
-        } else {
-          console.error("Error fetching data");
-        }
-      } catch (error) {
-        console.error("Error fetching data", error);
-      }
-    };
-
-    fetchData();
-  }, []);
   if (
     param1 !== user?.department?._id &&
     param1 !== "651b3409819ff0aec6af1387" &&
@@ -274,36 +330,16 @@ export default function PaidMarketingClientSheet(props) {
   ) {
     return <UnauthorizedError />;
   }
+
   return (
     <>
       <Header />
-      <div className="cards">
-        {user?.department._id === "651b3409819ff0aec6af1387" && (
-          <MarketingSalesCards />
-        )}
-      </div>
+
+      {user?.department._id === "651b3409819ff0aec6af1387" && (
+        <LocalSeoSalesCards />
+      )}
       <TableContainer component={Paper}>
-        <div>
-          <div
-            className="search"
-            style={{
-              display: "flex",
-              justifyContent: "flex-end",
-              alignItems: "center",
-              marginTop: "3%",
-            }}
-          >
-            <div className="searchIcon">
-              <SearchIcon />
-            </div>
-            <InputBase
-              placeholder="Search Client..."
-              inputProps={{ "aria-label": "search" }}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onKeyPress={handleSearch}
-            />
-          </div>
-        </div>
+        <SearchBar onSearch={handleSearch} />
         <Table sx={{ minWidth: 800 }} aria-label="custom pagination table">
           <TableHead>
             <TableRow>
@@ -311,19 +347,12 @@ export default function PaidMarketingClientSheet(props) {
               <TableCell>Sales Person</TableCell>
               <TableCell>Active/Not Active</TableCell>
               <TableCell>Subscription Date</TableCell>
-              <TableCell>Reporting Date</TableCell>
               <TableCell>Details</TableCell>
               <TableCell>Notes</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {(rowsPerPage > 0
-              ? tickets.slice(
-                  page * rowsPerPage,
-                  page * rowsPerPage + rowsPerPage
-                )
-              : tickets
-            ).map((ticket) => (
+            {tickets.map((ticket) => (
               <TableRow key={ticket._id}>
                 {ticket.businessdetails && (
                   <TableCell component="th" scope="row">
@@ -359,17 +388,6 @@ export default function PaidMarketingClientSheet(props) {
                 <TableCell style={{ width: 160 }} align="left">
                   {new Date(ticket.createdAt).toLocaleDateString()}
                 </TableCell>
-                <TableCell
-                  style={{ width: 160 }}
-                  align="left"
-                  contentEditable={true}
-                  onBlur={(e) =>
-                    handleReportingDateEdit(ticket._id, e.target.innerText)
-                  }
-                >
-                  {new Date(ticket.reportingDate).toLocaleDateString()}
-                </TableCell>
-
                 <TableCell style={{ width: 160 }} align="left">
                   <IconButton onClick={() => fetchTicketDetails(ticket._id)}>
                     <VisibilityIcon />
