@@ -18,6 +18,7 @@ import {
   DialogActions,
 } from "@mui/material";
 import DescriptionIcon from "@mui/icons-material/Description";
+import Badge from "@mui/material/Badge";
 import logoImage from "../assests/Navbarlogo.png";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -95,6 +96,7 @@ const Header = () => {
         setIsMenuOpen(false);
       }
     };
+
     // Add the event listener to the window
     window.addEventListener("click", handleOutsideClick);
     return () => {
@@ -128,6 +130,16 @@ const Header = () => {
   };
 
   const user = JSON.parse(localStorage.getItem("user"));
+  const [nCount, setNcount] = useState(0);
+  useEffect(() => {
+    axios
+      .get(`http://localhost:5000/api/notification/all?userId=${user._id}`)
+      .then(({ data }) => {
+        const filtered = data.payload.filter((x) => x.isRead === false);
+        setNcount(filtered.length);
+      })
+      .catch((err) => console.error(err));
+  }, [user]);
   const handleDepartmentSelect = (departmentName) => {
     // Define a mapping of department names to their respective routes
     const departmentRoutes = {
@@ -237,12 +249,16 @@ const Header = () => {
                 <ListItemText primary="Home" />
               </ListItem>
             </Link>
-            <ListItem button>
-              <ListItemIcon>
-                <Inbox />
-              </ListItemIcon>
-              <ListItemText primary="Inbox" />
-            </ListItem>
+            <Link to="/inbox">
+              <ListItem button>
+                <ListItemIcon>
+                  <Badge badgeContent={nCount} color="primary" invisible={nCount === 0}>
+                    <Inbox />
+                  </Badge>
+                </ListItemIcon>
+                <ListItemText primary="Inbox" />
+              </ListItem>
+            </Link>
             {/* <Link to="/todo">
               <ListItem button>
                 <ListItemIcon>

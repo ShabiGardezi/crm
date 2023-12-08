@@ -27,22 +27,23 @@ const ToDoContext = ({children}) => {
         });
     };
 
+
     const handleToggleToDo = (id) => {
-  /*      async function updateNoteStatus() {
-            const status = false;
-            try {
-                const response = await axios.put(`${apiUrl}/api/notes/update`, { id, status });
-                console.log('Updated Note:', response.data);
-            } catch (error) {
-                if (error.response) {
-                    console.error('Error response from server:', error.response.data);
-                } else if (error.request) {
-                    console.error('No response received:', error.request);
-                } else {
-                    console.error('Error setting up the request:', error.message);
-                }
-            }
-        }*/
+        /*      async function updateNoteStatus() {
+                  const status = false;
+                  try {
+                      const response = await axios.put(`${apiUrl}/api/notes/update`, { id, status });
+                      console.log('Updated Note:', response.data);
+                  } catch (error) {
+                      if (error.response) {
+                          console.error('Error response from server:', error.response.data);
+                      } else if (error.request) {
+                          console.error('No response received:', error.request);
+                      } else {
+                          console.error('Error setting up the request:', error.message);
+                      }
+                  }
+              }*/
 
     };
 

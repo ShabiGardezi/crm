@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Route, Routes, Navigate } from "react-router-dom";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SIgnUp";
@@ -38,9 +38,14 @@ import DesignersForm from "./pages/Departments/Designers";
 import ReviewsDesignersTickets from "./pages/Tickets/DesignersTicketHistory/ReviewsDesignersTickets";
 import WebseoDesignerTickets from "./pages/Tickets/DesignersTicketHistory/webseo_designer_tickets";
 import WordpressDesignersTickets from "./pages/Tickets/DesignersTicketHistory/wordpress_designer_tickets";
+import Inbox from "./pages/InboxPage";
 
 function App() {
   const user = JSON.parse(localStorage.getItem("user"));
+  const nCount = localStorage.getItem("notificationCount");
+  const [notificationCount, setNotificationCount] = useState(
+    nCount ? nCount : 0
+  );
   return (
     <div className="App">
       <Toaster />
@@ -51,21 +56,46 @@ function App() {
           path="/signup"
           element={user?.role === "admin" ? <SignUp /> : <Navigate to="/" />}
         />
-        <Route path="/home" element={<Home />} />
-        <Route path="/department/webseoform" element={<WebSeoForm />} />
-        <Route path="/department/localseoform" element={<LocalSeoForm />} />
-        <Route path="/department/designersform" element={<DesignersForm />} />
+        <Route
+          path="/home"
+          element={<Home notificationCount={notificationCount} />}
+        />
+        <Route
+          path="/inbox"
+          element={<Inbox notificationCount={notificationCount} />}
+        />
+        <Route
+          path="/department/webseoform"
+          element={<WebSeoForm notificationCount={notificationCount} />}
+        />
+        <Route
+          path="/department/localseoform"
+          element={<LocalSeoForm notificationCount={notificationCount} />}
+        />
+        <Route
+          path="/department/designersform"
+          element={<DesignersForm notificationCount={notificationCount} />}
+        />
         <Route
           path="/department/socialmediaform"
-          element={<SocialMediaForm />}
+          element={<SocialMediaForm notificationCount={notificationCount} />}
         />
         <Route
           path="/department/customdevelopment"
-          element={<CustomDevelopment />}
+          element={<CustomDevelopment notificationCount={notificationCount} />}
         />
-        <Route path="/department/wordpressform" element={<WordPress />} />
-        <Route path="/department/writersform" element={<WritersForm />} />
-        <Route path="/department/reviewsform" element={<Reviews />} />
+        <Route
+          path="/department/wordpressform"
+          element={<WordPress notificationCount={notificationCount} />}
+        />
+        <Route
+          path="/department/writersform"
+          element={<WritersForm notificationCount={notificationCount} />}
+        />
+        <Route
+          path="/department/reviewsform"
+          element={<Reviews notificationCount={notificationCount} />}
+        />
         <Route
           path="/department/paidmarketingform"
           element={<PaidMarketing />}
@@ -85,20 +115,32 @@ function App() {
         )} */}
 
         {/* This is showing ticket history of department as per login user department */}
-        <Route path="/history" element={<ShowOpenTickets />} />
+        <Route
+          path="/history"
+          element={<ShowOpenTickets notificationCount={notificationCount} />}
+        />
         <Route
           path="/reviews_designer_tickets"
-          element={<ReviewsDesignersTickets />}
+          element={
+            <ReviewsDesignersTickets notificationCount={notificationCount} />
+          }
         />
         <Route
           path="/webseo_designer_tickets"
-          element={<WebseoDesignerTickets />}
+          element={
+            <WebseoDesignerTickets notificationCount={notificationCount} />
+          }
         />
         <Route
           path="/wordpress_designer_tickets"
-          element={<WordpressDesignersTickets />}
+          element={
+            <WordpressDesignersTickets notificationCount={notificationCount} />
+          }
         />
-        <Route path="/tickets_created" element={<TicketCreatedTable />} />
+        <Route
+          path="/tickets_created"
+          element={<TicketCreatedTable notificationCount={notificationCount} />}
+        />
         {/* <Route path="/open_tickets" element={<ShowOpenTickets />} /> */}
         <Route path="/close_tickets" element={<ShowCloseTickets />} />
         <Route path="/local_seo_tickets" element={<LocalSeoWritersTickets />} />
@@ -149,3 +191,119 @@ function App() {
 }
 
 export default App;
+// import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
+
+// const App = () => {
+//   const arr = [
+//     {
+//       id: 1,
+//       dueDate: "2023-12-30",
+//       majorAssignee: "Website SEO",
+//       assignerDept: "Sales",
+//       createdAt: new Date(),
+//     },
+//     {
+//       id: 2,
+//       dueDate: "2023-12-30",
+//       majorAssignee: "Website SEO",
+//       assignerDept: "Sales",
+//       createdAt: new Date(),
+//     },
+//     {
+//       id: 3,
+//       dueDate: "2023-12-30",
+//       majorAssignee: "Website SEO",
+//       assignerDept: "Sales",
+//       createdAt: new Date(),
+//     },
+//     {
+//       id: 4,
+//       dueDate: "2023-12-30",
+//       majorAssignee: "Website SEO",
+//       assignerDept: "Sales",
+//       createdAt: new Date(),
+//     },
+//     {
+//       id: 5,
+//       dueDate: "2023-12-30",
+//       majorAssignee: "Website SEO",
+//       assignerDept: "Sales",
+//       createdAt: new Date(),
+//     },
+//   ];
+//   return (
+//     <Box>
+
+//       <Box sx={{ display: "flex", flexDirection: "column", gap: 4 }}>
+//         <Box sx={{ display: "flex", mt: 4, justifyContent: "center", gap: 2 }}>
+//           <Typography variant="h4" color="primary">
+//             Notifications
+//           </Typography>
+//           <NotificationsNoneIcon
+//             fontSize="large"
+//             color="primary"
+//             sx={{ mt: 0.2 }}
+//           />
+//         </Box>
+//         <List sx={{ bgcolor: "background.paper", m: 4 }}>
+//           {arr.map((notification) => (
+//             <Box
+//               key={notification.id}
+//               sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+//             >
+//               <Box
+//                 sx={{
+//                   display: "flex",
+//                   justifyContent: "space-around",
+//                   mt: 2,
+//                 }}
+//               >
+//                 {/* <Box sx={{ display: "flex"}}> */}
+//                 <Box sx={{ display: "flex", gap: 1 }}>
+//                   <Typography color={"primary"} fontWeight={"bold"}>
+//                     Generated by:{" "}
+//                   </Typography>
+//                   <Typography>{notification.assignerDept}</Typography>
+//                 </Box>
+//                 <Box sx={{ display: "flex", gap: 1 }}>
+//                   <Typography color={"primary"} fontWeight={"bold"}>
+//                     Assigned for:
+//                   </Typography>
+//                   <Typography>{notification.majorAssignee}</Typography>
+//                 </Box>{" "}
+//                 <Box sx={{ display: "flex", gap: 1 }}>
+//                   <Typography color={"primary"} fontWeight={"bold"}>
+//                     By User:
+//                   </Typography>
+//                   <Typography>{"SALES"}</Typography>
+//                 </Box>{" "}
+//                 {/* </Box> */}
+//                 {/* <Box sx={{ display: "flex", gap: 1}}> */}
+//                 <Box sx={{ display: "flex", gap: 1 }}>
+//                   <Typography color={"primary"} fontWeight={"bold"}>
+//                     Date of Creation:
+//                   </Typography>
+//                   <Typography>
+//                     {notification.createdAt.toDateString()}
+//                   </Typography>
+//                 </Box>
+//                 <Box sx={{ display: "flex", gap: 1 }}>
+//                   <Typography color={"primary"} fontWeight={"bold"}>
+//                     Due Date:
+//                   </Typography>
+//                   <Typography>
+//                     {new Date(notification.dueDate).toDateString()}
+//                   </Typography>
+//                 </Box>
+//                 {/* </Box> */}
+//                 {/* </Box> */}
+//               </Box>
+//               <Divider />
+//             </Box>
+//           ))}
+//         </List>
+//       </Box>
+//     </Box>
+//   );
+// };
+// export default App;
