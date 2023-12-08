@@ -22,6 +22,7 @@ import axios from "axios";
 import OneTimeServiceClientsCard from "./OneTimeClientCard";
 import "../../styles/Home/TicketCard.css";
 import TablePaginationActions from "../Tickets/TicketsTablePagination/TicketsPagination";
+import WebSeoSalesCards from "../SalesClientsSheet/WebSeoSalesSheet/WebSeoSalesCards";
 
 export default function LocalSeoSheet() {
   const apiUrl = process.env.REACT_APP_API_URL;
@@ -262,6 +263,9 @@ export default function LocalSeoSheet() {
         {user?.department._id !== "651b3409819ff0aec6af1387" && (
           <ActiveNotActiveCard />
         )}
+        {user?.department._id === "651b3409819ff0aec6af1387" && (
+          <WebSeoSalesCards />
+        )}
         <OneTimeServiceClientsCard />
       </div>
       <TableContainer component={Paper}>
@@ -329,15 +333,15 @@ export default function LocalSeoSheet() {
                       value={ticket.ActiveNotActive || "Active"}
                       onClick={() => handleClick(ticket)}
                       style={{
-                          backgroundColor:
-                            ticket.ActiveNotActive === "Active"
-                              ? "rgb(25, 118, 210)"
-                              : "#dc3545", // set background color for Select
-                          color:
-                            ticket.ActiveNotActive === "Active"
-                              ? "white"
-                              : "black",
-                        }}
+                        backgroundColor:
+                          ticket.ActiveNotActive === "Active"
+                            ? "rgb(25, 118, 210)"
+                            : "#dc3545", // set background color for Select
+                        color:
+                          ticket.ActiveNotActive === "Active"
+                            ? "white"
+                            : "black",
+                      }}
                     >
                       <MenuItem value="Active">Active</MenuItem>
                       <MenuItem value="Not Active">Not Active</MenuItem>

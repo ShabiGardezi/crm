@@ -23,6 +23,7 @@ import axios from "axios";
 import OneTimeServiceClientsCard from "./OneTimeClientCard";
 import TablePaginationActions from "../Tickets/TicketsTablePagination/TicketsPagination";
 import { useLocation } from "react-router-dom";
+import WebSeoSalesCards from "../SalesClientsSheet/WebSeoSalesSheet/WebSeoSalesCards";
 
 export default function MonthlySeoClients() {
   const apiUrl = process.env.REACT_APP_API_URL;
@@ -270,6 +271,10 @@ export default function MonthlySeoClients() {
         {user?.department._id !== "651b3409819ff0aec6af1387" && (
           <ActiveNotActiveCard />
         )}
+        {user?.department._id === "651b3409819ff0aec6af1387" && (
+          <WebSeoSalesCards />
+        )}
+
         <OneTimeServiceClientsCard />
       </div>
       <TableContainer component={Paper}>
@@ -331,15 +336,15 @@ export default function MonthlySeoClients() {
                       value={ticket.ActiveNotActive || "Active"}
                       onClick={() => handleClick(ticket)}
                       style={{
-                          backgroundColor:
-                            ticket.ActiveNotActive === "Active"
-                              ? "rgb(25, 118, 210)"
-                              : "#dc3545", // set background color for Select
-                          color:
-                            ticket.ActiveNotActive === "Active"
-                              ? "white"
-                              : "black",
-                        }}
+                        backgroundColor:
+                          ticket.ActiveNotActive === "Active"
+                            ? "rgb(25, 118, 210)"
+                            : "#dc3545", // set background color for Select
+                        color:
+                          ticket.ActiveNotActive === "Active"
+                            ? "white"
+                            : "black",
+                      }}
                     >
                       <MenuItem value="Active">Active</MenuItem>
                       <MenuItem value="Not Active">Not Active</MenuItem>
