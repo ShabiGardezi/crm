@@ -237,6 +237,7 @@ export default function WebSeoSheet() {
       console.error("Error updating reporting date", error);
     }
   };
+
   // Function to handle reporting date edit
   const handleReportingDateEdit = (ticketId, editedDate) => {
     // Convert the edited content back to a date format

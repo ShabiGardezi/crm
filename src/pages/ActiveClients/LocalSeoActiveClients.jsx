@@ -17,11 +17,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import axios from "axios";
 import "../../styles/Home/TicketCard.css";
 import TablePaginationActions from "../Tickets/TicketsTablePagination/TicketsPagination";
-import {
-  Dialog,
-  DialogTitle,
-  DialogActions,
-} from "@mui/material";
+import { Dialog, DialogTitle, DialogActions } from "@mui/material";
 import DisplayTicketDetails from "../Tickets/DisplayTicketDetails";
 export default function LocalSeoActiveClients() {
   const apiUrl = process.env.REACT_APP_API_URL;
@@ -280,6 +276,7 @@ export default function LocalSeoActiveClients() {
       });
   };
   // Function to handle notes edit and update
+
   const handleNotesEdit = (ticketId, editedNotes) => {
     // Make an API request to update the notes in the database
     fetch(`${apiUrl}/api/tickets/notes-update`, {

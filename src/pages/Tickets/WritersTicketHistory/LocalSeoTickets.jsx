@@ -96,8 +96,10 @@ export default function LocalSeoWritersTickets() {
       }
     }
   };
+
   const handleNotesEdit = (ticketId, editedNotes) => {
     // Make an API request to update the notes in the database
+
     fetch(`${apiUrl}/api/tickets/notes-update`, {
       method: "PUT",
       headers: {
