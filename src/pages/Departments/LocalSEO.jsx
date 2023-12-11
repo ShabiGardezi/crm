@@ -10,6 +10,7 @@ import axios from "axios"; // Import Axios for making API requests
 import "../../styles/Forms/customforms.css";
 import Header from "../Header";
 import toast from "react-hot-toast";
+
 const LocalSEOForm = () => {
   const apiUrl = process.env.REACT_APP_API_URL;
   const user = JSON.parse(localStorage.getItem("user"));
@@ -45,7 +46,30 @@ const LocalSEOForm = () => {
     fronter: "",
     closer: "",
   });
-
+  const sendNotification = async (
+    ticketId,
+    userId,
+    assignorDepartmentId,
+    majorAssigneeId,
+    dueDate,
+    clientName
+  ) => {
+    try {
+      const response = await axios.post(`${apiUrl}/api/notification`, {
+        ticketId: ticketId,
+        userId: userId,
+        assignorDepartmentId: assignorDepartmentId,
+        majorAssigneeId: majorAssigneeId,
+        dueDate: dueDate,
+        clientName: clientName,
+      });
+      if (response.status === 200) {
+        console.log("Notification send", response.data.payload);
+      }
+    } catch (error) {
+      console.error("Error adding note:", error);
+    }
+  };
   const handleChange = (event) => {
     const { name, value } = event.target;
     let updatedPrice = parseFloat(formData.price) || 0;
@@ -122,6 +146,14 @@ const LocalSEOForm = () => {
       // Handle the response as needed (e.g., show a success message)
       toast.success("Form submitted successfully!");
       console.log("Success:", response);
+      sendNotification(
+        response.data.payload._id.toString(),
+        user._id,
+        user.department._id,
+        majorAssignee,
+        formData.dueDate,
+        formData.clientName
+      );
     } catch (error) {
       // Handle errors (e.g., show an error message)
       toast.error("An error occurred. Please try again.");

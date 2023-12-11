@@ -247,7 +247,10 @@ export default function LocalSeoWritersTickets() {
                     {ticket.status}
                   </TableCell>
                   <TableCell
-                    style={{ width: 180, whiteSpace: "pre-line" }} // Apply the white-space property here
+                    style={{
+                      width: 180,
+                      whiteSpace: "pre-line",
+                    }} // Apply the white-space property here
                     align="left"
                     contentEditable={true}
                     onBlur={(e) =>
@@ -257,7 +260,10 @@ export default function LocalSeoWritersTickets() {
                     {ticket.businessdetails.Keywords}
                   </TableCell>
                   <TableCell
-                    style={{ width: 180, whiteSpace: "pre-line" }} // Apply the white-space property here
+                    style={{
+                      width: 180,
+                      whiteSpace: "pre-line",
+                    }} // Apply the white-space property here
                     align="left"
                     contentEditable={true}
                     onBlur={(e) =>
