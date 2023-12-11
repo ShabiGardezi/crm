@@ -411,6 +411,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Header = () => {
   const apiUrl = process.env.REACT_APP_API_URL;
+  const user = JSON.parse(localStorage.getItem("user"));
   const [isCreateModalOpen, setCreateModalOpen] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
@@ -431,10 +432,17 @@ const Header = () => {
     const fetchDepartments = async () => {
       try {
         const response = await axios.get(`${apiUrl}/api/departments`);
-        const departmentToExclude = "Sales";
+        const departmentsToExcludeForAll = ["Sales", "Custom Development"];
+        const userDepartmentIdToExclude = "651b3409819ff0aec6af1387";
+        const departmentsToExcludeForUser = ["Writers", "Designers"];
 
         const filteredDepartments = response.data.payload.filter(
-            (department) => department.name !== departmentToExclude
+          (department) =>
+            !departmentsToExcludeForAll.includes(department.name) &&
+            !(
+              user.department._id === userDepartmentIdToExclude &&
+              departmentsToExcludeForUser.includes(department.name)
+            )
         );
 
         setDepartments(filteredDepartments);
@@ -443,15 +451,15 @@ const Header = () => {
       }
     };
     fetchDepartments();
-  }, []);
+  }, [user.department._id]);
 
   useEffect(() => {
     const handleOutsideClick = (e) => {
       // Check if the click occurred outside the menu
       if (
-          isMenuOpen &&
-          e.target.closest(".MuiDrawer-paper") === null &&
-          e.target.closest(".MuiIconButton-root") === null
+        isMenuOpen &&
+        e.target.closest(".MuiDrawer-paper") === null &&
+        e.target.closest(".MuiIconButton-root") === null
       ) {
         setIsMenuOpen(false);
       }
@@ -489,17 +497,16 @@ const Header = () => {
     }
   };
 
-  const user = JSON.parse(localStorage.getItem("user"));
   const [nCount, setNcount] = useState(0);
   useEffect(() => {
     axios
-        .get(`http://localhost:5000/api/notification/all?userId=${user._id}`)
-        .then(({ data }) => {
-          const filtered = data.payload.filter((x) => x.isRead === false);
-          setNcount(filtered.length);
-          console.log(`Notification Count: ${nCount}`)
-        })
-        .catch((err) => console.error(err));
+      .get(`http://localhost:5000/api/notification/all?userId=${user._id}`)
+      .then(({ data }) => {
+        const filtered = data.payload.filter((x) => x.isRead === false);
+        setNcount(filtered.length);
+        console.log(`Notification Count: ${nCount}`);
+      })
+      .catch((err) => console.error(err));
   }, [user]);
   const handleDepartmentSelect = (departmentName) => {
     // Define a mapping of department names to their respective routes
@@ -512,7 +519,7 @@ const Header = () => {
       "Custom Development": "/department/customdevelopment",
       "Paid Marketing": "/department/paidmarketingform",
       "Social Media / Customer Reviews Management":
-          "/department/socialmediaform",
+        "/department/socialmediaform",
       // Sales: "/department/sales",
     };
 
@@ -533,94 +540,98 @@ const Header = () => {
     setDepartmentOpen(!isDepartmentOpen);
   };
   return (
-      <>
-        <CssBaseline />
-        <AppBar position="static" style={{ backgroundColor: "#1976d2" }}>
-          <Toolbar>
+    <>
+      <CssBaseline />
+      <AppBar position="static" style={{ backgroundColor: "#1976d2" }}>
+        <Toolbar>
+          <IconButton
+            edge="start"
+            color="inherit"
+            aria-label="menu"
+            onClick={toggleMenu}
+          >
+            <MenuIcon />
+          </IconButton>
+          <Button
+            color="inherit"
+            startIcon={<AddIcon />}
+            onClick={openCreateModal}
+          >
+            Create
+          </Button>
+          <Dialog open={isCreateModalOpen} onClose={closeCreateModal}>
+            <DialogContent>
+              <CreateTicketCard />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={closeCreateModal} color="primary">
+                Close
+              </Button>
+            </DialogActions>
+          </Dialog>
+          <div style={{ flexGrow: 1 }} />
+          <div>
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <SearchIcon />
+              <InputBase
+                placeholder="Search..."
+                inputProps={{ "aria-label": "search" }}
+                style={{ marginLeft: "8px", color: "inherit" }}
+              />
+            </div>
+          </div>
+          <div>
             <IconButton
-                edge="start"
-                color="inherit"
-                aria-label="menu"
-                onClick={toggleMenu}
+              aria-label="account of current user"
+              aria-controls="profile-menu"
+              aria-haspopup="true"
+              onClick={handleProfileMenuOpen}
+              color="inherit"
             >
-              <MenuIcon />
+              <AccountCircle />
             </IconButton>
-            <Button
-                color="inherit"
-                startIcon={<AddIcon />}
-                onClick={openCreateModal}
+            <Menu
+              id="profile-menu"
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleProfileMenuClose}
             >
-              Create
-            </Button>
-            <Dialog open={isCreateModalOpen} onClose={closeCreateModal}>
-              <DialogContent>
-                <CreateTicketCard />
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={closeCreateModal} color="primary">
-                  Close
-                </Button>
-              </DialogActions>
-            </Dialog>
-            <div style={{ flexGrow: 1 }} />
-            <div>
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <SearchIcon />
-                <InputBase
-                    placeholder="Search..."
-                    inputProps={{ "aria-label": "search" }}
-                    style={{ marginLeft: "8px", color: "inherit" }}
-                />
-              </div>
-            </div>
-            <div>
-              <IconButton
-                  aria-label="account of current user"
-                  aria-controls="profile-menu"
-                  aria-haspopup="true"
-                  onClick={handleProfileMenuOpen}
-                  color="inherit"
-              >
-                <AccountCircle />
-              </IconButton>
-              <Menu
-                  id="profile-menu"
-                  anchorEl={anchorEl}
-                  open={Boolean(anchorEl)}
-                  onClose={handleProfileMenuClose}
-              >
-                <MenuItem onClick={handleProfileMenuClose}>Profile</MenuItem>
-                <MenuItem onClick={handleProfileMenuClose}>Settings</MenuItem>
-                <MenuItem onClick={handleLogout}>Logout</MenuItem>
-              </Menu>
-            </div>
-          </Toolbar>
-        </AppBar>
-        <Drawer anchor="left" open={isMenuOpen} onClose={toggleMenu}>
-          <div className={classes.container}>
-            <div className="header-logo">
-              <img src={logoImage} alt="Logo" className="logo-header" />
-            </div>
-            <List>
-              <Link to="/home">
-                <ListItem button>
-                  <ListItemIcon>
-                    <Home />
-                  </ListItemIcon>
-                  <ListItemText primary="Home" />
-                </ListItem>
-              </Link>
-              <Link to="/inbox">
-                <ListItem button>
-                  <ListItemIcon>
-                    <Badge badgeContent={nCount} color="primary" invisible={nCount === 0}>
-                      <Inbox />
-                    </Badge>
-                  </ListItemIcon>
-                  <ListItemText primary="Inbox" />
-                </ListItem>
-              </Link>
-              {/* <Link to="/todo">
+              <MenuItem onClick={handleProfileMenuClose}>Profile</MenuItem>
+              <MenuItem onClick={handleProfileMenuClose}>Settings</MenuItem>
+              <MenuItem onClick={handleLogout}>Logout</MenuItem>
+            </Menu>
+          </div>
+        </Toolbar>
+      </AppBar>
+      <Drawer anchor="left" open={isMenuOpen} onClose={toggleMenu}>
+        <div className={classes.container}>
+          <div className="header-logo">
+            <img src={logoImage} alt="Logo" className="logo-header" />
+          </div>
+          <List>
+            <Link to="/home">
+              <ListItem button>
+                <ListItemIcon>
+                  <Home />
+                </ListItemIcon>
+                <ListItemText primary="Home" />
+              </ListItem>
+            </Link>
+            <Link to="/inbox">
+              <ListItem button>
+                <ListItemIcon>
+                  <Badge
+                    badgeContent={nCount}
+                    color="primary"
+                    invisible={nCount === 0}
+                  >
+                    <Inbox />
+                  </Badge>
+                </ListItemIcon>
+                <ListItemText primary="Inbox" />
+              </ListItem>
+            </Link>
+            {/* <Link to="/todo">
               <ListItem button>
                 <ListItemIcon>
                   <DescriptionIcon />
@@ -628,105 +639,96 @@ const Header = () => {
                 <ListItemText primary="Personal Notebook" />
               </ListItem>
             </Link> */}
-              <ListItem button onClick={toggleClientHistory}>
+            <ListItem button onClick={toggleClientHistory}>
+              <ListItemIcon>
+                <AssignmentIcon />
+              </ListItemIcon>
+              <ListItemText primary="Work Status" />
+              <ListItemIcon style={{ marginLeft: "auto" }}>
+                <ExpandMoreIcon />
+              </ListItemIcon>
+            </ListItem>
+            {isClientHistoryOpen && (
+              <div className="client-history-dropdown">
+                <Link to="/localseo_clients?depId=65195c4b504d80e8f11b0d13">
+                  <ListItem button>
+                    <ListItemText primary="Local SEO / GMB Optimization" />
+                  </ListItem>
+                </Link>
+                <Link to="/website_sheet?depId=65195c81504d80e8f11b0d14">
+                  <ListItem button>
+                    <ListItemText primary="Wordpress Development" />
+                  </ListItem>
+                </Link>
+                <Link to="/webseo_clients?depId=65195c8f504d80e8f11b0d15">
+                  <ListItem button>
+                    <ListItemText primary="Website SEO" />
+                  </ListItem>
+                </Link>
+                <Link to="/paid_marketing_sheet?depId=651ada3c819ff0aec6af1380">
+                  <ListItem button>
+                    <ListItemText primary="Paid Marketing" />
+                  </ListItem>
+                </Link>
+                <Link to="/social_media_client?depId=651ada78819ff0aec6af1381">
+                  <ListItem button>
+                    <ListItemText primary="Social Media / Customer Reviews Management" />
+                  </ListItem>
+                </Link>
+              </div>
+            )}
+            <ListItem button onClick={toggleDepartment}>
+              <ListItemIcon>
+                <DepartmentIcon />
+              </ListItemIcon>
+              <ListItemText primary="New Ticket" />
+              <ListItemIcon style={{ marginLeft: "auto" }}>
+                <ExpandMoreIcon />
+              </ListItemIcon>
+            </ListItem>
+            {isDepartmentOpen && (
+              <div className="client-history-dropdown">
+                {departments?.map((d) => (
+                  <ListItem
+                    button
+                    key={d._id}
+                    onClick={() => handleDepartmentSelect(d.name)}
+                  >
+                    <Link
+                      to={`/department/${encodeURIComponent(
+                        d.name.toLowerCase()
+                      )}`}
+                    >
+                      <ListItemText primary={d.name} />
+                    </Link>
+                  </ListItem>
+                ))}
+              </div>
+            )}
+            <Link to="/history">
+              <ListItem button>
                 <ListItemIcon>
-                  <AssignmentIcon />
+                  <HistoryIcon />
                 </ListItemIcon>
-                <ListItemText primary="Work Status" />
-                {/* Use the same dropdown icon as the "Department" item */}
-                <ListItemIcon style={{ marginLeft: "auto" }}>
-                  <ExpandMoreIcon />
-                </ListItemIcon>
+                <ListItemText primary="Ticket History" />
               </ListItem>
-              <ListItem button onClick={toggleDepartment}>
-                <ListItemIcon>
-                  <DepartmentIcon />
-                </ListItemIcon>
-                <ListItemText primary="New Ticket" />
-                <ListItemIcon style={{ marginLeft: "auto" }}>
-                  <ExpandMoreIcon />
-                </ListItemIcon>
-              </ListItem>
-              {/* Step 4: Add sub-items for "Client History" dropdown */}
-              {isClientHistoryOpen && (
-                  <div className="client-history-dropdown">
-                    <Link to="/localseo_clients?depId=65195c4b504d80e8f11b0d13">
-                      <ListItem button>
-                        {/* Local SEO */}
-                        <ListItemText primary="Local SEO / GMB Optimization" />
-                      </ListItem>
-                    </Link>
-                    <Link to="/website_sheet?depId=65195c81504d80e8f11b0d14">
-                      <ListItem button>
-                        {/* Paid Marketing */}
-                        <ListItemText primary="Wordpress Development" />
-                      </ListItem>
-                    </Link>
-                    <Link to="/webseo_clients?depId=65195c8f504d80e8f11b0d15">
-                      <ListItem button>
-                        {/* Web SEO */}
-                        <ListItemText primary="Website SEO" />
-                      </ListItem>
-                    </Link>
-                    <Link to="/paid_marketing_sheet?depId=651ada3c819ff0aec6af1380">
-                      <ListItem button>
-                        {/* Paid Marketing */}
-                        <ListItemText primary="Paid Marketing" />
-                      </ListItem>
-                    </Link>
-                    <Link to="/social_media_client?depId=651ada78819ff0aec6af1381">
-                      <ListItem button>
-                        {/* Social Media/ Customer Reviews */}
-                        <ListItemText primary="Social Media / Customer Reviews Management" />
-                      </ListItem>
-                    </Link>
-                  </div>
-              )}
-              <Link to="/history">
+            </Link>
+            {user?.role === "admin" && (
+              <div className="signup">
                 <ListItem button>
                   <ListItemIcon>
-                    <HistoryIcon />
+                    <AccountCircle />
                   </ListItemIcon>
-                  <ListItemText primary="Ticket History" />
+                  <Link to="/signup">
+                    <ListItemText primary="Sign Up" />
+                  </Link>
                 </ListItem>
-              </Link>
-
-              {isDepartmentOpen && (
-                  <div className="client-history-dropdown">
-                    {departments?.map((d) => (
-                        <ListItem
-                            button
-                            key={d._id}
-                            onClick={() => handleDepartmentSelect(d.name)}
-                        >
-                          <Link
-                              to={`/department/${encodeURIComponent(
-                                  d.name.toLowerCase()
-                              )}`}
-                          >
-                            <ListItemText primary={d.name} />
-                          </Link>
-                        </ListItem>
-                    ))}
-                  </div>
-              )}
-
-              {user?.role === "admin" && (
-                  <div className="signup">
-                    <ListItem button>
-                      <ListItemIcon>
-                        <AccountCircle />
-                      </ListItemIcon>
-                      <Link to="/signup">
-                        <ListItemText primary="Sign Up" />
-                      </Link>
-                    </ListItem>
-                  </div>
-              )}
-            </List>
-          </div>
-        </Drawer>
-      </>
+              </div>
+            )}
+          </List>
+        </div>
+      </Drawer>
+    </>
   );
 };
 

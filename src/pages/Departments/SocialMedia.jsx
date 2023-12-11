@@ -195,7 +195,7 @@ const SocialMediaForm = () => {
                 <Grid container spacing={3}>
                     <Grid item xs={5}>
                         <TextField
-                            label="Client/Business Name"
+                            label="Business Name"
                             fullWidth
                             name="clientName"
                             value={formData.clientName}

@@ -11,7 +11,6 @@ export default function NotificationGrid({ rows }) {
   const [isTicketDetailsOpen, setIsTicketDetailsOpen] = useState(false);
   const fetchTicketDetails = async (ticketId) => {
     try {
-      console.log("ticket " + ticketId);
       const response = await fetch(`${apiUrl}/api/tickets/${ticketId}`);
       if (response.ok) {
         const data = await response.json();
@@ -41,7 +40,7 @@ export default function NotificationGrid({ rows }) {
     },
     {
       field: "client_name",
-      headerName: "Client Name",
+      headerName: "Business Name",
       minWidth: 150,
       sortable: false,
       disableColumnMenu: true,

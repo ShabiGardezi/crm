@@ -282,7 +282,7 @@ const CustomDevelopment = () => {
                     </Grid>
                     <Grid item xs={6}>
                         <TextField
-                            label="Client/Business Name"
+                            label="Business Name"
                             fullWidth
                             name="clientName"
                             value={formData.clientName}
