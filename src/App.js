@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Route, Routes, Navigate } from "react-router-dom";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SIgnUp";
@@ -48,9 +48,14 @@ import ActiveMarketingSalesClients from "./pages/SalesClientsSheet/PaidMarketing
 import InActiveMarketingClients from "./pages/SalesClientsSheet/PaidMarketingSalesSheet.jsx/InActiveMarketingClients";
 import ActiveSocialMediaSalesClients from "./pages/SalesClientsSheet/SocialMediaSalesSheet/ActiveSocialMediaSalesClients";
 import InActiveSocialMediaSalesClients from "./pages/SalesClientsSheet/SocialMediaSalesSheet/InActiveSocialMediaSalesClients";
+import Inbox from "./pages/InboxPage";
 
 function App() {
   const user = JSON.parse(localStorage.getItem("user"));
+  const nCount = localStorage.getItem("notificationCount");
+  const [notificationCount, setNotificationCount] = useState(
+    nCount ? nCount : 0
+  );
   return (
     <div className="App">
       <Toaster />
@@ -63,43 +68,89 @@ function App() {
         />
         {user && (
           <>
-            <Route path="/home" element={<Home />} />
-            <Route path="/department/webseoform" element={<WebSeoForm />} />
-            <Route path="/department/localseoform" element={<LocalSeoForm />} />
+            <Route
+              path="/home"
+              element={<Home notificationCount={notificationCount} />}
+            />
+            <Route
+              path="/inbox"
+              element={<Inbox notificationCount={notificationCount} />}
+            />
+            <Route
+              path="/department/webseoform"
+              element={<WebSeoForm notificationCount={notificationCount} />}
+            />
+            <Route
+              path="/department/localseoform"
+              element={<LocalSeoForm notificationCount={notificationCount} />}
+            />
             <Route
               path="/department/designersform"
-              element={<DesignersForm />}
+              element={<DesignersForm notificationCount={notificationCount} />}
             />
             <Route
               path="/department/socialmediaform"
-              element={<SocialMediaForm />}
+              element={
+                <SocialMediaForm notificationCount={notificationCount} />
+              }
             />
             <Route
               path="/department/customdevelopment"
-              element={<CustomDevelopment />}
+              element={
+                <CustomDevelopment notificationCount={notificationCount} />
+              }
             />
-            <Route path="/department/wordpressform" element={<WordPress />} />
-            <Route path="/department/writersform" element={<WritersForm />} />
-            <Route path="/department/reviewsform" element={<Reviews />} />
+            <Route
+              path="/department/wordpressform"
+              element={<WordPress notificationCount={notificationCount} />}
+            />
+            <Route
+              path="/department/writersform"
+              element={<WritersForm notificationCount={notificationCount} />}
+            />
+            <Route
+              path="/department/reviewsform"
+              element={<Reviews notificationCount={notificationCount} />}
+            />
             <Route
               path="/department/paidmarketingform"
               element={<PaidMarketing />}
             />
             <Route path="/todo" element={<UserToDo showHeader={true} />} />
-            <Route path="/history" element={<ShowOpenTickets />} />
+            <Route
+              path="/history"
+              element={
+                <ShowOpenTickets notificationCount={notificationCount} />
+              }
+            />
             <Route
               path="/reviews_designer_tickets"
-              element={<ReviewsDesignersTickets />}
+              element={
+                <ReviewsDesignersTickets
+                  notificationCount={notificationCount}
+                />
+              }
             />
             <Route
               path="/webseo_designer_tickets"
-              element={<WebseoDesignerTickets />}
+              element={
+                <WebseoDesignerTickets notificationCount={notificationCount} />
+              }
             />
             <Route
               path="/wordpress_designer_tickets"
-              element={<WordpressDesignersTickets />}
+              element={
+                <WordpressDesignersTickets
+                  notificationCount={notificationCount}
+                />
+              }
             />
-            <Route path="/tickets_created" element={<TicketCreatedTable />} />
+            <Route
+              path="/tickets_created"
+              element={
+                <TicketCreatedTable notificationCount={notificationCount} />
+              }
+            />
             <Route path="/close_tickets" element={<ShowCloseTickets />} />
             <Route
               path="/local_seo_tickets"

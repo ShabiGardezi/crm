@@ -31,6 +31,7 @@ import TablePaginationActions from "../../Tickets/TicketsTablePagination/Tickets
 import UnauthorizedError from "../../../components/Error_401";
 import { Typography } from "@mui/material";
 import LocalSeoSalesCards from "../../SalesClientsSheet/LocalSeoSalesSheet/LocalSeoSalesCards";
+
 export default function LocalSeoSheet() {
   const apiUrl = process.env.REACT_APP_API_URL;
   const user = JSON.parse(localStorage.getItem("user"));
@@ -408,7 +409,7 @@ export default function LocalSeoSheet() {
                         style={{
                           backgroundColor:
                             ticket.ActiveNotActive === "Active"
-                              ? "rgb(25, 118, 210)"
+                              ? "#28a745"
                               : "#dc3545", // set background color for Select
                           color:
                             ticket.ActiveNotActive === "Active"
@@ -440,7 +441,10 @@ export default function LocalSeoSheet() {
                     </IconButton>
                   </TableCell>
                   <TableCell
-                    style={{ width: 180, whiteSpace: "pre-line" }} // Apply the white-space property here
+                    style={{
+                      width: 180,
+                      whiteSpace: "pre-line",
+                    }} // Apply the white-space property here
                     align="left"
                     contentEditable={true}
                     onBlur={(e) =>

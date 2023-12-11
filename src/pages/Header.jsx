@@ -238,12 +238,14 @@ const Header = () => {
                 <ListItemText primary="Home" />
               </ListItem>
             </Link>
-            <ListItem button>
-              <ListItemIcon>
-                <Inbox />
-              </ListItemIcon>
-              <ListItemText primary="Inbox" />
-            </ListItem>
+            <Link to="/inbox">
+              <ListItem button>
+                <ListItemIcon>
+                  <Inbox />
+                </ListItemIcon>
+                <ListItemText primary="Inbox" />
+              </ListItem>
+            </Link>
             {/* <Link to="/todo">
               <ListItem button>
                 <ListItemIcon>

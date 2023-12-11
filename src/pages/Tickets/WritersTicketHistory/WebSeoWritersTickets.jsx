@@ -209,7 +209,10 @@ export default function WebSeoWritersTickets() {
                     {ticket.status}
                   </TableCell>
                   <TableCell
-                    style={{ width: 180, whiteSpace: "pre-line" }} // Apply the white-space property here
+                    style={{
+                      width: 180,
+                      whiteSpace: "pre-line",
+                    }} // Apply the white-space property here
                     align="left"
                     contentEditable={true}
                     onBlur={(e) =>
