@@ -58,9 +58,10 @@ const WordPress = () => {
         socialProfile: "",
     });
 
-    const sendNotification = async (userId, assignorDepartmentId, majorAssigneeId, dueDate, clientName) => {
+    const sendNotification = async (ticketId, userId, assignorDepartmentId, majorAssigneeId, dueDate, clientName) => {
         try {
             const response = await axios.post(`${apiUrl}/api/notification`, {
+                ticketId: ticketId,
                 userId: userId,
                 assignorDepartmentId: assignorDepartmentId,
                 majorAssigneeId: majorAssigneeId,
@@ -171,7 +172,7 @@ const WordPress = () => {
 
             // Handle the response as needed (e.g., show a success message)
             console.log("Success:", response);
-            sendNotification(user._id,user.department._id,majorAssignee,formData.dueDate, formData.clientName);
+            sendNotification(response.data.payload._id.toString(),user._id, user.department._id, majorAssignee, formData.dueDate, formData.clientName);
         } catch (error) {
             toast.error("An error occurred. Please try again.");
 

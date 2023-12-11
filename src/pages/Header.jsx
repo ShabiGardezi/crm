@@ -74,7 +74,7 @@ const Header = () => {
         const departmentToExclude = "Sales";
 
         const filteredDepartments = response.data.payload.filter(
-          (department) => department.name !== departmentToExclude
+            (department) => department.name !== departmentToExclude
         );
 
         setDepartments(filteredDepartments);
@@ -89,9 +89,9 @@ const Header = () => {
     const handleOutsideClick = (e) => {
       // Check if the click occurred outside the menu
       if (
-        isMenuOpen &&
-        e.target.closest(".MuiDrawer-paper") === null &&
-        e.target.closest(".MuiIconButton-root") === null
+          isMenuOpen &&
+          e.target.closest(".MuiDrawer-paper") === null &&
+          e.target.closest(".MuiIconButton-root") === null
       ) {
         setIsMenuOpen(false);
       }
@@ -133,12 +133,13 @@ const Header = () => {
   const [nCount, setNcount] = useState(0);
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/api/notification/all?userId=${user._id}`)
-      .then(({ data }) => {
-        const filtered = data.payload.filter((x) => x.isRead === false);
-        setNcount(filtered.length);
-      })
-      .catch((err) => console.error(err));
+        .get(`http://localhost:5000/api/notification/all?userId=${user._id}`)
+        .then(({ data }) => {
+          const filtered = data.payload.filter((x) => x.isRead === false);
+          setNcount(filtered.length);
+          console.log(`Notification Count: ${nCount}`)
+        })
+        .catch((err) => console.error(err));
   }, [user]);
   const handleDepartmentSelect = (departmentName) => {
     // Define a mapping of department names to their respective routes
@@ -151,7 +152,7 @@ const Header = () => {
       "Custom Development": "/department/customdevelopment",
       "Paid Marketing": "/department/paidmarketingform",
       "Social Media / Customer Reviews Management":
-        "/department/socialmediaform",
+          "/department/socialmediaform",
       // Sales: "/department/sales",
     };
 
@@ -172,94 +173,94 @@ const Header = () => {
     setDepartmentOpen(!isDepartmentOpen);
   };
   return (
-    <>
-      <CssBaseline />
-      <AppBar position="static" style={{ backgroundColor: "#1976d2" }}>
-        <Toolbar>
-          <IconButton
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            onClick={toggleMenu}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Button
-            color="inherit"
-            startIcon={<AddIcon />}
-            onClick={openCreateModal}
-          >
-            Create
-          </Button>
-          <Dialog open={isCreateModalOpen} onClose={closeCreateModal}>
-            <DialogContent>
-              <CreateTicketCard />
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={closeCreateModal} color="primary">
-                Close
-              </Button>
-            </DialogActions>
-          </Dialog>
-          <div style={{ flexGrow: 1 }} />
-          <div>
-            <div style={{ display: "flex", alignItems: "center" }}>
-              <SearchIcon />
-              <InputBase
-                placeholder="Search..."
-                inputProps={{ "aria-label": "search" }}
-                style={{ marginLeft: "8px", color: "inherit" }}
-              />
-            </div>
-          </div>
-          <div>
+      <>
+        <CssBaseline />
+        <AppBar position="static" style={{ backgroundColor: "#1976d2" }}>
+          <Toolbar>
             <IconButton
-              aria-label="account of current user"
-              aria-controls="profile-menu"
-              aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
-              color="inherit"
+                edge="start"
+                color="inherit"
+                aria-label="menu"
+                onClick={toggleMenu}
             >
-              <AccountCircle />
+              <MenuIcon />
             </IconButton>
-            <Menu
-              id="profile-menu"
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={handleProfileMenuClose}
+            <Button
+                color="inherit"
+                startIcon={<AddIcon />}
+                onClick={openCreateModal}
             >
-              <MenuItem onClick={handleProfileMenuClose}>Profile</MenuItem>
-              <MenuItem onClick={handleProfileMenuClose}>Settings</MenuItem>
-              <MenuItem onClick={handleLogout}>Logout</MenuItem>
-            </Menu>
-          </div>
-        </Toolbar>
-      </AppBar>
-      <Drawer anchor="left" open={isMenuOpen} onClose={toggleMenu}>
-        <div className={classes.container}>
-          <div className="header-logo">
-            <img src={logoImage} alt="Logo" className="logo-header" />
-          </div>
-          <List>
-            <Link to="/home">
-              <ListItem button>
-                <ListItemIcon>
-                  <Home />
-                </ListItemIcon>
-                <ListItemText primary="Home" />
-              </ListItem>
-            </Link>
-            <Link to="/inbox">
-              <ListItem button>
-                <ListItemIcon>
-                  <Badge badgeContent={nCount} color="primary" invisible={nCount === 0}>
-                    <Inbox />
-                  </Badge>
-                </ListItemIcon>
-                <ListItemText primary="Inbox" />
-              </ListItem>
-            </Link>
-            {/* <Link to="/todo">
+              Create
+            </Button>
+            <Dialog open={isCreateModalOpen} onClose={closeCreateModal}>
+              <DialogContent>
+                <CreateTicketCard />
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={closeCreateModal} color="primary">
+                  Close
+                </Button>
+              </DialogActions>
+            </Dialog>
+            <div style={{ flexGrow: 1 }} />
+            <div>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <SearchIcon />
+                <InputBase
+                    placeholder="Search..."
+                    inputProps={{ "aria-label": "search" }}
+                    style={{ marginLeft: "8px", color: "inherit" }}
+                />
+              </div>
+            </div>
+            <div>
+              <IconButton
+                  aria-label="account of current user"
+                  aria-controls="profile-menu"
+                  aria-haspopup="true"
+                  onClick={handleProfileMenuOpen}
+                  color="inherit"
+              >
+                <AccountCircle />
+              </IconButton>
+              <Menu
+                  id="profile-menu"
+                  anchorEl={anchorEl}
+                  open={Boolean(anchorEl)}
+                  onClose={handleProfileMenuClose}
+              >
+                <MenuItem onClick={handleProfileMenuClose}>Profile</MenuItem>
+                <MenuItem onClick={handleProfileMenuClose}>Settings</MenuItem>
+                <MenuItem onClick={handleLogout}>Logout</MenuItem>
+              </Menu>
+            </div>
+          </Toolbar>
+        </AppBar>
+        <Drawer anchor="left" open={isMenuOpen} onClose={toggleMenu}>
+          <div className={classes.container}>
+            <div className="header-logo">
+              <img src={logoImage} alt="Logo" className="logo-header" />
+            </div>
+            <List>
+              <Link to="/home">
+                <ListItem button>
+                  <ListItemIcon>
+                    <Home />
+                  </ListItemIcon>
+                  <ListItemText primary="Home" />
+                </ListItem>
+              </Link>
+              <Link to="/inbox">
+                <ListItem button>
+                  <ListItemIcon>
+                    <Badge badgeContent={nCount} color="primary" invisible={nCount === 0}>
+                      <Inbox />
+                    </Badge>
+                  </ListItemIcon>
+                  <ListItemText primary="Inbox" />
+                </ListItem>
+              </Link>
+              {/* <Link to="/todo">
               <ListItem button>
                 <ListItemIcon>
                   <DescriptionIcon />
@@ -267,105 +268,105 @@ const Header = () => {
                 <ListItemText primary="Personal Notebook" />
               </ListItem>
             </Link> */}
-            <ListItem button onClick={toggleClientHistory}>
-              <ListItemIcon>
-                <AssignmentIcon />
-              </ListItemIcon>
-              <ListItemText primary="Work Status" />
-              {/* Use the same dropdown icon as the "Department" item */}
-              <ListItemIcon style={{ marginLeft: "auto" }}>
-                <ExpandMoreIcon />
-              </ListItemIcon>
-            </ListItem>
-            <ListItem button onClick={toggleDepartment}>
-              <ListItemIcon>
-                <DepartmentIcon />
-              </ListItemIcon>
-              <ListItemText primary="New Ticket" />
-              <ListItemIcon style={{ marginLeft: "auto" }}>
-                <ExpandMoreIcon />
-              </ListItemIcon>
-            </ListItem>
-            {/* Step 4: Add sub-items for "Client History" dropdown */}
-            {isClientHistoryOpen && (
-              <div className="client-history-dropdown">
-                <Link to="/localseo_clients?depId=65195c4b504d80e8f11b0d13">
-                  <ListItem button>
-                    {/* Local SEO */}
-                    <ListItemText primary="Local SEO / GMB Optimization" />
-                  </ListItem>
-                </Link>
-                <Link to="/website_sheet?depId=65195c81504d80e8f11b0d14">
-                  <ListItem button>
-                    {/* Paid Marketing */}
-                    <ListItemText primary="Wordpress Development" />
-                  </ListItem>
-                </Link>
-                <Link to="/webseo_clients?depId=65195c8f504d80e8f11b0d15">
-                  <ListItem button>
-                    {/* Web SEO */}
-                    <ListItemText primary="Website SEO" />
-                  </ListItem>
-                </Link>
-                <Link to="/paid_marketing_sheet?depId=651ada3c819ff0aec6af1380">
-                  <ListItem button>
-                    {/* Paid Marketing */}
-                    <ListItemText primary="Paid Marketing" />
-                  </ListItem>
-                </Link>
-                <Link to="/social_media_client?depId=651ada78819ff0aec6af1381">
-                  <ListItem button>
-                    {/* Social Media/ Customer Reviews */}
-                    <ListItemText primary="Social Media / Customer Reviews Management" />
-                  </ListItem>
-                </Link>
-              </div>
-            )}
-            <Link to="/history">
-              <ListItem button>
+              <ListItem button onClick={toggleClientHistory}>
                 <ListItemIcon>
-                  <HistoryIcon />
+                  <AssignmentIcon />
                 </ListItemIcon>
-                <ListItemText primary="Ticket History" />
+                <ListItemText primary="Work Status" />
+                {/* Use the same dropdown icon as the "Department" item */}
+                <ListItemIcon style={{ marginLeft: "auto" }}>
+                  <ExpandMoreIcon />
+                </ListItemIcon>
               </ListItem>
-            </Link>
-
-            {isDepartmentOpen && (
-              <div className="client-history-dropdown">
-                {departments?.map((d) => (
-                  <ListItem
-                    button
-                    key={d._id}
-                    onClick={() => handleDepartmentSelect(d.name)}
-                  >
-                    <Link
-                      to={`/department/${encodeURIComponent(
-                        d.name.toLowerCase()
-                      )}`}
-                    >
-                      <ListItemText primary={d.name} />
+              <ListItem button onClick={toggleDepartment}>
+                <ListItemIcon>
+                  <DepartmentIcon />
+                </ListItemIcon>
+                <ListItemText primary="New Ticket" />
+                <ListItemIcon style={{ marginLeft: "auto" }}>
+                  <ExpandMoreIcon />
+                </ListItemIcon>
+              </ListItem>
+              {/* Step 4: Add sub-items for "Client History" dropdown */}
+              {isClientHistoryOpen && (
+                  <div className="client-history-dropdown">
+                    <Link to="/localseo_clients?depId=65195c4b504d80e8f11b0d13">
+                      <ListItem button>
+                        {/* Local SEO */}
+                        <ListItemText primary="Local SEO / GMB Optimization" />
+                      </ListItem>
                     </Link>
-                  </ListItem>
-                ))}
-              </div>
-            )}
-
-            {user?.role === "admin" && (
-              <div className="signup">
+                    <Link to="/website_sheet?depId=65195c81504d80e8f11b0d14">
+                      <ListItem button>
+                        {/* Paid Marketing */}
+                        <ListItemText primary="Wordpress Development" />
+                      </ListItem>
+                    </Link>
+                    <Link to="/webseo_clients?depId=65195c8f504d80e8f11b0d15">
+                      <ListItem button>
+                        {/* Web SEO */}
+                        <ListItemText primary="Website SEO" />
+                      </ListItem>
+                    </Link>
+                    <Link to="/paid_marketing_sheet?depId=651ada3c819ff0aec6af1380">
+                      <ListItem button>
+                        {/* Paid Marketing */}
+                        <ListItemText primary="Paid Marketing" />
+                      </ListItem>
+                    </Link>
+                    <Link to="/social_media_client?depId=651ada78819ff0aec6af1381">
+                      <ListItem button>
+                        {/* Social Media/ Customer Reviews */}
+                        <ListItemText primary="Social Media / Customer Reviews Management" />
+                      </ListItem>
+                    </Link>
+                  </div>
+              )}
+              <Link to="/history">
                 <ListItem button>
                   <ListItemIcon>
-                    <AccountCircle />
+                    <HistoryIcon />
                   </ListItemIcon>
-                  <Link to="/signup">
-                    <ListItemText primary="Sign Up" />
-                  </Link>
+                  <ListItemText primary="Ticket History" />
                 </ListItem>
-              </div>
-            )}
-          </List>
-        </div>
-      </Drawer>
-    </>
+              </Link>
+
+              {isDepartmentOpen && (
+                  <div className="client-history-dropdown">
+                    {departments?.map((d) => (
+                        <ListItem
+                            button
+                            key={d._id}
+                            onClick={() => handleDepartmentSelect(d.name)}
+                        >
+                          <Link
+                              to={`/department/${encodeURIComponent(
+                                  d.name.toLowerCase()
+                              )}`}
+                          >
+                            <ListItemText primary={d.name} />
+                          </Link>
+                        </ListItem>
+                    ))}
+                  </div>
+              )}
+
+              {user?.role === "admin" && (
+                  <div className="signup">
+                    <ListItem button>
+                      <ListItemIcon>
+                        <AccountCircle />
+                      </ListItemIcon>
+                      <Link to="/signup">
+                        <ListItemText primary="Sign Up" />
+                      </Link>
+                    </ListItem>
+                  </div>
+              )}
+            </List>
+          </div>
+        </Drawer>
+      </>
   );
 };
 

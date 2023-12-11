@@ -15,9 +15,11 @@ export default function Inbox() {
         {}
       )
       .then((res) => {
+        console.log(res);
         setResp(res.data.payload);
       })
       .catch((err) => console.error(err.message));
+
   }, []);
   return (
     <Box>
