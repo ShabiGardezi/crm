@@ -247,8 +247,8 @@ export default function LocalSeoSheet() {
       body: JSON.stringify({
         ticketId,
         notes: editedNotes,
-        departmentId: user.department._id,
-        departmentName: user.department.name,
+        // departmentId: user.department._id,
+        // departmentName: user.department.name,
       }),
     })
       .then((response) => response.json())
@@ -426,7 +426,15 @@ export default function LocalSeoSheet() {
                     {new Date(ticket.createdAt).toLocaleDateString()}
                   </TableCell>
                   <TableCell
-                    style={{ width: 160 }}
+                    style={{
+                      width: 160,
+                      color:
+                        new Date(ticket.reportingDate).toLocaleDateString() ===
+                        new Date().toLocaleDateString()
+                          ? "red"
+                          : "inherit",
+                    }}
+                    title="Format: MM-DD-YYYY" // Tooltip for date format
                     align="left"
                     contentEditable={true}
                     onBlur={(e) =>

@@ -408,11 +408,23 @@ export default function LocalSeoActiveClients() {
                     </Select>
                   </FormControl>
                 </TableCell>
-                <TableCell style={{ width: 160 }} align="left">
+                <TableCell
+                  style={{ width: 160 }}
+                  align="left"
+                  title="Format: MM-DD-YYYY" // Tooltip for date format
+                >
                   {new Date(ticket.createdAt).toLocaleDateString()}
                 </TableCell>
                 <TableCell
-                  style={{ width: 160 }}
+                  style={{
+                    width: 160,
+                    color:
+                      new Date().setHours(0, 0, 0, 0) >=
+                      new Date(ticket.reportingDate).setHours(0, 0, 0, 0)
+                        ? "red"
+                        : "inherit",
+                  }}
+                  title="Format: MM-DD-YYYY" // Tooltip for date format
                   align="left"
                   contentEditable={true}
                   onBlur={(e) =>
