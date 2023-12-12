@@ -310,16 +310,12 @@ const AddToDo = (props) => {
     }
 
     const today = new Date().toDateString();
-    console.log("today " + today);
     const notesForToday = notesList.filter(
       (item) => item.date === today && item.status === true
       // && item.seen === false
     );
 
-    console.log("list " + notesList);
-
     setSameNotes(notesForToday);
-    console.log(notesForToday);
 
     if (notesForToday.length > 0) {
       setOpenDialog(true);
@@ -361,7 +357,6 @@ const AddToDo = (props) => {
   };
 
   async function updateNote(id) {
-    console.log("update");
     try {
       let seen = true;
       const response = await axios.put(`${apiUrl}/api/notes/seen`, {
