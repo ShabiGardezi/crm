@@ -415,7 +415,7 @@ export default function InActiveLocalSeoClients() {
                         }}
                       >
                         <MenuItem value="Active">Active</MenuItem>
-                        <MenuItem value="Not Active">Not Activee</MenuItem>
+                        <MenuItem value="Not Active">Not Active</MenuItem>
                       </Select>
                     </FormControl>
                   </TableCell>
