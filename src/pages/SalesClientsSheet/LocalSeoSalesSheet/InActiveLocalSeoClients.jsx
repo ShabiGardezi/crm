@@ -406,8 +406,8 @@ export default function InActiveLocalSeoClients() {
                         style={{
                           backgroundColor:
                             ticket.ActiveNotActive === "Active"
-                              ? "red"
-                              : "#dc3545", // set background color for Select
+                              ? "#049404"
+                              : "red", // set background color for Select
                           color:
                             ticket.ActiveNotActive === "Active"
                               ? "white"
@@ -430,8 +430,13 @@ export default function InActiveLocalSeoClients() {
                     style={{
                       width: 160,
                       color:
-                        new Date().setHours(0, 0, 0, 0) >=
-                        new Date(ticket.reportingDate).setHours(0, 0, 0, 0)
+                        new Date(ticket.reportingDate).toLocaleDateString() ===
+                        new Date().toLocaleDateString()
+                          ? "white"
+                          : "black",
+                      background:
+                        new Date(ticket.reportingDate).toLocaleDateString() ===
+                        new Date().toLocaleDateString()
                           ? "red"
                           : "inherit",
                     }}

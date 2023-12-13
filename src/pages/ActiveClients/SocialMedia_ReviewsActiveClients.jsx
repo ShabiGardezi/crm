@@ -294,7 +294,7 @@ const SocialMedia_ReviewsActiveClients = () => {
                       backgroundColor:
                         ticket.ActiveNotActive === "Active"
                           ? "#28a745"
-                          : "#dc3545", // set background color for Select
+                          : "red", // set background color for Select
                       color:
                         ticket.ActiveNotActive === "Active" ? "white" : "black",
                     }}

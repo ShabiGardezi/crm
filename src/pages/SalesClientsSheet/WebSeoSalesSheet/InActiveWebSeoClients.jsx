@@ -410,8 +410,8 @@ export default function InActiveWebSeoClients() {
                         style={{
                           backgroundColor:
                             ticket.ActiveNotActive === "Active"
-                              ? "red"
-                              : "#dc3545", // set background color for Select
+                              ? "#049404"
+                              : "red", // set background color for Select
                           color:
                             ticket.ActiveNotActive === "Active"
                               ? "white"

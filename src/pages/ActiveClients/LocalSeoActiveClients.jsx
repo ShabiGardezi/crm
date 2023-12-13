@@ -393,10 +393,10 @@ export default function LocalSeoActiveClients() {
                       value={ticket.ActiveNotActive || "Active"}
                       onClick={() => handleClick(ticket)}
                       style={{
-                             backgroundColor:
-                            ticket.ActiveNotActive === "Active"
-                              ? "red"
-                              : "#dc3545", // set background color for Select
+                        backgroundColor:
+                          ticket.ActiveNotActive === "Active"
+                            ? "#28a745"
+                            : "red", // set background color for Select
                         color:
                           ticket.ActiveNotActive === "Active"
                             ? "white"
