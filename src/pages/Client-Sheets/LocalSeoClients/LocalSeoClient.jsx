@@ -422,13 +422,18 @@ export default function LocalSeoSheet() {
                       </Select>
                     </FormControl>
                   </TableCell>
-                  <TableCell style={{ width: 160 }} align="left">
+                  <TableCell
+                    style={{ width: 160, cursor: "pointer" }}
+                    align="left"
+                    title="Format: MM-DD-YYYY" // Tooltip for date format
+                  >
                     {new Date(ticket.createdAt).toLocaleDateString()}
                   </TableCell>
                   <TableCell
                     style={{
-                      width: 160,
-                      color:
+                      width: 160,                    cursor: "pointer",
+
+                      background:
                         new Date(ticket.reportingDate).toLocaleDateString() ===
                         new Date().toLocaleDateString()
                           ? "red"
