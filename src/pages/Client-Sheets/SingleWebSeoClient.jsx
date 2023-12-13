@@ -333,10 +333,10 @@ export default function LocalSeoSheet() {
                       value={ticket.ActiveNotActive || "Active"}
                       onClick={() => handleClick(ticket)}
                       style={{
-                        backgroundColor:
-                          ticket.ActiveNotActive === "Active"
-                            ? "rgb(25, 118, 210)"
-                            : "#dc3545", // set background color for Select
+                             backgroundColor:
+                            ticket.ActiveNotActive === "Active"
+                              ? "red"
+                              : "#dc3545", // set background color for Select
                         color:
                           ticket.ActiveNotActive === "Active"
                             ? "white"
@@ -351,38 +351,50 @@ export default function LocalSeoSheet() {
                 <TableCell style={{ width: 160 }} align="left">
                   {new Date(ticket.createdAt).toLocaleDateString()}
                 </TableCell>
-                <TableCell
-                  style={{ width: 160 }}
-                  align="left"
-                  contentEditable={true}
-                  onBlur={(e) =>
-                    handleReportingDateEdit(ticket._id, e.target.innerText)
-                  }
-                >
-                  {new Date(ticket.reportingDate).toLocaleDateString()}
-                </TableCell>
+                   <TableCell
+                    style={{
+                      width: 160,
+                      cursor: "pointer",
+                      color:
+                        new Date(ticket.reportingDate).toLocaleDateString() ===
+                        new Date().toLocaleDateString()
+                          ? "white"
+                          : "black",
+                      background:
+                        new Date(ticket.reportingDate).toLocaleDateString() ===
+                        new Date().toLocaleDateString()
+                          ? "red"
+                          : "inherit",
+                    }}
+                    title="Format: MM-DD-YYYY" // Tooltip for date format
+                    align="left"
+                    contentEditable={true}
+                    onBlur={(e) =>
+                      handleReportingDateEdit(ticket._id, e.target.innerText)
+                    }
+                  >
+                    {new Date(ticket.reportingDate).toLocaleDateString()}
+                  </TableCell>
                 <TableCell style={{ width: 160 }} align="left">
                   <IconButton onClick={() => fetchTicketDetails(ticket._id)}>
                     <VisibilityIcon />
                   </IconButton>
                 </TableCell>
-  <TableCell
-                    style={{
-                      width: 180,
-                      whiteSpace: "pre-line",
-                      background: ticket.businessdetails.notes
-                        ? "red"
-                        : "white",
-                      color: ticket.businessdetails.notes ? "white" : "black",
-                    }} // Apply the white-space property here
-                    align="left"
-                    contentEditable={true}
-                    onBlur={(e) =>
-                      handleNotesEdit(ticket._id, e.target.innerText)
-                    }
-                  >
-                    {ticket.businessdetails.notes}
-                  </TableCell>
+                <TableCell
+                  style={{
+                    width: 180,
+                    whiteSpace: "pre-line",
+                    background: ticket.businessdetails.notes ? "red" : "white",
+                    color: ticket.businessdetails.notes ? "white" : "black",
+                  }} // Apply the white-space property here
+                  align="left"
+                  contentEditable={true}
+                  onBlur={(e) =>
+                    handleNotesEdit(ticket._id, e.target.innerText)
+                  }
+                >
+                  {ticket.businessdetails.notes}
+                </TableCell>
               </TableRow>
             ))}
             {emptyRows > 0 && (

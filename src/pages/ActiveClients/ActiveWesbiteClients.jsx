@@ -310,16 +310,30 @@ export default function ActiveWebsiteClients() {
                 <TableCell style={{ width: 160 }} align="left">
                   {new Date(ticket.createdAt).toLocaleDateString()}
                 </TableCell>
-                <TableCell
-                  style={{ width: 160 }}
-                  align="left"
-                  contentEditable={true}
-                  onBlur={(e) =>
-                    handleReportingDateEdit(ticket._id, e.target.innerText)
-                  }
-                >
-                  {new Date(ticket.reportingDate).toLocaleDateString()}
-                </TableCell>
+                   <TableCell
+                    style={{
+                      width: 160,
+                      cursor: "pointer",
+                      color:
+                        new Date(ticket.reportingDate).toLocaleDateString() ===
+                        new Date().toLocaleDateString()
+                          ? "white"
+                          : "black",
+                      background:
+                        new Date(ticket.reportingDate).toLocaleDateString() ===
+                        new Date().toLocaleDateString()
+                          ? "red"
+                          : "inherit",
+                    }}
+                    title="Format: MM-DD-YYYY" // Tooltip for date format
+                    align="left"
+                    contentEditable={true}
+                    onBlur={(e) =>
+                      handleReportingDateEdit(ticket._id, e.target.innerText)
+                    }
+                  >
+                    {new Date(ticket.reportingDate).toLocaleDateString()}
+                  </TableCell>
                 <TableCell style={{ width: 160 }} align="left">
                   <IconButton onClick={() => fetchTicketDetails(ticket._id)}>
                     <VisibilityIcon />

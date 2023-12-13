@@ -372,7 +372,8 @@ export default function ActiveWordpressSalesClients() {
                       style={{
                         backgroundColor:
                           ticket.ActiveNotActive === "Active"
-                            ? "rgb(25, 118, 210)"
+                            ? 
+"rgb(25, 118, 210)"
                             : "#dc3545", // set background color for Select
                         color:
                           ticket.ActiveNotActive === "Active"

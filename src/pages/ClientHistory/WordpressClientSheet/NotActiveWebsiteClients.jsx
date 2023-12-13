@@ -194,7 +194,7 @@ export default function InActiveWebsiteClients() {
                       style={{
                         backgroundColor:
                           ticket.ActiveNotActive === "Active"
-                            ? "rgb(25, 118, 210)"
+                            ? "red"
                             : "#dc3545", // set background color for Select
                         color:
                           ticket.ActiveNotActive === "Active"
@@ -215,23 +215,21 @@ export default function InActiveWebsiteClients() {
                     <VisibilityIcon />
                   </IconButton>
                 </TableCell>
-  <TableCell
-                    style={{
-                      width: 180,
-                      whiteSpace: "pre-line",
-                      background: ticket.businessdetails.notes
-                        ? "red"
-                        : "white",
-                      color: ticket.businessdetails.notes ? "white" : "black",
-                    }} // Apply the white-space property here
-                    align="left"
-                    contentEditable={true}
-                    onBlur={(e) =>
-                      handleNotesEdit(ticket._id, e.target.innerText)
-                    }
-                  >
-                    {ticket.businessdetails.notes}
-                  </TableCell>
+                <TableCell
+                  style={{
+                    width: 180,
+                    whiteSpace: "pre-line",
+                    background: ticket.businessdetails.notes ? "red" : "white",
+                    color: ticket.businessdetails.notes ? "white" : "black",
+                  }} // Apply the white-space property here
+                  align="left"
+                  contentEditable={true}
+                  onBlur={(e) =>
+                    handleNotesEdit(ticket._id, e.target.innerText)
+                  }
+                >
+                  {ticket.businessdetails.notes}
+                </TableCell>
               </TableRow>
             ))}
             {emptyRows > 0 && (

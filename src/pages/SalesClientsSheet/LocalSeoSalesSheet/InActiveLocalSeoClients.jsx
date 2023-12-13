@@ -406,7 +406,7 @@ export default function InActiveLocalSeoClients() {
                         style={{
                           backgroundColor:
                             ticket.ActiveNotActive === "Active"
-                              ? "rgb(25, 118, 210)"
+                              ? "red"
                               : "#dc3545", // set background color for Select
                           color:
                             ticket.ActiveNotActive === "Active"

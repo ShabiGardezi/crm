@@ -406,7 +406,7 @@ export default function LocalSeoSheet() {
                         style={{
                           backgroundColor:
                             ticket.ActiveNotActive === "Active"
-                              ? "rgb(25, 118, 210)"
+                              ? "red"
                               : "#dc3545", // set background color for Select
                           color:
                             ticket.ActiveNotActive === "Active"
@@ -426,10 +426,15 @@ export default function LocalSeoSheet() {
                   >
                     {new Date(ticket.createdAt).toLocaleDateString()}
                   </TableCell>
-                  <TableCell
+                   <TableCell
                     style={{
-                      width: 160,                    cursor: "pointer",
-
+                      width: 160,
+                      cursor: "pointer",
+                      color:
+                        new Date(ticket.reportingDate).toLocaleDateString() ===
+                        new Date().toLocaleDateString()
+                          ? "white"
+                          : "black",
                       background:
                         new Date(ticket.reportingDate).toLocaleDateString() ===
                         new Date().toLocaleDateString()
@@ -437,7 +442,6 @@ export default function LocalSeoSheet() {
                           : "inherit",
                     }}
                     title="Format: MM-DD-YYYY" // Tooltip for date format
-            
                     align="left"
                     contentEditable={true}
                     onBlur={(e) =>
