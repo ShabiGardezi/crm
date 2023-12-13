@@ -431,7 +431,8 @@ export default function LocalSeoSheet() {
                   </TableCell>
                   <TableCell
                     style={{
-                      width: 160,                    cursor: "pointer",
+                      width: 160,
+                      cursor: "pointer",
 
                       background:
                         new Date(ticket.reportingDate).toLocaleDateString() ===
@@ -457,6 +458,10 @@ export default function LocalSeoSheet() {
                     style={{
                       width: 180,
                       whiteSpace: "pre-line",
+                      background: ticket.businessdetails.notes
+                        ? "red"
+                        : "white",
+                      color: ticket.businessdetails.notes ? "white" : "black",
                     }} // Apply the white-space property here
                     align="left"
                     contentEditable={true}

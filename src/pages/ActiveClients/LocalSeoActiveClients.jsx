@@ -408,25 +408,29 @@ export default function LocalSeoActiveClients() {
                     </Select>
                   </FormControl>
                 </TableCell>
-            <TableCell
-                    style={{ width: 160, cursor: "pointer" }}
-                    align="left"
-                    title="Format: MM-DD-YYYY" // Tooltip for date format
-                  >
-                    {new Date(ticket.createdAt).toLocaleDateString()}
-                  </TableCell>
-                  <TableCell
-                    style={{
-                      width: 160,                    cursor: "pointer",
-
-                      background:
-                        new Date(ticket.reportingDate).toLocaleDateString() ===
-                        new Date().toLocaleDateString()
-                          ? "red"
-                          : "inherit",
-                    }}
-                    title="Format: MM-DD-YYYY" // Tooltip for date format
-            
+                <TableCell
+                  style={{ width: 160, cursor: "pointer" }}
+                  align="left"
+                  title="Format: MM-DD-YYYY" // Tooltip for date format
+                >
+                  {new Date(ticket.createdAt).toLocaleDateString()}
+                </TableCell>
+                <TableCell
+                  style={{
+                    width: 160,
+                    cursor: "pointer",
+                    background:
+                      new Date(ticket.reportingDate).toLocaleDateString() ===
+                      new Date().toLocaleDateString()
+                        ? "red"
+                        : "inherit",
+                    color:
+                      new Date(ticket.reportingDate).toLocaleDateString() ===
+                      new Date().toLocaleDateString()
+                        ? "white"
+                        : "black",
+                  }}
+                  title="Format: MM-DD-YYYY" // Tooltip for date format
                   align="left"
                   contentEditable={true}
                   onBlur={(e) =>
@@ -441,7 +445,12 @@ export default function LocalSeoActiveClients() {
                   </IconButton>
                 </TableCell>
                 <TableCell
-                  style={{ width: 180, whiteSpace: "pre-line" }} // Apply the white-space property here
+                  style={{
+                    width: 180,
+                    whiteSpace: "pre-line",
+                    background: ticket.businessdetails.notes ? "red" : "white",
+                    color: ticket.businessdetails.notes ? "white" : "black",
+                  }} // Apply the white-space property here
                   align="left"
                   contentEditable={true}
                   onBlur={(e) =>
