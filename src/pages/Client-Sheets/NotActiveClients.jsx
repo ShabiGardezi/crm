@@ -20,9 +20,13 @@ import DisplayTicketDetails from "../Tickets/DisplayTicketDetails";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import ActiveNotActiveCard from "./ActiveNotActiveCard";
 import axios from "axios";
+import { Dialog, DialogTitle, DialogActions } from "@mui/material";
+import { Typography, TextField } from "@material-ui/core";
+import DialogContent from "@mui/material/DialogContent";
 import OneTimeServiceClientsCard from "./OneTimeClientCard";
 import CardsSocialMediaTrack from "./SocialMediaClientSheet/CardsSocialMedia/CardsSocialMediaTrack";
 import TablePaginationActions from "../Tickets/TicketsTablePagination/TicketsPagination";
+import InActiveWebsiteClients from "../ClientHistory/WordpressClientSheet/NotActiveWebsiteClients";
 export default function NotActiveClients() {
   const apiUrl = process.env.REACT_APP_API_URL;
   const user = JSON.parse(localStorage.getItem("user"));
@@ -30,9 +34,13 @@ export default function NotActiveClients() {
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [tickets, setTickets] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [remainingPrice, setRemainingPrice] = useState("");
   const [reportingDates, setReportingDates] = useState({});
   const [isTicketDetailsOpen, setIsTicketDetailsOpen] = useState(false);
   const [selectedTicketDetails, setSelectedTicketDetails] = useState(null);
+  const [ticketSelected, setTicketSelected] = useState();
+  const [paymentRecieved, setPaymentRecieved] = useState(0);
+  const [openRecurringDialog, setOpenRecurringDialog] = useState(false);
 
   <TablePaginationActions />;
   const handleSearch = async (e) => {
@@ -52,7 +60,16 @@ export default function NotActiveClients() {
       }
     }
   };
-
+  const handleRemainingPriceChange = (event) => {
+    setRemainingPrice(event.target.value);
+  };
+  const handleRecurringDialogOpen = () => {
+    setOpenRecurringDialog(true);
+  };
+  // Function to close the recurring dialog
+  const handleRecurringDialogClose = () => {
+    setOpenRecurringDialog(false);
+  };
   // Function to fetch ticket details by ID
   const fetchTicketDetails = async (ticketId) => {
     try {
@@ -286,6 +303,65 @@ export default function NotActiveClients() {
       status: temp,
     });
   };
+  const handleRemainingEdit = (ticketId, remaining) => {
+    // Make an API request to update the notes in the database
+    fetch(`${apiUrl}/api/tickets/remaining-update`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ticketId,
+        remaining: remaining,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.payload) {
+          const updatedTickets = tickets.map((ticket) => {
+            if (ticket._id === ticketId) {
+              return {
+                ...ticket,
+                quotation: {
+                  ...ticket.quotation,
+                  remainingPrice: remaining,
+                },
+              };
+            }
+            return ticket;
+          });
+          setTickets(updatedTickets);
+        } else {
+          console.error("Error updating notes");
+        }
+      })
+      .catch((error) => {
+        console.error("Error updating notes", error);
+      });
+  };
+  // Function to handle submission of recurring data
+  const handleRecurringSubmit = async () => {
+    try {
+      const currentReportingDate = new Date(reportingDates[ticketSelected._id]);
+      const oneMonthLaterDate = new Date(
+        currentReportingDate.getFullYear(),
+        currentReportingDate.getMonth() + 1,
+        currentReportingDate.getDate()
+      );
+
+      // Update the reporting date using the `api/tickets/reportingDate-update` endpoint
+      await axios.put(`${apiUrl}/api/tickets/reportingDate-update`, {
+        ticketId: ticketSelected._id,
+        reportingDate: oneMonthLaterDate.toISOString(),
+      });
+      const response = await axios.post(
+        `${apiUrl}/api/tickets/update_payment_history`,
+        { ticketId: ticketSelected._id, payment: remainingPrice }
+      );
+    } catch (error) {}
+
+    setOpenRecurringDialog(false);
+  };
   return (
     <>
       <Header />
@@ -330,7 +406,7 @@ export default function NotActiveClients() {
                 <TableCell>Business Name</TableCell>
                 <TableCell>Sales Person</TableCell>
                 <TableCell>Active/Not Active</TableCell>
-                <TableCell>Subscription Date</TableCell>
+                <TableCell>Subscription sssDate</TableCell>
                 <TableCell>Reporting Date</TableCell>
                 <TableCell>Details</TableCell>
                 <TableCell>Notes</TableCell>
@@ -371,14 +447,14 @@ export default function NotActiveClients() {
                       </Select>
                     </FormControl>
                   </TableCell>
-               <TableCell
+                  <TableCell
                     style={{ width: 160, cursor: "pointer" }}
                     align="left"
                     title="Format: MM-DD-YYYY" // Tooltip for date format
                   >
                     {new Date(ticket.createdAt).toLocaleDateString()}
                   </TableCell>
-                   <TableCell
+                  <TableCell
                     style={{
                       width: 160,
                       cursor: "pointer",
@@ -460,7 +536,6 @@ export default function NotActiveClients() {
                 <TableCell>Reporting Date</TableCell>
                 <TableCell>Details</TableCell>
                 <TableCell>Notes</TableCell>
-                <TableCell>Recurring</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -502,14 +577,14 @@ export default function NotActiveClients() {
                       </Select>
                     </FormControl>
                   </TableCell>
-               <TableCell
+                  <TableCell
                     style={{ width: 160, cursor: "pointer" }}
                     align="left"
                     title="Format: MM-DD-YYYY" // Tooltip for date format
                   >
                     {new Date(ticket.createdAt).toLocaleDateString()}
                   </TableCell>
-                   <TableCell
+                  <TableCell
                     style={{
                       width: 160,
                       cursor: "pointer",
@@ -547,17 +622,6 @@ export default function NotActiveClients() {
                     }
                   >
                     {ticket.businessdetails.notes}
-                  </TableCell>
-
-                  <TableCell>
-                    <Button
-                      style={{ backgroundColor: "red" }}
-                      variant="contained"
-                      color="primary"
-                      onClick={() => handleRecurringClick(ticket._id)}
-                    >
-                      Recurring
-                    </Button>
                   </TableCell>
                 </TableRow>
               ))}
@@ -602,7 +666,6 @@ export default function NotActiveClients() {
                 <TableCell>Reporting Date</TableCell>
                 <TableCell>Details</TableCell>
                 <TableCell>Notes</TableCell>
-                <TableCell>Recurring</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -644,14 +707,14 @@ export default function NotActiveClients() {
                       </Select>
                     </FormControl>
                   </TableCell>
-               <TableCell
+                  <TableCell
                     style={{ width: 160, cursor: "pointer" }}
                     align="left"
                     title="Format: MM-DD-YYYY" // Tooltip for date format
                   >
                     {new Date(ticket.createdAt).toLocaleDateString()}
                   </TableCell>
-                   <TableCell
+                  <TableCell
                     style={{
                       width: 160,
                       cursor: "pointer",
@@ -689,17 +752,6 @@ export default function NotActiveClients() {
                     }
                   >
                     {ticket.businessdetails.notes}
-                  </TableCell>
-
-                  <TableCell>
-                    <Button
-                      style={{ backgroundColor: "red" }}
-                      variant="contained"
-                      color="primary"
-                      onClick={() => handleRecurringClick(ticket._id)}
-                    >
-                      Recurring
-                    </Button>
                   </TableCell>
                 </TableRow>
               ))}
@@ -833,6 +885,10 @@ export default function NotActiveClients() {
               </TableRow>
             </TableFooter>
           </Table>
+        )}
+        {/* Wordpress */}
+        {user?.department._id === "65195c81504d80e8f11b0d14" && (
+          <InActiveWebsiteClients />
         )}
       </TableContainer>
       {selectedTicketDetails && (

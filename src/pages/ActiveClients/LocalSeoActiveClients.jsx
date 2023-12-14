@@ -9,7 +9,6 @@ import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import TableHead from "@mui/material/TableHead";
 import IconButton from "@mui/material/IconButton";
-import { Button } from "@mui/material";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
@@ -17,7 +16,6 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import axios from "axios";
 import "../../styles/Home/TicketCard.css";
 import TablePaginationActions from "../Tickets/TicketsTablePagination/TicketsPagination";
-import { Dialog, DialogTitle, DialogActions } from "@mui/material";
 import DisplayTicketDetails from "../Tickets/DisplayTicketDetails";
 export default function LocalSeoActiveClients() {
   const apiUrl = process.env.REACT_APP_API_URL;
@@ -26,29 +24,9 @@ export default function LocalSeoActiveClients() {
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [tickets, setTickets] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [openRecurringDialog, setOpenRecurringDialog] = useState(false);
   const [reportingDates, setReportingDates] = useState({});
   const [isTicketDetailsOpen, setIsTicketDetailsOpen] = useState(false);
   const [selectedTicketDetails, setSelectedTicketDetails] = useState(null);
-  const [price, setPrice] = useState("");
-  const [advancePrice, setAdvancePrice] = useState("");
-  const [remainingPrice, setRemainingPrice] = useState("");
-  // Function to open the recurring dialog and reset state values
-  const handleRecurringDialogOpen = () => {
-    setOpenRecurringDialog(true);
-    setPrice(""); // Set price to an empty string or 0 if needed
-    setAdvancePrice(""); // Set advancePrice to an empty string or 0 if needed
-    setRemainingPrice(""); // Set remainingPrice to an empty string or 0 if needed
-  };
-
-  // Function to close the recurring dialog
-  const handleRecurringDialogClose = () => {
-    setOpenRecurringDialog(false);
-  };
-  // Function to handle submission of recurring data
-  const handleRecurringSubmit = () => {
-    setOpenRecurringDialog(false);
-  };
 
   // Function to fetch ticket details by ID
   const fetchTicketDetails = async (ticketId) => {
@@ -101,9 +79,6 @@ export default function LocalSeoActiveClients() {
           );
 
           setTickets(activeTickets);
-          data.payload.forEach((ticket) => {
-            fetchReportingDate(ticket._id);
-          });
         } else {
           console.error("Error fetching data");
         }
@@ -115,41 +90,6 @@ export default function LocalSeoActiveClients() {
     fetchData();
   }, []);
 
-  const fetchReportingDate = async (ticketId) => {
-    try {
-      const response = await fetch(
-        `${apiUrl}/api/tickets/reporting-date/${ticketId}`
-      );
-      if (response.ok) {
-        const data = await response.json();
-        if (data.payload) {
-          setReportingDates((prevReportingDates) => ({
-            ...prevReportingDates,
-            [ticketId]: data.payload,
-          }));
-        } else {
-          // Set the reporting date to one month later than createdAt
-          const createdAtDate = new Date(
-            tickets.find((ticket) => ticket._id === ticketId).createdAt
-          );
-          const oneMonthLaterDate = new Date(
-            createdAtDate.getFullYear(),
-            createdAtDate.getMonth() + 1,
-            createdAtDate.getDate()
-          );
-          setReportingDates((prevReportingDates) => ({
-            ...prevReportingDates,
-            [ticketId]: oneMonthLaterDate.toISOString(),
-          }));
-        }
-      } else {
-        console.error("Error fetching reporting date");
-      }
-    } catch (error) {
-      console.error("Error fetching reporting date", error);
-    }
-  };
-
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - tickets.length) : 0;
 
@@ -160,41 +100,6 @@ export default function LocalSeoActiveClients() {
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
-  };
-
-  // Function to handle form field changes
-  const handlePriceChange = (event) => {
-    const { value } = event.target;
-
-    // Convert the input value to a float, or 0 if it's not a valid number
-    const updatedPrice = parseFloat(value) || 0;
-    const updatedAdvancePrice = parseFloat(advancePrice) || 0;
-
-    // Calculate the remaining price
-    const remaining = updatedPrice - updatedAdvancePrice;
-
-    // Update the state variables for price and remaining price
-    setPrice(updatedPrice);
-    setRemainingPrice(remaining);
-  };
-
-  const handleAdvancePriceChange = (event) => {
-    const { value } = event.target;
-
-    // Convert the input value to a float, or 0 if it's not a valid number
-    const updatedPrice = parseFloat(price) || 0;
-    const updatedAdvancePrice = parseFloat(value) || 0;
-
-    // Calculate the remaining price
-    const remaining = updatedPrice - updatedAdvancePrice;
-
-    // Update the state variables for advance price and remaining price
-    setAdvancePrice(updatedAdvancePrice);
-    setRemainingPrice(remaining);
-  };
-
-  const handleRemainingPriceChange = (event) => {
-    setRemainingPrice(event.target.value);
   };
   // Function to update reporting date
   const updateReportingDate = async (ticketId, newReportingDate) => {
@@ -234,46 +139,6 @@ export default function LocalSeoActiveClients() {
 
     // Call the updateReportingDate function
     updateReportingDate(ticketId, newReportingDate);
-  };
-
-  // Function to handle the "Recurring" button click
-  const handleRecurringClick = (ticketId) => {
-    // Get the current reporting date
-    const currentReportingDate = new Date(reportingDates[ticketId]);
-
-    // Calculate one month later date
-    const oneMonthLaterDate = new Date(
-      currentReportingDate.getFullYear(),
-      currentReportingDate.getMonth() + 1,
-      currentReportingDate.getDate()
-    );
-
-    // Make an API request to update the reporting date in the database
-    fetch(`${apiUrl}/api/tickets/reportingDate-update`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        ticketId,
-        reportingDate: oneMonthLaterDate.toISOString(),
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.payload) {
-          // If the update is successful, update the local state with the new reporting date
-          setReportingDates((prevReportingDates) => ({
-            ...prevReportingDates,
-            [ticketId]: oneMonthLaterDate.toISOString(),
-          }));
-        } else {
-          console.error("Error updating reporting date");
-        }
-      })
-      .catch((error) => {
-        console.error("Error updating reporting date", error);
-      });
   };
   // Function to handle notes edit and update
 
@@ -364,7 +229,6 @@ export default function LocalSeoActiveClients() {
             <TableCell>Reporting Date</TableCell>
             <TableCell>Details</TableCell>
             <TableCell>Notes</TableCell>
-            <TableCell>Recurring</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -420,13 +284,12 @@ export default function LocalSeoActiveClients() {
                     width: 160,
                     cursor: "pointer",
                     background:
-                         new Date(ticket.reportingDate).toLocaleDateString() <=
-                        new Date().toLocaleDateString()
+                      new Date(ticket.reportingDate) <= new Date()
                         ? "red"
                         : "inherit",
+
                     color:
-                         new Date(ticket.reportingDate).toLocaleDateString() <=
-                        new Date().toLocaleDateString()
+                      new Date(ticket.reportingDate) <= new Date()
                         ? "white"
                         : "black",
                   }}
@@ -458,54 +321,6 @@ export default function LocalSeoActiveClients() {
                   }
                 >
                   {ticket.businessdetails.notes}
-                </TableCell>
-                <TableCell>
-                  <Button
-                    style={{ backgroundColor: "red" }}
-                    variant="contained"
-                    color="primary"
-                    onClick={() => {
-                      handleRecurringDialogOpen();
-                      handleRecurringClick(ticket._id);
-                    }}
-                  >
-                    Recurring
-                  </Button>
-                  {/* Recurring Dialog */}
-                  <Dialog
-                    open={openRecurringDialog}
-                    onClose={handleRecurringDialogClose}
-                  >
-                    <DialogTitle>Recurring Details</DialogTitle>
-                    {/* <DialogContent>
-                      <TextField
-                        label="Price"
-                        value={price}
-                        onChange={handlePriceChange}
-                        fullWidth
-                      />
-                      <TextField
-                        label="Advance Price"
-                        value={advancePrice}
-                        onChange={handleAdvancePriceChange}
-                        fullWidth
-                      />
-                      <TextField
-                        label="Remaining Price"
-                        value={remainingPrice}
-                        onChange={handleRemainingPriceChange}
-                        fullWidth
-                      />
-                    </DialogContent> */}
-                    <DialogActions>
-                      <Button onClick={handleRecurringDialogClose}>
-                        Cancel
-                      </Button>
-                      <Button onClick={handleRecurringSubmit} color="primary">
-                        Save
-                      </Button>
-                    </DialogActions>
-                  </Dialog>
                 </TableCell>
               </TableRow>
             ))}

@@ -427,7 +427,9 @@ export default function WebSeoSheet() {
               <TableCell>Reporting Date</TableCell>
               <TableCell>Details</TableCell>
               <TableCell>Notes</TableCell>
-              <TableCell>Recurring</TableCell>
+              {user?.department?._id === "651b3409819ff0aec6af1387" && (
+                <TableCell>Recurring</TableCell>
+              )}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -488,7 +490,7 @@ export default function WebSeoSheet() {
                           ? "white"
                           : "black",
                       background:
-                        new Date(ticket.reportingDate).toLocaleDateString() <=
+                        new Date(ticket.reportingDate).toLocaleDateString() ===
                         new Date().toLocaleDateString()
                           ? "red"
                           : "inherit",
@@ -517,122 +519,127 @@ export default function WebSeoSheet() {
                   >
                     {ticket.businessdetails.notes}
                   </TableCell>
-                  <TableCell>
-                    <Button
-                      style={{ backgroundColor: "red" }}
-                      variant="contained"
-                      color="primary"
-                      onClick={() => {
-                        handleRecurringDialogOpen();
-                        setTicketSelected(ticket);
-                        setPaymentRecieved(() => {
-                          let payment = 0;
-                          ticket.payment_history.forEach((p) => {
-                            payment = payment + p.payment;
+                  {user?.department?._id === "651b3409819ff0aec6af1387" && (
+                    <TableCell>
+                      <Button
+                        style={{ backgroundColor: "red" }}
+                        variant="contained"
+                        color="primary"
+                        onClick={() => {
+                          handleRecurringDialogOpen();
+                          setTicketSelected(ticket);
+                          setPaymentRecieved(() => {
+                            let payment = 0;
+                            ticket.payment_history.forEach((p) => {
+                              payment = payment + p.payment;
+                            });
+                            return payment;
                           });
-                          return payment;
-                        });
-                      }}
-                    >
-                      Recurring
-                    </Button>
-                    {/* Recurring Dialog */}
-                    <Dialog
-                      open={openRecurringDialog}
-                      onClose={handleRecurringDialogClose}
-                    >
-                      <DialogTitle style={{ textAlign: "center" }}>
-                        {ticketSelected
-                          ? `Payment History - ${ticketSelected.businessdetails.clientName}`
-                          : "Payment History"}
-                      </DialogTitle>
-                      <DialogContent
-                        style={{ overflowY: "auto", maxHeight: "500px" }}
+                        }}
                       >
-                        <table style={{ width: "100%" }}>
-                          <thead>
-                            <tr>
-                              <th>Date</th>
-                              <th>Work Type</th>
-                              <th>Received</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {ticketSelected &&
-                              ticketSelected?.payment_history.map((p) => (
-                                <tr key={p.date}>
-                                  <td style={{ textAlign: "center" }}>
-                                    {new Date(p.date).toLocaleDateString()}
-                                  </td>
-                                  <td style={{ textAlign: "center" }}>
-                                    {ticket.businessdetails.workStatus}
-                                  </td>
-                                  <td
-                                    style={{ textAlign: "center" }}
-                                  >{`$${p.payment}`}</td>
-                                </tr>
-                              ))}
-                          </tbody>
-                        </table>
-                        <hr
-                          style={{
-                            marginTop: "16px",
-                            marginBottom: "16px",
-                            border: "0",
-                            borderTop: "2px solid #eee",
-                          }}
-                        />
+                        Recurring
+                      </Button>
+                      {/* Recurring Dialog */}
+                      <Dialog
+                        open={openRecurringDialog}
+                        onClose={handleRecurringDialogClose}
+                      >
+                        <DialogTitle style={{ textAlign: "center" }}>
+                          {ticketSelected
+                            ? `Payment History - ${ticketSelected.businessdetails.clientName}`
+                            : "Payment History"}
+                        </DialogTitle>
+                        <DialogContent
+                          style={{ overflowY: "auto", maxHeight: "500px" }}
+                        >
+                          <table style={{ width: "100%" }}>
+                            <thead>
+                              <tr>
+                                <th>Date</th>
+                                <th>Work Type</th>
+                                <th>Received</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {ticketSelected &&
+                                ticketSelected?.payment_history.map((p) => (
+                                  <tr key={p.date}>
+                                    <td style={{ textAlign: "center" }}>
+                                      {new Date(p.date).toLocaleDateString()}
+                                    </td>
+                                    <td style={{ textAlign: "center" }}>
+                                      {ticket.businessdetails.workStatus}
+                                    </td>
+                                    <td
+                                      style={{ textAlign: "center" }}
+                                    >{`$${p.payment}`}</td>
+                                  </tr>
+                                ))}
+                            </tbody>
+                          </table>
+                          <hr
+                            style={{
+                              marginTop: "16px",
+                              marginBottom: "16px",
+                              border: "0",
+                              borderTop: "2px solid #eee",
+                            }}
+                          />
 
-                        <Typography>
-                          <div
-                            style={{
-                              display: "flex",
-                              justifyContent: "space-between",
-                              fontWeight: "bold",
-                            }}
-                          >
-                            <div>Payment Received:</div>
-                            <div>{`$${paymentRecieved}`}</div>
-                          </div>
-                        </Typography>
-                        <Typography>
-                          <div
-                            style={{
-                              display: "flex",
-                              justifyContent: "space-between",
-                              fontWeight: "bold",
-                            }}
-                          >
-                            <div>Remaining Charges:</div>
+                          <Typography>
                             <div
-                              class="remainingCharges"
-                              contentEditable={true}
-                              onBlur={(e) =>
-                                handleRemainingEdit(
-                                  ticket._id,
-                                  e.target.innerText
-                                )
-                              }
-                            >{`${ticket.quotation.remainingPrice}`}</div>
-                          </div>
-                        </Typography>
-                        <TextField
-                          label="Payment Received"
-                          value={remainingPrice}
-                          onChange={handleRemainingPriceChange}
-                          fullWidth
-                        />
-                      </DialogContent>
-                      <DialogActions>
-                        <Button onClick={handleRecurringDialogClose}>
-                          Cancel
-                        </Button>
-                        <Button onClick={handleRecurringSubmit} color="primary">
-                          Save
-                        </Button>
-                      </DialogActions>
-                    </Dialog>
-                  </TableCell>
+                              style={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                                fontWeight: "bold",
+                              }}
+                            >
+                              <div>Payment Received:</div>
+                              <div>{`$${paymentRecieved}`}</div>
+                            </div>
+                          </Typography>
+                          <Typography>
+                            <div
+                              style={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                                fontWeight: "bold",
+                              }}
+                            >
+                              <div>Remaining Charges:</div>
+                              <div
+                                class="remainingCharges"
+                                contentEditable={true}
+                                onBlur={(e) =>
+                                  handleRemainingEdit(
+                                    ticket._id,
+                                    e.target.innerText
+                                  )
+                                }
+                              >{`${ticket.quotation.remainingPrice}`}</div>
+                            </div>
+                          </Typography>
+                          <TextField
+                            label="Payment Received"
+                            value={remainingPrice}
+                            onChange={handleRemainingPriceChange}
+                            fullWidth
+                          />
+                        </DialogContent>
+                        <DialogActions>
+                          <Button onClick={handleRecurringDialogClose}>
+                            Cancel
+                          </Button>
+                          <Button
+                            onClick={handleRecurringSubmit}
+                            color="primary"
+                          >
+                            Save
+                          </Button>
+                        </DialogActions>
+                      </Dialog>
+                    </TableCell>
+                  )}
                 </TableRow>
               ))}
             {emptyRows > 0 && (

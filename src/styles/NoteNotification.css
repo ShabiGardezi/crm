@@ -1,0 +1,27 @@
+.note-notification {
+  display: none;
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  background-color: #4caf50;
+  color: white;
+  padding: 15px;
+  border-radius: 5px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.note-notification.show {
+  display: block;
+}
+
+.note-notification.hide {
+  display: none;
+}
+
+.note-notification button {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  float: right;
+}

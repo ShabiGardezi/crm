@@ -10,6 +10,7 @@ import TablePaginationActions from "../Tickets/TicketsTablePagination/TicketsPag
 import LocalSeoActiveClients from "../ActiveClients/LocalSeoActiveClients";
 import SocialMedia_ReviewsActiveClients from "../ActiveClients/SocialMedia_ReviewsActiveClients";
 import PaidMarketingActiveClient from "../ActiveClients/PaidMarketingActiveClient";
+import ActiveWebsiteClients from "../ActiveClients/ActiveWesbiteClients";
 export default function ActiveClients() {
   const user = JSON.parse(localStorage.getItem("user"));
   <TablePaginationActions />;
@@ -43,6 +44,10 @@ export default function ActiveClients() {
         {(user?.department._id === "65195c4b504d80e8f11b0d13" ||
           user?.department._id === "65195c8f504d80e8f11b0d15") && (
           <LocalSeoActiveClients />
+        )}
+        {/* Wordpress */}
+        {user?.department._id === "65195c81504d80e8f11b0d14" && (
+          <ActiveWebsiteClients />
         )}
       </TableContainer>
     </>

@@ -32,7 +32,6 @@ export default function WordpressClientSheet(props) {
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [tickets, setTickets] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [reportingDates, setReportingDates] = useState({});
   const [isTicketDetailsOpen, setIsTicketDetailsOpen] = useState(false);
   const [selectedTicketDetails, setSelectedTicketDetails] = useState(null);
 
@@ -86,9 +85,6 @@ export default function WordpressClientSheet(props) {
         if (response.ok) {
           const data = await response.json();
           setTickets(data.payload);
-          data.payload.forEach((ticket) => {
-            fetchReportingDate(ticket._id);
-          });
         } else {
           console.error("Error fetching data");
         }
@@ -99,42 +95,6 @@ export default function WordpressClientSheet(props) {
 
     fetchData();
   }, []);
-
-  const fetchReportingDate = async (ticketId) => {
-    try {
-      const response = await fetch(
-        `${apiUrl}/api/tickets/reporting-date/${ticketId}`
-      );
-      if (response.ok) {
-        const data = await response.json();
-        if (data.payload) {
-          setReportingDates((prevReportingDates) => ({
-            ...prevReportingDates,
-            [ticketId]: data.payload,
-          }));
-        } else {
-          // Set the reporting date to one month later than createdAt
-          const createdAtDate = new Date(
-            tickets.find((ticket) => ticket._id === ticketId).createdAt
-          );
-          const oneMonthLaterDate = new Date(
-            createdAtDate.getFullYear(),
-            createdAtDate.getMonth() + 1,
-            createdAtDate.getDate()
-          );
-          setReportingDates((prevReportingDates) => ({
-            ...prevReportingDates,
-            [ticketId]: oneMonthLaterDate.toISOString(),
-          }));
-        }
-      } else {
-        console.error("Error fetching reporting date");
-      }
-    } catch (error) {
-      console.error("Error fetching reporting date", error);
-    }
-  };
-
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - tickets.length) : 0;
 
@@ -145,46 +105,6 @@ export default function WordpressClientSheet(props) {
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
-  };
-
-  // Function to update reporting date
-  const updateReportingDate = async (ticketId, newReportingDate) => {
-    try {
-      const response = await fetch(
-        `${apiUrl}/api/tickets/reportingDate-update`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            ticketId,
-            reportingDate: newReportingDate.toISOString(),
-          }),
-        }
-      );
-
-      if (response.ok) {
-        // Reporting Date updated successfully
-        // Update the state to display the updated date
-        setReportingDates((prevReportingDates) => ({
-          ...prevReportingDates,
-          [ticketId]: newReportingDate.toISOString(),
-        }));
-      } else {
-        console.error("Error updating reporting date");
-      }
-    } catch (error) {
-      console.error("Error updating reporting date", error);
-    }
-  };
-  // Function to handle reporting date edit
-  const handleReportingDateEdit = (ticketId, editedDate) => {
-    // Convert the edited content back to a date format
-    const newReportingDate = new Date(editedDate);
-
-    // Call the updateReportingDate function
-    updateReportingDate(ticketId, newReportingDate);
   };
 
   // Function to handle notes edit and update
@@ -255,9 +175,6 @@ export default function WordpressClientSheet(props) {
           const data = await response.json();
 
           setTickets(data.payload);
-          data.payload.forEach((ticket) => {
-            fetchReportingDate(ticket._id);
-          });
         } else {
           console.error("Error fetching data");
         }
@@ -316,7 +233,6 @@ export default function WordpressClientSheet(props) {
               <TableCell>Sales Person</TableCell>
               <TableCell>Active/Not Active</TableCell>
               <TableCell>Subscription Date</TableCell>
-              <TableCell>Reporting Date</TableCell>
               <TableCell>Details</TableCell>
               <TableCell>Notes</TableCell>
             </TableRow>
@@ -348,8 +264,7 @@ export default function WordpressClientSheet(props) {
                       style={{
                         backgroundColor:
                           ticket.ActiveNotActive === "Active"
-                            ? 
-"rgb(25, 118, 210)"
+                            ? "rgb(25, 118, 210)"
                             : "#dc3545", // set background color for Select
                         color:
                           ticket.ActiveNotActive === "Active"
@@ -365,53 +280,27 @@ export default function WordpressClientSheet(props) {
                 <TableCell style={{ width: 160 }} align="left">
                   {new Date(ticket.createdAt).toLocaleDateString()}
                 </TableCell>
-                   <TableCell
-                    style={{
-                      width: 160,
-                      cursor: "pointer",
-                      color:
-                        new Date(ticket.reportingDate).toLocaleDateString() ===
-                        new Date().toLocaleDateString()
-                          ? "white"
-                          : "black",
-                      background:
-                        new Date(ticket.reportingDate).toLocaleDateString() <=
-                        new Date().toLocaleDateString()
-                          ? "red"
-                          : "inherit",
-                    }}
-                    title="Format: MM-DD-YYYY" // Tooltip for date format
-                    align="left"
-                    contentEditable={true}
-                    onBlur={(e) =>
-                      handleReportingDateEdit(ticket._id, e.target.innerText)
-                    }
-                  >
-                    {new Date(ticket.reportingDate).toLocaleDateString()}
-                  </TableCell>
 
                 <TableCell style={{ width: 160 }} align="left">
                   <IconButton onClick={() => fetchTicketDetails(ticket._id)}>
                     <VisibilityIcon />
                   </IconButton>
                 </TableCell>
-  <TableCell
-                    style={{
-                      width: 180,
-                      whiteSpace: "pre-line",
-                      background: ticket.businessdetails.notes
-                        ? "red"
-                        : "white",
-                      color: ticket.businessdetails.notes ? "white" : "black",
-                    }} // Apply the white-space property here
-                    align="left"
-                    contentEditable={true}
-                    onBlur={(e) =>
-                      handleNotesEdit(ticket._id, e.target.innerText)
-                    }
-                  >
-                    {ticket.businessdetails.notes}
-                  </TableCell>
+                <TableCell
+                  style={{
+                    width: 180,
+                    whiteSpace: "pre-line",
+                    background: ticket.businessdetails.notes ? "red" : "white",
+                    color: ticket.businessdetails.notes ? "white" : "black",
+                  }} // Apply the white-space property here
+                  align="left"
+                  contentEditable={true}
+                  onBlur={(e) =>
+                    handleNotesEdit(ticket._id, e.target.innerText)
+                  }
+                >
+                  {ticket.businessdetails.notes}
+                </TableCell>
               </TableRow>
             ))}
             {emptyRows > 0 && (

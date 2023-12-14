@@ -12,7 +12,6 @@ import IconButton from "@mui/material/IconButton";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import Header from "../../Header";
 import DisplayTicketDetails from "../../Tickets/DisplayTicketDetails";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import axios from "axios";
@@ -29,21 +28,6 @@ export default function InActiveWebsiteClients() {
   const [selectedTicketDetails, setSelectedTicketDetails] = useState(null);
 
   <TablePaginationActions />;
-  const handleSearch = async (searchQuery) => {
-    try {
-      const response = await fetch(
-        `${apiUrl}/api/tickets/client-search?searchString=${searchQuery}`
-      );
-      if (response.ok) {
-        const data = await response.json();
-        setTickets(data.payload);
-      } else {
-        console.error("Error fetching search results");
-      }
-    } catch (error) {
-      console.error("Error fetching search results", error);
-    }
-  };
 
   // Function to fetch ticket details by ID
   const fetchTicketDetails = async (ticketId) => {
@@ -157,109 +141,97 @@ export default function InActiveWebsiteClients() {
   };
   return (
     <>
-      <Header />
-      <div className="cards">{<WebisteClientCards />}</div>
-
-      <TableContainer component={Paper}>
-        <SearchBar onSearch={handleSearch} />
-        <Table sx={{ minWidth: 800 }} aria-label="custom pagination table">
-          <TableHead>
-            <TableRow>
-              <TableCell>Business Name</TableCell>
-              <TableCell>Sales Person</TableCell>
-              <TableCell>Active/Not Active</TableCell>
-              <TableCell>Subscription Date</TableCell>
-              <TableCell>Details</TableCell>
-              <TableCell>Notes</TableCell>
+      <Table sx={{ minWidth: 800 }} aria-label="custom pagination table">
+        <TableHead>
+          <TableRow>
+            <TableCell>Business Name</TableCell>
+            <TableCell>Sales Person</TableCell>
+            <TableCell>Active/Not Active</TableCell>
+            <TableCell>Subscription Date</TableCell>
+            <TableCell>Details</TableCell>
+            <TableCell>Notes</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {tickets.map((ticket) => (
+            <TableRow key={ticket._id}>
+              {ticket.businessdetails && (
+                <TableCell component="th" scope="row">
+                  {ticket.businessdetails.clientName}
+                </TableCell>
+              )}
+              {ticket.TicketDetails && (
+                <TableCell style={{ width: 160 }} align="left">
+                  {ticket.TicketDetails.assignor}
+                </TableCell>
+              )}
+              <TableCell style={{ width: 160 }} align="left">
+                <FormControl>
+                  <Select
+                    value={ticket.ActiveNotActive || "Active"}
+                    onClick={() => handleClick(ticket)}
+                    style={{
+                      backgroundColor:
+                        ticket.ActiveNotActive === "Active" ? "#28a745" : "#dc3545", // set background color for Select
+                      color:
+                        ticket.ActiveNotActive === "Active" ? "white" : "black",
+                    }}
+                  >
+                    <MenuItem value="Active">Active</MenuItem>
+                    <MenuItem value="Not Active">Not Active</MenuItem>
+                  </Select>
+                </FormControl>
+              </TableCell>
+              <TableCell style={{ width: 160 }} align="left">
+                {new Date(ticket.createdAt).toLocaleDateString()}
+              </TableCell>
+              <TableCell style={{ width: 160 }} align="left">
+                <IconButton onClick={() => fetchTicketDetails(ticket._id)}>
+                  <VisibilityIcon />
+                </IconButton>
+              </TableCell>
+              <TableCell
+                style={{
+                  width: 180,
+                  whiteSpace: "pre-line",
+                  background: ticket.businessdetails.notes ? "red" : "white",
+                  color: ticket.businessdetails.notes ? "white" : "black",
+                }} // Apply the white-space property here
+                align="left"
+                contentEditable={true}
+                onBlur={(e) => handleNotesEdit(ticket._id, e.target.innerText)}
+              >
+                {ticket.businessdetails.notes}
+              </TableCell>
             </TableRow>
-          </TableHead>
-          <TableBody>
-            {tickets.map((ticket) => (
-              <TableRow key={ticket._id}>
-                {ticket.businessdetails && (
-                  <TableCell component="th" scope="row">
-                    {ticket.businessdetails.clientName}
-                  </TableCell>
-                )}
-                {ticket.TicketDetails && (
-                  <TableCell style={{ width: 160 }} align="left">
-                    {ticket.TicketDetails.assignor}
-                  </TableCell>
-                )}
-                <TableCell style={{ width: 160 }} align="left">
-                  <FormControl>
-                    <Select
-                      value={ticket.ActiveNotActive || "Active"}
-                      onClick={() => handleClick(ticket)}
-                      style={{
-                        backgroundColor:
-                          ticket.ActiveNotActive === "Active"
-                            ? "red"
-                            : "#dc3545", // set background color for Select
-                        color:
-                          ticket.ActiveNotActive === "Active"
-                            ? "white"
-                            : "black",
-                      }}
-                    >
-                      <MenuItem value="Active">Active</MenuItem>
-                      <MenuItem value="Not Active">Not Active</MenuItem>
-                    </Select>
-                  </FormControl>
-                </TableCell>
-                <TableCell style={{ width: 160 }} align="left">
-                  {new Date(ticket.createdAt).toLocaleDateString()}
-                </TableCell>
-                <TableCell style={{ width: 160 }} align="left">
-                  <IconButton onClick={() => fetchTicketDetails(ticket._id)}>
-                    <VisibilityIcon />
-                  </IconButton>
-                </TableCell>
-                <TableCell
-                  style={{
-                    width: 180,
-                    whiteSpace: "pre-line",
-                    background: ticket.businessdetails.notes ? "red" : "white",
-                    color: ticket.businessdetails.notes ? "white" : "black",
-                  }} // Apply the white-space property here
-                  align="left"
-                  contentEditable={true}
-                  onBlur={(e) =>
-                    handleNotesEdit(ticket._id, e.target.innerText)
-                  }
-                >
-                  {ticket.businessdetails.notes}
-                </TableCell>
-              </TableRow>
-            ))}
-            {emptyRows > 0 && (
-              <TableRow style={{ height: 53 * emptyRows }}>
-                <TableCell colSpan={8} />
-              </TableRow>
-            )}
-          </TableBody>
-          <TableFooter>
-            <TableRow>
-              <TablePagination
-                rowsPerPageOptions={[10, 20, 25, { label: "All", value: -1 }]}
-                colSpan={8}
-                count={tickets?.length ?? 0} // Ensure tickets and tickets.length are defined
-                rowsPerPage={rowsPerPage}
-                page={page}
-                SelectProps={{
-                  inputProps: {
-                    "aria-label": "rows per page",
-                  },
-                  native: true,
-                }}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-                ActionsComponent={TablePaginationActions}
-              />
+          ))}
+          {emptyRows > 0 && (
+            <TableRow style={{ height: 53 * emptyRows }}>
+              <TableCell colSpan={8} />
             </TableRow>
-          </TableFooter>
-        </Table>
-      </TableContainer>
+          )}
+        </TableBody>
+        <TableFooter>
+          <TableRow>
+            <TablePagination
+              rowsPerPageOptions={[10, 20, 25, { label: "All", value: -1 }]}
+              colSpan={8}
+              count={tickets?.length ?? 0} // Ensure tickets and tickets.length are defined
+              rowsPerPage={rowsPerPage}
+              page={page}
+              SelectProps={{
+                inputProps: {
+                  "aria-label": "rows per page",
+                },
+                native: true,
+              }}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+              ActionsComponent={TablePaginationActions}
+            />
+          </TableRow>
+        </TableFooter>
+      </Table>
       {selectedTicketDetails && (
         <DisplayTicketDetails
           open={isTicketDetailsOpen}
