@@ -372,7 +372,7 @@ export default function FbReviewSheet(props) {
                           ? "white"
                           : "black",
                       background:
-                        new Date(ticket.reportingDate).toLocaleDateString() ===
+                        new Date(ticket.reportingDate).toLocaleDateString() <=
                         new Date().toLocaleDateString()
                           ? "red"
                           : "inherit",

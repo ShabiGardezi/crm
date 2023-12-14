@@ -365,7 +365,7 @@ export default function LikesFollowersSocialMedia(props) {
                           ? "white"
                           : "black",
                       background:
-                        new Date(ticket.reportingDate).toLocaleDateString() ===
+                        new Date(ticket.reportingDate).toLocaleDateString() <=
                         new Date().toLocaleDateString()
                           ? "red"
                           : "inherit",

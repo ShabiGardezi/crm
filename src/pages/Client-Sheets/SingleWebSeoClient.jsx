@@ -356,13 +356,13 @@ export default function LocalSeoSheet() {
                     width: 160,
                     cursor: "pointer",
                     color:
-                      new Date(ticket.reportingDate).toLocaleDateString() ===
-                      new Date().toLocaleDateString()
+                         new Date(ticket.reportingDate).toLocaleDateString() <=
+                        new Date().toLocaleDateString()
                         ? "white"
                         : "black",
                     background:
-                      new Date(ticket.reportingDate).toLocaleDateString() ===
-                      new Date().toLocaleDateString()
+                         new Date(ticket.reportingDate).toLocaleDateString() <=
+                        new Date().toLocaleDateString()
                         ? "red"
                         : "inherit",
                   }}

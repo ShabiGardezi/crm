@@ -388,7 +388,7 @@ export default function NotActiveClients() {
                           ? "white"
                           : "black",
                       background:
-                        new Date(ticket.reportingDate).toLocaleDateString() ===
+                        new Date(ticket.reportingDate).toLocaleDateString() <=
                         new Date().toLocaleDateString()
                           ? "red"
                           : "inherit",
@@ -519,7 +519,7 @@ export default function NotActiveClients() {
                           ? "white"
                           : "black",
                       background:
-                        new Date(ticket.reportingDate).toLocaleDateString() ===
+                        new Date(ticket.reportingDate).toLocaleDateString() <=
                         new Date().toLocaleDateString()
                           ? "red"
                           : "inherit",
@@ -661,7 +661,7 @@ export default function NotActiveClients() {
                           ? "white"
                           : "black",
                       background:
-                        new Date(ticket.reportingDate).toLocaleDateString() ===
+                        new Date(ticket.reportingDate).toLocaleDateString() <=
                         new Date().toLocaleDateString()
                           ? "red"
                           : "inherit",

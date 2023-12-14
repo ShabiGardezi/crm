@@ -320,7 +320,7 @@ export default function ActiveWebsiteClients() {
                           ? "white"
                           : "black",
                       background:
-                        new Date(ticket.reportingDate).toLocaleDateString() ===
+                        new Date(ticket.reportingDate).toLocaleDateString() <=
                         new Date().toLocaleDateString()
                           ? "red"
                           : "inherit",

@@ -420,13 +420,13 @@ export default function LocalSeoActiveClients() {
                     width: 160,
                     cursor: "pointer",
                     background:
-                      new Date(ticket.reportingDate).toLocaleDateString() ===
-                      new Date().toLocaleDateString()
+                         new Date(ticket.reportingDate).toLocaleDateString() <=
+                        new Date().toLocaleDateString()
                         ? "red"
                         : "inherit",
                     color:
-                      new Date(ticket.reportingDate).toLocaleDateString() ===
-                      new Date().toLocaleDateString()
+                         new Date(ticket.reportingDate).toLocaleDateString() <=
+                        new Date().toLocaleDateString()
                         ? "white"
                         : "black",
                   }}
