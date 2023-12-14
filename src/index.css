@@ -12,5 +12,5 @@ code {
     monospace;
 }
 .css-mbdu2s {
-  max-width: 100%;
+  max-width: 100% !important;
 }
