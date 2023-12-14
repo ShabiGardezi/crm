@@ -6,14 +6,12 @@ import NotificationGrid from "./NotificationGrid";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 
 export default function Inbox() {
+  const apiUrl = process.env.REACT_APP_API_URL;
   const [resp, setResp] = useState([]);
   useEffect(() => {
     const { _id } = JSON.parse(localStorage.getItem("user"));
     axios
-      .get(
-        `http://localhost:5000/api/notification/all?userId=${_id}&shouldMark=true`,
-        {}
-      )
+      .get(`${apiUrl}/api/notification/all?userId=${_id}&shouldMark=true`, {})
       .then((res) => {
         console.log(res);
         setResp(res.data.payload);
