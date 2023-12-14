@@ -504,7 +504,6 @@ const Header = () => {
       .then(({ data }) => {
         const filtered = data.payload.filter((x) => x.isRead === false);
         setNcount(filtered.length);
-        console.log(`Notification Count: ${nCount}`);
       })
       .catch((err) => console.error(err));
   }, [user]);
