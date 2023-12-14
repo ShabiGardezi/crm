@@ -27,7 +27,6 @@ const ToDos = (props) => {
   const [selectedNote, setselectedNote] = useState();
   const { notesList, setnotesList } = props;
   const user = JSON.parse(localStorage.getItem("user"));
-  console.log(notesList);
   let filterToDo = notesList;
   if (todosData === "active") {
     filterToDo = notesList.filter((note) => note.status === true);
