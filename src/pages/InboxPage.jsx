@@ -13,7 +13,6 @@ export default function Inbox() {
     axios
       .get(`${apiUrl}/api/notification/all?userId=${_id}&shouldMark=true`, {})
       .then((res) => {
-        console.log(res);
         setResp(res.data.payload);
       })
       .catch((err) => console.error(err.message));
