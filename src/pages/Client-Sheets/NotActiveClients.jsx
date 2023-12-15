@@ -367,14 +367,14 @@ export default function NotActiveClients() {
       <Header />
       <div className="cards">
         <ActiveNotActiveCard />
-        {(user?.department._id === "651ada78819ff0aec6af1381" ||
-          user?.department._id === "651ada98819ff0aec6af1382") && (
-          <CardsSocialMediaTrack />
-        )}
         {user?.department._id === "65195c8f504d80e8f11b0d15" && (
           <OneTimeServiceClientsCard />
         )}
       </div>
+      {(user?.department._id === "651ada78819ff0aec6af1381" ||
+        user?.department._id === "651ada98819ff0aec6af1382") && (
+        <CardsSocialMediaTrack />
+      )}
       <TableContainer component={Paper}>
         <div>
           <div
@@ -460,10 +460,9 @@ export default function NotActiveClients() {
                       cursor: "pointer",
                       color:
                         new Date(ticket.reportingDate) <= new Date()
-
                           ? "white"
                           : "black",
-                     background:
+                      background:
                         new Date(ticket.reportingDate) <= new Date()
                           ? "red"
                           : "inherit",
@@ -483,7 +482,14 @@ export default function NotActiveClients() {
                     </IconButton>
                   </TableCell>
                   <TableCell
-                    style={{ width: 180, whiteSpace: "pre-line" }} // Apply the white-space property here
+                    style={{
+                      width: 180,
+                      whiteSpace: "pre-line",
+                      background: ticket.businessdetails.notes
+                        ? "red"
+                        : "white",
+                      color: ticket.businessdetails.notes ? "white" : "black",
+                    }} // Apply the white-space property here
                     align="left"
                     contentEditable={true}
                     onBlur={(e) =>
@@ -589,10 +595,9 @@ export default function NotActiveClients() {
                       cursor: "pointer",
                       color:
                         new Date(ticket.reportingDate) <= new Date()
-
                           ? "white"
                           : "black",
-                     background:
+                      background:
                         new Date(ticket.reportingDate) <= new Date()
                           ? "red"
                           : "inherit",
@@ -612,7 +617,14 @@ export default function NotActiveClients() {
                     </IconButton>
                   </TableCell>
                   <TableCell
-                    style={{ width: 180, whiteSpace: "pre-line" }} // Apply the white-space property here
+                    style={{
+                      width: 180,
+                      whiteSpace: "pre-line",
+                      background: ticket.businessdetails.notes
+                        ? "red"
+                        : "white",
+                      color: ticket.businessdetails.notes ? "white" : "black",
+                    }} // Apply the white-space property here
                     align="left"
                     contentEditable={true}
                     onBlur={(e) =>
@@ -718,10 +730,9 @@ export default function NotActiveClients() {
                       cursor: "pointer",
                       color:
                         new Date(ticket.reportingDate) <= new Date()
-
                           ? "white"
                           : "black",
-                     background:
+                      background:
                         new Date(ticket.reportingDate) <= new Date()
                           ? "red"
                           : "inherit",
@@ -741,7 +752,14 @@ export default function NotActiveClients() {
                     </IconButton>
                   </TableCell>
                   <TableCell
-                    style={{ width: 180, whiteSpace: "pre-line" }} // Apply the white-space property here
+                    style={{
+                      width: 180,
+                      whiteSpace: "pre-line",
+                      background: ticket.businessdetails.notes
+                        ? "red"
+                        : "white",
+                      color: ticket.businessdetails.notes ? "white" : "black",
+                    }} // Apply the white-space property here
                     align="left"
                     contentEditable={true}
                     onBlur={(e) =>
@@ -844,7 +862,14 @@ export default function NotActiveClients() {
                     </IconButton>
                   </TableCell>
                   <TableCell
-                    style={{ width: 180, whiteSpace: "pre-line" }} // Apply the white-space property here
+                    style={{
+                      width: 180,
+                      whiteSpace: "pre-line",
+                      background: ticket.businessdetails.notes
+                        ? "red"
+                        : "white",
+                      color: ticket.businessdetails.notes ? "white" : "black",
+                    }} // Apply the white-space property here
                     align="left"
                     contentEditable={true}
                     onBlur={(e) =>

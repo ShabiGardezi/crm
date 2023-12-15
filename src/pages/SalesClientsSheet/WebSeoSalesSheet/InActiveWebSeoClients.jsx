@@ -458,16 +458,21 @@ export default function InActiveWebSeoClients() {
                       <VisibilityIcon />
                     </IconButton>
                   </TableCell>
-                  <TableCell
-                    style={{ width: 180, whiteSpace: "pre-line" }} // Apply the white-space property here
-                    align="left"
-                    contentEditable={true}
-                    onBlur={(e) =>
-                      handleNotesEdit(ticket._id, e.target.innerText)
-                    }
-                  >
-                    {ticket.businessdetails.notes}
-                  </TableCell>
+                 <TableCell
+                  style={{
+                    width: 180,
+                    whiteSpace: "pre-line",
+                    background: ticket.businessdetails.notes ? "red" : "white",
+                    color: ticket.businessdetails.notes ? "white" : "black",
+                  }} // Apply the white-space property here
+                  align="left"
+                  contentEditable={true}
+                  onBlur={(e) =>
+                    handleNotesEdit(ticket._id, e.target.innerText)
+                  }
+                >
+                  {ticket.businessdetails.notes}
+                </TableCell>
                   <TableCell>
                     <Button
                       style={{ backgroundColor: "red" }}

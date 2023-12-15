@@ -32,7 +32,7 @@ import { useLocation } from "react-router-dom";
 import TablePaginationActions from "../../Tickets/TicketsTablePagination/TicketsPagination";
 import UnauthorizedError from "../../../components/Error_401";
 import MarketingSalesCards from "../../SalesClientsSheet/PaidMarketingSalesSheet.jsx/MarketingSalesCards";
-
+import ActiveNotActiveCard from "../ActiveNotActiveCard";
 export default function PaidMarketingClientSheet(props) {
   const apiUrl = process.env.REACT_APP_API_URL;
   const user = JSON.parse(localStorage.getItem("user"));
@@ -360,6 +360,9 @@ export default function PaidMarketingClientSheet(props) {
       <div className="cards">
         {user?.department._id === "651b3409819ff0aec6af1387" && (
           <MarketingSalesCards />
+        )}
+        {user?.department._id !== "651b3409819ff0aec6af1387" && (
+          <ActiveNotActiveCard />
         )}
       </div>
       <TableContainer component={Paper}>
