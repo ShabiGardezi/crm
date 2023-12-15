@@ -4,11 +4,12 @@ import GreetingCard from "../Layout/Home/GreetingCard";
 import TicketCards from "../Layout/Home/TicketCard";
 import UserToDo from "./UserToDo";
 import NotificationHome from "../pages/NotificationsHome";
-
+import NotesNotification from "../pages/NotesNotification";
 const Home = () => {
   const user = JSON.parse(localStorage.getItem("user"));
   const apiUrl = process.env.REACT_APP_API_URL;
   const [notifications, setNotifications] = useState([]);
+  // const [notesNotification, setNotesNotification] = useState([]);
   const [loading, setLoading] = useState(true);
   const [processedBusinesses, setProcessedBusinesses] = useState(new Set());
 
@@ -16,15 +17,17 @@ const Home = () => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `${apiUrl}/api/tickets?departmentId=${user?.department?._id}&salesDep=true`
+          `${apiUrl}/api/tickets/reportingdate-notification?userDepartmentId=${user?.department?._id}&salesDep=true`
         );
         if (response.ok) {
           const data = await response.json();
-          // Fetch reporting date for each ticket
+          // Fetch reporting date for each ticket and assignor user information
           for (const ticket of data.payload) {
             await fetchReportingDate(
               ticket._id,
-              ticket.businessdetails.clientName
+              ticket.businessdetails.clientName,
+              ticket.majorAssignee,
+              ticket.assignorDepartment
             );
           }
         } else {
@@ -38,9 +41,14 @@ const Home = () => {
     };
 
     fetchData();
-  }, []); // This effect will run once when the component mounts
+  }, []);
 
-  const fetchReportingDate = async (ticketId, clientName) => {
+  const fetchReportingDate = async (
+    ticketId,
+    clientName,
+    majorAssignee,
+    assignorDepartment
+  ) => {
     try {
       const response = await fetch(
         `${apiUrl}/api/tickets/reporting-date/${ticketId}`
@@ -50,19 +58,32 @@ const Home = () => {
         if (data.payload) {
           const currentDate = new Date();
           const reportingDate = new Date(data.payload);
+          const isMajorAssignee = user?.department?._id === majorAssignee?._id;
+          const isAssignorDepartment =
+            user?.department?._id === assignorDepartment?._id;
 
           if (
             currentDate >= reportingDate &&
             !processedBusinesses.has(clientName)
           ) {
-            // Add a notification
-            setNotifications((prevNotifications) => [
-              ...prevNotifications,
-              `Reporting date reached for Business Name: ${clientName}`,
-            ]);
-            setProcessedBusinesses((prevBusinesses) =>
-              new Set(prevBusinesses).add(clientName)
-            );
+            if (isMajorAssignee || isAssignorDepartment) {
+              let notificationMessage = `Reporting date reached for Business Name: <span class="red-text">${clientName}</span>`;
+
+              if (isMajorAssignee) {
+                notificationMessage += ` (assigned by ${assignorDepartment.name})`;
+              } else if (isAssignorDepartment) {
+                notificationMessage += ` (assigned to ${majorAssignee.name})`;
+              }
+
+              setNotifications((prevNotifications) => [
+                ...prevNotifications,
+                notificationMessage,
+              ]);
+
+              setProcessedBusinesses((prevBusinesses) =>
+                new Set(prevBusinesses).add(clientName)
+              );
+            }
           }
         }
       } else {
@@ -87,6 +108,7 @@ const Home = () => {
       {!loading && notifications.length > 0 && (
         <NotificationHome notifications={notifications} />
       )}
+      {/* <NotesNotification notes={notesNotification} /> */}
     </div>
   );
 };

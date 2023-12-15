@@ -313,16 +313,14 @@ const SocialMedia_ReviewsActiveClients = () => {
                 style={{
                   width: 160,
                   cursor: "pointer",
-                  color:
-                    new Date(ticket.reportingDate).toLocaleDateString() ===
-                    new Date().toLocaleDateString()
-                      ? "white"
-                      : "black",
                   background:
-                    new Date(ticket.reportingDate).toLocaleDateString() <=
-                    new Date().toLocaleDateString()
+                    new Date(ticket.reportingDate) <= new Date()
                       ? "red"
                       : "inherit",
+                  color:
+                    new Date(ticket.reportingDate) <= new Date()
+                      ? "white"
+                      : "black",
                 }}
                 title="Format: MM-DD-YYYY" // Tooltip for date format
                 align="left"

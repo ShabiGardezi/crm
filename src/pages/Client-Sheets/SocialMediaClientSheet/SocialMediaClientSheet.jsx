@@ -504,6 +504,10 @@ export default function SocialMediaClientSheet(props) {
                       new Date(ticket.reportingDate) <= new Date()
                         ? "red"
                         : "inherit",
+                    color:
+                      new Date(ticket.reportingDate) <= new Date()
+                        ? "white"
+                        : "black",
                   }}
                   title="Format: MM-DD-YYYY" // Tooltip for date format
                   align="left"

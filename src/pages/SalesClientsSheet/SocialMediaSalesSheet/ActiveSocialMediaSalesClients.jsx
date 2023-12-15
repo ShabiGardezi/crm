@@ -488,7 +488,7 @@ export default function ActiveSocialMediaSalesClients(props) {
                 <TableCell style={{ width: 160 }} align="left">
                   {new Date(ticket.createdAt).toLocaleDateString()}
                 </TableCell>
-                <TableCell
+                 <TableCell
                   style={{
                     width: 160,
                     cursor: "pointer",
@@ -496,6 +496,10 @@ export default function ActiveSocialMediaSalesClients(props) {
                       new Date(ticket.reportingDate) <= new Date()
                         ? "red"
                         : "inherit",
+                    color:
+                      new Date(ticket.reportingDate) <= new Date()
+                        ? "white"
+                        : "black",
                   }}
                   title="Format: MM-DD-YYYY" // Tooltip for date format
                   align="left"
