@@ -9,3 +9,7 @@
 .card-description {
   text-align: center;
 }
+.MuiDialog-paperWidthSm {
+  width: 100%;
+  max-width: 50% !important;
+}

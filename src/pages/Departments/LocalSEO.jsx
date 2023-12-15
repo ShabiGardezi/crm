@@ -145,7 +145,6 @@ const LocalSEOForm = () => {
 
       // Handle the response as needed (e.g., show a success message)
       toast.success("Form submitted successfully!");
-      console.log("Success:", response);
       sendNotification(
         response.data.payload._id.toString(),
         user._id,

@@ -24,6 +24,15 @@ import { useLocation } from "react-router-dom";
 import TablePaginationActions from "../../Tickets/TicketsTablePagination/TicketsPagination";
 import UnauthorizedError from "../../../components/Error_401";
 import { Typography } from "@mui/material";
+import "../../../styles/createTicket.css";
+import {
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+} from "@material-ui/core";
 import WordpressSalesCards from "../../SalesClientsSheet/WordpressSalesSheet/WordpressSalesCards";
 export default function WordpressClientSheet(props) {
   const apiUrl = process.env.REACT_APP_API_URL;
@@ -34,8 +43,23 @@ export default function WordpressClientSheet(props) {
   const [searchQuery, setSearchQuery] = useState("");
   const [isTicketDetailsOpen, setIsTicketDetailsOpen] = useState(false);
   const [selectedTicketDetails, setSelectedTicketDetails] = useState(null);
+  const [paymentRecieved, setPaymentRecieved] = useState(0);
+  const [remainingPrice, setRemainingPrice] = useState("");
+  const [openRecurringDialog, setOpenRecurringDialog] = useState(false);
+  const [ticketSelected, setTicketSelected] = useState();
+  const [reportingDates, setReportingDates] = useState({});
 
   <TablePaginationActions />;
+  const handleRecurringSubmit = async () => {
+    try {
+      const response = await axios.post(
+        `${apiUrl}/api/tickets/update_payment_history`,
+        { ticketId: ticketSelected._id, payment: remainingPrice }
+      );
+    } catch (error) {}
+
+    setOpenRecurringDialog(false);
+  };
   const handleSearch = async (e) => {
     if (e.key === "Enter" && searchQuery) {
       try {
@@ -192,6 +216,54 @@ export default function WordpressClientSheet(props) {
   ) {
     return <UnauthorizedError />;
   }
+  const handleRemainingEdit = (ticketId, remaining) => {
+    // Make an API request to update the notes in the database
+    fetch(`${apiUrl}/api/tickets/remaining-update`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ticketId,
+        remaining: remaining,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.payload) {
+          const updatedTickets = tickets.map((ticket) => {
+            if (ticket._id === ticketId) {
+              return {
+                ...ticket,
+                quotation: {
+                  ...ticket.quotation,
+                  remainingPrice: remaining,
+                },
+              };
+            }
+            return ticket;
+          });
+          setTickets(updatedTickets);
+        } else {
+          console.error("Error updating notes");
+        }
+      })
+      .catch((error) => {
+        console.error("Error updating notes", error);
+      });
+  };
+  const handleRemainingPriceChange = (event) => {
+    setRemainingPrice(event.target.value);
+  };
+  const handleRecurringDialogOpen = () => {
+    setOpenRecurringDialog(true);
+  };
+
+  // Function to close the recurring dialog
+  const handleRecurringDialogClose = () => {
+    setOpenRecurringDialog(false);
+  };
+
   return (
     <>
       <Header />
@@ -235,6 +307,9 @@ export default function WordpressClientSheet(props) {
               <TableCell>Subscription Date</TableCell>
               <TableCell>Details</TableCell>
               <TableCell>Notes</TableCell>
+              {user?.department?._id === "651b3409819ff0aec6af1387" && (
+                <TableCell>Recurring</TableCell>
+              )}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -301,6 +376,128 @@ export default function WordpressClientSheet(props) {
                 >
                   {ticket.businessdetails.notes}
                 </TableCell>
+                {user?.department?._id === "651b3409819ff0aec6af1387" && (
+                  <TableCell>
+                    <Button
+                      style={{ backgroundColor: "red" }}
+                      variant="contained"
+                      color="primary"
+                      onClick={() => {
+                        handleRecurringDialogOpen();
+                        setTicketSelected(ticket);
+                        setPaymentRecieved(() => {
+                          let payment = 0;
+                          ticket.payment_history.forEach((p) => {
+                            payment = payment + p.payment;
+                          });
+                          return payment;
+                        });
+                      }}
+                    >
+                      Recurring
+                    </Button>
+                    {/* Recurring Dialog */}
+                    <Dialog
+                      style={{ width: "100%" }}
+                      open={openRecurringDialog}
+                      onClose={handleRecurringDialogClose}
+                    >
+                      <DialogTitle style={{ textAlign: "center" }}>
+                        {ticketSelected
+                          ? `Payment History - ${ticketSelected.businessdetails.clientName}`
+                          : "Payment History"}
+                      </DialogTitle>
+                      <DialogContent
+                        style={{
+                          overflowY: "auto",
+                          maxHeight: "500px",
+                        }}
+                      >
+                        <table style={{ width: "100%" }}>
+                          <thead>
+                            <tr>
+                              <th>Date</th>
+                              <th>Work Type</th>
+                              <th>Received</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {ticketSelected &&
+                              ticketSelected?.payment_history.map((p) => (
+                                <tr key={p.date}>
+                                  <td style={{ textAlign: "center" }}>
+                                    {new Date(p.date).toLocaleDateString()}
+                                  </td>
+                                  <td style={{ textAlign: "center" }}>
+                                    {ticket.businessdetails.websiteType}
+                                  </td>
+                                  <td
+                                    style={{ textAlign: "center" }}
+                                  >{`$${p.payment}`}</td>
+                                </tr>
+                              ))}
+                          </tbody>
+                        </table>
+                        <hr
+                          style={{
+                            marginTop: "16px",
+                            marginBottom: "16px",
+                            border: "0",
+                            borderTop: "2px solid #eee",
+                          }}
+                        />
+
+                        <Typography>
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              fontWeight: "bold",
+                            }}
+                          >
+                            <div>Payment Received:</div>
+                            <div>{`$${paymentRecieved}`}</div>
+                          </div>
+                        </Typography>
+                        <Typography>
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              fontWeight: "bold",
+                            }}
+                          >
+                            <div>Remaining Charges:</div>
+                            <div
+                              class="remainingCharges"
+                              contentEditable={true}
+                              onBlur={(e) =>
+                                handleRemainingEdit(
+                                  ticket._id,
+                                  e.target.innerText
+                                )
+                              }
+                            >{`${ticket.quotation.remainingPrice}`}</div>
+                          </div>
+                        </Typography>
+                        <TextField
+                          label="Payment Received"
+                          value={remainingPrice}
+                          onChange={handleRemainingPriceChange}
+                          fullWidth
+                        />
+                      </DialogContent>
+                      <DialogActions>
+                        <Button onClick={handleRecurringDialogClose}>
+                          Cancel
+                        </Button>
+                        <Button onClick={handleRecurringSubmit} color="primary">
+                          Save
+                        </Button>
+                      </DialogActions>
+                    </Dialog>
+                  </TableCell>
+                )}
               </TableRow>
             ))}
             {emptyRows > 0 && (
