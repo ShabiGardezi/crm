@@ -406,7 +406,7 @@ export default function NotActiveClients() {
                 <TableCell>Business Name</TableCell>
                 <TableCell>Sales Person</TableCell>
                 <TableCell>Active/Not Active</TableCell>
-                <TableCell>Subscription sssDate</TableCell>
+                <TableCell>Subscription Date</TableCell>
                 <TableCell>Reporting Date</TableCell>
                 <TableCell>Details</TableCell>
                 <TableCell>Notes</TableCell>
