@@ -367,13 +367,12 @@ export default function FbReviewSheet(props) {
                       width: 160,
                       cursor: "pointer",
                       color:
-                        new Date(ticket.reportingDate).toLocaleDateString() ===
-                        new Date().toLocaleDateString()
+                        new Date(ticket.reportingDate) <= new Date()
+
                           ? "white"
                           : "black",
-                      background:
-                        new Date(ticket.reportingDate).toLocaleDateString() <=
-                        new Date().toLocaleDateString()
+                     background:
+                        new Date(ticket.reportingDate) <= new Date()
                           ? "red"
                           : "inherit",
                     }}

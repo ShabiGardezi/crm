@@ -436,8 +436,7 @@ export default function LocalSeoSheet() {
                       width: 160,
                       cursor: "pointer",
                       background:
-                        new Date(ticket.reportingDate).toLocaleDateString() <=
-                        new Date().toLocaleDateString()
+                        new Date(ticket.reportingDate) <= new Date()
                           ? "red"
                           : "inherit",
                     }}

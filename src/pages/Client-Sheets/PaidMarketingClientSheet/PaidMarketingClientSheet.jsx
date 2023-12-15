@@ -446,14 +446,8 @@ export default function PaidMarketingClientSheet(props) {
                   style={{
                     width: 160,
                     cursor: "pointer",
-                    color:
-                      new Date(ticket.reportingDate).toLocaleDateString() ===
-                      new Date().toLocaleDateString()
-                        ? "white"
-                        : "black",
                     background:
-                      new Date(ticket.reportingDate).toLocaleDateString() <=
-                      new Date().toLocaleDateString()
+                      new Date(ticket.reportingDate) <= new Date()
                         ? "red"
                         : "inherit",
                   }}
@@ -466,7 +460,6 @@ export default function PaidMarketingClientSheet(props) {
                 >
                   {new Date(ticket.reportingDate).toLocaleDateString()}
                 </TableCell>
-
                 <TableCell style={{ width: 160 }} align="left">
                   <IconButton onClick={() => fetchTicketDetails(ticket._id)}>
                     <VisibilityIcon />

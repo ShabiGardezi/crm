@@ -253,6 +253,43 @@ const PaidMarketingActiveClient = () => {
 
     setOpenRecurringDialog(false);
   };
+  const updateReportingDate = async (ticketId, newReportingDate) => {
+    try {
+      const response = await fetch(
+        `${apiUrl}/api/tickets/reportingDate-update`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            ticketId,
+            reportingDate: newReportingDate.toISOString(),
+          }),
+        }
+      );
+
+      if (response.ok) {
+        // Reporting Date updated successfully
+        // Update the state to display the updated date
+        setReportingDates((prevReportingDates) => ({
+          ...prevReportingDates,
+          [ticketId]: newReportingDate.toISOString(),
+        }));
+      } else {
+        console.error("Error updating reporting date");
+      }
+    } catch (error) {
+      console.error("Error updating reporting date", error);
+    }
+  };
+  const handleReportingDateEdit = (ticketId, editedDate) => {
+    // Convert the edited content back to a date format
+    const newReportingDate = new Date(editedDate);
+
+    // Call the updateReportingDate function
+    updateReportingDate(ticketId, newReportingDate);
+  };
   return (
     <div>
       <Header />
@@ -283,6 +320,7 @@ const PaidMarketingActiveClient = () => {
             <TableCell>Sales Person</TableCell>
             <TableCell>Active/Not Active</TableCell>
             <TableCell>Subscription Date</TableCell>
+            <TableCell>Reporting Date</TableCell>
             <TableCell>Ad Platfrom</TableCell>
             <TableCell>Budget</TableCell>
             <TableCell>Details</TableCell>
@@ -326,6 +364,24 @@ const PaidMarketingActiveClient = () => {
               </TableCell>
               <TableCell style={{ width: 160 }} align="left">
                 {new Date(ticket.createdAt).toLocaleDateString()}
+              </TableCell>
+              <TableCell
+                style={{
+                  width: 160,
+                  cursor: "pointer",
+                  background:
+                    new Date(ticket.reportingDate) <= new Date()
+                      ? "red"
+                      : "inherit",
+                }}
+                title="Format: MM-DD-YYYY" // Tooltip for date format
+                align="left"
+                contentEditable={true}
+                onBlur={(e) =>
+                  handleReportingDateEdit(ticket._id, e.target.innerText)
+                }
+              >
+                {new Date(ticket.reportingDate).toLocaleDateString()}
               </TableCell>
               <TableCell style={{ width: 160 }} align="left">
                 {ticket.businessdetails.platform}
