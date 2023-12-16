@@ -5,7 +5,7 @@ import axios from "axios";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
-import { Grid, TextField } from "@mui/material";
+import { Grid, TextField, Typography } from "@mui/material";
 const style = {
   position: "absolute",
   top: "50%",
@@ -33,6 +33,7 @@ const ToDos = (props) => {
   } else if (todosData === "completed") {
     filterToDo = notesList.filter((note) => note.status === false);
   }
+
   async function updateNoteStatus(id) {
     const status = false;
     try {
