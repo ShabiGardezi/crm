@@ -5,6 +5,7 @@ import TicketCards from "../Layout/Home/TicketCard";
 import UserToDo from "./UserToDo";
 import NotificationHome from "../pages/NotificationsHome";
 import NotesNotification from "../pages/NotesNotification";
+import axios from "axios";
 const Home = () => {
   const user = JSON.parse(localStorage.getItem("user"));
   const apiUrl = process.env.REACT_APP_API_URL;
@@ -74,9 +75,16 @@ const Home = () => {
               } else if (isAssignorDepartment) {
                 notificationMessage += ` (assigned to ${majorAssignee.name})`;
               }
-
+              const resp = await axios(
+                `${apiUrl}/api/notification/all?userId=${user._id}`
+              );
+              const filterData = resp.data.payload.map((e) => {
+                if (e.forInBox === false) {
+                  return e.message;
+                }
+              });
               setNotifications((prevNotifications) => [
-                ...prevNotifications,
+                ...filterData,
                 notificationMessage,
               ]);
 
