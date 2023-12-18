@@ -132,7 +132,9 @@ const Home = () => {
       {!loading && notifications.length > 0 && (
         <NotificationHome notifications={notifications} />
       )}
-      <NotesNotification notes={notesNotification} />
+      {!loading && notesNotification.length > 0 && (
+        <NotesNotification notes={notesNotification} />
+      )}
     </div>
   );
 };
