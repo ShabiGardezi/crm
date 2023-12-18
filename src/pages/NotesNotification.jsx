@@ -7,7 +7,7 @@ const NotesNotification = ({ notes }) => {
       <h3>Notes Notification</h3>
       <ul className="notes-list">
         {notes.map((note, index) => (
-          <li key={index}>{note}</li>
+          <li key={index} dangerouslySetInnerHTML={{ __html: note }} />
         ))}
       </ul>
     </div>

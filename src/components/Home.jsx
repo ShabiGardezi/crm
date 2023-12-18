@@ -10,9 +10,32 @@ const Home = () => {
   const user = JSON.parse(localStorage.getItem("user"));
   const apiUrl = process.env.REACT_APP_API_URL;
   const [notifications, setNotifications] = useState([]);
-  // const [notesNotification, setNotesNotification] = useState([]);
+  const [notesNotification, setNotesNotification] = useState([]);
   const [loading, setLoading] = useState(true);
   const [processedBusinesses, setProcessedBusinesses] = useState(new Set());
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `${apiUrl}/api/notification/all?userId=${user._id}`
+        );
+
+        if (response.data.payload) {
+          const updatedNotes = response.data.payload
+            .filter((e) => !e.forInBox)
+            .map((e) => `${e.message}`);
+
+          setNotesNotification(updatedNotes);
+        }
+      } catch (error) {
+        console.error("Error fetching data", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [apiUrl, user._id]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -75,16 +98,9 @@ const Home = () => {
               } else if (isAssignorDepartment) {
                 notificationMessage += ` (assigned to ${majorAssignee.name})`;
               }
-              const resp = await axios(
-                `${apiUrl}/api/notification/all?userId=${user._id}`
-              );
-              const filterData = resp.data.payload.map((e) => {
-                if (e.forInBox === false) {
-                  return e.message;
-                }
-              });
+
               setNotifications((prevNotifications) => [
-                ...filterData,
+                ...prevNotifications,
                 notificationMessage,
               ]);
 
@@ -116,7 +132,7 @@ const Home = () => {
       {!loading && notifications.length > 0 && (
         <NotificationHome notifications={notifications} />
       )}
-      {/* <NotesNotification notes={notesNotification} /> */}
+      <NotesNotification notes={notesNotification} />
     </div>
   );
 };

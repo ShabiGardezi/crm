@@ -13,7 +13,13 @@ export default function Inbox() {
     axios
       .get(`${apiUrl}/api/notification/all?userId=${_id}&shouldMark=true`, {})
       .then((res) => {
-        setResp(res.data.payload);
+        if (res.data.payload) {
+          // Modify the data to filter notifications based on the forInBox condition
+          const filteredNotifications = res.data.payload.filter(
+            (notification) => notification.forInBox
+          );
+          setResp(filteredNotifications);
+        }
       })
       .catch((err) => console.error(err.message));
   }, []);

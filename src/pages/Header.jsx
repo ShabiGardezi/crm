@@ -141,7 +141,9 @@ const Header = () => {
     axios
       .get(`${apiUrl}/api/notification/all?userId=${user._id}`)
       .then(({ data }) => {
-        const filtered = data.payload.filter((x) => x.isRead === false);
+        const filtered = data.payload.filter(
+          (x) => x.isRead === false && x.forInBox === true
+        );
         setNcount(filtered.length);
       })
       .catch((err) => console.error(err));

@@ -25,3 +25,6 @@
   cursor: pointer;
   float: right;
 }
+.red-text {
+  color: red;
+}
