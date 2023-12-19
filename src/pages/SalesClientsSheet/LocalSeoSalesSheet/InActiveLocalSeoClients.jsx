@@ -248,6 +248,8 @@ export default function InActiveLocalSeoClients() {
       body: JSON.stringify({
         ticketId,
         notes: editedNotes,
+        departmentId: user.department._id,
+        departmentName: user.department.name,
       }),
     })
       .then((response) => response.json())
@@ -431,10 +433,9 @@ export default function InActiveLocalSeoClients() {
                       width: 160,
                       color:
                         new Date(ticket.reportingDate) <= new Date()
-
                           ? "white"
                           : "black",
-                     background:
+                      background:
                         new Date(ticket.reportingDate) <= new Date()
                           ? "red"
                           : "inherit",
@@ -453,21 +454,23 @@ export default function InActiveLocalSeoClients() {
                       <VisibilityIcon />
                     </IconButton>
                   </TableCell>
-                 <TableCell
-                  style={{
-                    width: 180,
-                    whiteSpace: "pre-line",
-                    background: ticket.businessdetails.notes ? "red" : "white",
-                    color: ticket.businessdetails.notes ? "white" : "black",
-                  }} // Apply the white-space property here
-                  align="left"
-                  contentEditable={true}
-                  onBlur={(e) =>
-                    handleNotesEdit(ticket._id, e.target.innerText)
-                  }
-                >
-                  {ticket.businessdetails.notes}
-                </TableCell>
+                  <TableCell
+                    style={{
+                      width: 180,
+                      whiteSpace: "pre-line",
+                      background: ticket.businessdetails.notes
+                        ? "red"
+                        : "white",
+                      color: ticket.businessdetails.notes ? "white" : "black",
+                    }} // Apply the white-space property here
+                    align="left"
+                    contentEditable={true}
+                    onBlur={(e) =>
+                      handleNotesEdit(ticket._id, e.target.innerText)
+                    }
+                  >
+                    {ticket.businessdetails.notes}
+                  </TableCell>
                   <TableCell>
                     <Button
                       style={{ backgroundColor: "red" }}

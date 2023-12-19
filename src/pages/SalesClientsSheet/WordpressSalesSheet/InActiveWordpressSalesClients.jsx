@@ -227,9 +227,7 @@ export default function InActiveWordpressClients() {
   };
 
   // Function to handle notes edit and update
-  const handleNotesEdit = (ticketId, editedNotes) => {
-    // Make an API request to update the notes in the database
-    fetch(`${apiUrl}/api/tickets/notes-update`, {
+  fetch(`${apiUrl}/api/tickets/notes-update`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -237,33 +235,10 @@ export default function InActiveWordpressClients() {
       body: JSON.stringify({
         ticketId,
         notes: editedNotes,
+        departmentId: user.department._id,
+        departmentName: user.department.name,
       }),
     })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.payload) {
-          // If the update is successful, update the local state with the edited notes
-          const updatedTickets = tickets.map((ticket) => {
-            if (ticket._id === ticketId) {
-              return {
-                ...ticket,
-                businessdetails: {
-                  ...ticket.businessdetails,
-                  notes: editedNotes,
-                },
-              };
-            }
-            return ticket;
-          });
-          setTickets(updatedTickets);
-        } else {
-          console.error("Error updating notes");
-        }
-      })
-      .catch((error) => {
-        console.error("Error updating notes", error);
-      });
-  };
   const handleRemainingEdit = (ticketId, remaining) => {
     // Make an API request to update the notes in the database
     fetch(`${apiUrl}/api/tickets/remaining-update`, {

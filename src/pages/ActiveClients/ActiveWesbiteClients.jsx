@@ -116,6 +116,8 @@ export default function ActiveWebsiteClients() {
       body: JSON.stringify({
         ticketId,
         notes: editedNotes,
+        departmentId: user.department._id,
+        departmentName: user.department.name,
       }),
     })
       .then((response) => response.json())
@@ -143,7 +145,6 @@ export default function ActiveWebsiteClients() {
         console.error("Error updating notes", error);
       });
   };
-
   const handleClick = (ticket) => {
     let temp = "";
     if (ticket.ActiveNotActive === "Active") {

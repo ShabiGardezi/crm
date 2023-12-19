@@ -139,6 +139,8 @@ const PaidMarketingActiveClient = () => {
       body: JSON.stringify({
         ticketId,
         notes: editedNotes,
+        departmentId: user.department._id,
+        departmentName: user.department.name,
       }),
     })
       .then((response) => response.json())

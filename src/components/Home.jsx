@@ -10,7 +10,8 @@ const Home = () => {
   const user = JSON.parse(localStorage.getItem("user"));
   const apiUrl = process.env.REACT_APP_API_URL;
   const [notifications, setNotifications] = useState([]);
-  const [notesNotification, setNotesNotification] = useState([]);
+  const [notes, setNotes] = useState([]);
+
   const [loading, setLoading] = useState(true);
   const [processedBusinesses, setProcessedBusinesses] = useState(new Set());
   useEffect(() => {
@@ -19,13 +20,12 @@ const Home = () => {
         const response = await axios.get(
           `${apiUrl}/api/notification/all?userId=${user._id}`
         );
-
         if (response.data.payload) {
           const updatedNotes = response.data.payload
             .filter((e) => !e.forInBox)
             .map((e) => `${e.message}`);
 
-          setNotesNotification(updatedNotes);
+          setNotes(updatedNotes);
         }
       } catch (error) {
         console.error("Error fetching data", error);
@@ -132,9 +132,7 @@ const Home = () => {
       {!loading && notifications.length > 0 && (
         <NotificationHome notifications={notifications} />
       )}
-      {!loading && notesNotification.length > 0 && (
-        <NotesNotification notes={notesNotification} />
-      )}
+      {!loading && notes.length > 0 && <NotesNotification notes={notes} />}
     </div>
   );
 };

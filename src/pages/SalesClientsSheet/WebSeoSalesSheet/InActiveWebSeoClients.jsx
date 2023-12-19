@@ -239,7 +239,7 @@ export default function InActiveWebSeoClients() {
   };
 
   // Function to handle notes edit and update
-  const handleNotesEdit = (ticketId, editedNotes) => {
+ const handleNotesEdit = (ticketId, editedNotes) => {
     // Make an API request to update the notes in the database
     fetch(`${apiUrl}/api/tickets/notes-update`, {
       method: "PUT",
@@ -249,6 +249,8 @@ export default function InActiveWebSeoClients() {
       body: JSON.stringify({
         ticketId,
         notes: editedNotes,
+        departmentId: user.department._id,
+        departmentName: user.department.name,
       }),
     })
       .then((response) => response.json())
@@ -275,8 +277,7 @@ export default function InActiveWebSeoClients() {
       .catch((error) => {
         console.error("Error updating notes", error);
       });
-  };
-  const handleRemainingEdit = (ticketId, remaining) => {
+  };  const handleRemainingEdit = (ticketId, remaining) => {
     // Make an API request to update the notes in the database
     fetch(`${apiUrl}/api/tickets/remaining-update`, {
       method: "PUT",

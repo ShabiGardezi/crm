@@ -5,7 +5,7 @@ const NotificationHome = ({ notifications }) => {
   return (
     <div className="notifications-container">
       <h3>Reporting Date Notifications</h3>
-      <ul className="notifications-list">
+      <ul className="notifications-list" style={{ cursor: "pointer" }}>
         {notifications.map((notification, index) => (
           <li
             key={index}

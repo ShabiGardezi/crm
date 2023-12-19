@@ -277,6 +277,8 @@ export default function PaidMarketingClientSheet(props) {
       body: JSON.stringify({
         ticketId,
         notes: editedNotes,
+        departmentId: user.department._id,
+        departmentName: user.department.name,
       }),
     })
       .then((response) => response.json())
@@ -445,7 +447,7 @@ export default function PaidMarketingClientSheet(props) {
                 <TableCell style={{ width: 160 }} align="left">
                   {new Date(ticket.createdAt).toLocaleDateString()}
                 </TableCell>
-                 <TableCell
+                <TableCell
                   style={{
                     width: 160,
                     cursor: "pointer",
