@@ -6,8 +6,6 @@ const NotesNotification = ({ notes }) => {
   const user = JSON.parse(localStorage.getItem("user"));
 
   const getDepartmentLink = () => {
-    // Replace this with your logic to map clientName to department IDs
-    // For example, if clientName is the department ID, you can directly use it in the Link
     const departmentId = user?.department?._id;
 
     switch (departmentId) {
@@ -21,24 +19,39 @@ const NotesNotification = ({ notes }) => {
         return "/paid_marketing_sheet?depId=651ada3c819ff0aec6af1380";
       case "651ada78819ff0aec6af1381":
         return "/social_media_client?depId=651ada78819ff0aec6af1381";
-      // Add more cases for other department IDs as needed
       default:
         return "/";
     }
   };
+  const extractUsernameAndClientName = (note) => {
+    const regex = /(.+) has edited the notes for Business Name: (.+)/;
+    const match = note.match(regex);
 
+    if (match) {
+      const [, username, clientName] = match;
+      return { username, clientName };
+    }
+
+    return { username: "", clientName: "" };
+  };
   return (
     <div className="notes-notification-container">
       <h3>Client Notes Notification</h3>
       <ul className="notes-list">
-        {notes.map((note, index) => (
-          <li
-            key={index}
-            onClick={() => (window.location.href = getDepartmentLink(note))}
-          >
-            {note}
-          </li>
-        ))}
+        {notes.map((note, index) => {
+          const { username, clientName } = extractUsernameAndClientName(note);
+
+          return (
+            <li
+              key={index}
+              onClick={() => (window.location.href = getDepartmentLink(note))}
+            >
+              <span style={{ color: "red" }}>{username}</span> has edited the
+              notes for Business Name:
+              <span style={{ color: "red" }}>{clientName}</span>
+            </li>
+          );
+        })}
       </ul>
     </div>
   );
