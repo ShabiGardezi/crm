@@ -11,6 +11,7 @@ const Home = () => {
   const apiUrl = process.env.REACT_APP_API_URL;
   const [notifications, setNotifications] = useState([]);
   const [notes, setNotes] = useState([]);
+  const [notificationId, setNotificationIds] = useState([]);
 
   const [loading, setLoading] = useState(true);
   const [processedBusinesses, setProcessedBusinesses] = useState(new Set());
@@ -23,9 +24,13 @@ const Home = () => {
         if (response.data.payload) {
           const updatedNotes = response.data.payload
             .filter((e) => !e.forInBox)
-            .map((e) => `${e.message}`);
+            .map((e) => `${e.message} `);
 
           setNotes(updatedNotes);
+          const ids = response.data.payload
+            .filter((e) => !e.forInBox)
+            .map((e) => e._id);
+          setNotificationIds(ids);
         }
       } catch (error) {
         console.error("Error fetching data", error);
@@ -118,6 +123,38 @@ const Home = () => {
     }
   };
 
+  const onNotificationClick = async (
+    notificationId,
+    majorAssigneeId,
+    assignorDepartmentId
+  ) => {
+    try {
+      const response = await axios.delete(
+        `${apiUrl}/api/notification/${notificationId}`
+      );
+
+      if (response.status === 200) {
+        // Update the state to remove the clicked notification
+        setNotes((prevNotes) =>
+          prevNotes.filter(
+            (note) =>
+              note.majorAssigneeId !== majorAssigneeId ||
+              note.assignorDepartmentId !== assignorDepartmentId
+          )
+        );
+
+        // Filter out the clicked notification ID from the notificationIds state
+        setNotificationIds((prevIds) =>
+          prevIds.filter((id) => id !== notificationId)
+        );
+      } else {
+        console.error("Error deleting notification", response.data);
+      }
+    } catch (error) {
+      console.error("Error deleting notification", error.message);
+    }
+  };
+
   return (
     <div>
       <Header />
@@ -132,7 +169,12 @@ const Home = () => {
       {!loading && notifications.length > 0 && (
         <NotificationHome notifications={notifications} />
       )}
-      {!loading && notes.length > 0 && <NotesNotification notes={notes} />}
+      {!loading && notes.length > 0 && (
+        <NotesNotification
+          notes={notes}
+          onNotificationClick={onNotificationClick}
+        />
+      )}
     </div>
   );
 };

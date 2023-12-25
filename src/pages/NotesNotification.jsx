@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "../styles/NoteNotification.css";
 import axios from "axios";
 
-const NotesNotification = ({ notes }) => {
+const NotesNotification = ({ notes, onNotificationClick }) => {
   const apiUrl = process.env.REACT_APP_API_URL;
   const user = JSON.parse(localStorage.getItem("user"));
   const [notesNotification, setNotesNotification] = useState([]);
@@ -18,6 +18,7 @@ const NotesNotification = ({ notes }) => {
           const updatedNotes = response.data.payload
             .filter((e) => !e.forInBox)
             .map((e) => ({
+              id: e._id,
               message: e.message,
               majorAssigneeId: e.majorAssigneeId,
               assignorDepartmentId: e.assignorDepartmentId,
@@ -37,10 +38,12 @@ const NotesNotification = ({ notes }) => {
     const userDepartmentId = user?.department?._id;
 
     if (
-      (assignorDepartmentId === "65195c4b504d80e8f11b0d13" &&
-        majorAssigneeId === "651b3409819ff0aec6af1387") ||
-      userDepartmentId === "65195c81504d80e8f11b0d13"
+      assignorDepartmentId === "65195c4b504d80e8f11b0d13" ||
+      majorAssigneeId === "651b3409819ff0aec6af1387"
     ) {
+      return "/localseo_clients?depId=65195c4b504d80e8f11b0d13";
+    }
+    if (userDepartmentId === "65195c4b504d80e8f11b0d13") {
       return "/localseo_clients?depId=65195c4b504d80e8f11b0d13";
     } else if (
       (majorAssigneeId === "651b3409819ff0aec6af1387" &&
@@ -70,10 +73,10 @@ const NotesNotification = ({ notes }) => {
       return "/home";
     }
   };
-
+  console.log(notesNotification);
   const extractUsernameAndClientName = (note, index) => {
     const noteData = notesNotification[index];
-    if (!noteData) {
+    if (!noteData || typeof note !== "string") {
       return {
         username: "",
         clientName: "",
@@ -82,17 +85,24 @@ const NotesNotification = ({ notes }) => {
       };
     }
 
-    const { majorAssigneeId, assignorDepartmentId } = noteData;
+    const { id, majorAssigneeId, assignorDepartmentId } = noteData;
 
     const regex = /(.+) has edited the notes for Business Name: (.+)/;
     const match = note.match(regex);
 
     if (match) {
       const [, username, clientName] = match;
-      return { username, clientName, majorAssigneeId, assignorDepartmentId };
+      return {
+        id: id,
+        username,
+        clientName,
+        majorAssigneeId,
+        assignorDepartmentId,
+      };
     }
 
     return {
+      id: "",
       username: "",
       clientName: "",
       majorAssigneeId: "",
@@ -107,21 +117,24 @@ const NotesNotification = ({ notes }) => {
           <ul className="notes-list" style={{ cursor: "pointer" }}>
             {notes.map((note, index) => {
               const {
+                id,
                 username,
                 clientName,
                 majorAssigneeId,
                 assignorDepartmentId,
               } = extractUsernameAndClientName(note, index);
-
+              console.log("note", note);
+              const departmentLink = getDepartmentLink(
+                majorAssigneeId,
+                assignorDepartmentId
+              );
               return (
                 <li
                   key={index}
-                  onClick={() =>
-                    (window.location.href = getDepartmentLink(
-                      majorAssigneeId,
-                      assignorDepartmentId
-                    ))
-                  }
+                  onClick={() => {
+                    window.location.href = departmentLink;
+                    onNotificationClick(id);
+                  }}
                 >
                   <span style={{ color: "red" }}>{username}</span> has edited
                   the notes for Business Name:
