@@ -179,6 +179,21 @@ const Header = () => {
   const toggleDepartment = () => {
     setDepartmentOpen(!isDepartmentOpen);
   };
+  const handleListItemClick = () => {
+    const depId = user?.department?._id;
+
+    if (depId === "65195c4b504d80e8f11b0d13") {
+      navigate("/localseo_clients?depId=65195c4b504d80e8f11b0d13");
+    } else if (depId === "65195c81504d80e8f11b0d14") {
+      navigate("/website_sheet?depId=65195c81504d80e8f11b0d14");
+    } else if (depId === "65195c8f504d80e8f11b0d15") {
+      navigate("/webseo_clients?depId=65195c8f504d80e8f11b0d15");
+    } else if (depId === "651ada3c819ff0aec6af1380") {
+      navigate("/paid_marketing_sheet?depId=651ada3c819ff0aec6af1380");
+    } else if (depId === "651ada78819ff0aec6af1381") {
+      navigate("/social_media_client?depId=651ada78819ff0aec6af1381");
+    }
+  };
   return (
     <>
       <CssBaseline />
@@ -271,52 +286,58 @@ const Header = () => {
                 <ListItemText primary="Inbox" />
               </ListItem>
             </Link>
-            {/* <Link to="/todo">
-              <ListItem button>
+            {user?.department?._id !== "651b3409819ff0aec6af1387" && (
+              <ListItem button onClick={handleListItemClick}>
                 <ListItemIcon>
-                  <DescriptionIcon />
+                  <AssignmentIcon />
                 </ListItemIcon>
-                <ListItemText primary="Personal Notebook" />
+                <ListItemText primary="Work Status" />
               </ListItem>
-            </Link> */}
-            <ListItem button onClick={toggleClientHistory}>
-              <ListItemIcon>
-                <AssignmentIcon />
-              </ListItemIcon>
-              <ListItemText primary="Work Status" />
-              <ListItemIcon style={{ marginLeft: "auto" }}>
-                <ExpandMoreIcon />
-              </ListItemIcon>
-            </ListItem>
-            {isClientHistoryOpen && (
-              <div className="client-history-dropdown">
-                <Link to="/localseo_clients?depId=65195c4b504d80e8f11b0d13">
-                  <ListItem button>
-                    <ListItemText primary="Local SEO / GMB Optimization" />
-                  </ListItem>
-                </Link>
-                <Link to="/website_sheet?depId=65195c81504d80e8f11b0d14">
-                  <ListItem button>
-                    <ListItemText primary="Wordpress Development" />
-                  </ListItem>
-                </Link>
-                <Link to="/webseo_clients?depId=65195c8f504d80e8f11b0d15">
-                  <ListItem button>
-                    <ListItemText primary="Website SEO" />
-                  </ListItem>
-                </Link>
-                <Link to="/paid_marketing_sheet?depId=651ada3c819ff0aec6af1380">
-                  <ListItem button>
-                    <ListItemText primary="Paid Marketing" />
-                  </ListItem>
-                </Link>
-                <Link to="/social_media_client?depId=651ada78819ff0aec6af1381">
-                  <ListItem button>
-                    <ListItemText primary="Social Media / Customer Reviews Management" />
-                  </ListItem>
-                </Link>
-              </div>
             )}
+            {user?.department?._id === "651b3409819ff0aec6af1387" && (
+              <React.Fragment>
+                <ListItem button onClick={toggleClientHistory}>
+                  <ListItemIcon>
+                    <AssignmentIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Work Status" />
+                  <ListItemIcon style={{ marginLeft: "auto" }}>
+                    <ExpandMoreIcon />
+                  </ListItemIcon>
+                </ListItem>
+
+                {isClientHistoryOpen && (
+                  <div className="client-history-dropdown">
+                    <Link to="/localseo_clients?depId=65195c4b504d80e8f11b0d13">
+                      <ListItem button>
+                        <ListItemText primary="Local SEO / GMB Optimization" />
+                      </ListItem>
+                    </Link>
+                    <Link to="/website_sheet?depId=65195c81504d80e8f11b0d14">
+                      <ListItem button>
+                        <ListItemText primary="Wordpress Development" />
+                      </ListItem>
+                    </Link>
+                    <Link to="/webseo_clients?depId=65195c8f504d80e8f11b0d15">
+                      <ListItem button>
+                        <ListItemText primary="Website SEO" />
+                      </ListItem>
+                    </Link>
+                    <Link to="/paid_marketing_sheet?depId=651ada3c819ff0aec6af1380">
+                      <ListItem button>
+                        <ListItemText primary="Paid Marketing" />
+                      </ListItem>
+                    </Link>
+                    <Link to="/social_media_client?depId=651ada78819ff0aec6af1381">
+                      <ListItem button>
+                        <ListItemText primary="Social Media / Customer Reviews Management" />
+                      </ListItem>
+                    </Link>
+                  </div>
+                )}
+              </React.Fragment>
+            )}
+
             <ListItem button onClick={toggleDepartment}>
               <ListItemIcon>
                 <DepartmentIcon />
