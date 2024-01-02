@@ -12,6 +12,8 @@ const Home = () => {
   const [notifications, setNotifications] = useState([]);
   const [notes, setNotes] = useState([]);
   const [notificationId, setNotificationIds] = useState([]);
+  const [majorAssigneeId, setMajorAssigneeId] = useState(null);
+  const [assignorDepartmentId, setAssignorDepartmentId] = useState(null);
 
   const [loading, setLoading] = useState(true);
   const [processedBusinesses, setProcessedBusinesses] = useState(new Set());
@@ -96,6 +98,8 @@ const Home = () => {
             !processedBusinesses.has(clientName)
           ) {
             if (isMajorAssignee || isAssignorDepartment) {
+              setMajorAssigneeId(majorAssignee?._id);
+              setAssignorDepartmentId(assignorDepartment?._id);
               let notificationMessage = `Reporting date reached for Business Name: <span class="red-text">${clientName}</span>`;
 
               if (isMajorAssignee) {
@@ -122,7 +126,28 @@ const Home = () => {
       console.error("Error fetching reporting date", error);
     }
   };
-
+  const handleNotificationClick = () => {
+    if (majorAssigneeId) {
+      if (user?.department?._id === "65195c8f504d80e8f11b0d15") {
+        window.location.href = "/webseo_clients?depId=65195c8f504d80e8f11b0d15";
+      } else if (user?.department?._id === "65195c4b504d80e8f11b0d13") {
+        window.location.href =
+          "/localseo_clients?depId=65195c4b504d80e8f11b0d13";
+      } else if (user?.department?._id === "65195c81504d80e8f11b0d14") {
+        window.location.href = "/website_sheet?depId=65195c81504d80e8f11b0d14";
+      } else if (user?.department?._id === "651ada3c819ff0aec6af1380") {
+        window.location.href =
+          "/paid_marketing_sheet?depId=651ada3c819ff0aec6af1380";
+      } else if (user?.department?._id === "651ada78819ff0aec6af1381") {
+        window.location.href =
+          "/social_media_client?depId=651ada78819ff0aec6af1381";
+      } else {
+        console.error("Invalid majorAssigneeId or assignorDepartmentId");
+      }
+    } else {
+      console.error("MajorAssigneeId or assignorDepartmentId not available");
+    }
+  };
   const onNotificationClick = async (
     notificationId,
     majorAssigneeId,
@@ -167,7 +192,10 @@ const Home = () => {
         <UserToDo wrapInCard={true} showHeader={false} />
       </div>
       {!loading && notifications.length > 0 && (
-        <NotificationHome notifications={notifications} />
+        <NotificationHome
+          notifications={notifications}
+          handleNotificationClick={handleNotificationClick}
+        />
       )}
       {!loading && notes.length > 0 && (
         <NotesNotification

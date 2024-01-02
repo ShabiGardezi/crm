@@ -73,7 +73,6 @@ const NotesNotification = ({ notes, onNotificationClick }) => {
       return "/home";
     }
   };
-  console.log(notesNotification);
   const extractUsernameAndClientName = (note, index) => {
     const noteData = notesNotification[index];
     if (!noteData || typeof note !== "string") {
@@ -123,7 +122,6 @@ const NotesNotification = ({ notes, onNotificationClick }) => {
                 majorAssigneeId,
                 assignorDepartmentId,
               } = extractUsernameAndClientName(note, index);
-              console.log("note", note);
               const departmentLink = getDepartmentLink(
                 majorAssigneeId,
                 assignorDepartmentId

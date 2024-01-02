@@ -1,7 +1,7 @@
 import React from "react";
 import "../styles/Notifications.css";
 
-const NotificationHome = ({ notifications }) => {
+const NotificationHome = ({ notifications, handleNotificationClick }) => {
   return (
     <div className="notifications-container">
       <h3>Reporting Date Notifications</h3>
@@ -10,6 +10,7 @@ const NotificationHome = ({ notifications }) => {
           <li
             key={index}
             dangerouslySetInnerHTML={{ __html: notification }}
+            onClick={handleNotificationClick}
           ></li>
         ))}
       </ul>
