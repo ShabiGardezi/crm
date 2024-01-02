@@ -248,6 +248,14 @@ const WordPress = () => {
       console.error("Error fetching suggestions:", error);
     }
   };
+  const truncateDepartmentName = (departmentName, maxLength) => {
+    if (departmentName.length <= maxLength) {
+      return departmentName;
+    } else {
+      // Truncate the department name and add an ellipsis
+      return `${departmentName.substr(0, maxLength)}...`;
+    }
+  };
   return (
     <div className="styleform">
       <Header />
@@ -360,9 +368,10 @@ const WordPress = () => {
               label="Department"
               fullWidth
               name="department"
-              value={formData.department}
               onChange={handleChange}
-              select
+              value={truncateDepartmentName(formData.department, 10)}
+              // select
+              disabled
             >
               {departments?.map((d) => (
                 <MenuItem key={d._id} value={d.name}>

@@ -215,6 +215,14 @@ const LocalSEOForm = () => {
       console.error("Error fetching client details:", error);
     }
   };
+  const truncateDepartmentName = (departmentName, maxLength) => {
+    if (departmentName.length <= maxLength) {
+      return departmentName;
+    } else {
+      // Truncate the department name and add an ellipsis
+      return `${departmentName.substr(0, maxLength)}...`;
+    }
+  };
   return (
     <div className="styleform">
       <Header />
@@ -328,9 +336,9 @@ const LocalSEOForm = () => {
               label="Select Department"
               fullWidth
               name="department"
-              value={formData.department}
+              value={truncateDepartmentName(formData.department, 10)}
               onChange={handleChange}
-              select
+              disabled
             >
               {departments?.map((d) => (
                 <MenuItem key={d._id} value={d.name}>

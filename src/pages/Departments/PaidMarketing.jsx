@@ -28,7 +28,7 @@ const PaidMarketing = () => {
     assignor: user?.username || "",
     dueDate: new Date().toISOString().substr(0, 10), // Initialize with the current date in yyyy-mm-dd format
     price: "",
-        advanceprice: 0, // Set the default value to 0
+    advanceprice: 0, // Set the default value to 0
 
     remainingPrice: "",
     serviceName: "",
@@ -199,6 +199,14 @@ const PaidMarketing = () => {
       console.error("Error fetching suggestions:", error);
     }
   };
+  const truncateDepartmentName = (departmentName, maxLength) => {
+    if (departmentName.length <= maxLength) {
+      return departmentName;
+    } else {
+      // Truncate the department name and add an ellipsis
+      return `${departmentName.substr(0, maxLength)}...`;
+    }
+  };
   return (
     <div className="styleform">
       <Header />
@@ -311,9 +319,10 @@ const PaidMarketing = () => {
               label="Select Department"
               fullWidth
               name="department"
-              value={formData.department}
+              value={truncateDepartmentName(formData.department, 10)}
               onChange={handleChange}
-              select
+              // select
+              disabled
             >
               {departments?.map((d) => (
                 <MenuItem key={d._id} value={d.name}>
