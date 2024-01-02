@@ -28,7 +28,8 @@ const WebSeoForm = () => {
         webUrl: "",
         loginCredentials: "",
         price: "",
-        advanceprice: "",
+            advanceprice: 0, // Set the default value to 0
+
         remainingPrice: "",
         serviceName: "",
         serviceQuantity: "",
@@ -374,6 +375,7 @@ const WebSeoForm = () => {
                             label="Price"
                             fullWidth
                             name="price"
+                            required
                             value={formData.price}
                             onChange={handleChange}
                         />

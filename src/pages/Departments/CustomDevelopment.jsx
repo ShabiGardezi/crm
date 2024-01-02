@@ -22,7 +22,8 @@ const CustomDevelopment = () => {
         assignor: user?.username || "",
         dueDate: new Date().toISOString().substr(0, 10), // Initialize with the current date in yyyy-mm-dd format
         price: "",
-        advanceprice: "",
+            advanceprice: 0, // Set the default value to 0
+
         remainingPrice: "",
 
         serviceName: "",
@@ -213,6 +214,7 @@ const CustomDevelopment = () => {
                             label="Price"
                             fullWidth
                             name="price"
+                            required
                             value={formData.price}
                             onChange={handleChange}
                         />

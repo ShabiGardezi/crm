@@ -27,7 +27,8 @@ const SocialMediaForm = () => {
     dueDate: new Date().toISOString().substr(0, 10), // Initialize with the current date in yyyy-mm-dd format
     webUrl: "",
     price: "",
-    advanceprice: "",
+    advanceprice: 0, // Set the default value to 0
+
     clientName: "",
     street: "",
     WebsiteURL: "",
@@ -342,6 +343,7 @@ const SocialMediaForm = () => {
               fullWidth
               name="price"
               value={formData.price}
+              required
               onChange={handleChange}
             />
           </Grid>

@@ -28,7 +28,7 @@ const LocalSEOForm = () => {
     webUrl: "",
     loginCredentials: "",
     price: "",
-    advanceprice: "",
+    advanceprice: 0, // Set the default value to 0
     remainingPrice: "",
     clientName: "",
     street: "",
@@ -356,6 +356,7 @@ const LocalSEOForm = () => {
               fullWidth
               name="price"
               value={formData.price}
+              required
               onChange={handleChange}
             />
           </Grid>

@@ -26,7 +26,8 @@ const ReviewsForm = () => {
         dueDate: new Date().toISOString().substr(0, 10), // Initialize with the current date in yyyy-mm-dd format
         webUrl: "",
         price: "",
-        advanceprice: "",
+            advanceprice: 0, // Set the default value to 0
+
         clientName: "",
         street: "",
         WebsiteURL: "",
@@ -327,6 +328,7 @@ const ReviewsForm = () => {
                             label="Price"
                             fullWidth
                             name="price"
+                            required
                             value={formData.price}
                             onChange={handleChange}
                         />

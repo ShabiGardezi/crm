@@ -35,7 +35,8 @@ const WordPress = () => {
     loginCredentials: "",
     priorityLevel: "",
     price: "",
-    advanceprice: "",
+    advanceprice: 0, // Set the default value to 0
+
     remainingPrice: "",
     serviceName: "",
     serviceDescription: "",
@@ -387,6 +388,7 @@ const WordPress = () => {
               fullWidth
               name="price"
               value={formData.price}
+              required
               onChange={handleChange}
             />
           </Grid>
