@@ -10,7 +10,7 @@ const NotificationHome = ({ notifications, handleNotificationClick }) => {
           <li
             key={index}
             dangerouslySetInnerHTML={{ __html: notification }}
-            onClick={handleNotificationClick}
+            onClick={() => handleNotificationClick(notification)}
           ></li>
         ))}
       </ul>
