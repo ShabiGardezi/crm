@@ -394,11 +394,18 @@ const AddToDo = (props) => {
         <button type="submit">Add</button>
       </form>
 
-      <Dialog open={openDialog} onClose={handleDialogClose}>
+      <Dialog
+        open={openDialog}
+        onClose={handleDialogClose}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
         <DialogTitle>Due Date is today for these Notes!!</DialogTitle>
-        <DialogContent>
+        <DialogContent style={{ width: "50%" }}>
           <DialogContentText>
-            {/* {sameNotes.length > 0 && sameNotes[dialogIndex].note} */}
             {sameNotes.length > 0 && sameNotes[dialogIndex].note}
           </DialogContentText>
         </DialogContent>
