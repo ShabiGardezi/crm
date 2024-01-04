@@ -453,7 +453,7 @@ export default function PaidMarketingClientSheet(props) {
                     cursor: "pointer",
                     background:
                       new Date(ticket.reportingDate) <= new Date()
-                        ? "red"
+                        ? "#ed08088f"
                         : "inherit",
                     color:
                       new Date(ticket.reportingDate) <= new Date()
@@ -478,7 +478,7 @@ export default function PaidMarketingClientSheet(props) {
                   style={{
                     width: 180,
                     whiteSpace: "pre-line",
-                    background: ticket.businessdetails.notes ? "red" : "white",
+                    background: ticket.businessdetails.notes ? "#ed08088f" : "white",
                     color: ticket.businessdetails.notes ? "white" : "black",
                   }} // Apply the white-space property here
                   align="left"

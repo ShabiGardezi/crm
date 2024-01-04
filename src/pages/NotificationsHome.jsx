@@ -9,8 +9,8 @@ const NotificationHome = ({ notifications, handleNotificationClick }) => {
         {notifications.map((notification, index) => (
           <li
             key={index}
-            dangerouslySetInnerHTML={{ __html: notification }}
-            onClick={handleNotificationClick}
+            dangerouslySetInnerHTML={{ __html: notification.message }}
+            onClick={() => handleNotificationClick(notification)}
           ></li>
         ))}
       </ul>

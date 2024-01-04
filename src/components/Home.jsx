@@ -73,7 +73,6 @@ const Home = () => {
 
     fetchData();
   }, []);
-
   const fetchReportingDate = async (
     ticketId,
     clientName,
@@ -108,9 +107,15 @@ const Home = () => {
                 notificationMessage += ` (assigned to ${majorAssignee.name})`;
               }
 
+              // Include majorAssigneeId in the notification object
+              const notificationObject = {
+                message: notificationMessage,
+                majorAssigneeId: majorAssignee?._id,
+              };
+
               setNotifications((prevNotifications) => [
                 ...prevNotifications,
-                notificationMessage,
+                notificationObject,
               ]);
 
               setProcessedBusinesses((prevBusinesses) =>
@@ -126,7 +131,31 @@ const Home = () => {
       console.error("Error fetching reporting date", error);
     }
   };
-  const handleNotificationClick = () => {
+
+  const handleNotificationClick = (clickedNotification) => {
+    let majorAssigneeId = clickedNotification.majorAssigneeId.toString();
+
+    if (assignorDepartmentId === "651b3409819ff0aec6af1387") {
+      if (majorAssigneeId === "65195c4b504d80e8f11b0d13") {
+        window.location.href =
+          "/localseo_clients?depId=65195c4b504d80e8f11b0d13";
+      }
+      if (majorAssigneeId === "65195c8f504d80e8f11b0d15") {
+        window.location.href = "/webseo_clients?depId=65195c8f504d80e8f11b0d15";
+      }
+      if (majorAssigneeId === "651ada78819ff0aec6af1381") {
+        window.location.href =
+          "/social_media_client?depId=651ada78819ff0aec6af1381";
+      }
+      if (majorAssigneeId === "651ada3c819ff0aec6af1380") {
+        window.location.href =
+          "/paid_marketing_sheet?depId=651ada3c819ff0aec6af1380";
+      }
+      if (majorAssigneeId === "65195c81504d80e8f11b0d14") {
+        window.location.href = "/website_sheet?depId=65195c81504d80e8f11b0d14";
+      }
+    }
+
     if (majorAssigneeId) {
       if (user?.department?._id === "65195c8f504d80e8f11b0d15") {
         window.location.href = "/webseo_clients?depId=65195c8f504d80e8f11b0d15";

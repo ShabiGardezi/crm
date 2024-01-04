@@ -435,9 +435,9 @@ export default function LocalSeoSheet() {
                     style={{
                       width: 160,
                       cursor: "pointer",
-                      background:
+                         background:
                         new Date(ticket.reportingDate) <= new Date()
-                          ? "red"
+                          ? "#ed08088f"
                           : "inherit",
                     }}
                     title="Format: MM-DD-YYYY" // Tooltip for date format
@@ -458,8 +458,8 @@ export default function LocalSeoSheet() {
                     style={{
                       width: 180,
                       whiteSpace: "pre-line",
-                      background: ticket.businessdetails.notes
-                        ? "red"
+                         background: ticket.businessdetails.notes
+                        ? "#ed08088f"
                         : "white",
                       color: ticket.businessdetails.notes ? "white" : "black",
                     }} // Apply the white-space property here

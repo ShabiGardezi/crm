@@ -210,7 +210,7 @@ export default function WordpressDesignersTickets() {
                   style={{
                     width: 180,
                     whiteSpace: "pre-line",
-                    background: ticket.businessdetails.notes ? "red" : "white",
+                    background: ticket.businessdetails.notes ? "#ed08088f" : "white",
                     color: ticket.businessdetails.notes ? "white" : "black",
                   }} // Apply the white-space property here
                   align="left"
