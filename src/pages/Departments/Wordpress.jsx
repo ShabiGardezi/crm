@@ -55,7 +55,7 @@ const WordPress = () => {
     supportPerson: "",
     notes: "",
     departmentName: "",
-    websiteType: "",
+    workStatus: "",
     socialProfile: "",
   });
 
@@ -85,7 +85,7 @@ const WordPress = () => {
   };
   const handleChange = (event) => {
     const { name, value } = event.target;
-    if (name === "websiteType") {
+    if (name === "workStatus") {
       setSelectedWebsiteType(value);
     }
     if (name === "departmentName") {
@@ -131,8 +131,13 @@ const WordPress = () => {
   };
 
   const handleSubmit = async (event) => {
-    event.preventDefault(); // Prevent the default form submission behavior
-    // Make an Axios request here (replace "/api/submit" with your actual API endpoint)
+    event.preventDefault();
+    if (!formData.clientName || !formData.price) {
+      toast.error(
+        "Please fill in all required fields (Business Name and Price)."
+      );
+      return;
+    }
     try {
       const selectedDepartment = departments.find(
         (department) => department.name === formData.department
@@ -163,7 +168,7 @@ const WordPress = () => {
           notes: formData.notes,
           departmentName: formData.departmentName,
           socialProfile: formData.socialProfile,
-          websiteType: formData.websiteType,
+          workStatus: formData.workStatus,
         },
 
         quotation: {
@@ -256,10 +261,15 @@ const WordPress = () => {
       return `${departmentName.substr(0, maxLength)}...`;
     }
   };
+  const handleFormKeyPress = (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault(); // Prevent the default form submission on Enter key
+    }
+  };
   return (
     <div className="styleform">
       <Header />
-      <form onSubmit={handleSubmit}>
+      <form onKeyPress={handleFormKeyPress}>
         <div className="formtitle">
           <Typography variant="h5">Customer</Typography>
         </div>
@@ -271,7 +281,8 @@ const WordPress = () => {
               name="clientName"
               value={formData.clientName}
               onChange={handleChange}
-              multiline
+              // multiline
+              required
               onInput={(e) => fetchSuggestions(e.target.value)}
             />
 
@@ -479,7 +490,7 @@ const WordPress = () => {
               </Grid>
               <Grid item xs={2}>
                 <TextField
-                  label="Client Name."
+                  label="Client Name"
                   fullWidth
                   name="ownerName"
                   value={formData.ownerName}
@@ -551,15 +562,15 @@ const WordPress = () => {
                 <TextField
                   label="Website Type"
                   fullWidth
-                  name="websiteType"
+                  name="workStatus"
                   value={selectedWebsiteType}
                   onChange={handleChange}
                   select
                 >
-                  <MenuItem value="Ecommerce">Ecommerce</MenuItem>
-                  <MenuItem value="Redeisgn">Redeisgn</MenuItem>
-                  <MenuItem value="One-Page">One-Page</MenuItem>
-                  <MenuItem value="Full">Full</MenuItem>
+                  <MenuItem value="Ecommerce-Website">Ecommerce</MenuItem>
+                  <MenuItem value="Redeisgn-Website">Redeisgn</MenuItem>
+                  <MenuItem value="One-Page-Website">One-Page</MenuItem>
+                  <MenuItem value="Full-Website">Full Website</MenuItem>
                 </TextField>
               </Grid>
               <Grid item xs={2}>
@@ -720,7 +731,12 @@ const WordPress = () => {
         )}
 
         <div className="formbtn">
-          <Button type="submit" variant="contained" color="primary">
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            onClick={handleSubmit}
+          >
             Submit
           </Button>
         </div>

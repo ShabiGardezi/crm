@@ -49,6 +49,7 @@ import InActiveMarketingClients from "./pages/SalesClientsSheet/PaidMarketingSal
 import ActiveSocialMediaSalesClients from "./pages/SalesClientsSheet/SocialMediaSalesSheet/ActiveSocialMediaSalesClients";
 import InActiveSocialMediaSalesClients from "./pages/SalesClientsSheet/SocialMediaSalesSheet/InActiveSocialMediaSalesClients";
 import Inbox from "./pages/InboxPage";
+import PaymentHistory from "./pages/PaymentHistory/PaymentHistory";
 
 function App() {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -123,6 +124,7 @@ function App() {
                 <ShowOpenTickets notificationCount={notificationCount} />
               }
             />
+            <Route path="/payment_history" element={<PaymentHistory />} />
             <Route
               path="/reviews_designer_tickets"
               element={
