@@ -75,6 +75,8 @@ const Home = () => {
         fetchData();
     }, []);
 
+// ...
+
     const fetchReportingDate = async (
         ticketId,
         clientName,
@@ -109,9 +111,15 @@ const Home = () => {
                                 notificationMessage += ` (assigned to ${majorAssignee.name})`;
                             }
 
+                            // Include majorAssigneeId in the notification object
+                            const notificationObject = {
+                                message: notificationMessage,
+                                majorAssigneeId: majorAssignee?._id,
+                            };
+
                             setNotifications((prevNotifications) => [
                                 ...prevNotifications,
-                                notificationMessage,
+                                notificationObject,
                             ]);
 
                             setProcessedBusinesses((prevBusinesses) =>
@@ -126,40 +134,32 @@ const Home = () => {
         } catch (error) {
             console.error("Error fetching reporting date", error);
         }
-        console.log(notifications);
     };
-    const handleNotificationClick = (clickedNotification) => {
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(clickedNotification, "text/html");
-        const businessNameElement = doc.querySelector(".red-text");
-        const businessName = businessNameElement ? businessNameElement.textContent : null;
-        const formattedBusinessName = businessName.toLowerCase().replace(/\s/g, '');
 
+    const handleNotificationClick = (clickedNotification) => {
+
+        let majorAssigneeId = clickedNotification.majorAssigneeId.toString();
 
         if (assignorDepartmentId === "651b3409819ff0aec6af1387") {
-            if (formattedBusinessName === "localseosales") {
+            if (majorAssigneeId === "65195c4b504d80e8f11b0d13") {
                 window.location.href = "/localseo_clients?depId=65195c4b504d80e8f11b0d13";
             }
-            if (formattedBusinessName === "webseo") {
+            if (majorAssigneeId === "65195c8f504d80e8f11b0d15") {
                 window.location.href = "/webseo_clients?depId=65195c8f504d80e8f11b0d15";
             }
-            if (formattedBusinessName === "socialmedia") {
+            if (majorAssigneeId === "651ada78819ff0aec6af1381") {
                 window.location.href = "/social_media_client?depId=651ada78819ff0aec6af1381";
             }
-            if (formattedBusinessName === "localseoone") {
-                window.location.href = "/localseo_clients?depId=65195c4b504d80e8f11b0d13";
-            }
-            if (formattedBusinessName === "paidmarketing") {
+            if (majorAssigneeId === "651ada3c819ff0aec6af1380") {
                 window.location.href =
                     "/paid_marketing_sheet?depId=651ada3c819ff0aec6af1380";
             }
-            if (formattedBusinessName === "wordpress") {
+            if (majorAssigneeId === "65195c81504d80e8f11b0d14") {
                 window.location.href =
                     "/website_sheet?depId=65195c81504d80e8f11b0d14";
             }
-
-
         }
+
         if (majorAssigneeId) {
             if (user?.department?._id === "65195c8f504d80e8f11b0d15") {
                 window.location.href = "/webseo_clients?depId=65195c8f504d80e8f11b0d15";
