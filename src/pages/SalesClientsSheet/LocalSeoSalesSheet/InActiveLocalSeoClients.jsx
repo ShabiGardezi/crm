@@ -397,7 +397,7 @@ export default function InActiveLocalSeoClients() {
                   )}
                   {ticket.businessdetails && (
                     <TableCell style={{ width: 160 }} align="left">
-                      {ticket.businessdetails.workStatus}
+                      {ticket.businessdetails.work_status}
                     </TableCell>
                   )}
                   <TableCell style={{ width: 160 }} align="left">
@@ -519,7 +519,7 @@ export default function InActiveLocalSeoClients() {
                                     {new Date(p.date).toLocaleDateString()}
                                   </td>
                                   <td style={{ textAlign: "center" }}>
-                                    {ticket.businessdetails.workStatus}
+                                    {ticket.businessdetails.work_status}
                                   </td>
                                   <td
                                     style={{ textAlign: "center" }}

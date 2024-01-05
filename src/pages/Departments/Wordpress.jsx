@@ -55,7 +55,7 @@ const WordPress = () => {
     supportPerson: "",
     notes: "",
     departmentName: "",
-    workStatus: "",
+    work_status: "",
     socialProfile: "",
   });
 
@@ -85,7 +85,7 @@ const WordPress = () => {
   };
   const handleChange = (event) => {
     const { name, value } = event.target;
-    if (name === "workStatus") {
+    if (name === "work_status") {
       setSelectedWebsiteType(value);
     }
     if (name === "departmentName") {
@@ -168,7 +168,7 @@ const WordPress = () => {
           notes: formData.notes,
           departmentName: formData.departmentName,
           socialProfile: formData.socialProfile,
-          workStatus: formData.workStatus,
+          work_status: formData.work_status,
         },
 
         quotation: {
@@ -562,7 +562,7 @@ const WordPress = () => {
                 <TextField
                   label="Website Type"
                   fullWidth
-                  name="workStatus"
+                  name="work_status"
                   value={selectedWebsiteType}
                   onChange={handleChange}
                   select

@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from "react";
 import {
-  FormControl,
-  Select,
-  MenuItem,
   Table,
   TableBody,
   TableCell,
@@ -12,14 +9,10 @@ import {
   TableRow,
   TableHead,
   Paper,
-  IconButton,
   InputBase,
 } from "@mui/material";
 import Header from "../Header";
-import TicketCards from "../../Layout/Home/TicketCard";
-import VisibilityIcon from "@mui/icons-material/Visibility";
 import SearchIcon from "@mui/icons-material/Search";
-import DisplayTicketDetails from "../Tickets/DisplayTicketDetails";
 
 export default function PaymentHistory() {
   const apiUrl = process.env.REACT_APP_API_URL;
@@ -27,7 +20,6 @@ export default function PaymentHistory() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(-1); // Display all rows on one page
   const [tickets, setTickets] = useState([]); // State to store fetched data
-  const [selectedStatus, setSelectedStatus] = useState({});
   const [searchQuery, setSearchQuery] = useState("");
 
   const emptyRows =
@@ -84,8 +76,6 @@ export default function PaymentHistory() {
   return (
     <div>
       <Header />
-      <TicketCards />
-
       <TableContainer component={Paper}>
         <div>
           <div
@@ -132,10 +122,30 @@ export default function PaymentHistory() {
                 </TableCell>
                 <TableCell style={{ width: 160 }} align="left">
                   {ticket.majorAssignee.name}
-                </TableCell>{" "}
-                <TableCell style={{ width: 160 }} align="left">
-                  {ticket.businessdetails.workStatus}
                 </TableCell>
+                <TableCell style={{ width: 160 }} align="left">
+                  {ticket.businessdetails.work_status}
+                </TableCell>
+                {/* <TableCell style={{ width: 160 }} align="left">
+                  {ticket.businessdetails.noOfreviewsGMB > 0 && (
+                    <div>
+                      <strong>No. Of GMB Reviews:</strong>{" "}
+                      {ticket.businessdetails.noOfreviewsGMB}
+                    </div>
+                  )}
+                  {ticket.businessdetails.noOfFbreviews > 0 && (
+                    <div>
+                      <strong>No. Of FB Reviews:</strong>{" "}
+                      {ticket.businessdetails.noOfFbreviews}
+                    </div>
+                  )}
+                  {ticket.businessdetails.LikesFollowers > 0 && (
+                    <div>
+                      <strong>Likes/Followers:</strong>{" "}
+                      {ticket.businessdetails.LikesFollowers}
+                    </div>
+                  )}
+                </TableCell> */}
               </TableRow>
             ))}
             {emptyRows > 0 && (

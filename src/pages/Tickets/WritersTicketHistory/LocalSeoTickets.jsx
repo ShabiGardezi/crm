@@ -229,7 +229,7 @@ export default function LocalSeoWritersTickets() {
                     {ticket.TicketDetails.assignor}
                   </TableCell>
                   <TableCell style={{ width: 160 }} align="left">
-                    {ticket.businessdetails.workStatus}
+                    {ticket.businessdetails.work_status}
                   </TableCell>
                   <TableCell style={{ width: 160 }} align="left">
                     {ticket.businessdetails.quantity}

@@ -46,7 +46,7 @@ const WebSeoForm = () => {
     businessHours: "",
     socialProfile: "",
     gmbUrl: "",
-    workStatus: "",
+    work_status: "",
     notes: "",
     monthlyBlogsRequirement: "",
     LoginCredentials: "",
@@ -108,14 +108,14 @@ const WebSeoForm = () => {
 
     // Check if the selected service is "Backlinks" to decide whether to show the "No. of Backlinks" TextField
     if (
-      name === "workStatus" &&
+      name === "work_status" &&
       (value === "backlinks" ||
         value === "paid-guest" ||
         value === "extra-backlinks")
     ) {
       setShowNoOfBacklinks(true);
     }
-    if (name === "workStatus" && value === "Monthly-SEO") {
+    if (name === "work_status" && value === "Monthly-SEO") {
       setShowMonthlyBlogs(true);
     }
     setFormData({
@@ -159,7 +159,7 @@ const WebSeoForm = () => {
           businessHours: formData.businessHours,
           socialProfile: formData.socialProfile,
           gmbUrl: formData.gmbUrl,
-          workStatus: formData.workStatus,
+          work_status: formData.work_status,
           notes: formData.notes,
           Keywords: formData.Keywords,
           fronter: formData.fronter,
@@ -241,7 +241,7 @@ const WebSeoForm = () => {
         zipcode: response.data.zipcode,
         socialProfile: response.data.socialProfile,
         businessHours: response.data.businessHours,
-        workStatus: response.data.workStatus,
+        work_status: response.data.work_status,
         gmbUrl: response.data.gmbUrl,
         WebsiteURL: response.data.WebsiteURL,
       });
@@ -552,8 +552,8 @@ const WebSeoForm = () => {
             <TextField
               label="Work Nature"
               fullWidth
-              name="workStatus"
-              value={formData.workStatus}
+              name="work_status"
+              value={formData.work_status}
               onChange={handleChange}
               select
             >

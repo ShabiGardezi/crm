@@ -41,7 +41,7 @@ const LocalSEOForm = () => {
     businessHours: "",
     socialProfile: "",
     gmbUrl: "",
-    workStatus: "",
+    work_status: "",
     notes: "",
     fronter: "",
     closer: "",
@@ -83,7 +83,7 @@ const LocalSEOForm = () => {
 
     const remaining = updatedPrice - updatedAdvancePrice;
     setRemainingPrice(remaining);
-    if (name === "workStatus") {
+    if (name === "work_status") {
       // Update the state
       setFormData({
         ...formData,
@@ -126,7 +126,7 @@ const LocalSEOForm = () => {
           businessHours: formData.businessHours,
           socialProfile: formData.socialProfile,
           gmbUrl: formData.gmb,
-          workStatus: formData.workStatus,
+          work_status: formData.work_status,
           notes: formData.notes,
           supportPerson: formData.supportPerson,
           closer: formData.closer,
@@ -206,7 +206,7 @@ const LocalSEOForm = () => {
         zipcode: response.data.zipcode,
         socialProfile: response.data.socialProfile,
         businessHours: response.data.businessHours,
-        workStatus: response.data.workStatus,
+        work_status: response.data.work_status,
         gmbUrl: response.data.gmbUrl,
         WebsiteURL: response.data.WebsiteURL,
       });
@@ -491,8 +491,8 @@ const LocalSEOForm = () => {
             <TextField
               label="Work Status"
               fullWidth
-              name="workStatus"
-              value={formData.workStatus}
+              name="work_status"
+              value={formData.work_status}
               onChange={handleChange}
               select
             >

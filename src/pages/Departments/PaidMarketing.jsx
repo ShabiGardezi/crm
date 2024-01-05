@@ -40,7 +40,7 @@ const PaidMarketing = () => {
     clientName: "",
     clientEmail: "",
     selectedBudget: "",
-    platform: "",
+    work_status: "",
     selectedPlatform: "",
   });
 
@@ -63,7 +63,7 @@ const PaidMarketing = () => {
     } else {
       setShowBudgetPrice(false);
     }
-    if (name === "platform" && value === "Other") {
+    if (name === "work_status" && value === "Other") {
       setShowPlatform(true);
     }
     const remaining = updatedPrice - updatedAdvancePrice;
@@ -123,7 +123,7 @@ const PaidMarketing = () => {
           budget: formData.budget,
           notes: formData.notes,
           selectedBudget: formData.selectedBudget,
-          platform: formData.platform,
+          work_status: formData.work_status,
           selectedPlatform: formData.selectedPlatform,
           serviceName: formData.serviceName,
         },
@@ -437,8 +437,8 @@ const PaidMarketing = () => {
             <TextField
               label="Platform"
               fullWidth
-              name="platform"
-              value={formData.platform}
+              name="work_status"
+              value={formData.work_status}
               onChange={handleChange}
               select
             >

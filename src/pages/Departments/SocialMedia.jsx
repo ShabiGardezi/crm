@@ -28,7 +28,6 @@ const SocialMediaForm = () => {
     webUrl: "",
     price: "",
     advanceprice: 0, // Set the default value to 0
-
     clientName: "",
     street: "",
     WebsiteURL: "",

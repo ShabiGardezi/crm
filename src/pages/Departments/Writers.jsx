@@ -33,7 +33,7 @@ const WritersForm = () => {
         WebsiteURL: "",
         gmbUrl: "",
         clientEmail: "",
-        workStatus: "",
+        work_status: "",
         notes: "",
         ReferralWebsite: "",
         departmentName: "",
@@ -106,7 +106,7 @@ const WritersForm = () => {
                     zipcode: formData.zipcode,
                     businessNumber: formData.businessNumber,
                     clientEmail: formData.clientEmail,
-                    workStatus: formData.workStatus,
+                    work_status: formData.work_status,
                     notes: formData.notes,
                     Keywords: formData.Keywords,
                     ReferralWebsite: formData.ReferralWebsite,
@@ -173,7 +173,7 @@ const WritersForm = () => {
                 ...formData,
                 clientEmail: response.data.clientEmail,
                 clientName: response.data.clientName,
-                workStatus: response.data.workStatus,
+                work_status: response.data.work_status,
                 WebsiteURL: response.data.WebsiteURL,
                 ReferralWebsite: response.data.ReferralWebsite,
             });
@@ -311,8 +311,8 @@ const WritersForm = () => {
                                 <TextField
                                     label="Work Nature"
                                     fullWidth
-                                    name="workStatus"
-                                    value={formData.workStatus}
+                                    name="work_status"
+                                    value={formData.work_status}
                                     onChange={handleChange}
                                     select
                                 >
@@ -393,8 +393,8 @@ const WritersForm = () => {
                                 <TextField
                                     label="Work Nature"
                                     fullWidth
-                                    name="workStatus"
-                                    value={formData.workStatus}
+                                    name="work_status"
+                                    value={formData.work_status}
                                     onChange={handleChange}
                                     select
                                 >
@@ -446,8 +446,8 @@ const WritersForm = () => {
                                 <TextField
                                     label="Work Nature"
                                     fullWidth
-                                    name="workStatus"
-                                    value={formData.workStatus}
+                                    name="work_status"
+                                    value={formData.work_status}
                                     onChange={handleChange}
                                     select
                                 >
@@ -563,8 +563,8 @@ const WritersForm = () => {
                                 <TextField
                                     label="Work Nature"
                                     fullWidth
-                                    name="workStatus"
-                                    value={formData.workStatus}
+                                    name="work_status"
+                                    value={formData.work_status}
                                     onChange={handleChange}
                                     select
                                 >
