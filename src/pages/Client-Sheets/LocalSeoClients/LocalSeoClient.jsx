@@ -385,215 +385,221 @@ export default function LocalSeoSheet() {
           <TableBody>
             {tickets
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((ticket) => (
-                <TableRow key={ticket._id}>
-                  {ticket.businessdetails && (
-                    <TableCell component="th" scope="row">
-                      {ticket.businessdetails.clientName}
-                    </TableCell>
-                  )}
-                  {ticket.TicketDetails && (
+              .map((ticket) => {
+                return (
+                  <TableRow key={ticket._id}>
+                    {ticket.businessdetails && (
+                      <TableCell component="th" scope="row">
+                        {ticket.businessdetails.clientName}
+                      </TableCell>
+                    )}
+                    {ticket.TicketDetails && (
+                      <TableCell style={{ width: 160 }} align="left">
+                        {ticket.TicketDetails.assignor}
+                      </TableCell>
+                    )}
+                    {ticket.businessdetails && (
+                      <TableCell style={{ width: 160 }} align="left">
+                        {ticket.businessdetails.workStatus}
+                      </TableCell>
+                    )}
                     <TableCell style={{ width: 160 }} align="left">
-                      {ticket.TicketDetails.assignor}
-                    </TableCell>
-                  )}
-                  {ticket.businessdetails && (
-                    <TableCell style={{ width: 160 }} align="left">
-                      {ticket.businessdetails.workStatus}
-                    </TableCell>
-                  )}
-                  <TableCell style={{ width: 160 }} align="left">
-                    <FormControl>
-                      <Select
-                        value={ticket.ActiveNotActive || "Active"}
-                        onClick={() => handleClick(ticket)}
-                        style={{
-                          backgroundColor:
-                            ticket.ActiveNotActive === "Active"
-                              ? "#28a745"
-                              : "#dc3545", // set background color for Select
-                          color:
-                            ticket.ActiveNotActive === "Active"
-                              ? "white"
-                              : "black",
-                        }}
-                      >
-                        <MenuItem value="Active">Active</MenuItem>
-                        <MenuItem value="Not Active">Not Active</MenuItem>
-                      </Select>
-                    </FormControl>
-                  </TableCell>
-                  <TableCell
-                    style={{ width: 160, cursor: "pointer" }}
-                    align="left"
-                    title="Format: MM-DD-YYYY" // Tooltip for date format
-                  >
-                    {new Date(ticket.createdAt).toLocaleDateString()}
-                  </TableCell>
-
-                  <TableCell
-                    style={{
-                      width: 160,
-                      cursor: "pointer",
-                         background:
-                        new Date(ticket.reportingDate) <= new Date()
-                          ? "#ed08088f"
-                          : "inherit",
-                    }}
-                    title="Format: MM-DD-YYYY" // Tooltip for date format
-                    align="left"
-                    contentEditable={true}
-                    onBlur={(e) =>
-                      handleReportingDateEdit(ticket._id, e.target.innerText)
-                    }
-                  >
-                    {new Date(ticket.reportingDate).toLocaleDateString()}
-                  </TableCell>
-                  <TableCell style={{ width: 160 }} align="left">
-                    <IconButton onClick={() => fetchTicketDetails(ticket._id)}>
-                      <VisibilityIcon />
-                    </IconButton>
-                  </TableCell>
-                  <TableCell
-                    style={{
-                      width: 180,
-                      whiteSpace: "pre-line",
-                         background: ticket.businessdetails.notes
-                        ? "#ed08088f"
-                        : "white",
-                      color: ticket.businessdetails.notes ? "white" : "black",
-                    }} // Apply the white-space property here
-                    align="left"
-                    contentEditable={true}
-                    onBlur={(e) =>
-                      handleNotesEdit(ticket._id, e.target.innerText)
-                    }
-                  >
-                    {ticket.businessdetails.notes}
-                  </TableCell>
-                  {user?.department?._id === "651b3409819ff0aec6af1387" && (
-                    <TableCell>
-                      <Button
-                        style={{ backgroundColor: "red" }}
-                        variant="contained"
-                        color="primary"
-                        onClick={() => {
-                          handleRecurringDialogOpen();
-                          setTicketSelected(ticket);
-                          setPaymentRecieved(() => {
-                            let payment = 0;
-                            ticket.payment_history.forEach((p) => {
-                              payment = payment + p.payment;
-                            });
-                            return payment;
-                          });
-                        }}
-                      >
-                        Recurring
-                      </Button>
-                      {/* Recurring Dialog */}
-                      <Dialog
-                        open={openRecurringDialog}
-                        onClose={handleRecurringDialogClose}
-                      >
-                        <DialogTitle style={{ textAlign: "center" }}>
-                          {ticketSelected
-                            ? `Payment History - ${ticketSelected.businessdetails.clientName}`
-                            : "Payment History"}
-                        </DialogTitle>
-                        <DialogContent
-                          style={{ overflowY: "auto", maxHeight: "500px" }}
+                      <FormControl>
+                        <Select
+                          value={ticket.ActiveNotActive || "Active"}
+                          onClick={() => handleClick(ticket)}
+                          style={{
+                            backgroundColor:
+                              ticket.ActiveNotActive === "Active"
+                                ? "#28a745"
+                                : "#dc3545", // set background color for Select
+                            color:
+                              ticket.ActiveNotActive === "Active"
+                                ? "white"
+                                : "black",
+                          }}
                         >
-                          <table style={{ width: "100%" }}>
-                            <thead>
-                              <tr>
-                                <th>Date</th>
-                                <th>Work Type</th>
-                                <th>Received</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {ticketSelected &&
-                                ticketSelected?.payment_history.map((p) => (
-                                  <tr key={p.date}>
-                                    <td style={{ textAlign: "center" }}>
-                                      {new Date(p.date).toLocaleDateString()}
-                                    </td>
-                                    <td style={{ textAlign: "center" }}>
-                                      {ticket.businessdetails.workStatus}
-                                    </td>
-                                    <td
-                                      style={{ textAlign: "center" }}
-                                    >{`$${p.payment}`}</td>
-                                  </tr>
-                                ))}
-                            </tbody>
-                          </table>
-                          <hr
-                            style={{
-                              marginTop: "16px",
-                              marginBottom: "16px",
-                              border: "0",
-                              borderTop: "2px solid #eee",
-                            }}
-                          />
-
-                          <Typography>
-                            <div
-                              style={{
-                                display: "flex",
-                                justifyContent: "space-between",
-                                fontWeight: "bold",
-                              }}
-                            >
-                              <div>Payment Received:</div>
-                              <div>{`$${paymentRecieved}`}</div>
-                            </div>
-                          </Typography>
-                          <Typography>
-                            <div
-                              style={{
-                                display: "flex",
-                                justifyContent: "space-between",
-                                fontWeight: "bold",
-                              }}
-                            >
-                              <div>Remaining Charges:</div>
-                              <div
-                                class="remainingCharges"
-                                contentEditable={true}
-                                onBlur={(e) =>
-                                  handleRemainingEdit(
-                                    ticket._id,
-                                    e.target.innerText
-                                  )
-                                }
-                              >{`${ticket.quotation.remainingPrice}`}</div>
-                            </div>
-                          </Typography>
-                          <TextField
-                            label="Payment Received"
-                            value={remainingPrice}
-                            onChange={handleRemainingPriceChange}
-                            fullWidth
-                          />
-                        </DialogContent>
-                        <DialogActions>
-                          <Button onClick={handleRecurringDialogClose}>
-                            Cancel
-                          </Button>
-                          <Button
-                            onClick={handleRecurringSubmit}
-                            color="primary"
-                          >
-                            Save
-                          </Button>
-                        </DialogActions>
-                      </Dialog>
+                          <MenuItem value="Active">Active</MenuItem>
+                          <MenuItem value="Not Active">Not Active</MenuItem>
+                        </Select>
+                      </FormControl>
                     </TableCell>
-                  )}
-                </TableRow>
-              ))}
+                    <TableCell
+                      style={{ width: 160, cursor: "pointer" }}
+                      align="left"
+                      title="Format: MM-DD-YYYY" // Tooltip for date format
+                    >
+                      {new Date(ticket.createdAt).toLocaleDateString()}
+                    </TableCell>
+
+                    <TableCell
+                      style={{
+                        width: 160,
+                        cursor: "pointer",
+                        background:
+                          new Date(ticket.reportingDate) <= new Date()
+                            ? "#ed08088f"
+                            : "inherit",
+                      }}
+                      title="Format: MM-DD-YYYY" // Tooltip for date format
+                      align="left"
+                      contentEditable={true}
+                      onBlur={(e) =>
+                        handleReportingDateEdit(ticket._id, e.target.innerText)
+                      }
+                    >
+                      {new Date(ticket.reportingDate).toLocaleDateString()}
+                    </TableCell>
+                    <TableCell style={{ width: 160 }} align="left">
+                      <IconButton
+                        onClick={() => fetchTicketDetails(ticket._id)}
+                      >
+                        <VisibilityIcon />
+                      </IconButton>
+                    </TableCell>
+                    <TableCell
+                      style={{
+                        width: 180,
+                        whiteSpace: "pre-line",
+                        background: ticket.businessdetails.notes
+                          ? "#ed08088f"
+                          : "white",
+                        color: ticket.businessdetails.notes ? "white" : "black",
+                      }} // Apply the white-space property here
+                      align="left"
+                      contentEditable={true}
+                      onBlur={(e) =>
+                        handleNotesEdit(ticket._id, e.target.innerText)
+                      }
+                    >
+                      {ticket.businessdetails.notes}
+                    </TableCell>
+                    {user?.department?._id === "651b3409819ff0aec6af1387" && (
+                      <TableCell>
+                        <Button
+                          style={{ backgroundColor: "red" }}
+                          variant="contained"
+                          color="primary"
+                          onClick={() => {
+                            handleRecurringDialogOpen();
+                            setTicketSelected(ticket);
+                            setPaymentRecieved(() => {
+                              let payment = 0;
+                              ticket.payment_history.forEach((p) => {
+                                payment = payment + p.payment;
+                              });
+                              return payment;
+                            });
+                          }}
+                        >
+                          Recurring
+                        </Button>
+                        {/* Recurring Dialog */}
+                        <Dialog
+                          open={openRecurringDialog}
+                          onClose={handleRecurringDialogClose}
+                        >
+                          <DialogTitle style={{ textAlign: "center" }}>
+                            {ticketSelected
+                              ? `Payment History - ${ticketSelected.businessdetails.clientName}`
+                              : "Payment History"}
+                          </DialogTitle>
+                          <DialogContent
+                            style={{ overflowY: "auto", maxHeight: "500px" }}
+                          >
+                            <table style={{ width: "100%" }}>
+                              <thead>
+                                <tr>
+                                  <th>Date</th>
+                                  <th>Work Type</th>
+                                  <th>Received</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {ticketSelected &&
+                                  ticketSelected?.payment_history.map((p) => (
+                                    <tr key={p.date}>
+                                      <td style={{ textAlign: "center" }}>
+                                        {new Date(p.date).toLocaleDateString()}
+                                      </td>
+                                      <td style={{ textAlign: "center" }}>
+                                        {ticket.businessdetails.workStatus}
+                                      </td>
+                                      <td
+                                        style={{ textAlign: "center" }}
+                                      >{`$${p.payment}`}</td>
+                                    </tr>
+                                  ))}
+                              </tbody>
+                            </table>
+                            <hr
+                              style={{
+                                marginTop: "16px",
+                                marginBottom: "16px",
+                                border: "0",
+                                borderTop: "2px solid #eee",
+                              }}
+                            />
+
+                            <Typography>
+                              <div
+                                style={{
+                                  display: "flex",
+                                  justifyContent: "space-between",
+                                  fontWeight: "bold",
+                                }}
+                              >
+                                <div>Payment Received:</div>
+                                <div>{`$${paymentRecieved}`}</div>
+                              </div>
+                            </Typography>
+                            <Typography>
+                              <div
+                                style={{
+                                  display: "flex",
+                                  justifyContent: "space-between",
+                                  fontWeight: "bold",
+                                }}
+                              >
+                                <div>Remaining Charges:</div>
+                                <div
+                                  class="remainingCharges"
+                                  contentEditable={true}
+                                  onBlur={(e) =>
+                                    handleRemainingEdit(
+                                      ticketSelected?._id,
+                                      e.target.innerText
+                                    )
+                                  }
+                                >
+                                  {`${ticketSelected?.quotation.remainingPrice}`}
+                                </div>
+                              </div>
+                            </Typography>
+                            <TextField
+                              label="Payment Received"
+                              value={remainingPrice}
+                              onChange={handleRemainingPriceChange}
+                              fullWidth
+                            />
+                          </DialogContent>
+                          <DialogActions>
+                            <Button onClick={handleRecurringDialogClose}>
+                              Cancel
+                            </Button>
+                            <Button
+                              onClick={handleRecurringSubmit}
+                              color="primary"
+                            >
+                              Save
+                            </Button>
+                          </DialogActions>
+                        </Dialog>
+                      </TableCell>
+                    )}
+                  </TableRow>
+                );
+              })}
             {emptyRows > 0 && (
               <TableRow style={{ height: 53 * emptyRows }}>
                 <TableCell colSpan={8} />
