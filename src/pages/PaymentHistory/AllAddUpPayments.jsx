@@ -93,25 +93,6 @@ export default function AllAddUpPayments() {
         );
 
         setTickets(updatedTickets);
-
-        // Calculate and set the total payment and remaining for all tickets
-        const sumOfPayments = updatedTickets.reduce(
-          (total, ticket) =>
-            total + calculateTotalPaymentForTicket(ticket.payment_history),
-          0
-        );
-        setTotalPaymentForAllTickets(sumOfPayments);
-
-        const sumOfRemaining = updatedTickets.reduce(
-          (total, ticket) =>
-            total +
-            (parseFloat(calculateTotalRemainingForTicket(ticket.quotation)) ||
-              0), // Convert to number before adding
-          0
-        );
-        setTotalRemainingForAllTickets(sumOfRemaining.toFixed(2)); // Keep two decimal places
-
-        setTotalRemainingForAllTickets(sumOfRemaining);
       } catch (error) {
         console.error("Error fetching tickets:", error.message);
       }
@@ -134,8 +115,18 @@ export default function AllAddUpPayments() {
     return totalPayment;
   };
 
-  const calculateTotalRemainingForTicket = (quotation) => {
-    return quotation.remainingPrice;
+  const calculateTotalPaymentForFilteredTickets = (filteredTickets) => {
+    const totalPayment = filteredTickets.reduce((total, ticket) => {
+      return total + calculateTotalPaymentForTicket(ticket.payment_history);
+    }, 0);
+    return totalPayment.toFixed(2);
+  };
+  const calculateTotalRemainingForFilteredTickets = (filteredTickets) => {
+    const totalRemaining = filteredTickets.reduce((total, ticket) => {
+      return total + parseFloat(ticket.quotation.remainingPrice);
+    }, 0);
+
+    return totalRemaining.toFixed(2);
   };
   return (
     <div>
@@ -226,13 +217,13 @@ export default function AllAddUpPayments() {
           <TableRow>
             <TableCell colSpan={7} style={{ textAlign: "right" }}>
               <strong>Total Received Payment:</strong>
-              {`$${totalPaymentForAllTickets}`}
+              {`$${calculateTotalPaymentForFilteredTickets(filteredTickets)}`}
             </TableCell>
           </TableRow>
           <TableRow>
             <TableCell colSpan={7} style={{ textAlign: "right" }}>
               <strong>Total Remaining:</strong>
-              {`$${totalRemainingForAllTickets}`}
+              {`$${calculateTotalRemainingForFilteredTickets(filteredTickets)}`}
             </TableCell>
           </TableRow>
         </Table>

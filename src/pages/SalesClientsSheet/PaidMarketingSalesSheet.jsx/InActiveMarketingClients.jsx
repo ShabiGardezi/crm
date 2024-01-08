@@ -48,6 +48,9 @@ const PaidMarketingActiveClient = () => {
     setRemainingPrice(event.target.value);
   };
   const handleRemainingEdit = (ticketId, remaining) => {
+    // Convert empty string to 0
+    const remainingValue = remaining === "" ? 0 : remaining;
+
     // Make an API request to update the notes in the database
     fetch(`${apiUrl}/api/tickets/remaining-update`, {
       method: "PUT",
@@ -56,7 +59,7 @@ const PaidMarketingActiveClient = () => {
       },
       body: JSON.stringify({
         ticketId,
-        remaining: remaining,
+        remaining: remainingValue,
       }),
     })
       .then((response) => response.json())
@@ -68,7 +71,7 @@ const PaidMarketingActiveClient = () => {
                 ...ticket,
                 quotation: {
                   ...ticket.quotation,
-                  remainingPrice: remaining,
+                  remainingPrice: remainingValue,
                 },
               };
             }

@@ -306,6 +306,9 @@ export default function NotActiveClients() {
     });
   };
   const handleRemainingEdit = (ticketId, remaining) => {
+    // Convert empty string to 0
+    const remainingValue = remaining === "" ? 0 : remaining;
+
     // Make an API request to update the notes in the database
     fetch(`${apiUrl}/api/tickets/remaining-update`, {
       method: "PUT",
@@ -314,7 +317,7 @@ export default function NotActiveClients() {
       },
       body: JSON.stringify({
         ticketId,
-        remaining: remaining,
+        remaining: remainingValue,
       }),
     })
       .then((response) => response.json())
@@ -326,7 +329,7 @@ export default function NotActiveClients() {
                 ...ticket,
                 quotation: {
                   ...ticket.quotation,
-                  remainingPrice: remaining,
+                  remainingPrice: remainingValue,
                 },
               };
             }

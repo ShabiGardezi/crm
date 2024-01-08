@@ -279,6 +279,9 @@ export default function ActiveWebSeoSalesClients() {
       });
   };
   const handleRemainingEdit = (ticketId, remaining) => {
+    // Convert empty string to 0
+    const remainingValue = remaining === "" ? 0 : remaining;
+
     // Make an API request to update the notes in the database
     fetch(`${apiUrl}/api/tickets/remaining-update`, {
       method: "PUT",
@@ -287,7 +290,7 @@ export default function ActiveWebSeoSalesClients() {
       },
       body: JSON.stringify({
         ticketId,
-        remaining: remaining,
+        remaining: remainingValue,
       }),
     })
       .then((response) => response.json())
@@ -299,7 +302,7 @@ export default function ActiveWebSeoSalesClients() {
                 ...ticket,
                 quotation: {
                   ...ticket.quotation,
-                  remainingPrice: remaining,
+                  remainingPrice: remainingValue,
                 },
               };
             }
@@ -517,19 +520,28 @@ export default function ActiveWebSeoSalesClients() {
                           </thead>
                           <tbody>
                             {ticketSelected &&
-                              ticketSelected?.payment_history.map((p) => (
-                                <tr key={p.date}>
-                                  <td style={{ textAlign: "center" }}>
-                                    {new Date(p.date).toLocaleDateString()}
-                                  </td>
-                                  <td style={{ textAlign: "center" }}>
-                                    {ticket.businessdetails.work_status}
-                                  </td>
-                                  <td
-                                    style={{ textAlign: "center" }}
-                                  >{`$${p.payment}`}</td>
-                                </tr>
-                              ))}
+                             ticketSelected?.payment_history.map(
+                                    (p) =>
+                                      // Check if payment is not null before rendering the row
+                                      p.payment !== null && (
+                                        <tr key={p.date}>
+                                          <td style={{ textAlign: "center" }}>
+                                            {new Date(
+                                              p.date
+                                            ).toLocaleDateString()}
+                                          </td>
+                                          <td style={{ textAlign: "center" }}>
+                                            {
+                                              ticketSelected.businessdetails
+                                                .work_status
+                                            }
+                                          </td>
+                                          <td
+                                            style={{ textAlign: "center" }}
+                                          >{`$${p.payment}`}</td>
+                                        </tr>
+                                      )
+                                  )}
                           </tbody>
                         </table>
                         <hr

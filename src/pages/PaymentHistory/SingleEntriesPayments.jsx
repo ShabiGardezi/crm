@@ -105,13 +105,11 @@ export default function SingleEntriesPayments() {
     return totalPayment;
   };
 
-  const calculateTotalRemainingForTicket = (quotation) => {
-    return quotation.remainingPrice;
-  };
   const calculateTotalPaymentForFilteredTickets = (filteredTickets) => {
-    return filteredTickets.reduce((total, ticket) => {
+    const totalPayment = filteredTickets.reduce((total, ticket) => {
       return total + calculateTotalPaymentForTicket(ticket.payment_history);
     }, 0);
+    return totalPayment.toFixed(2);
   };
   const calculateTotalRemainingForFilteredTickets = (filteredTickets) => {
     const totalRemaining = filteredTickets.reduce((total, ticket) => {
