@@ -412,36 +412,6 @@ const SocialMediaForm = () => {
               onChange={handleChange}
             />
           </Grid>
-          {/* <Grid item xs={3}>
-            <TextField
-              label="No. Of FB Reviews"
-              fullWidth
-              name="noOfFbreviews"
-              value={formData.noOfFbreviews}
-              onChange={handleChange}
-              multiline
-            />
-          </Grid>
-          <Grid item xs={3}>
-            <TextField
-              label="Likes/Followers"
-              fullWidth
-              name="LikesFollowers"
-              value={formData.LikesFollowers}
-              onChange={handleChange}
-              multiline
-            />
-          </Grid>
-          <Grid item xs={3}>
-            <TextField
-              label="No.Of GMB Reviews"
-              fullWidth
-              name="noOfreviewsGMB"
-              value={formData.noOfreviewsGMB}
-              onChange={handleChange}
-              multiline
-            />
-          </Grid> */}
           <Grid item xs={3}>
             <TextField
               label="Work Status"

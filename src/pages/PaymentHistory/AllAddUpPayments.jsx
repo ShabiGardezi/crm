@@ -132,16 +132,30 @@ export default function AllAddUpPayments() {
     <div>
       <Header />
       <div>
-        <label htmlFor="filterDropdown">Filter:</label>
+        <label htmlFor="filterDropdown">Services:</label>
         <select
           id="filterDropdown"
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
         >
           <option value="All">All</option>
+          <option value="GMB Full Optimization">GMB Full Optimization</option>
+          <option value="GMB Off Page">GMB Off Page</option>
+          <option value="Paid-Guest-Posting">Paid-Guest-Posting</option>
+          <option value="Monthly-SEO">Monthly-SEO</option>
+          <option value="On-Page">On-Page</option>
           <option value="Backlinks">Backlinks</option>
           <option value="Extra-Backlinks">Extra-Backlinks</option>
+          <option value="Facebook-Ads">Facebook-Ads</option>
+          <option value="Google-Ads">Google-Ads</option>
+          <option value="Other-Ads">Other-Ads</option>
+          <option value="Ecommerce">Ecommerce</option>
+          <option value="Redeisgn-Website">Redeisgn-Website</option>
+          <option value="One-Page-Website">One-Page-Website</option>
           <option value="Full-Website">Full-Website</option>
+          <option value="No. Of FB Reviews">No. Of FB Reviews</option>
+          <option value="Likes/Followers">Likes/Followers</option>
+          <option value="No.Of GMB Reviews">No.Of GMB Reviews</option>
         </select>
       </div>
       <TableContainer component={Paper}>
