@@ -19,6 +19,9 @@ const SocialMediaForm = () => {
   const [remainingPrice, setRemainingPrice] = useState(0); // Initialize remainingPrice
   const [selectedClient, setSelectedClient] = useState(null);
   const [clientSuggestions, setClientSuggestions] = useState([]);
+  const [showFbReviewsField, setShowFbReviewsField] = useState(false);
+  const [showLikesFollowersField, setShowLikesFollowersField] = useState(false);
+  const [showGmbReviewsField, setShowGmbReviewsField] = useState(false);
 
   const [formData, setFormData] = useState({
     department: "Social Media / Customer Reviews Management",
@@ -38,6 +41,7 @@ const SocialMediaForm = () => {
     facebookURL: "",
     noOfreviewsGMB: "0",
     logincredentials: "",
+    work_status: "",
     notes: "",
     supportPerson: "",
     closer: "",
@@ -58,7 +62,16 @@ const SocialMediaForm = () => {
 
     const remaining = updatedPrice - updatedAdvancePrice;
     setRemainingPrice(remaining);
-
+    if (name === "work_status") {
+      // Update the state
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+      setShowFbReviewsField(value === "No. Of FB Reviews");
+      setShowLikesFollowersField(value === "Likes/Followers");
+      setShowGmbReviewsField(value === "No.Of GMB Reviews");
+    }
     setFormData({
       ...formData,
       [name]: value,
@@ -114,6 +127,7 @@ const SocialMediaForm = () => {
           gmbUrl: formData.gmbUrl,
           facebookURL: formData.facebookURL,
           noOfreviewsGMB: formData.noOfreviewsGMB,
+          work_status: formData.work_status,
           logincredentials: formData.logincredentials,
           notes: formData.notes,
           noOfFbreviews: formData.noOfFbreviews,
@@ -135,7 +149,6 @@ const SocialMediaForm = () => {
       });
       // Handle the response as needed (e.g., show a success message)
       toast.success("Form submitted successfully!");
-      console.log("Success:", response);
       sendNotification(
         response.data.payload._id.toString(),
         user._id,
@@ -399,7 +412,7 @@ const SocialMediaForm = () => {
               onChange={handleChange}
             />
           </Grid>
-          <Grid item xs={3}>
+          {/* <Grid item xs={3}>
             <TextField
               label="No. Of FB Reviews"
               fullWidth
@@ -428,7 +441,57 @@ const SocialMediaForm = () => {
               onChange={handleChange}
               multiline
             />
+          </Grid> */}
+          <Grid item xs={3}>
+            <TextField
+              label="Work Status"
+              fullWidth
+              name="work_status"
+              value={formData.work_status}
+              onChange={handleChange}
+              select
+            >
+              <MenuItem value="No. Of FB Reviews">No. Of FB Reviews </MenuItem>
+              <MenuItem value="Likes/Followers">Likes/Followers</MenuItem>
+              <MenuItem value="No.Of GMB Reviews">No.Of GMB Reviews</MenuItem>
+            </TextField>
           </Grid>
+          {showGmbReviewsField && (
+            <Grid item xs={3}>
+              <TextField
+                label="No. Of FB Reviews"
+                fullWidth
+                name="noOfFbreviews"
+                value={formData.noOfFbreviews}
+                onChange={handleChange}
+                multiline
+              />
+            </Grid>
+          )}
+          {showFbReviewsField && (
+            <Grid item xs={3}>
+              <TextField
+                label="No. Of FB Reviews"
+                fullWidth
+                name="noOfFbreviews"
+                value={formData.noOfFbreviews}
+                onChange={handleChange}
+                multiline
+              />
+            </Grid>
+          )}
+          {showLikesFollowersField && (
+            <Grid item xs={3}>
+              <TextField
+                label="No. Of Likes & Followers"
+                fullWidth
+                name="LikesFollowers"
+                value={formData.LikesFollowers}
+                onChange={handleChange}
+                multiline
+              />
+            </Grid>
+          )}
           <Grid item xs={3}>
             <TextField
               label="GMB URL"
@@ -459,7 +522,6 @@ const SocialMediaForm = () => {
               multiline
             />
           </Grid>
-
           <Grid item xs={3}>
             <TextField
               label="Login Credentials"
