@@ -79,9 +79,7 @@ export default function SingleEntriesPayments() {
         // Fetch and update remaining prices for all tickets
         const updatedTickets = await Promise.all(
           data.payload.map(async (ticket) => {
-            console.log(data.payload);
             const remainingPrice = await fetchRemainingPrice(ticket._id);
-            console.log("remainingPrice", remainingPrice);
             return {
               ...ticket,
               quotation: {
@@ -111,8 +109,6 @@ export default function SingleEntriesPayments() {
         );
         setTotalRemainingForAllTickets(sumOfRemaining.toFixed(2)); // Keep two decimal places
 
-        console.log(sumOfRemaining);
-        console.log(totalRemainingForAllTickets);
         setTotalRemainingForAllTickets(sumOfRemaining);
       } catch (error) {
         console.error("Error fetching tickets:", error.message);
