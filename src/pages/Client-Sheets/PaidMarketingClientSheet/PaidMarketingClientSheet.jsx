@@ -582,11 +582,11 @@ export default function PaidMarketingClientSheet(props) {
                               contentEditable={true}
                               onBlur={(e) =>
                                 handleRemainingEdit(
-                                  ticket._id,
+                                  ticketSelected?._id,
                                   e.target.innerText
                                 )
                               }
-                            >{`${ticket.quotation.remainingPrice}`}</div>
+                            > {`${ticketSelected?.quotation.remainingPrice}`}</div>
                           </div>
                         </Typography>
                         <TextField

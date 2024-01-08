@@ -517,19 +517,25 @@ export default function LocalSeoSheet() {
                               </thead>
                               <tbody>
                                 {ticketSelected &&
-                                  ticketSelected?.payment_history.map((p) => (
-                                    <tr key={p.date}>
-                                      <td style={{ textAlign: "center" }}>
-                                        {new Date(p.date).toLocaleDateString()}
-                                      </td>
-                                      <td style={{ textAlign: "center" }}>
-                                        {ticket.businessdetails.workStatus}
-                                      </td>
-                                      <td
-                                        style={{ textAlign: "center" }}
-                                      >{`$${p.payment}`}</td>
-                                    </tr>
-                                  ))}
+                                  ticketSelected?.payment_history.map(
+                                    (p) =>
+                                      // Check if payment is not null before rendering the row
+                                      p.payment !== null && (
+                                        <tr key={p.date}>
+                                          <td style={{ textAlign: "center" }}>
+                                            {new Date(
+                                              p.date
+                                            ).toLocaleDateString()}
+                                          </td>
+                                          <td style={{ textAlign: "center" }}>
+                                            {ticket.businessdetails.workStatus}
+                                          </td>
+                                          <td
+                                            style={{ textAlign: "center" }}
+                                          >{`$${p.payment}`}</td>
+                                        </tr>
+                                      )
+                                  )}
                               </tbody>
                             </table>
                             <hr

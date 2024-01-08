@@ -564,11 +564,11 @@ export default function LocalSeoSheet() {
                               contentEditable={true}
                               onBlur={(e) =>
                                 handleRemainingEdit(
-                                  ticket._id,
+                                  ticketSelected?._id,
                                   e.target.innerText
                                 )
                               }
-                            >{`${ticket.quotation.remainingPrice}`}</div>
+                            > {`${ticketSelected?.quotation.remainingPrice}`}</div>
                           </div>
                         </Typography>
                         <TextField

@@ -506,7 +506,7 @@ const PaidMarketingActiveClient = () => {
                                 e.target.innerText
                               )
                             }
-                          >{`${ticket.quotation.remainingPrice}`}</div>
+                          > {`${ticketSelected?.quotation.remainingPrice}`}</div>
                         </div>
                       </Typography>
                       <TextField

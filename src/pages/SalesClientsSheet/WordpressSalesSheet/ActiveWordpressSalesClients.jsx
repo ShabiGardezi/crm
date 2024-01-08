@@ -451,22 +451,28 @@ export default function ActiveWordpressSalesClients() {
                               <th>Received</th>
                             </tr>
                           </thead>
-                          <tbody>
-                            {ticketSelected &&
-                              ticketSelected?.payment_history.map((p) => (
-                                <tr key={p.date}>
-                                  <td style={{ textAlign: "center" }}>
-                                    {new Date(p.date).toLocaleDateString()}
-                                  </td>
-                                  <td style={{ textAlign: "center" }}>
-                                    {ticket.businessdetails.websiteType}
-                                  </td>
-                                  <td
-                                    style={{ textAlign: "center" }}
-                                  >{`$${p.payment}`}</td>
-                                </tr>
-                              ))}
-                          </tbody>
+                      <tbody>
+                              {ticketSelected &&
+                                ticketSelected?.payment_history.map(
+                                  (p) =>
+                                    // Check if payment is not null before rendering the row
+                                    p.payment !== null && (
+                                      <tr key={p.date}>
+                                        <td style={{ textAlign: "center" }}>
+                                          {new Date(
+                                            p.date
+                                          ).toLocaleDateString()}
+                                        </td>
+                                        <td style={{ textAlign: "center" }}>
+                                          {ticket.businessdetails.workStatus}
+                                        </td>
+                                        <td
+                                          style={{ textAlign: "center" }}
+                                        >{`$${p.payment}`}</td>
+                                      </tr>
+                                    )
+                                )}
+                            </tbody>
                         </table>
                         <hr
                           style={{
@@ -503,11 +509,11 @@ export default function ActiveWordpressSalesClients() {
                               contentEditable={true}
                               onBlur={(e) =>
                                 handleRemainingEdit(
-                                  ticket._id,
+                                  ticketSelected?._id,
                                   e.target.innerText
                                 )
                               }
-                            >{`${ticket.quotation.remainingPrice}`}</div>
+                            > {`${ticketSelected?.quotation.remainingPrice}`}</div>
                           </div>
                         </Typography>
                         <TextField

@@ -132,7 +132,7 @@ export default function WordpressClientSheet(props) {
   };
 
   // Function to handle notes edit and update
- const handleNotesEdit = (ticketId, editedNotes) => {
+  const handleNotesEdit = (ticketId, editedNotes) => {
     // Make an API request to update the notes in the database
     fetch(`${apiUrl}/api/tickets/notes-update`, {
       method: "PUT",
@@ -366,7 +366,9 @@ export default function WordpressClientSheet(props) {
                   style={{
                     width: 180,
                     whiteSpace: "pre-line",
-                    background: ticket.businessdetails.notes ? "#ed08088f" : "white",
+                    background: ticket.businessdetails.notes
+                      ? "#ed08088f"
+                      : "white",
                     color: ticket.businessdetails.notes ? "white" : "black",
                   }} // Apply the white-space property here
                   align="left"
@@ -424,19 +426,23 @@ export default function WordpressClientSheet(props) {
                           </thead>
                           <tbody>
                             {ticketSelected &&
-                              ticketSelected?.payment_history.map((p) => (
-                                <tr key={p.date}>
-                                  <td style={{ textAlign: "center" }}>
-                                    {new Date(p.date).toLocaleDateString()}
-                                  </td>
-                                  <td style={{ textAlign: "center" }}>
-                                    {ticket.businessdetails.websiteType}
-                                  </td>
-                                  <td
-                                    style={{ textAlign: "center" }}
-                                  >{`$${p.payment}`}</td>
-                                </tr>
-                              ))}
+                              ticketSelected?.payment_history.map(
+                                (p) =>
+                                  // Check if payment is not null before rendering the row
+                                  p.payment !== null && (
+                                    <tr key={p.date}>
+                                      <td style={{ textAlign: "center" }}>
+                                        {new Date(p.date).toLocaleDateString()}
+                                      </td>
+                                      <td style={{ textAlign: "center" }}>
+                                        {ticket.businessdetails.workStatus}
+                                      </td>
+                                      <td
+                                        style={{ textAlign: "center" }}
+                                      >{`$${p.payment}`}</td>
+                                    </tr>
+                                  )
+                              )}
                           </tbody>
                         </table>
                         <hr
@@ -474,11 +480,13 @@ export default function WordpressClientSheet(props) {
                               contentEditable={true}
                               onBlur={(e) =>
                                 handleRemainingEdit(
-                                  ticket._id,
+                                  ticketSelected?._id,
                                   e.target.innerText
                                 )
                               }
-                            >{`${ticket.quotation.remainingPrice}`}</div>
+                            >
+                              {`${ticketSelected?.quotation.remainingPrice}`}
+                            </div>
                           </div>
                         </Typography>
                         <TextField

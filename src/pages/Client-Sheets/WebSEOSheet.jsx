@@ -384,6 +384,7 @@ export default function WebSeoSheet() {
         console.error("Error updating notes", error);
       });
   };
+
   return (
     <>
       <Header />
@@ -490,11 +491,10 @@ export default function WebSeoSheet() {
                         new Date(ticket.reportingDate) <= new Date()
                           ? "white"
                           : "black",
-                         background:
+                      background:
                         new Date(ticket.reportingDate) <= new Date()
                           ? "#ed08088f"
                           : "inherit",
-                   
                     }}
                     title="Format: MM-DD-YYYY" // Tooltip for date format
                     align="left"
@@ -514,7 +514,7 @@ export default function WebSeoSheet() {
                     style={{
                       width: 180,
                       whiteSpace: "pre-line",
-                         background: ticket.businessdetails.notes
+                      background: ticket.businessdetails.notes
                         ? "#ed08088f"
                         : "white",
                       color: ticket.businessdetails.notes ? "white" : "black",
@@ -570,21 +570,28 @@ export default function WebSeoSheet() {
                             </thead>
                             <tbody>
                               {ticketSelected &&
-                                ticketSelected?.payment_history.map((p) => (
-                                  <tr key={p.date}>
-                                    <td style={{ textAlign: "center" }}>
-                                      {new Date(p.date).toLocaleDateString()}
-                                    </td>
-                                    <td style={{ textAlign: "center" }}>
-                                      {ticket.businessdetails.workStatus}
-                                    </td>
-                                    <td
-                                      style={{ textAlign: "center" }}
-                                    >{`$${p.payment}`}</td>
-                                  </tr>
-                                ))}
+                                ticketSelected?.payment_history.map(
+                                  (p) =>
+                                    // Check if payment is not null before rendering the row
+                                    p.payment !== null && (
+                                      <tr key={p.date}>
+                                        <td style={{ textAlign: "center" }}>
+                                          {new Date(
+                                            p.date
+                                          ).toLocaleDateString()}
+                                        </td>
+                                        <td style={{ textAlign: "center" }}>
+                                          {ticket.businessdetails.workStatus}
+                                        </td>
+                                        <td
+                                          style={{ textAlign: "center" }}
+                                        >{`$${p.payment}`}</td>
+                                      </tr>
+                                    )
+                                )}
                             </tbody>
                           </table>
+
                           <hr
                             style={{
                               marginTop: "16px",
@@ -620,11 +627,15 @@ export default function WebSeoSheet() {
                                 contentEditable={true}
                                 onBlur={(e) =>
                                   handleRemainingEdit(
-                                    ticket._id,
+                                    ticketSelected?._id,
                                     e.target.innerText
                                   )
                                 }
-                              >{`${ticket.quotation.remainingPrice}`}</div>
+                              >
+                                {ticketSelected?.quotation.remainingPrice !==
+                                  null &&
+                                  `${ticketSelected?.quotation.remainingPrice}`}
+                              </div>
                             </div>
                           </Typography>
                           <TextField
