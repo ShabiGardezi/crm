@@ -581,7 +581,10 @@ export default function WebSeoSheet() {
                                           ).toLocaleDateString()}
                                         </td>
                                         <td style={{ textAlign: "center" }}>
-                                          {ticket.businessdetails.work_status}
+                                          {
+                                            ticketSelected.businessdetails
+                                              .work_status
+                                          }
                                         </td>
                                         <td
                                           style={{ textAlign: "center" }}

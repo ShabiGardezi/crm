@@ -14,17 +14,9 @@ import SearchIcon from "@mui/icons-material/Search";
 
 export default function SingleEntriesPayments() {
   const apiUrl = process.env.REACT_APP_API_URL;
-  const user = JSON.parse(localStorage.getItem("user"));
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(-1); // Display all rows on one page
   const [tickets, setTickets] = useState([]); // State to store fetched data
   const [searchQuery, setSearchQuery] = useState("");
-  const [totalPaymentForAllTickets, setTotalPaymentForAllTickets] = useState(0);
-  const [totalRemainingForAllTickets, setTotalRemainingForAllTickets] =
-    useState(0);
-
-  const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - tickets.length) : 0;
+  const [filter, setFilter] = useState("All");
 
   const handleSearch = async (e) => {
     if (e.key === "Enter" && searchQuery) {
@@ -91,25 +83,6 @@ export default function SingleEntriesPayments() {
         );
 
         setTickets(updatedTickets);
-
-        // Calculate and set the total payment and remaining for all tickets
-        const sumOfPayments = updatedTickets.reduce(
-          (total, ticket) =>
-            total + calculateTotalPaymentForTicket(ticket.payment_history),
-          0
-        );
-        setTotalPaymentForAllTickets(sumOfPayments);
-
-        const sumOfRemaining = updatedTickets.reduce(
-          (total, ticket) =>
-            total +
-            (parseFloat(calculateTotalRemainingForTicket(ticket.quotation)) ||
-              0), // Convert to number before adding
-          0
-        );
-        setTotalRemainingForAllTickets(sumOfRemaining.toFixed(2)); // Keep two decimal places
-
-        setTotalRemainingForAllTickets(sumOfRemaining);
       } catch (error) {
         console.error("Error fetching tickets:", error.message);
       }
@@ -118,6 +91,12 @@ export default function SingleEntriesPayments() {
     fetchTickets();
   }, []);
 
+  const filteredTickets =
+    filter === "All"
+      ? tickets
+      : tickets.filter(
+          (ticket) => ticket.businessdetails.work_status === filter
+        );
   const calculateTotalPaymentForTicket = (paymentHistory) => {
     let totalPayment = 0;
     paymentHistory.forEach((p) => {
@@ -129,10 +108,35 @@ export default function SingleEntriesPayments() {
   const calculateTotalRemainingForTicket = (quotation) => {
     return quotation.remainingPrice;
   };
+  const calculateTotalPaymentForFilteredTickets = (filteredTickets) => {
+    return filteredTickets.reduce((total, ticket) => {
+      return total + calculateTotalPaymentForTicket(ticket.payment_history);
+    }, 0);
+  };
+  const calculateTotalRemainingForFilteredTickets = (filteredTickets) => {
+    const totalRemaining = filteredTickets.reduce((total, ticket) => {
+      return total + parseFloat(ticket.quotation.remainingPrice);
+    }, 0);
+
+    return totalRemaining.toFixed(2);
+  };
 
   return (
     <div>
       <Header />
+      <div>
+        <label htmlFor="filterDropdown">Filter:</label>
+        <select
+          id="filterDropdown"
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
+        >
+          <option value="All">All</option>
+          <option value="Backlinks">Backlinks</option>
+          <option value="Extra-Backlinks">Extra-Backlinks</option>
+          <option value="Full-Website">Full-Website</option>
+        </select>
+      </div>
       <TableContainer component={Paper}>
         <div>
           <div
@@ -168,7 +172,7 @@ export default function SingleEntriesPayments() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {tickets.map((ticket) => (
+            {filteredTickets.map((ticket) => (
               <React.Fragment key={ticket._id}>
                 {ticket.payment_history.map(
                   (p) =>
@@ -192,22 +196,17 @@ export default function SingleEntriesPayments() {
                 )}
               </React.Fragment>
             ))}
-            {emptyRows > 0 && (
-              <TableRow style={{ height: 53 * emptyRows }}>
-                <TableCell colSpan={7} />
-              </TableRow>
-            )}
           </TableBody>
           <TableRow>
             <TableCell colSpan={7} style={{ textAlign: "right" }}>
               <strong>Total Received Payment:</strong>
-              {`$${totalPaymentForAllTickets}`}
+              {`$${calculateTotalPaymentForFilteredTickets(filteredTickets)}`}
             </TableCell>
           </TableRow>
           <TableRow>
             <TableCell colSpan={7} style={{ textAlign: "right" }}>
               <strong>Total Remaining:</strong>
-              {`$${totalRemainingForAllTickets}`}
+              {`$${calculateTotalRemainingForFilteredTickets(filteredTickets)}`}
             </TableCell>
           </TableRow>
         </Table>

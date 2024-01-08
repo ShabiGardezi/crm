@@ -20,21 +20,13 @@ export default function AllAddUpPayments() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(-1); // Display all rows on one page
   const [tickets, setTickets] = useState([]); // State to store fetched data
+  const [filter, setFilter] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [totalPaymentForAllTickets, setTotalPaymentForAllTickets] = useState(0);
   const [totalRemainingForAllTickets, setTotalRemainingForAllTickets] =
     useState(0);
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - tickets.length) : 0;
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
 
   const handleSearch = async (e) => {
     if (e.key === "Enter" && searchQuery) {
@@ -127,6 +119,12 @@ export default function AllAddUpPayments() {
 
     fetchTickets();
   }, []);
+  const filteredTickets =
+    filter === "All"
+      ? tickets
+      : tickets.filter(
+          (ticket) => ticket.businessdetails.work_status === filter
+        );
 
   const calculateTotalPaymentForTicket = (paymentHistory) => {
     let totalPayment = 0;
@@ -142,6 +140,19 @@ export default function AllAddUpPayments() {
   return (
     <div>
       <Header />
+      <div>
+        <label htmlFor="filterDropdown">Filter:</label>
+        <select
+          id="filterDropdown"
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
+        >
+          <option value="All">All</option>
+          <option value="Backlinks">Backlinks</option>
+          <option value="Extra-Backlinks">Extra-Backlinks</option>
+          <option value="Full-Website">Full-Website</option>
+        </select>
+      </div>
       <TableContainer component={Paper}>
         <div>
           <div
@@ -176,7 +187,7 @@ export default function AllAddUpPayments() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {tickets.map((ticket) => (
+            {filteredTickets.map((ticket) => (
               <TableRow key={ticket._id}>
                 <TableCell component="th" scope="row">
                   {ticket.businessdetails.clientName}
@@ -225,25 +236,6 @@ export default function AllAddUpPayments() {
             </TableCell>
           </TableRow>
         </Table>
-        {/* <TableFooter>
-          <TableRow>
-            <TablePagination
-              rowsPerPageOptions={[]}
-              colSpan={7}
-              count={tickets?.length ?? 0}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              SelectProps={{
-                inputProps: {
-                  "aria-label": "rows per page",
-                },
-                native: true,
-              }}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-            />
-          </TableRow>
-        </TableFooter> */}
       </TableContainer>
     </div>
   );

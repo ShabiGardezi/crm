@@ -528,7 +528,10 @@ export default function LocalSeoSheet() {
                                             ).toLocaleDateString()}
                                           </td>
                                           <td style={{ textAlign: "center" }}>
-                                            {ticket.businessdetails.work_status}
+                                            {
+                                              ticketSelected.businessdetails
+                                                .work_status
+                                            }
                                           </td>
                                           <td
                                             style={{ textAlign: "center" }}
@@ -578,7 +581,10 @@ export default function LocalSeoSheet() {
                                     )
                                   }
                                 >
-                                  {`${ticketSelected?.quotation.remainingPrice}`}
+                                  {`${
+                                    ticketSelected?.quotation.remainingPrice ||
+                                    0
+                                  }`}
                                 </div>
                               </div>
                             </Typography>

@@ -551,7 +551,9 @@ export default function SocialMediaClientSheet(props) {
                   style={{
                     width: 180,
                     whiteSpace: "pre-line",
-                    background: ticket.businessdetails.notes ? "#ed08088f" : "white",
+                    background: ticket.businessdetails.notes
+                      ? "#ed08088f"
+                      : "white",
                     color: ticket.businessdetails.notes ? "white" : "black",
                   }} // Apply the white-space property here
                   align="left"
@@ -605,19 +607,26 @@ export default function SocialMediaClientSheet(props) {
                           </thead>
                           <tbody>
                             {ticketSelected &&
-                              ticketSelected?.payment_history.map((p) => (
-                                <tr key={p.date}>
-                                  <td style={{ textAlign: "center" }}>
-                                    {new Date(p.date).toLocaleDateString()}
-                                  </td>
-                                  <td style={{ textAlign: "center" }}>
-                                    {ticket.businessdetails.platform}
-                                  </td>
-                                  <td
-                                    style={{ textAlign: "center" }}
-                                  >{`$${p.payment}`}</td>
-                                </tr>
-                              ))}
+                              ticketSelected?.payment_history.map(
+                                (p) =>
+                                  // Check if payment is not null before rendering the row
+                                  p.payment !== null && (
+                                    <tr key={p.date}>
+                                      <td style={{ textAlign: "center" }}>
+                                        {new Date(p.date).toLocaleDateString()}
+                                      </td>
+                                      <td style={{ textAlign: "center" }}>
+                                        {
+                                          ticketSelected.businessdetails
+                                            .work_status
+                                        }
+                                      </td>
+                                      <td
+                                        style={{ textAlign: "center" }}
+                                      >{`$${p.payment}`}</td>
+                                    </tr>
+                                  )
+                              )}
                           </tbody>
                         </table>
                         <hr
@@ -659,7 +668,10 @@ export default function SocialMediaClientSheet(props) {
                                   e.target.innerText
                                 )
                               }
-                            > {`${ticketSelected?.quotation.remainingPrice}`}</div>
+                            >
+                              {" "}
+                              {`${ticketSelected?.quotation.remainingPrice}`}
+                            </div>
                           </div>
                         </Typography>
                         <TextField
