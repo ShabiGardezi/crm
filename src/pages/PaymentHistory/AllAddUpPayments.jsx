@@ -21,7 +21,9 @@ export default function AllAddUpPayments() {
   const [rowsPerPage, setRowsPerPage] = React.useState(-1); // Display all rows on one page
   const [tickets, setTickets] = useState([]); // State to store fetched data
   const [searchQuery, setSearchQuery] = useState("");
-  console.log(tickets);
+  const [totalPaymentForAllTickets, setTotalPaymentForAllTickets] = useState(0);
+  const [totalRemainingForAllTickets, setTotalRemainingForAllTickets] =
+    useState(0);
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - tickets.length) : 0;
 
@@ -51,6 +53,25 @@ export default function AllAddUpPayments() {
       }
     }
   };
+
+  const fetchRemainingPrice = async (ticketId) => {
+    try {
+      const response = await fetch(
+        `${apiUrl}/api/tickets/remaining/${ticketId}`
+      );
+      if (response.ok) {
+        const data = await response.json();
+        return data.remainingPrice;
+      } else {
+        console.error("Error fetching remaining price");
+        return null;
+      }
+    } catch (error) {
+      console.error("Error fetching remaining price", error);
+      return null;
+    }
+  };
+
   useEffect(() => {
     const fetchTickets = async () => {
       try {
@@ -64,6 +85,37 @@ export default function AllAddUpPayments() {
 
         const data = await response.json();
         setTickets(data.payload);
+
+        // Fetch and update remaining prices for all tickets
+        const updatedTickets = await Promise.all(
+          data.payload.map(async (ticket) => {
+            const remainingPrice = await fetchRemainingPrice(ticket._id);
+            return {
+              ...ticket,
+              quotation: {
+                ...ticket.quotation,
+                remainingPrice: remainingPrice !== null ? remainingPrice : 0,
+              },
+            };
+          })
+        );
+
+        setTickets(updatedTickets);
+
+        // Calculate and set the total payment and remaining for all tickets
+        const sumOfPayments = updatedTickets.reduce(
+          (total, ticket) =>
+            total + calculateTotalPaymentForTicket(ticket.payment_history),
+          0
+        );
+        setTotalPaymentForAllTickets(sumOfPayments);
+
+        const sumOfRemaining = updatedTickets.reduce(
+          (total, ticket) =>
+            total + calculateTotalRemainingForTicket(ticket.quotation),
+          0
+        );
+        setTotalRemainingForAllTickets(sumOfRemaining);
       } catch (error) {
         console.error("Error fetching tickets:", error.message);
       }
@@ -80,22 +132,9 @@ export default function AllAddUpPayments() {
     return totalPayment;
   };
 
-  const calculateTotalPaymentForAllTickets = (tickets) => {
-    let sumOfPayments = 0;
-    tickets.forEach((ticket) => {
-      // Check if paymentHistory is defined before iterating over it
-      if (ticket.payment_history && Array.isArray(ticket.payment_history)) {
-        ticket.payment_history.forEach((p) => {
-          sumOfPayments += p.payment;
-        });
-      }
-    });
-    return sumOfPayments;
+  const calculateTotalRemainingForTicket = (quotation) => {
+    return quotation.remainingPrice;
   };
-
-  // Calculate total payment for all tickets
-  const totalPaymentForAllTickets = calculateTotalPaymentForAllTickets(tickets);
-
   return (
     <div>
       <Header />
@@ -130,6 +169,7 @@ export default function AllAddUpPayments() {
               <TableCell>Assign To</TableCell>
               <TableCell>Work Type</TableCell>
               <TableCell>Payment Received</TableCell>
+              <TableCell>Payment Remaining</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -159,11 +199,11 @@ export default function AllAddUpPayments() {
                     )}`}</td>
                   </tr>
                 </TableCell>
-                {/* <TableCell style={{ width: 160 }} align="left">
+                <TableCell style={{ width: 160 }} align="left">
                   <tr style={{ justifyContent: "center", display: "flex" }}>
                     {`${ticket.quotation.remainingPrice}`}
                   </tr>
-                </TableCell> */}
+                </TableCell>
               </TableRow>
             ))}
             {emptyRows > 0 && (
@@ -172,8 +212,20 @@ export default function AllAddUpPayments() {
               </TableRow>
             )}
           </TableBody>
+          <TableRow>
+            <TableCell colSpan={7} style={{ textAlign: "right" }}>
+              <strong>Total Received Payment:</strong>
+              {`$${totalPaymentForAllTickets}`}
+            </TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell colSpan={7} style={{ textAlign: "right" }}>
+              <strong>Total Remaining:</strong>
+              {`$${totalRemainingForAllTickets}`}
+            </TableCell>
+          </TableRow>
         </Table>
-        <TableFooter>
+        {/* <TableFooter>
           <TableRow>
             <TablePagination
               rowsPerPageOptions={[]}
@@ -191,13 +243,7 @@ export default function AllAddUpPayments() {
               onRowsPerPageChange={handleChangeRowsPerPage}
             />
           </TableRow>
-          <TableRow>
-            <TableCell colSpan={5} style={{ textAlign: "right" }}>
-              <strong>Total Payment for All Tickets:</strong>{" "}
-              {`$${totalPaymentForAllTickets}`}
-            </TableCell>
-          </TableRow>
-        </TableFooter>
+        </TableFooter> */}
       </TableContainer>
     </div>
   );
