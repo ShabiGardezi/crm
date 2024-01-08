@@ -411,10 +411,10 @@ const SocialMediaForm = () => {
           </Grid>
           <Grid item xs={3}>
             <TextField
-              label="GMB URL"
+              label="Likes/Followers"
               fullWidth
-              name="gmbUrl"
-              value={formData.gmbUrl}
+              name="LikesFollowers"
+              value={formData.LikesFollowers}
               onChange={handleChange}
               multiline
             />
@@ -425,6 +425,16 @@ const SocialMediaForm = () => {
               fullWidth
               name="noOfreviewsGMB"
               value={formData.noOfreviewsGMB}
+              onChange={handleChange}
+              multiline
+            />
+          </Grid>
+          <Grid item xs={3}>
+            <TextField
+              label="GMB URL"
+              fullWidth
+              name="gmbUrl"
+              value={formData.gmbUrl}
               onChange={handleChange}
               multiline
             />
@@ -449,16 +459,7 @@ const SocialMediaForm = () => {
               multiline
             />
           </Grid>
-          <Grid item xs={3}>
-            <TextField
-              label="Likes/Followers"
-              fullWidth
-              name="LikesFollowers"
-              value={formData.LikesFollowers}
-              onChange={handleChange}
-              multiline
-            />
-          </Grid>
+
           <Grid item xs={3}>
             <TextField
               label="Login Credentials"

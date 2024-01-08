@@ -30,7 +30,7 @@ const DesignersForm = () => {
     colors: "",
     imgsize: "",
     clientEmail: "",
-    workStatus: "",
+    work_status: "",
     socialmedia_posts: "",
     notes: "",
     ReferralWebsite: "",
@@ -107,7 +107,7 @@ const DesignersForm = () => {
           WebsiteURL: formData.WebsiteURL,
           businessNumber: formData.businessNumber,
           clientEmail: formData.clientEmail,
-          workStatus: formData.workStatus,
+          work_status: formData.work_status,
           socialmedia_posts: formData.socialmedia_posts,
           notes: formData.notes,
           ReferralWebsite: formData.ReferralWebsite,
@@ -178,7 +178,7 @@ const DesignersForm = () => {
         ...formData,
         clientEmail: response.data.clientEmail,
         clientName: response.data.clientName,
-        workStatus: response.data.workStatus,
+        work_status: response.data.work_status,
         WebsiteURL: response.data.WebsiteURL,
         ReferralWebsite: response.data.ReferralWebsite,
       });
@@ -323,8 +323,8 @@ const DesignersForm = () => {
                 <TextField
                   label="Work Nature"
                   fullWidth
-                  name="workStatus"
-                  value={formData.workStatus}
+                  name="work_status"
+                  value={formData.work_status}
                   onChange={handleChange}
                 />
               </Grid>
@@ -461,8 +461,8 @@ const DesignersForm = () => {
                 <TextField
                   label="Work Nature"
                   fullWidth
-                  name="workStatus"
-                  value={formData.workStatus}
+                  name="work_status"
+                  value={formData.work_status}
                   onChange={handleChange}
                 />
               </Grid>

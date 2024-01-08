@@ -46,7 +46,7 @@ const WebSeoForm = () => {
     businessHours: "",
     socialProfile: "",
     gmbUrl: "",
-    workStatus: "",
+    work_status: "",
     notes: "",
     monthlyBlogsRequirement: "",
     LoginCredentials: "",
@@ -108,14 +108,14 @@ const WebSeoForm = () => {
 
     // Check if the selected service is "Backlinks" to decide whether to show the "No. of Backlinks" TextField
     if (
-      name === "workStatus" &&
-      (value === "backlinks" ||
-        value === "paid-guest" ||
-        value === "extra-backlinks")
+      name === "work_status" &&
+      (value === "Backlinks" ||
+        value === "Paid-Guest-Posting" ||
+        value === "Extra-Backlinks")
     ) {
       setShowNoOfBacklinks(true);
     }
-    if (name === "workStatus" && value === "Monthly-SEO") {
+    if (name === "work_status" && value === "Monthly-SEO") {
       setShowMonthlyBlogs(true);
     }
     setFormData({
@@ -159,7 +159,7 @@ const WebSeoForm = () => {
           businessHours: formData.businessHours,
           socialProfile: formData.socialProfile,
           gmbUrl: formData.gmbUrl,
-          workStatus: formData.workStatus,
+          work_status: formData.work_status,
           notes: formData.notes,
           Keywords: formData.Keywords,
           fronter: formData.fronter,
@@ -241,7 +241,7 @@ const WebSeoForm = () => {
         zipcode: response.data.zipcode,
         socialProfile: response.data.socialProfile,
         businessHours: response.data.businessHours,
-        workStatus: response.data.workStatus,
+        work_status: response.data.work_status,
         gmbUrl: response.data.gmbUrl,
         WebsiteURL: response.data.WebsiteURL,
       });
@@ -552,15 +552,15 @@ const WebSeoForm = () => {
             <TextField
               label="Work Nature"
               fullWidth
-              name="workStatus"
-              value={formData.workStatus}
+              name="work_status"
+              value={formData.work_status}
               onChange={handleChange}
               select
             >
               <MenuItem value="On-Page">On-Page</MenuItem>
-              <MenuItem value="backlinks">Backlinks</MenuItem>
-              <MenuItem value="extra-backlinks">Extra Backlinks</MenuItem>
-              <MenuItem value="paid-guest">Paid-Guest Posting</MenuItem>
+              <MenuItem value="Backlinks">Backlinks</MenuItem>
+              <MenuItem value="Extra-Backlinks">Extra Backlinks</MenuItem>
+              <MenuItem value="Paid-Guest-Posting">Paid-Guest Posting</MenuItem>
               <MenuItem value="Monthly-SEO">Monthly SEO</MenuItem>
             </TextField>
           </Grid>

@@ -435,7 +435,7 @@ export default function WordpressClientSheet(props) {
                                         {new Date(p.date).toLocaleDateString()}
                                       </td>
                                       <td style={{ textAlign: "center" }}>
-                                        {ticket.businessdetails.workStatus}
+                                        {ticket.businessdetails.work_status}
                                       </td>
                                       <td
                                         style={{ textAlign: "center" }}

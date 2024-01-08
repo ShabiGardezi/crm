@@ -55,7 +55,7 @@ const WordPress = () => {
     supportPerson: "",
     notes: "",
     departmentName: "",
-    websiteType: "",
+    work_status: "",
     socialProfile: "",
   });
 
@@ -85,7 +85,7 @@ const WordPress = () => {
   };
   const handleChange = (event) => {
     const { name, value } = event.target;
-    if (name === "websiteType") {
+    if (name === "work_status") {
       setSelectedWebsiteType(value);
     }
     if (name === "departmentName") {
@@ -163,7 +163,7 @@ const WordPress = () => {
           notes: formData.notes,
           departmentName: formData.departmentName,
           socialProfile: formData.socialProfile,
-          websiteType: formData.websiteType,
+          work_status: formData.work_status,
         },
 
         quotation: {
@@ -551,15 +551,15 @@ const WordPress = () => {
                 <TextField
                   label="Website Type"
                   fullWidth
-                  name="websiteType"
+                  name="work_status"
                   value={selectedWebsiteType}
                   onChange={handleChange}
                   select
                 >
                   <MenuItem value="Ecommerce">Ecommerce</MenuItem>
-                  <MenuItem value="Redeisgn">Redeisgn</MenuItem>
-                  <MenuItem value="One-Page">One-Page</MenuItem>
-                  <MenuItem value="Full">Full</MenuItem>
+                  <MenuItem value="Redeisgn-Website">Redeisgn-Website</MenuItem>
+                  <MenuItem value="One-Page-Website">One-Page-Website</MenuItem>
+                  <MenuItem value="Full-Website">Full</MenuItem>
                 </TextField>
               </Grid>
               <Grid item xs={2}>
