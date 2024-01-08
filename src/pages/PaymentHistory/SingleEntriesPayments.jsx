@@ -4,8 +4,6 @@ import {
   TableBody,
   TableCell,
   TableContainer,
-  TableFooter,
-  TablePagination,
   TableRow,
   TableHead,
   Paper,
@@ -14,7 +12,7 @@ import {
 import Header from "../Header";
 import SearchIcon from "@mui/icons-material/Search";
 
-export default function AllAddUpPayments() {
+export default function SingleEntriesPayments() {
   const apiUrl = process.env.REACT_APP_API_URL;
   const user = JSON.parse(localStorage.getItem("user"));
   const [page, setPage] = React.useState(0);
@@ -24,17 +22,9 @@ export default function AllAddUpPayments() {
   const [totalPaymentForAllTickets, setTotalPaymentForAllTickets] = useState(0);
   const [totalRemainingForAllTickets, setTotalRemainingForAllTickets] =
     useState(0);
+
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - tickets.length) : 0;
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
 
   const handleSearch = async (e) => {
     if (e.key === "Enter" && searchQuery) {
@@ -143,6 +133,7 @@ export default function AllAddUpPayments() {
   const calculateTotalRemainingForTicket = (quotation) => {
     return quotation.remainingPrice;
   };
+
   return (
     <div>
       <Header />
@@ -174,41 +165,36 @@ export default function AllAddUpPayments() {
               <TableCell>Business Name</TableCell>
               <TableCell>Sales Person</TableCell>
               <TableCell>Assign To</TableCell>
+              <TableCell>Date</TableCell>
               <TableCell>Work Type</TableCell>
-              <TableCell>Payment Received</TableCell>
-              <TableCell>Payment Remaining</TableCell>
+              <TableCell>Received</TableCell>
+              <TableCell>Remaining</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {tickets.map((ticket) => (
-              <TableRow key={ticket._id}>
-                <TableCell component="th" scope="row">
-                  {ticket.businessdetails.clientName}
-                </TableCell>
-                <TableCell style={{ width: 160 }} align="left">
-                  {ticket.TicketDetails.assignor}
-                </TableCell>
-                <TableCell style={{ width: 160 }} align="left">
-                  {ticket.majorAssignee.name}
-                </TableCell>
-                <TableCell style={{ width: 160 }} align="left">
-                  {ticket.businessdetails.work_status}
-                </TableCell>
-                <TableCell style={{ width: 160 }} align="left">
-                  <tr style={{ justifyContent: "center", display: "flex" }}>
-                    <td
-                      style={{ textAlign: "center" }}
-                    >{`$${calculateTotalPaymentForTicket(
-                      ticket.payment_history
-                    )}`}</td>
-                  </tr>
-                </TableCell>
-                <TableCell style={{ width: 160 }} align="left">
-                  <tr style={{ justifyContent: "center", display: "flex" }}>
-                    {`${ticket.quotation.remainingPrice}`}
-                  </tr>
-                </TableCell>
-              </TableRow>
+              <React.Fragment key={ticket._id}>
+                {ticket.payment_history.map(
+                  (p) =>
+                    p.payment !== null && (
+                      <TableRow key={`${ticket._id}-${p.date}`}>
+                        <TableCell>
+                          {ticket.businessdetails.clientName}
+                        </TableCell>
+                        <TableCell>{ticket.TicketDetails.assignor}</TableCell>
+                        <TableCell>{ticket.majorAssignee.name}</TableCell>
+                        <TableCell>
+                          {new Date(p.date).toLocaleDateString()}
+                        </TableCell>
+                        <TableCell>
+                          {ticket.businessdetails.work_status}
+                        </TableCell>
+                        <TableCell>{`$${p.payment}`}</TableCell>
+                        <TableCell>{`$${ticket.quotation.remainingPrice}`}</TableCell>
+                      </TableRow>
+                    )
+                )}
+              </React.Fragment>
             ))}
             {emptyRows > 0 && (
               <TableRow style={{ height: 53 * emptyRows }}>
@@ -229,25 +215,6 @@ export default function AllAddUpPayments() {
             </TableCell>
           </TableRow>
         </Table>
-        {/* <TableFooter>
-          <TableRow>
-            <TablePagination
-              rowsPerPageOptions={[]}
-              colSpan={7}
-              count={tickets?.length ?? 0}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              SelectProps={{
-                inputProps: {
-                  "aria-label": "rows per page",
-                },
-                native: true,
-              }}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-            />
-          </TableRow>
-        </TableFooter> */}
       </TableContainer>
     </div>
   );
