@@ -467,7 +467,7 @@ export default function NotActiveClients() {
                         new Date(ticket.reportingDate) <= new Date()
                           ? "white"
                           : "black",
-                         background:
+                      background:
                         new Date(ticket.reportingDate) <= new Date()
                           ? "#ed08088f"
                           : "inherit",
@@ -490,7 +490,7 @@ export default function NotActiveClients() {
                     style={{
                       width: 180,
                       whiteSpace: "pre-line",
-                         background: ticket.businessdetails.notes
+                      background: ticket.businessdetails.notes
                         ? "#ed08088f"
                         : "white",
                       color: ticket.businessdetails.notes ? "white" : "black",
@@ -602,7 +602,7 @@ export default function NotActiveClients() {
                         new Date(ticket.reportingDate) <= new Date()
                           ? "white"
                           : "black",
-                         background:
+                      background:
                         new Date(ticket.reportingDate) <= new Date()
                           ? "#ed08088f"
                           : "inherit",
@@ -625,7 +625,7 @@ export default function NotActiveClients() {
                     style={{
                       width: 180,
                       whiteSpace: "pre-line",
-                         background: ticket.businessdetails.notes
+                      background: ticket.businessdetails.notes
                         ? "#ed08088f"
                         : "white",
                       color: ticket.businessdetails.notes ? "white" : "black",
@@ -737,7 +737,7 @@ export default function NotActiveClients() {
                         new Date(ticket.reportingDate) <= new Date()
                           ? "white"
                           : "black",
-                         background:
+                      background:
                         new Date(ticket.reportingDate) <= new Date()
                           ? "#ed08088f"
                           : "inherit",
@@ -760,7 +760,7 @@ export default function NotActiveClients() {
                     style={{
                       width: 180,
                       whiteSpace: "pre-line",
-                         background: ticket.businessdetails.notes
+                      background: ticket.businessdetails.notes
                         ? "#ed08088f"
                         : "white",
                       color: ticket.businessdetails.notes ? "white" : "black",
@@ -870,7 +870,7 @@ export default function NotActiveClients() {
                     style={{
                       width: 180,
                       whiteSpace: "pre-line",
-                         background: ticket.businessdetails.notes
+                      background: ticket.businessdetails.notes
                         ? "#ed08088f"
                         : "white",
                       color: ticket.businessdetails.notes ? "white" : "black",
