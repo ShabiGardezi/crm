@@ -11,12 +11,29 @@ import {
 } from "@mui/material";
 import Header from "../Header";
 import SearchIcon from "@mui/icons-material/Search";
+import DateRangeSelector from "../DateRangeSelector";
 
 export default function SingleEntriesPayments() {
   const apiUrl = process.env.REACT_APP_API_URL;
+  const [startDate, setStartDate] = useState(
+    new Date().toISOString().split("T")[0]
+  );
+  const [endDate, setEndDate] = useState(
+    new Date().toISOString().split("T")[0]
+  );
+  const [startDateFilter, setStartDateFilter] = useState("");
+  const [endDateFilter, setEndDateFilter] = useState("");
   const [tickets, setTickets] = useState([]); // State to store fetched data
   const [searchQuery, setSearchQuery] = useState("");
   const [filter, setFilter] = useState("All");
+
+  const handleStartDateChange = (event) => {
+    setStartDate(event.target.value);
+  };
+
+  const handleEndDateChange = (event) => {
+    setEndDate(event.target.value);
+  };
 
   const handleSearch = async (e) => {
     if (e.key === "Enter" && searchQuery) {
@@ -90,13 +107,24 @@ export default function SingleEntriesPayments() {
 
     fetchTickets();
   }, []);
+  const filteredTickets = tickets.filter((ticket) => {
+    const paymentDates = ticket.payment_history.map((p) => new Date(p.date));
+    const startDateFilterDate = startDateFilter
+      ? new Date(startDateFilter)
+      : null;
+    const endDateFilterDate = endDateFilter ? new Date(endDateFilter) : null;
 
-  const filteredTickets =
-    filter === "All"
-      ? tickets
-      : tickets.filter(
-          (ticket) => ticket.businessdetails.work_status === filter
-        );
+    return (
+      (filter === "All" || ticket.businessdetails.work_status === filter) &&
+      paymentDates.some(
+        (date) =>
+          (!startDateFilterDate || date >= startDateFilterDate) &&
+          (!endDateFilterDate ||
+            date <= endDateFilterDate.setDate(endDateFilterDate.getDate() + 1))
+      )
+    );
+  });
+
   const calculateTotalPaymentForTicket = (paymentHistory) => {
     let totalPayment = 0;
     paymentHistory.forEach((p) => {
@@ -104,7 +132,6 @@ export default function SingleEntriesPayments() {
     });
     return totalPayment;
   };
-
   const calculateTotalPaymentForFilteredTickets = (filteredTickets) => {
     const totalPayment = filteredTickets.reduce((total, ticket) => {
       return total + calculateTotalPaymentForTicket(ticket.payment_history);
@@ -122,44 +149,58 @@ export default function SingleEntriesPayments() {
   return (
     <div>
       <Header />
-      <div>
-        <label htmlFor="filterDropdown">Services:</label>
-        <select
-          id="filterDropdown"
-          value={filter}
-          onChange={(e) => setFilter(e.target.value)}
-        >
-          <option value="All">All</option>
-          <option value="GMB Full Optimization">GMB Full Optimization</option>
-          <option value="GMB Off Page">GMB Off Page</option>
-          <option value="Paid-Guest-Posting">Paid-Guest-Posting</option>
-          <option value="Monthly-SEO">Monthly-SEO</option>
-          <option value="On-Page">On-Page</option>
-          <option value="Backlinks">Backlinks</option>
-          <option value="Extra-Backlinks">Extra-Backlinks</option>
-          <option value="Facebook-Ads">Facebook-Ads</option>
-          <option value="Google-Ads">Google-Ads</option>
-          <option value="Other-Ads">Other-Ads</option>
-          <option value="Ecommerce">Ecommerce</option>
-          <option value="Redeisgn-Website">Redeisgn-Website</option>
-          <option value="One-Page-Website">One-Page-Website</option>
-          <option value="Full-Website">Full-Website</option>
-          <option value="No. Of FB Reviews">No. Of FB Reviews</option>
-          <option value="Likes/Followers">Likes/Followers</option>
-          <option value="No.Of GMB Reviews">No.Of GMB Reviews</option>
-        </select>
-      </div>
       <TableContainer component={Paper}>
         <div>
           <div
-            className="search"
             style={{
               display: "flex",
               justifyContent: "flex-end",
               alignItems: "center",
-              marginTop: "3%",
+              marginTop: "2%",
+              marginBottom: "2%",
             }}
           >
+            <div style={{ marginRight: "3%" }}>
+              <label htmlFor="filterDropdown">Services:</label>
+              <select
+                id="filterDropdown"
+                value={filter}
+                onChange={(e) => setFilter(e.target.value)}
+              >
+                <option value="All">All</option>
+                <option value="GMB Full Optimization">
+                  GMB Full Optimization
+                </option>
+                <option value="GMB Off Page">GMB Off Page</option>
+                <option value="Paid-Guest-Posting">Paid-Guest-Posting</option>
+                <option value="Monthly-SEO">Monthly-SEO</option>
+                <option value="On-Page">On-Page</option>
+                <option value="Backlinks">Backlinks</option>
+                <option value="Extra-Backlinks">Extra-Backlinks</option>
+                <option value="Facebook-Ads">Facebook-Ads</option>
+                <option value="Google-Ads">Google-Ads</option>
+                <option value="Other-Ads">Other-Ads</option>
+                <option value="Ecommerce">Ecommerce</option>
+                <option value="Redeisgn-Website">Redeisgn-Website</option>
+                <option value="One-Page-Website">One-Page-Website</option>
+                <option value="Full-Website">Full-Website</option>
+                <option value="No. Of FB Reviews">No. Of FB Reviews</option>
+                <option value="Likes/Followers">Likes/Followers</option>
+                <option value="No.Of GMB Reviews">No.Of GMB Reviews</option>
+              </select>
+            </div>
+            <div className="filter" style={{ marginRight: "3%" }}>
+              <DateRangeSelector
+                startDate={startDate}
+                endDate={endDate}
+                onStartDateChange={handleStartDateChange}
+                onEndDateChange={handleEndDateChange}
+                startDateFilter={startDateFilter}
+                endDateFilter={endDateFilter}
+                onStartDateFilterChange={(date) => setStartDateFilter(date)}
+                onEndDateFilterChange={(date) => setEndDateFilter(date)}
+              />
+            </div>
             <div className="searchIcon">
               <SearchIcon />
             </div>

@@ -32,6 +32,7 @@ import {
   Business as DepartmentIcon,
   ExpandMore as ExpandMoreIcon,
 } from "@mui/icons-material";
+import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import AssignmentIcon from "@mui/icons-material/Assignment"; // You can choose a different icon from Material-UI icons
 import { makeStyles } from "@mui/styles";
 import "../styles/header.css";
@@ -374,6 +375,18 @@ const Header = () => {
                 <ListItemText primary="Ticket History" />
               </ListItem>
             </Link>
+            {user?.role === "admin" && (
+              <div className="signup">
+                <ListItem button>
+                  <ListItemIcon>
+                    <AccountBalanceIcon />
+                  </ListItemIcon>
+                  <Link to="/single_payment_history">
+                    <ListItemText primary="Accounts" />
+                  </Link>
+                </ListItem>
+              </div>
+            )}
             {user?.role === "admin" && (
               <div className="signup">
                 <ListItem button>
