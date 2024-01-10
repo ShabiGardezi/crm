@@ -242,7 +242,8 @@ export default function SingleEntriesPayments() {
                         <TableCell>
                           {ticket.businessdetails.work_status}
                         </TableCell>
-                        <TableCell>{`$${p.payment}`}</TableCell>
+                        <TableCell>{`$`}</TableCell>
+                        {/* <TableCell>{`$${p.payment}`}</TableCell> */}
                         <TableCell>{`$${ticket.quotation.remainingPrice}`}</TableCell>
                       </TableRow>
                     )
@@ -253,7 +254,8 @@ export default function SingleEntriesPayments() {
           <TableRow>
             <TableCell colSpan={7} style={{ textAlign: "right" }}>
               <strong>Total Received Payment:</strong>
-              {`$${calculateTotalPaymentForFilteredTickets(filteredTickets)}`}
+              {/* {`$${calculateTotalPaymentForFilteredTickets(filteredTickets)}`} */}
+              {`$`}
             </TableCell>
           </TableRow>
           <TableRow>

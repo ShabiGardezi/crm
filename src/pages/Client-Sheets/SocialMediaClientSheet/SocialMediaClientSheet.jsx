@@ -52,7 +52,6 @@ export default function SocialMediaClientSheet(props) {
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [selectedPaymentIndex, setSelectedPaymentIndex] = useState(null);
   const [newPayment, setNewPayment] = useState("");
-  <TablePaginationActions />;
   const handleEditPayment = async () => {
     try {
       if (ticketSelected && selectedPaymentIndex !== null) {
@@ -82,6 +81,7 @@ export default function SocialMediaClientSheet(props) {
       console.error("Error updating payment", error);
     }
   };
+  <TablePaginationActions />;
   const handleSearch = async (e) => {
     if (e.key === "Enter" && searchQuery) {
       try {

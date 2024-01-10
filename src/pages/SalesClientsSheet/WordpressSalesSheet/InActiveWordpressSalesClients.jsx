@@ -44,6 +44,38 @@ export default function InActiveWordpressClients() {
   const [remainingPrice, setRemainingPrice] = useState("");
   const [ticketSelected, setTicketSelected] = useState();
   const [paymentRecieved, setPaymentRecieved] = useState(0);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [selectedPaymentIndex, setSelectedPaymentIndex] = useState(null);
+  const [newPayment, setNewPayment] = useState("");
+  const handleEditPayment = async () => {
+    try {
+      if (ticketSelected && selectedPaymentIndex !== null) {
+        // Make the API request to update the payment at the selected index
+        const response = await axios.put(
+          `${apiUrl}/api/tickets/update_payment/${ticketSelected._id}/${selectedPaymentIndex}`,
+          { payment: parseFloat(newPayment) }
+        );
+
+        if (response.status === 200) {
+          // Update the local state with the edited payment
+          const updatedTicket = response.data.payload;
+          setTickets((prevTickets) =>
+            prevTickets.map((t) =>
+              t._id === updatedTicket._id ? updatedTicket : t
+            )
+          );
+          // Close the dialog box
+          setEditDialogOpen(false);
+        } else {
+          console.error("Error updating payment");
+        }
+      } else {
+        console.error("Invalid ticket or payment index");
+      }
+    } catch (error) {
+      console.error("Error updating payment", error);
+    }
+  };
   // Function to open the recurring dialog and reset state values
   const handleRecurringDialogOpen = () => {
     setOpenRecurringDialog(true);
@@ -398,7 +430,9 @@ export default function InActiveWordpressClients() {
                   style={{
                     width: 180,
                     whiteSpace: "pre-line",
-                    background: ticket.businessdetails.notes ? "#ed08088f" : "white",
+                    background: ticket.businessdetails.notes
+                      ? "#ed08088f"
+                      : "white",
                     color: ticket.businessdetails.notes ? "white" : "black",
                   }} // Apply the white-space property here
                   align="left"
@@ -454,28 +488,78 @@ export default function InActiveWordpressClients() {
                               <th>Received</th>
                             </tr>
                           </thead>
-                      <tbody>
-                              {ticketSelected &&
-                                ticketSelected?.payment_history.map(
-                                  (p) =>
-                                    // Check if payment is not null before rendering the row
-                                    p.payment !== null && (
-                                      <tr key={p.date}>
-                                        <td style={{ textAlign: "center" }}>
-                                          {new Date(
-                                            p.date
-                                          ).toLocaleDateString()}
-                                        </td>
-                                        <td style={{ textAlign: "center" }}>
-                                          {ticket.businessdetails.work_status}
-                                        </td>
-                                        <td
-                                          style={{ textAlign: "center" }}
-                                        >{`$${p.payment}`}</td>
-                                      </tr>
-                                    )
-                                )}
-                            </tbody>
+                          <tbody>
+                            {ticketSelected &&
+                              ticketSelected?.payment_history.map(
+                                (p, index) =>
+                                  // Check if payment is not null before rendering the row
+                                  p.payment !== null && (
+                                    <tr key={p.date}>
+                                      <td style={{ textAlign: "center" }}>
+                                        {new Date(p.date).toLocaleDateString()}
+                                      </td>
+                                      <td style={{ textAlign: "center" }}>
+                                        {
+                                          ticketSelected.businessdetails
+                                            .work_status
+                                        }
+                                      </td>
+                                      <td style={{ textAlign: "center" }}>
+                                        <div className="payment">
+                                          {`$${p.payment}`}
+                                          <button
+                                            style={{
+                                              marginLeft: "10px",
+                                              background: "white",
+                                              border: "none",
+                                              textDecoration: "underline",
+                                              cursor: "pointer",
+                                            }}
+                                            onClick={() => {
+                                              setEditDialogOpen(true);
+                                              setSelectedPaymentIndex(index);
+                                            }}
+                                          >
+                                            Edit
+                                          </button>
+                                        </div>
+                                      </td>
+                                    </tr>
+                                  )
+                              )}
+                          </tbody>
+                          <Dialog
+                            open={editDialogOpen}
+                            onClose={() => setEditDialogOpen(false)}
+                          >
+                            <DialogTitle>
+                              {` Edit Payment: Old Payment is
+                              $${ticketSelected?.payment_history[selectedPaymentIndex]?.payment}`}
+                            </DialogTitle>
+                            <DialogContent>
+                              <TextField
+                                label="New Payment"
+                                value={newPayment}
+                                onChange={(e) => setNewPayment(e.target.value)}
+                                fullWidth
+                              />
+                            </DialogContent>
+                            <DialogActions>
+                              <Button onClick={() => setEditDialogOpen(false)}>
+                                Cancel
+                              </Button>
+                              <Button
+                                onClick={() => {
+                                  setEditDialogOpen(false);
+                                  setOpenRecurringDialog(false);
+                                  handleEditPayment();
+                                }}
+                                color="primary"
+                              >
+                                Save
+                              </Button>
+                            </DialogActions>
+                          </Dialog>
                         </table>
                         <hr
                           style={{
@@ -516,7 +600,10 @@ export default function InActiveWordpressClients() {
                                   e.target.innerText
                                 )
                               }
-                            > {`${ticketSelected?.quotation.remainingPrice}`}</div>
+                            >
+                              {" "}
+                              {`${ticketSelected?.quotation.remainingPrice}`}
+                            </div>
                           </div>
                         </Typography>
                         <TextField
