@@ -216,7 +216,8 @@ export default function SingleEntriesPayments() {
           <TableHead>
             <TableRow>
               <TableCell>Business Name</TableCell>
-              <TableCell>Sales Person</TableCell>
+              <TableCell>Fronter</TableCell>
+              <TableCell>Closer</TableCell>
               <TableCell>Assign To</TableCell>
               <TableCell>Date</TableCell>
               <TableCell>Work Type</TableCell>
@@ -234,7 +235,8 @@ export default function SingleEntriesPayments() {
                         <TableCell>
                           {ticket.businessdetails.clientName}
                         </TableCell>
-                        <TableCell>{ticket.TicketDetails.assignor}</TableCell>
+                        <TableCell>{ticket.businessdetails.fronter}</TableCell>
+                        <TableCell>{ticket.businessdetails.closer}</TableCell>
                         <TableCell>{ticket.majorAssignee.name}</TableCell>
                         <TableCell>
                           {new Date(p.date).toLocaleDateString()}
@@ -242,8 +244,7 @@ export default function SingleEntriesPayments() {
                         <TableCell>
                           {ticket.businessdetails.work_status}
                         </TableCell>
-                        <TableCell>{`$`}</TableCell>
-                        {/* <TableCell>{`$${p.payment}`}</TableCell> */}
+                        {<TableCell>{`$${p.payment}`}</TableCell>}
                         <TableCell>{`$${ticket.quotation.remainingPrice}`}</TableCell>
                       </TableRow>
                     )
@@ -254,8 +255,7 @@ export default function SingleEntriesPayments() {
           <TableRow>
             <TableCell colSpan={7} style={{ textAlign: "right" }}>
               <strong>Total Received Payment:</strong>
-              {/* {`$${calculateTotalPaymentForFilteredTickets(filteredTickets)}`} */}
-              {`$`}
+              {`$${calculateTotalPaymentForFilteredTickets(filteredTickets)}`}
             </TableCell>
           </TableRow>
           <TableRow>

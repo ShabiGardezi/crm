@@ -5,6 +5,9 @@ import {
   Button,
   MenuItem,
   Typography,
+  FormControl,
+  Select,
+  InputLabel,
 } from "@material-ui/core";
 import axios from "axios"; // Import Axios for making API requests
 import "../../styles/Forms/customforms.css";
@@ -18,6 +21,7 @@ const LocalSEOForm = () => {
   const [remainingPrice, setRemainingPrice] = useState(0); // Initialize remainingPrice
   const [clientSuggestions, setClientSuggestions] = useState([]);
   const [selectedClient, setSelectedClient] = useState(null);
+  const [users, setUsers] = useState([]);
   const [formData, setFormData] = useState({
     department: "Local SEO / GMB Optimization",
     priorityLevel: "",
@@ -115,6 +119,8 @@ const LocalSEOForm = () => {
         department: formData.department,
         businessdetails: {
           fronter: formData.fronter,
+          supportPerson: formData.supportPerson,
+          closer: formData.closer,
           clientName: formData.clientName,
           street: formData.street,
           WebsiteURL: formData.WebsiteURL,
@@ -128,8 +134,6 @@ const LocalSEOForm = () => {
           gmbUrl: formData.gmb,
           work_status: formData.work_status,
           notes: formData.notes,
-          supportPerson: formData.supportPerson,
-          closer: formData.closer,
         },
         quotation: {
           price: formData.price,
@@ -171,6 +175,22 @@ const LocalSEOForm = () => {
     fetchDepartments();
   }, []);
 
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const departmentId = "651b3409819ff0aec6af1387";
+        const response = await axios.get(
+          `${apiUrl}/api/tickets/users/${departmentId}`
+        );
+        setUsers(response.data);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    };
+
+    fetchUsers();
+  }, []);
+
   // Function to fetch suggestions as the user types
   const fetchSuggestions = async (query) => {
     if (query.trim() === "") {
@@ -187,7 +207,6 @@ const LocalSEOForm = () => {
       console.error("Error fetching suggestions:", error);
     }
   };
-
   // Function to fetch client details when a suggestion is selected
   const handleClientSelection = async (clientName) => {
     try {
@@ -240,6 +259,7 @@ const LocalSEOForm = () => {
               onChange={handleChange}
               multiline
               onInput={(e) => fetchSuggestions(e.target.value)}
+              required
             />
 
             {/* Display client suggestions as a dropdown */}
@@ -286,31 +306,58 @@ const LocalSEOForm = () => {
             />
           </Grid>
           <Grid item xs={3}>
-            <TextField
-              label="Support Person"
-              fullWidth
-              name="supportPerson"
-              value={formData.supportPerson}
-              onChange={handleChange}
-            />
+            <FormControl fullWidth>
+              <InputLabel id="supportPersonLabel">Support Person</InputLabel>
+              <Select
+                labelId="supportPersonLabel"
+                id="supportPerson"
+                name="supportPerson"
+                value={formData.supportPerson}
+                onChange={handleChange}
+              >
+                {users.map((user) => (
+                  <MenuItem key={user._id} value={user.username}>
+                    {user.username}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </Grid>
           <Grid item xs={3}>
-            <TextField
-              label="Closer Person"
-              fullWidth
-              name="closer"
-              value={formData.closer}
-              onChange={handleChange}
-            />
+            <FormControl fullWidth>
+              <InputLabel id="closerLabel">Closer Person</InputLabel>
+              <Select
+                labelId="closerLabel"
+                id="closer"
+                name="closer"
+                value={formData.closer}
+                onChange={handleChange}
+              >
+                {users.map((user) => (
+                  <MenuItem key={user._id} value={user.username}>
+                    {user.username}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </Grid>
           <Grid item xs={3}>
-            <TextField
-              label="Fronter"
-              fullWidth
-              name="fronter"
-              value={formData.fronter}
-              onChange={handleChange}
-            />
+            <FormControl fullWidth>
+              <InputLabel id="fronterLabel">Fronter</InputLabel>
+              <Select
+                labelId="fronterLabel"
+                id="fronter"
+                name="fronter"
+                value={formData.fronter}
+                onChange={handleChange}
+              >
+                {users.map((user) => (
+                  <MenuItem key={user._id} value={user.username}>
+                    {user.username}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </Grid>
         </Grid>
         <div className="formtitle ticketHeading">
@@ -495,6 +542,7 @@ const LocalSEOForm = () => {
               value={formData.work_status}
               onChange={handleChange}
               select
+              required
             >
               <MenuItem value="GMB Full Optimization">
                 GMB Full Optimization
