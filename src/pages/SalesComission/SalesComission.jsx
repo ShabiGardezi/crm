@@ -7,10 +7,6 @@ import {
   TableRow,
   TableHead,
   Paper,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
 } from "@mui/material";
 import Header from "../Header";
 
@@ -88,11 +84,6 @@ export default function SalesComissionSheet() {
       return roundedCommission;
     }
   };
-
-  // Example usage:
-  const totalPayment = 1600;
-  const commission = calculateCommission(totalPayment);
-  console.log("Commission:", commission);
 
   // Handle fronter selection in dropdown
   const handleFronterSelect = (fronter) => {
