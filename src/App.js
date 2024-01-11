@@ -51,6 +51,7 @@ import InActiveSocialMediaSalesClients from "./pages/SalesClientsSheet/SocialMed
 import Inbox from "./pages/InboxPage";
 import AllAddUpPayments from "./pages/PaymentHistory/AllAddUpPayments";
 import SingleEntriesPayments from "./pages/PaymentHistory/SingleEntriesPayments";
+import SalesComissionSheet from "./pages/SalesComission/SalesComission";
 
 function App() {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -242,8 +243,15 @@ function App() {
               path="/socialmedia_Inactiveclients"
               element={<InActiveSocialMediaSalesClients />}
             />
-            <Route path="/all_payment_history" element={<AllAddUpPayments />} />{" "}
-            <Route path="/single_payment_history" element={<SingleEntriesPayments />} />
+            <Route path="/all_payment_history" element={<AllAddUpPayments />} />
+            <Route
+              path="/single_payment_history"
+              element={<SingleEntriesPayments />}
+            />
+            <Route
+              path="/sales_comission_sheet"
+              element={<SalesComissionSheet />}
+            />
           </>
         )}
       </Routes>
