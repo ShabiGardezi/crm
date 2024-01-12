@@ -178,7 +178,7 @@ export default function SalesComissionSheet() {
             </div>
           </div>
           <div style={{ margin: "10px" }}>
-            <label id="fronter-select-label">Select Fronter</label>
+            <label id="fronter-select-label">Select Fronter: </label>
             <select
               labelId="fronter-select-label"
               id="fronter-select"
