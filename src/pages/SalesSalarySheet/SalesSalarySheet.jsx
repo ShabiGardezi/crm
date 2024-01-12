@@ -152,9 +152,68 @@ export default function FronterSalarySheet() {
     return roundCommission(commissionableAmount);
   };
 
+  // Function to filter tickets for a specific month
+  const filterTicketsByMonth = (tickets, month) => {
+    return tickets.filter((ticket) => {
+      const createdAtDate = new Date(ticket.createdAt);
+      return createdAtDate.getMonth() === month;
+    });
+  };
+
+  // Function to calculate monthly values for each fronter
+  const calculateMonthlyValues = (fronter, month) => {
+    const monthlyTickets = filterTicketsByMonth(tickets, month);
+
+    const totalSalary = calculateTotalPaymentForFronter(
+      fronter,
+      monthlyTickets
+    );
+    const commissionRate = calculateCommissionRate(totalSalary);
+    const commissionableAmount = calculateCommissionableAmountForFronter(
+      fronter,
+      monthlyTickets
+    );
+    const netSalary = totalSalary * 0.9 * (commissionRate / 100);
+
+    return {
+      totalSalary,
+      commissionableAmount,
+      commissionRate,
+      netSalary,
+    };
+  };
+  // Function to calculate total payment for a fronter with a specific set of tickets
+  const calculateTotalPaymentForFronter = (fronter, tickets) => {
+    return tickets.reduce(
+      (total, ticket) => total + parseFloat(ticket.quotation.price),
+      0
+    );
+  };
+  // Function to calculate commissionable amount for a fronter with a specific set of tickets
+  const calculateCommissionableAmountForFronter = (fronter, tickets) => {
+    const totalPayment = calculateTotalPaymentForFronter(fronter, tickets);
+    const commissionableAmount = 0.9 * totalPayment;
+    return roundCommission(commissionableAmount);
+  };
+
   return (
     <div>
       <Header />
+      <div style={{ textAlign: "center", marginTop: "2%" }}>
+        <Typography variant="h6">Select Month:</Typography>
+        <input
+          type="month"
+          onChange={(e) => {
+            const selectedDate = new Date(e.target.value);
+            const selectedMonth = selectedDate.getMonth();
+            const values = fronters.map((fronter) =>
+              calculateMonthlyValues(fronter, selectedMonth)
+            );
+            console.log("Monthly Values:", values);
+          }}
+        />
+      </div>
+
       <Typography
         variant="h3"
         style={{ textAlign: "center", marginBottom: "2%" }}
