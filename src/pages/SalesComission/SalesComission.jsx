@@ -126,36 +126,54 @@ export default function SalesComissionSheet() {
   return (
     <div>
       <Header />
-      <div style={{ margin: "10px" }}>
-        <label id="fronter-select-label">Select Fronter</label>
-        <select
-          labelId="fronter-select-label"
-          id="fronter-select"
-          value={selectedFronter}
-          onChange={(e) => handleFronterSelect(e.target.value)}
+      <div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            alignItems: "center",
+            marginTop: "2%",
+            marginBottom: "2%",
+          }}
         >
-          <option value="All">All</option>
-          {fronters.map((fronter) => (
-            <option key={fronter} value={fronter}>
-              {fronter}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div style={{ margin: "10px" }}>
-        <label id="start-date-label">Start Date</label>
-        <input
-          type="date"
-          id="start-date"
-          onChange={(e) => handleStartDateSelect(new Date(e.target.value))}
-        />
+          <div style={{ marginRight: "3%" }}></div>
+          <div className="filter" style={{ marginRight: "3%" }}>
+            <div style={{ marginRight: "20px" }}>
+              <label id="start-date-label">Start Date</label>
+              <input
+                style={{ marginRight: "10px" }}
+                type="date"
+                id="start-date"
+                onChange={(e) =>
+                  handleStartDateSelect(new Date(e.target.value))
+                }
+              />
 
-        <label id="end-date-label">End Date</label>
-        <input
-          type="date"
-          id="end-date"
-          onChange={(e) => handleEndDateSelect(new Date(e.target.value))}
-        />
+              <label id="end-date-label">End Date</label>
+              <input
+                type="date"
+                id="end-date"
+                onChange={(e) => handleEndDateSelect(new Date(e.target.value))}
+              />
+            </div>
+          </div>
+          <div style={{ margin: "10px" }}>
+            <label id="fronter-select-label">Select Fronter</label>
+            <select
+              labelId="fronter-select-label"
+              id="fronter-select"
+              value={selectedFronter}
+              onChange={(e) => handleFronterSelect(e.target.value)}
+            >
+              <option value="All">All</option>
+              {fronters.map((fronter) => (
+                <option key={fronter} value={fronter}>
+                  {fronter}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
       </div>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 800 }} aria-label="custom pagination table">
