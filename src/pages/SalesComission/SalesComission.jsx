@@ -136,6 +136,13 @@ export default function SalesComissionSheet() {
     ...new Set(tickets.map((ticket) => ticket.businessdetails.fronter)),
   ];
 
+  // Calculate total payment for all fronters
+  const calculateTotalPaymentForAll = () => {
+    return fronters.reduce((total, fronter) => {
+      const totalPayment = calculateTotalPayment(fronter, startDate, endDate);
+      return total + totalPayment;
+    }, 0);
+  };
   return (
     <div>
       <Header />
@@ -152,7 +159,7 @@ export default function SalesComissionSheet() {
           <div style={{ marginRight: "3%" }}></div>
           <div className="filter" style={{ marginRight: "3%" }}>
             <div style={{ marginRight: "20px" }}>
-              <label id="start-date-label">Start Date</label>
+              <label id="start-date-label">Start Date: </label>
               <input
                 style={{ marginRight: "10px" }}
                 type="date"
@@ -162,7 +169,7 @@ export default function SalesComissionSheet() {
                 }
               />
 
-              <label id="end-date-label">End Date</label>
+              <label id="end-date-label">End Date: </label>
               <input
                 type="date"
                 id="end-date"
@@ -224,6 +231,17 @@ export default function SalesComissionSheet() {
                 )}
               </React.Fragment>
             ))}
+            {selectedFronter === "All" && (
+              <TableRow>
+                <TableCell colSpan={5}></TableCell>
+                <TableCell>
+                  <b>Total payment for all fronters is:</b>
+                </TableCell>
+                <TableCell>
+                  <b>{`$${calculateTotalPaymentForAll()}`}</b>
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
           {/* Display total payment for the selected fronter */}
           {selectedFronter !== "All" && (
