@@ -58,14 +58,30 @@ export default function SalesComissionSheet() {
   }, []);
 
   // Calculate total payment for each fronter
-  const calculateTotalPayment = (fronterName) => {
+  const calculateTotalPayment = (fronterName, startDate, endDate) => {
     return tickets
-      .filter((ticket) => ticket.businessdetails.fronter === fronterName)
+      .filter((ticket) => {
+        const createdAtDate = new Date(ticket.createdAt);
+
+        // Check if the ticket's createdAt date is within the selected range
+        return (
+          ticket.businessdetails.fronter === fronterName &&
+          (!startDate || createdAtDate >= startDate) &&
+          (!endDate ||
+            createdAtDate <= new Date(endDate.getTime() + 24 * 60 * 60 * 1000)) // Include end date
+        );
+      })
       .reduce((total, ticket) => total + parseFloat(ticket.quotation.price), 0);
   };
 
   // Calculate commission based on total payment
-  const calculateCommission = (totalPayment) => {
+  const calculateCommission = () => {
+    const totalPayment = calculateTotalPayment(
+      selectedFronter,
+      startDate,
+      endDate
+    );
+
     const commissionThresholdLow = 500;
     const commissionThresholdMedium = 800;
     const commissionThresholdHigh = 1500;
@@ -114,9 +130,6 @@ export default function SalesComissionSheet() {
       [fronter]: commission,
     }));
   };
-
-  // Set to keep track of processed ticket IDs
-  const processedTicketIds = new Set();
 
   // Get unique fronter names
   const fronters = [
@@ -186,7 +199,6 @@ export default function SalesComissionSheet() {
               <TableCell>Date</TableCell>
               <TableCell>Work Type</TableCell>
               <TableCell>Client Payment</TableCell>
-              <TableCell>Total Payment</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -207,11 +219,6 @@ export default function SalesComissionSheet() {
                         {ticket.businessdetails.work_status}
                       </TableCell>
                       <TableCell>{`$${ticket.quotation.price}`}</TableCell>
-                      <TableCell>
-                        {`$${calculateTotalPayment(
-                          ticket.businessdetails.fronter
-                        )}`}
-                      </TableCell>
                     </TableRow>
                   </>
                 )}
@@ -222,19 +229,28 @@ export default function SalesComissionSheet() {
           {selectedFronter !== "All" && (
             <TableBody>
               <TableRow>
-                <TableCell colSpan={6}></TableCell>
-                <TableCell>Total Payment for {selectedFronter}:</TableCell>
-                <TableCell>{`$${
-                  fronterTotalPayment[selectedFronter] || 0
-                }`}</TableCell>
+                <TableCell colSpan={5}></TableCell>
+                <TableCell>
+                  <b> {`Total payment from ${selectedFronter} is: `}</b>
+                </TableCell>
+                <TableCell>
+                  <b>
+                    {`$${calculateTotalPayment(
+                      selectedFronter,
+                      startDate,
+                      endDate
+                    )}`}
+                  </b>
+                </TableCell>
               </TableRow>
-              <TableRow>
-                <TableCell colSpan={6}></TableCell>
-                <TableCell>Commission for {selectedFronter}:</TableCell>
-                <TableCell>{`$${
-                  fronterCommission[selectedFronter] || 0
-                }`}</TableCell>
-              </TableRow>
+
+              <TableCell colSpan={5}></TableCell>
+              <TableCell>
+                <b>Commission for {selectedFronter}:</b>
+              </TableCell>
+              <TableCell>
+                <b>{`$${calculateCommission()}`}</b>
+              </TableCell>
             </TableBody>
           )}
         </Table>
