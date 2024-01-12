@@ -16,7 +16,26 @@ export default function SalesComissionSheet() {
   const [selectedFronter, setSelectedFronter] = useState("All");
   const [fronterTotalPayment, setFronterTotalPayment] = useState({});
   const [fronterCommission, setFronterCommission] = useState({});
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  const handleStartDateSelect = (date) => {
+    setStartDate(date);
+  };
 
+  // Handle end date selection
+  const handleEndDateSelect = (date) => {
+    setEndDate(date);
+  };
+  const filteredTickets = tickets.filter((ticket) => {
+    const createdAtDate = new Date(ticket.createdAt);
+
+    // Check if the ticket's createdAt date is within the selected range
+    return (
+      (!startDate || createdAtDate >= startDate) &&
+      (!endDate ||
+        createdAtDate <= new Date(endDate.getTime() + 24 * 60 * 60 * 1000)) // Include end date
+    );
+  });
   useEffect(() => {
     const fetchTickets = async () => {
       try {
@@ -123,6 +142,21 @@ export default function SalesComissionSheet() {
           ))}
         </select>
       </div>
+      <div style={{ margin: "10px" }}>
+        <label id="start-date-label">Start Date</label>
+        <input
+          type="date"
+          id="start-date"
+          onChange={(e) => handleStartDateSelect(new Date(e.target.value))}
+        />
+
+        <label id="end-date-label">End Date</label>
+        <input
+          type="date"
+          id="end-date"
+          onChange={(e) => handleEndDateSelect(new Date(e.target.value))}
+        />
+      </div>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 800 }} aria-label="custom pagination table">
           <TableHead>
@@ -138,7 +172,7 @@ export default function SalesComissionSheet() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {tickets.map((ticket) => (
+            {filteredTickets.map((ticket) => (
               <React.Fragment key={ticket._id}>
                 {(selectedFronter === "All" ||
                   ticket.businessdetails.fronter === selectedFronter) && (
@@ -149,9 +183,7 @@ export default function SalesComissionSheet() {
                       <TableCell>{ticket.businessdetails.closer}</TableCell>
                       <TableCell>{ticket.majorAssignee.name}</TableCell>
                       <TableCell>
-                        {new Date(
-                          ticket.payment_history[0].date
-                        ).toLocaleDateString()}
+                        {new Date(ticket.createdAt).toLocaleDateString()}
                       </TableCell>
                       <TableCell>
                         {ticket.businessdetails.work_status}
