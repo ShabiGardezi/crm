@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import Header from "../Header";
 
-export default function SalesComissionSheet() {
+export default function FronterComissionSheet() {
   const apiUrl = process.env.REACT_APP_API_URL;
   const [tickets, setTickets] = useState([]);
   const [selectedFronter, setSelectedFronter] = useState("All");
