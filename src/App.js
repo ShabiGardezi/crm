@@ -52,6 +52,7 @@ import Inbox from "./pages/InboxPage";
 import AllAddUpPayments from "./pages/PaymentHistory/AllAddUpPayments";
 import SingleEntriesPayments from "./pages/PaymentHistory/SingleEntriesPayments";
 import FronterComissionSheet from "./pages/SalesComission/FronterComission";
+import FronterSalarySheet from "./pages/SalesSalarySheet/SalesSalarySheet";
 
 function App() {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -251,6 +252,10 @@ function App() {
             <Route
               path="/sales_comission_sheet"
               element={<FronterComissionSheet />}
+            />
+            <Route
+              path="/fronter_salary_sheet"
+              element={<FronterSalarySheet />}
             />
           </>
         )}
