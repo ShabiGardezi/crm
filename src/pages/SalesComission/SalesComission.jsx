@@ -54,35 +54,27 @@ export default function SalesComissionSheet() {
 
     const ninetyPercent = 0.9 * totalPayment;
 
-    if (ninetyPercent <= commissionThresholdLow) {
+    if (totalPayment <= commissionThresholdLow) {
       return 0; // No commission
-    } else if (
-      ninetyPercent > commissionThresholdLow &&
-      ninetyPercent <= commissionThresholdMedium
-    ) {
+    } else if (totalPayment <= commissionThresholdMedium) {
       const commission = 0.025 * ninetyPercent;
-      // Round off to 2 decimal places
-      const roundedCommission = Number(commission.toFixed(2));
-      return roundedCommission;
-    } else if (
-      ninetyPercent > commissionThresholdMedium &&
-      ninetyPercent <= commissionThresholdHigh
-    ) {
+      return roundCommission(commission);
+    } else if (totalPayment <= commissionThresholdHigh) {
       const commission = 0.05 * ninetyPercent;
-      const roundedCommission = Number(commission.toFixed(2));
-      return roundedCommission;
-    } else if (
-      ninetyPercent > commissionThresholdHigh &&
-      ninetyPercent <= commissionThresholdVeryHigh
-    ) {
+      return roundCommission(commission);
+    } else if (totalPayment <= commissionThresholdVeryHigh) {
       const commission = 0.075 * ninetyPercent;
-      const roundedCommission = Number(commission.toFixed(2));
-      return roundedCommission;
+      return roundCommission(commission);
     } else {
       const commission = 0.1 * ninetyPercent;
-      const roundedCommission = Number(commission.toFixed(2));
-      return roundedCommission;
+      return roundCommission(commission);
     }
+  };
+
+  const roundCommission = (commission) => {
+    // Round off to 2 decimal places with adjustment
+    const roundedCommission = Math.round(commission * 100) / 100;
+    return roundedCommission;
   };
 
   // Handle fronter selection in dropdown
