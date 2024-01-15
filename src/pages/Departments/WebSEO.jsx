@@ -6,6 +6,9 @@ import {
   Button,
   MenuItem,
   Typography,
+  FormControl,
+  InputLabel,
+  Select,
 } from "@material-ui/core";
 import axios from "axios";
 import Header from "../Header";
@@ -14,6 +17,7 @@ import toast from "react-hot-toast";
 const WebSeoForm = () => {
   const apiUrl = process.env.REACT_APP_API_URL;
   const user = JSON.parse(localStorage.getItem("user"));
+  const [users, setUsers] = useState([]);
   const [departments, setDepartments] = useState([]);
   const [remainingPrice, setRemainingPrice] = useState(0); // Initialize remainingPrice
   const [selectedClient, setSelectedClient] = useState(null);
@@ -29,7 +33,6 @@ const WebSeoForm = () => {
     loginCredentials: "",
     price: "",
     advanceprice: 0, // Set the default value to 0
-
     remainingPrice: "",
     serviceName: "",
     serviceQuantity: "",
@@ -59,6 +62,21 @@ const WebSeoForm = () => {
     noOfBacklinks: "",
   });
   useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const departmentId = "651b3409819ff0aec6af1387";
+        const response = await axios.get(
+          `${apiUrl}/api/tickets/users/${departmentId}`
+        );
+        setUsers(response.data);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    };
+
+    fetchUsers();
+  }, []);
+  useEffect(() => {
     // Calculate one month later from the current date
     const currentDate = new Date();
     currentDate.setMonth(currentDate.getMonth() + 1);
@@ -85,9 +103,6 @@ const WebSeoForm = () => {
         dueDate: dueDate,
         clientName: clientName,
       });
-      if (response.status === 200) {
-        console.log("Notification send", response.data.payload);
-      }
     } catch (error) {
       console.error("Error adding note:", error);
     }
@@ -301,7 +316,7 @@ const WebSeoForm = () => {
               name="clientEmail"
               value={formData.clientEmail}
               onChange={handleChange}
-              multiline
+              required
             />
           </Grid>
         </Grid>
@@ -319,32 +334,62 @@ const WebSeoForm = () => {
               disabled
             />
           </Grid>
+
           <Grid item xs={3}>
-            <TextField
-              label="Support Person"
-              fullWidth
-              name="supportPerson"
-              value={formData.supportPerson}
-              onChange={handleChange}
-            />
+            <FormControl fullWidth>
+              <InputLabel id="supportPersonLabel">Support Person</InputLabel>
+              <Select
+                labelId="supportPersonLabel"
+                id="supportPerson"
+                name="supportPerson"
+                value={formData.supportPerson}
+                onChange={handleChange}
+              >
+                {users.map((user) => (
+                  <MenuItem key={user._id} value={user.username}>
+                    {user.username}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </Grid>
           <Grid item xs={3}>
-            <TextField
-              label="Closer Person"
-              fullWidth
-              name="closer"
-              value={formData.closer}
-              onChange={handleChange}
-            />
+            <FormControl fullWidth>
+              <InputLabel id="closerLabel">Closer Person</InputLabel>
+              <Select
+                labelId="closerLabel"
+                id="closer"
+                name="closer"
+                value={formData.closer}
+                onChange={handleChange}
+                required
+              >
+                {users.map((user) => (
+                  <MenuItem key={user._id} value={user.username}>
+                    {user.username}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </Grid>
           <Grid item xs={3}>
-            <TextField
-              label="Fronter"
-              fullWidth
-              name="fronter"
-              value={formData.fronter}
-              onChange={handleChange}
-            />
+            <FormControl fullWidth>
+              <InputLabel id="fronterLabel">Fronter</InputLabel>
+              <Select
+                labelId="fronterLabel"
+                id="fronter"
+                name="fronter"
+                value={formData.fronter}
+                onChange={handleChange}
+                required
+              >
+                {users.map((user) => (
+                  <MenuItem key={user._id} value={user.username}>
+                    {user.username}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </Grid>
         </Grid>
         <div className="formtitle ticketHeading">
@@ -556,6 +601,7 @@ const WebSeoForm = () => {
               value={formData.work_status}
               onChange={handleChange}
               select
+              required
             >
               <MenuItem value="On-Page">On-Page</MenuItem>
               <MenuItem value="Backlinks">Backlinks</MenuItem>

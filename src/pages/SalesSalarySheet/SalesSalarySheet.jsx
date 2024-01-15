@@ -10,7 +10,6 @@ import {
   Typography,
 } from "@mui/material";
 import Header from "../Header";
-
 export default function FronterSalarySheet() {
   const apiUrl = process.env.REACT_APP_API_URL;
   const [tickets, setTickets] = useState([]);

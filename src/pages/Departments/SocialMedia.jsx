@@ -7,6 +7,9 @@ import {
   Button,
   MenuItem,
   Typography,
+  FormControl,
+  InputLabel,
+  Select,
 } from "@material-ui/core";
 import axios from "axios";
 import Header from "../Header";
@@ -15,6 +18,7 @@ import toast from "react-hot-toast";
 const SocialMediaForm = () => {
   const apiUrl = process.env.REACT_APP_API_URL;
   const user = JSON.parse(localStorage.getItem("user"));
+  const [users, setUsers] = useState([]);
   const [departments, setDepartments] = useState([]);
   const [remainingPrice, setRemainingPrice] = useState(0); // Initialize remainingPrice
   const [selectedClient, setSelectedClient] = useState(null);
@@ -31,7 +35,9 @@ const SocialMediaForm = () => {
     webUrl: "",
     price: "",
     advanceprice: 0, // Set the default value to 0
-
+    fronter: "",
+    closer: "",
+    supportPerson: "",
     clientName: "",
     street: "",
     WebsiteURL: "",
@@ -49,6 +55,21 @@ const SocialMediaForm = () => {
     noOfFbreviews: "0",
     LikesFollowers: "0",
   });
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const departmentId = "651b3409819ff0aec6af1387";
+        const response = await axios.get(
+          `${apiUrl}/api/tickets/users/${departmentId}`
+        );
+        setUsers(response.data);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    };
+
+    fetchUsers();
+  }, []);
   const handleChange = (event) => {
     const { name, value } = event.target;
     let updatedPrice = parseFloat(formData.price) || 0;
@@ -119,6 +140,9 @@ const SocialMediaForm = () => {
         created_by: user._id,
         assignorDepartment: user.department._id,
         businessdetails: {
+          fronter: formData.fronter,
+          closer: formData.closer,
+          supportPerson: formData.supportPerson,
           clientName: formData.clientName,
           serviceName: formData.serviceName,
           WebsiteURL: formData.WebsiteURL,
@@ -126,12 +150,12 @@ const SocialMediaForm = () => {
           socialProfile: formData.socialProfile,
           gmbUrl: formData.gmbUrl,
           facebookURL: formData.facebookURL,
-          noOfreviewsGMB: formData.noOfreviewsGMB,
           work_status: formData.work_status,
           logincredentials: formData.logincredentials,
-          notes: formData.notes,
+          noOfreviewsGMB: formData.noOfreviewsGMB,
           noOfFbreviews: formData.noOfFbreviews,
           LikesFollowers: formData.LikesFollowers,
+          notes: formData.notes,
         },
         quotation: {
           price: formData.price,
@@ -264,7 +288,7 @@ const SocialMediaForm = () => {
               name="clientEmail"
               value={formData.clientEmail}
               onChange={handleChange}
-              multiline
+              required
             />
           </Grid>
         </Grid>
@@ -282,32 +306,62 @@ const SocialMediaForm = () => {
               disabled
             />
           </Grid>
+
           <Grid item xs={3}>
-            <TextField
-              label="Support Person"
-              fullWidth
-              name="supportPerson"
-              value={formData.supportPerson}
-              onChange={handleChange}
-            />
+            <FormControl fullWidth>
+              <InputLabel id="supportPersonLabel">Support Person</InputLabel>
+              <Select
+                labelId="supportPersonLabel"
+                id="supportPerson"
+                name="supportPerson"
+                value={formData.supportPerson}
+                onChange={handleChange}
+              >
+                {users.map((user) => (
+                  <MenuItem key={user._id} value={user.username}>
+                    {user.username}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </Grid>
           <Grid item xs={3}>
-            <TextField
-              label="Closer Person"
-              fullWidth
-              name="closer"
-              value={formData.closer}
-              onChange={handleChange}
-            />
+            <FormControl fullWidth>
+              <InputLabel id="closerLabel">Closer Person</InputLabel>
+              <Select
+                labelId="closerLabel"
+                id="closer"
+                name="closer"
+                value={formData.closer}
+                onChange={handleChange}
+                required
+              >
+                {users.map((user) => (
+                  <MenuItem key={user._id} value={user.username}>
+                    {user.username}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </Grid>
           <Grid item xs={3}>
-            <TextField
-              label="Fronter"
-              fullWidth
-              name="fronter"
-              value={formData.fronter}
-              onChange={handleChange}
-            />
+            <FormControl fullWidth>
+              <InputLabel id="fronterLabel">Fronter</InputLabel>
+              <Select
+                labelId="fronterLabel"
+                id="fronter"
+                name="fronter"
+                value={formData.fronter}
+                onChange={handleChange}
+                required
+              >
+                {users.map((user) => (
+                  <MenuItem key={user._id} value={user.username}>
+                    {user.username}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </Grid>
         </Grid>
         <div className="formtitle ticketHeading">
@@ -420,6 +474,7 @@ const SocialMediaForm = () => {
               value={formData.work_status}
               onChange={handleChange}
               select
+              required
             >
               <MenuItem value="No. Of FB Reviews">No. Of FB Reviews </MenuItem>
               <MenuItem value="Likes/Followers">Likes/Followers</MenuItem>
@@ -443,8 +498,8 @@ const SocialMediaForm = () => {
               <TextField
                 label="No. Of FB Reviews"
                 fullWidth
-                name="noOfFbreviews"
-                value={formData.noOfFbreviews}
+                name="noOfreviewsGMB"
+                value={formData.noOfreviewsGMB}
                 onChange={handleChange}
                 multiline
               />

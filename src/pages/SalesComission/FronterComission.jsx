@@ -7,6 +7,7 @@ import {
   TableRow,
   TableHead,
   Paper,
+  Typography,
 } from "@mui/material";
 import Header from "../Header";
 
@@ -195,6 +196,13 @@ export default function FronterComissionSheet() {
           </div>
         </div>
       </div>
+      <Typography
+        variant="h3"
+        style={{ textAlign: "center", marginBottom: "2%" }}
+        fontFamily={"revert-layer"}
+      >
+        Fronter's Daily Sheet
+      </Typography>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 800 }} aria-label="custom pagination table">
           <TableHead>

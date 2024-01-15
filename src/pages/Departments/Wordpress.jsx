@@ -6,6 +6,9 @@ import {
   Button,
   MenuItem,
   Typography,
+  FormControl,
+  InputLabel,
+  Select,
 } from "@material-ui/core";
 // import CloudUploadIcon from "@material-ui/icons/CloudUpload"; // Import CloudUploadIcon
 import axios from "axios";
@@ -16,6 +19,7 @@ import toast from "react-hot-toast";
 const WordPress = () => {
   const apiUrl = process.env.REACT_APP_API_URL;
   const user = JSON.parse(localStorage.getItem("user"));
+  const [users, setUsers] = useState([]);
   const [departments, setDepartments] = useState([]);
   const [remainingPrice, setRemainingPrice] = useState(0); // Initialize remainingPrice
   const [clientSuggestions, setClientSuggestions] = useState([]);
@@ -24,7 +28,21 @@ const WordPress = () => {
   const [showWordpressFields, setShowWordpressFields] = useState(false);
   const [showEcommerceFields, setShowEcommerceFields] = useState(false);
   const [selectedWebsiteType, setSelectedWebsiteType] = useState("");
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const departmentId = "651b3409819ff0aec6af1387";
+        const response = await axios.get(
+          `${apiUrl}/api/tickets/users/${departmentId}`
+        );
+        setUsers(response.data);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    };
 
+    fetchUsers();
+  }, []);
   const [formData, setFormData] = useState({
     department: "Wordpress Development", // Initialize with "Wordpress Development"
     priority: "",
@@ -271,7 +289,7 @@ const WordPress = () => {
               name="clientName"
               value={formData.clientName}
               onChange={handleChange}
-              multiline
+              required
               onInput={(e) => fetchSuggestions(e.target.value)}
             />
 
@@ -299,7 +317,7 @@ const WordPress = () => {
               name="clientEmail"
               value={formData.clientEmail}
               onChange={handleChange}
-              multiline
+              required
             />
           </Grid>
         </Grid>
@@ -316,33 +334,62 @@ const WordPress = () => {
               onChange={handleChange}
               disabled
             />
+          </Grid>{" "}
+          <Grid item xs={3}>
+            <FormControl fullWidth>
+              <InputLabel id="supportPersonLabel">Support Person</InputLabel>
+              <Select
+                labelId="supportPersonLabel"
+                id="supportPerson"
+                name="supportPerson"
+                value={formData.supportPerson}
+                onChange={handleChange}
+              >
+                {users.map((user) => (
+                  <MenuItem key={user._id} value={user.username}>
+                    {user.username}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </Grid>
           <Grid item xs={3}>
-            <TextField
-              label="Support Person"
-              fullWidth
-              name="supportPerson"
-              value={formData.supportPerson}
-              onChange={handleChange}
-            />
+            <FormControl fullWidth>
+              <InputLabel id="closerLabel">Closer Person</InputLabel>
+              <Select
+                labelId="closerLabel"
+                id="closer"
+                name="closer"
+                value={formData.closer}
+                onChange={handleChange}
+                required
+              >
+                {users.map((user) => (
+                  <MenuItem key={user._id} value={user.username}>
+                    {user.username}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </Grid>
           <Grid item xs={3}>
-            <TextField
-              label="Closer Person"
-              fullWidth
-              name="closer"
-              value={formData.closer}
-              onChange={handleChange}
-            />
-          </Grid>
-          <Grid item xs={3}>
-            <TextField
-              label="Fronter"
-              fullWidth
-              name="fronter"
-              value={formData.fronter}
-              onChange={handleChange}
-            />
+            <FormControl fullWidth>
+              <InputLabel id="fronterLabel">Fronter</InputLabel>
+              <Select
+                labelId="fronterLabel"
+                id="fronter"
+                name="fronter"
+                value={formData.fronter}
+                onChange={handleChange}
+                required
+              >
+                {users.map((user) => (
+                  <MenuItem key={user._id} value={user.username}>
+                    {user.username}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </Grid>
         </Grid>
         <div className="formtitle ticketHeading">
@@ -479,7 +526,7 @@ const WordPress = () => {
               </Grid>
               <Grid item xs={2}>
                 <TextField
-                  label="Client Name."
+                  label="Client Name"
                   fullWidth
                   name="ownerName"
                   value={formData.ownerName}
@@ -555,6 +602,7 @@ const WordPress = () => {
                   value={selectedWebsiteType}
                   onChange={handleChange}
                   select
+                  required
                 >
                   <MenuItem value="Ecommerce">Ecommerce</MenuItem>
                   <MenuItem value="Redeisgn-Website">Redeisgn-Website</MenuItem>
@@ -714,7 +762,6 @@ const WordPress = () => {
                   multiline
                 />
               </Grid>
-              {/* Add more fields as needed */}
             </Grid>
           </>
         )}

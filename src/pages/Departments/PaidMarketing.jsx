@@ -6,6 +6,9 @@ import {
   Button,
   MenuItem,
   Typography,
+  FormControl,
+  InputLabel,
+  Select,
 } from "@material-ui/core";
 import axios from "axios";
 import Header from "../Header";
@@ -20,8 +23,7 @@ const PaidMarketing = () => {
   const [selectedClient, setSelectedClient] = useState(null);
   const [ShowBudgetPrice, setShowBudgetPrice] = useState(null);
   const [ShowPlatform, setShowPlatform] = useState(null);
-  console.log(user);
-
+  const [users, setUsers] = useState([]);
   const [formData, setFormData] = useState({
     department: "Paid Marketing",
     priorityLevel: "",
@@ -29,7 +31,9 @@ const PaidMarketing = () => {
     dueDate: new Date().toISOString().substr(0, 10), // Initialize with the current date in yyyy-mm-dd format
     price: "",
     advanceprice: 0, // Set the default value to 0
-
+    fronter: "",
+    closer: "",
+    supportPerson: "",
     remainingPrice: "",
     serviceName: "",
     adAccountAccess: "",
@@ -43,7 +47,21 @@ const PaidMarketing = () => {
     work_status: "",
     selectedPlatform: "",
   });
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const departmentId = "651b3409819ff0aec6af1387";
+        const response = await axios.get(
+          `${apiUrl}/api/tickets/users/${departmentId}`
+        );
+        setUsers(response.data);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    };
 
+    fetchUsers();
+  }, []);
   const handleChange = (event) => {
     const { name, value } = event.target;
     let updatedPrice = parseFloat(formData.price) || 0;
@@ -115,6 +133,9 @@ const PaidMarketing = () => {
         created_by: user._id,
         assignorDepartment: user.department._id,
         businessdetails: {
+          fronter: formData.fronter,
+          closer: formData.closer,
+          supportPerson: formData.supportPerson,
           clientName: formData.clientName,
           clientEmail: formData.clientEmail,
           location: formData.location,
@@ -222,7 +243,7 @@ const PaidMarketing = () => {
               name="clientName"
               value={formData.clientName}
               onChange={handleChange}
-              multiline
+              required
               onInput={(e) => fetchSuggestions(e.target.value)}
             />
 
@@ -250,7 +271,7 @@ const PaidMarketing = () => {
               name="clientEmail"
               value={formData.clientEmail}
               onChange={handleChange}
-              multiline
+              required
             />
           </Grid>
         </Grid>
@@ -268,32 +289,62 @@ const PaidMarketing = () => {
               disabled
             />
           </Grid>
+
           <Grid item xs={3}>
-            <TextField
-              label="Support Person"
-              fullWidth
-              name="supportPerson"
-              value={formData.supportPerson}
-              onChange={handleChange}
-            />
+            <FormControl fullWidth>
+              <InputLabel id="supportPersonLabel">Support Person</InputLabel>
+              <Select
+                labelId="supportPersonLabel"
+                id="supportPerson"
+                name="supportPerson"
+                value={formData.supportPerson}
+                onChange={handleChange}
+              >
+                {users.map((user) => (
+                  <MenuItem key={user._id} value={user.username}>
+                    {user.username}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </Grid>
           <Grid item xs={3}>
-            <TextField
-              label="Closer Person"
-              fullWidth
-              name="closer"
-              value={formData.closer}
-              onChange={handleChange}
-            />
+            <FormControl fullWidth>
+              <InputLabel id="closerLabel">Closer Person</InputLabel>
+              <Select
+                labelId="closerLabel"
+                id="closer"
+                name="closer"
+                value={formData.closer}
+                onChange={handleChange}
+                required
+              >
+                {users.map((user) => (
+                  <MenuItem key={user._id} value={user.username}>
+                    {user.username}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </Grid>
           <Grid item xs={3}>
-            <TextField
-              label="Fronter"
-              fullWidth
-              name="fronter"
-              value={formData.fronter}
-              onChange={handleChange}
-            />
+            <FormControl fullWidth>
+              <InputLabel id="fronterLabel">Fronter</InputLabel>
+              <Select
+                labelId="fronterLabel"
+                id="fronter"
+                name="fronter"
+                value={formData.fronter}
+                onChange={handleChange}
+                required
+              >
+                {users.map((user) => (
+                  <MenuItem key={user._id} value={user.username}>
+                    {user.username}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </Grid>
         </Grid>
         <div className="formtitle ticketHeading">
@@ -416,6 +467,7 @@ const PaidMarketing = () => {
               value={formData.budget}
               onChange={handleChange}
               select
+              required
             >
               <MenuItem value="dailyBudget">Daily</MenuItem>
               <MenuItem value="weeklyBudget">Weekly</MenuItem>
@@ -430,6 +482,7 @@ const PaidMarketing = () => {
                 name="selectedBudget"
                 value={formData.selectedBudget}
                 onChange={handleChange}
+                required
               />
             </Grid>
           )}
@@ -441,6 +494,7 @@ const PaidMarketing = () => {
               value={formData.work_status}
               onChange={handleChange}
               select
+              required
             >
               <MenuItem value="Facebook-Ads">Facebook</MenuItem>
               <MenuItem value="Google-Ads">Google</MenuItem>

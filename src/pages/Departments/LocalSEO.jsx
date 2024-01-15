@@ -332,6 +332,7 @@ const LocalSEOForm = () => {
                 name="closer"
                 value={formData.closer}
                 onChange={handleChange}
+                required
               >
                 {users.map((user) => (
                   <MenuItem key={user._id} value={user.username}>
@@ -350,6 +351,7 @@ const LocalSEOForm = () => {
                 name="fronter"
                 value={formData.fronter}
                 onChange={handleChange}
+                required
               >
                 {users.map((user) => (
                   <MenuItem key={user._id} value={user.username}>

@@ -20,6 +20,7 @@ import {
 import Badge from "@mui/material/Badge";
 import logoImage from "../assests/Navbarlogo.png";
 import { useNavigate } from "react-router-dom";
+import TrendingDownSharpIcon from "@mui/icons-material/TrendingDownSharp";
 import axios from "axios";
 import {
   Menu as MenuIcon,
@@ -195,6 +196,12 @@ const Header = () => {
       navigate("/social_media_client?depId=651ada78819ff0aec6af1381");
     }
   };
+  const [isSalesDropdownOpen, setSalesDropdownOpen] = useState(false);
+
+  // Step 4: Function to toggle "Sales" dropdown
+  const toggleSalesDropdown = () => {
+    setSalesDropdownOpen(!isSalesDropdownOpen);
+  };
   return (
     <>
       <CssBaseline />
@@ -338,7 +345,6 @@ const Header = () => {
                 )}
               </React.Fragment>
             )}
-
             <ListItem button onClick={toggleDepartment}>
               <ListItemIcon>
                 <DepartmentIcon />
@@ -386,6 +392,34 @@ const Header = () => {
                   </Link>
                 </ListItem>
               </div>
+            )}
+            {user?.role === "admin" && (
+              <React.Fragment>
+                <ListItem button onClick={toggleSalesDropdown}>
+                  <ListItemIcon>
+                    <AssignmentIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Sales Sheet" />
+                  <ListItemIcon style={{ marginLeft: "auto" }}>
+                    <ExpandMoreIcon />
+                  </ListItemIcon>
+                </ListItem>
+
+                {isSalesDropdownOpen && (
+                  <div className="client-history-dropdown">
+                    <Link to="/sales_comission_sheet">
+                      <ListItem button>
+                        <ListItemText primary="Daily Fronter Sale" />
+                      </ListItem>
+                    </Link>
+                    <Link to="/fronter_salary_sheet">
+                      <ListItem button>
+                        <ListItemText primary="Monthly Fronter Sale" />
+                      </ListItem>
+                    </Link>
+                  </div>
+                )}
+              </React.Fragment>
             )}
             {user?.role === "admin" && (
               <div className="signup">
