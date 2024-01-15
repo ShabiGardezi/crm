@@ -15,10 +15,13 @@ export default function FronterSalarySheet() {
   const apiUrl = process.env.REACT_APP_API_URL;
   const [tickets, setTickets] = useState([]);
   const [selectedFronter, setSelectedFronter] = useState("All");
-  const [fronterTotalPayment, setFronterTotalPayment] = useState({});
-  const [fronterCommission, setFronterCommission] = useState({});
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
+  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth()); // Default to current month
+  const [startDate, setStartDate] = useState(
+    new Date(new Date().getFullYear(), new Date().getMonth(), 1)
+  );
+  const [endDate, setEndDate] = useState(
+    new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0)
+  );
 
   const handleStartDateSelect = (date) => {
     setStartDate(date);
@@ -161,27 +164,42 @@ export default function FronterSalarySheet() {
   };
 
   // Function to calculate monthly values for each fronter
-  const calculateMonthlyValues = (fronter, month) => {
-    const monthlyTickets = filterTicketsByMonth(tickets, month);
+  const calculateMonthlyValues = async (fronter, month) => {
+    try {
+      const response = await fetch(
+        `${apiUrl}/api/tickets/all-departments-ticket`
+      );
 
-    const totalSalary = calculateTotalPaymentForFronter(
-      fronter,
-      monthlyTickets
-    );
-    const commissionRate = calculateCommissionRate(totalSalary);
-    const commissionableAmount = calculateCommissionableAmountForFronter(
-      fronter,
-      monthlyTickets
-    );
-    const netSalary = totalSalary * 0.9 * (commissionRate / 100);
+      if (!response.ok) {
+        throw new Error("Failed to fetch tickets");
+      }
 
-    return {
-      totalSalary,
-      commissionableAmount,
-      commissionRate,
-      netSalary,
-    };
+      const data = await response.json();
+      const monthlyTickets = filterTicketsByMonth(data.payload, month);
+
+      const totalSalary = calculateTotalPaymentForFronter(
+        fronter,
+        monthlyTickets
+      );
+      const commissionRate = calculateCommissionRate(totalSalary);
+      const commissionableAmount = calculateCommissionableAmountForFronter(
+        fronter,
+        monthlyTickets
+      );
+      const netSalary = totalSalary * 0.9 * (commissionRate / 100);
+
+      return {
+        totalSalary,
+        commissionableAmount,
+        commissionRate,
+        netSalary,
+      };
+    } catch (error) {
+      console.error("Error fetching tickets:", error.message);
+      return null; // Handle error gracefully
+    }
   };
+
   // Function to calculate total payment for a fronter with a specific set of tickets
   const calculateTotalPaymentForFronter = (fronter, tickets) => {
     return tickets.reduce(
@@ -199,7 +217,7 @@ export default function FronterSalarySheet() {
   return (
     <div>
       <Header />
-      <div style={{ textAlign: "center", marginTop: "2%" }}>
+      <div style={{ textAlign: "center", marginTop: "2%", marginBottom: "2%" }}>
         <Typography variant="h6">Select Month:</Typography>
         <input
           type="month"
@@ -209,7 +227,14 @@ export default function FronterSalarySheet() {
             const values = fronters.map((fronter) =>
               calculateMonthlyValues(fronter, selectedMonth)
             );
-            console.log("Monthly Values:", values);
+            // Update state with selected start and end dates
+            setStartDate(
+              new Date(selectedDate.getFullYear(), selectedMonth, 1)
+            );
+            setEndDate(
+              new Date(selectedDate.getFullYear(), selectedMonth + 1, 0)
+            );
+            setSelectedMonth(selectedMonth);
           }}
         />
       </div>
@@ -219,7 +244,7 @@ export default function FronterSalarySheet() {
         style={{ textAlign: "center", marginBottom: "2%" }}
         fontFamily={"revert-layer"}
       >
-        Fronter's Salary Sheet
+        Fronter's Salary Sheet - {getMonthName(selectedMonth)}
       </Typography>
 
       <TableContainer component={Paper}>
@@ -269,3 +294,22 @@ export default function FronterSalarySheet() {
     </div>
   );
 }
+
+// Helper function to get month name
+const getMonthName = (monthIndex) => {
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+  return months[monthIndex];
+};
