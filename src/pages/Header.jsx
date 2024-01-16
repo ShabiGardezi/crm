@@ -407,7 +407,7 @@ const Header = () => {
 
                 {isSalesDropdownOpen && (
                   <div className="client-history-dropdown">
-                    <Link to="/sales_comission_sheet">
+                    <Link to="/fronter_comission_sheet">
                       <ListItem button>
                         <ListItemText primary="Daily Fronter Sale" />
                       </ListItem>

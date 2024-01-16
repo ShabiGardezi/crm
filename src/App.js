@@ -52,7 +52,9 @@ import Inbox from "./pages/InboxPage";
 import AllAddUpPayments from "./pages/PaymentHistory/AllAddUpPayments";
 import SingleEntriesPayments from "./pages/PaymentHistory/SingleEntriesPayments";
 import FronterComissionSheet from "./pages/SalesComission/FronterComission";
-import FronterSalarySheet from "./pages/SalesSalarySheet/SalesSalarySheet";
+import FronterSalarySheet from "./pages/SalesSalarySheet/FronterSalarySheet";
+import CloserComissionSheet from "./pages/SalesComission/CloserCommission";
+import CloserSalarySheet from "./pages/SalesSalarySheet/CloserSalarySheet";
 
 function App() {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -250,12 +252,20 @@ function App() {
               element={<SingleEntriesPayments />}
             />
             <Route
-              path="/sales_comission_sheet"
+              path="/fronter_comission_sheet"
               element={<FronterComissionSheet />}
+            />
+            <Route
+              path="/closer_comission_sheet"
+              element={<CloserComissionSheet />}
             />
             <Route
               path="/fronter_salary_sheet"
               element={<FronterSalarySheet />}
+            />
+            <Route
+              path="/closer_salary_sheet"
+              element={<CloserSalarySheet />}
             />
           </>
         )}
