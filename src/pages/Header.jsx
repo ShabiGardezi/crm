@@ -414,7 +414,7 @@ const Header = () => {
                     </Link>
                     <Link to="/fronter_salary_sheet">
                       <ListItem button>
-                        <ListItemText primary="Monthly Fronter Sale" />
+                        <ListItemText primary="Monthly Fronter Commission" />
                       </ListItem>
                     </Link>
                   </div>

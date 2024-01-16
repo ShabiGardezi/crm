@@ -10,7 +10,6 @@ import {
   Typography,
 } from "@mui/material";
 import Header from "../Header";
-import ClientPaymentEdit from "../ClientPaymentEdit";
 
 export default function FronterComissionSheet() {
   const apiUrl = process.env.REACT_APP_API_URL;
@@ -23,8 +22,6 @@ export default function FronterComissionSheet() {
   const handleStartDateSelect = (date) => {
     setStartDate(date);
   };
-  const [selectedTicket, setSelectedTicket] = useState(null);
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 
   // Handle end date selection
   const handleEndDateSelect = (date) => {
@@ -148,48 +145,6 @@ export default function FronterComissionSheet() {
     }, 0);
   };
 
-  const openEditDialog = (ticket) => {
-    setSelectedTicket(ticket);
-    setIsEditDialogOpen(true);
-  };
-
-  const closeEditDialog = () => {
-    setIsEditDialogOpen(false);
-  };
-  const handleSaveEdit = async (newPayment) => {
-    try {
-      if (!selectedTicket || !selectedTicket._id) {
-        console.error("Invalid selectedTicket or _id");
-        return;
-      }
-
-      const url = new URL(
-        `${apiUrl}/api/tickets/${selectedTicket._id}/update-price`
-      );
-      const requestBody = JSON.stringify({ newPrice: newPayment }); // Ensure the correct property name
-
-      const response = await fetch(url, {
-        method: "PUT", // Use PUT method for updating resource
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: requestBody,
-      });
-
-      if (!response.ok) {
-        throw new Error(`Failed to update price: ${response.statusText}`);
-      }
-
-      const responseData = await response.json();
-      console.log("Response Data:", responseData);
-
-      // Update the UI or perform any other actions as needed
-    } catch (error) {
-      console.error("Error updating price:", error.message);
-      // Handle the error, show a notification, etc.
-    }
-  };
-
   return (
     <div>
       <Header />
@@ -279,20 +234,7 @@ export default function FronterComissionSheet() {
                       <TableCell>
                         {ticket.businessdetails.work_status}
                       </TableCell>
-                      <TableCell>
-                        {`$${ticket.quotation.price}`}
-                        <button
-                          onClick={() => openEditDialog(ticket)}
-                          style={{ marginLeft: "10px", cursor: "pointer" }}
-                          title={
-                            ticket.quotation.price
-                              ? "Only edit if ticket price is falsy"
-                              : ""
-                          }
-                        >
-                          Edit
-                        </button>
-                      </TableCell>
+                      <TableCell>{`$${ticket.quotation.price}`}</TableCell>
                     </TableRow>
                   </>
                 )}
@@ -340,13 +282,6 @@ export default function FronterComissionSheet() {
           )}
         </Table>
       </TableContainer>
-      {selectedTicket && (
-        <ClientPaymentEdit
-          isOpen={isEditDialogOpen}
-          onClose={closeEditDialog}
-          onSave={handleSaveEdit}
-        />
-      )}
     </div>
   );
 }

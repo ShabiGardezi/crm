@@ -286,7 +286,7 @@ const LocalSEOForm = () => {
               name="clientEmail"
               value={formData.clientEmail}
               onChange={handleChange}
-              multiline
+              required
             />
           </Grid>
         </Grid>

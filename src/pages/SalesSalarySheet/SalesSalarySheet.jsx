@@ -254,7 +254,7 @@ export default function FronterSalarySheet() {
               <TableCell>Total Salary</TableCell>
               <TableCell>Commissionable Amount</TableCell>
               <TableCell>Commission Rate</TableCell>
-              <TableCell>Net Salary</TableCell>
+              <TableCell>Net Commission</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
