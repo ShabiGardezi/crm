@@ -288,7 +288,7 @@ const WebSeoForm = () => {
               name="clientName"
               value={formData.clientName}
               onChange={handleChange}
-              multiline
+              required
               onInput={(e) => fetchSuggestions(e.target.value)}
             />
 

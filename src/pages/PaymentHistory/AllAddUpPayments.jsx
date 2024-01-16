@@ -4,29 +4,19 @@ import {
   TableBody,
   TableCell,
   TableContainer,
-  TableFooter,
-  TablePagination,
   TableRow,
   TableHead,
   Paper,
   InputBase,
+  Typography,
 } from "@mui/material";
 import Header from "../Header";
 import SearchIcon from "@mui/icons-material/Search";
 
 export default function AllAddUpPayments() {
   const apiUrl = process.env.REACT_APP_API_URL;
-  const user = JSON.parse(localStorage.getItem("user"));
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(-1); // Display all rows on one page
   const [tickets, setTickets] = useState([]); // State to store fetched data
-  const [filter, setFilter] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
-  const [totalPaymentForAllTickets, setTotalPaymentForAllTickets] = useState(0);
-  const [totalRemainingForAllTickets, setTotalRemainingForAllTickets] =
-    useState(0);
-  const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - tickets.length) : 0;
 
   const handleSearch = async (e) => {
     if (e.key === "Enter" && searchQuery) {
@@ -100,12 +90,6 @@ export default function AllAddUpPayments() {
 
     fetchTickets();
   }, []);
-  const filteredTickets =
-    filter === "All"
-      ? tickets
-      : tickets.filter(
-          (ticket) => ticket.businessdetails.work_status === filter
-        );
 
   const calculateTotalPaymentForTicket = (paymentHistory) => {
     let totalPayment = 0;
@@ -114,50 +98,35 @@ export default function AllAddUpPayments() {
     });
     return totalPayment;
   };
-
-  const calculateTotalPaymentForFilteredTickets = (filteredTickets) => {
-    const totalPayment = filteredTickets.reduce((total, ticket) => {
-      return total + calculateTotalPaymentForTicket(ticket.payment_history);
+  const calculateTotalPaymentForFilteredTickets = (tickets, clientName) => {
+    const totalPayment = tickets.reduce((total, ticket) => {
+      if (ticket.businessdetails.clientName === clientName) {
+        return total + calculateTotalPaymentForTicket(ticket.payment_history);
+      }
+      return total;
     }, 0);
     return totalPayment.toFixed(2);
   };
-  const calculateTotalRemainingForFilteredTickets = (filteredTickets) => {
-    const totalRemaining = filteredTickets.reduce((total, ticket) => {
-      return total + parseFloat(ticket.quotation.remainingPrice);
+  const calculateTotalRemainingForFilteredTickets = (tickets, clientName) => {
+    const totalRemaining = tickets.reduce((total, ticket) => {
+      if (ticket.businessdetails.clientName === clientName) {
+        return total + parseFloat(ticket.quotation.remainingPrice);
+      }
+      return total;
     }, 0);
-
     return totalRemaining.toFixed(2);
   };
   return (
     <div>
       <Header />
-      <div>
-        <label htmlFor="filterDropdown">Services:</label>
-        <select
-          id="filterDropdown"
-          value={filter}
-          onChange={(e) => setFilter(e.target.value)}
-        >
-          <option value="All">All</option>
-          <option value="GMB Full Optimization">GMB Full Optimization</option>
-          <option value="GMB Off Page">GMB Off Page</option>
-          <option value="Paid-Guest-Posting">Paid-Guest-Posting</option>
-          <option value="Monthly-SEO">Monthly-SEO</option>
-          <option value="On-Page">On-Page</option>
-          <option value="Backlinks">Backlinks</option>
-          <option value="Extra-Backlinks">Extra-Backlinks</option>
-          <option value="Facebook-Ads">Facebook-Ads</option>
-          <option value="Google-Ads">Google-Ads</option>
-          <option value="Other-Ads">Other-Ads</option>
-          <option value="Ecommerce">Ecommerce</option>
-          <option value="Redeisgn-Website">Redeisgn-Website</option>
-          <option value="One-Page-Website">One-Page-Website</option>
-          <option value="Full-Website">Full-Website</option>
-          <option value="No. Of FB Reviews">No. Of FB Reviews</option>
-          <option value="Likes/Followers">Likes/Followers</option>
-          <option value="No.Of GMB Reviews">No.Of GMB Reviews</option>
-        </select>
-      </div>
+      <Typography
+        variant="h4"
+        style={{ textAlign: "center", marginTop: "2%" }}
+        fontFamily={"revert-layer"}
+      >
+        Clients Payment Info
+      </Typography>
+
       <TableContainer component={Paper}>
         <div>
           <div
@@ -184,62 +153,65 @@ export default function AllAddUpPayments() {
           <TableHead>
             <TableRow>
               <TableCell>Business Name</TableCell>
-              <TableCell>Sales Person</TableCell>
-              <TableCell>Assign To</TableCell>
-              <TableCell>Work Type</TableCell>
               <TableCell>Payment Received</TableCell>
               <TableCell>Payment Remaining</TableCell>
+              <TableCell>Charge Back</TableCell>
+              <TableCell>Refund</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {filteredTickets.map((ticket) => (
-              <TableRow key={ticket._id}>
-                <TableCell component="th" scope="row">
-                  {ticket.businessdetails.clientName}
-                </TableCell>
-                <TableCell style={{ width: 160 }} align="left">
-                  {ticket.TicketDetails.assignor}
-                </TableCell>
-                <TableCell style={{ width: 160 }} align="left">
-                  {ticket.majorAssignee.name}
-                </TableCell>
-                <TableCell style={{ width: 160 }} align="left">
-                  {ticket.businessdetails.work_status}
-                </TableCell>
-                <TableCell style={{ width: 160 }} align="left">
-                  <tr style={{ justifyContent: "center", display: "flex" }}>
-                    <td
-                      style={{ textAlign: "center" }}
-                    >{`$${calculateTotalPaymentForTicket(
-                      ticket.payment_history
-                    )}`}</td>
-                  </tr>
-                </TableCell>
-                <TableCell style={{ width: 160 }} align="left">
-                  <tr style={{ justifyContent: "center", display: "flex" }}>
-                    {`${ticket.quotation.remainingPrice}`}
-                  </tr>
-                </TableCell>
-              </TableRow>
-            ))}
-            {emptyRows > 0 && (
-              <TableRow style={{ height: 53 * emptyRows }}>
-                <TableCell colSpan={7} />
-              </TableRow>
-            )}
+            {tickets
+              .reduce((uniqueClients, ticket) => {
+                if (
+                  !uniqueClients.includes(ticket.businessdetails.clientName)
+                ) {
+                  uniqueClients.push(ticket.businessdetails.clientName);
+                  return uniqueClients;
+                }
+                return uniqueClients;
+              }, [])
+              .map((clientName) => {
+                const totalPayment = calculateTotalPaymentForFilteredTickets(
+                  tickets,
+                  clientName
+                );
+                const totalRemaining =
+                  calculateTotalRemainingForFilteredTickets(
+                    tickets,
+                    clientName
+                  );
+
+                return (
+                  <TableRow key={clientName}>
+                    <TableCell component="th" scope="row">
+                      {clientName}
+                    </TableCell>
+                    <TableCell style={{ width: 180 }} align="left">
+                      <tr style={{ justifyContent: "center", display: "flex" }}>
+                        <td style={{ textAlign: "center" }}>
+                          <strong>{`$${totalPayment}`}</strong>
+                        </td>
+                      </tr>
+                    </TableCell>
+                    <TableCell style={{ width: 180 }} align="left">
+                      <tr style={{ justifyContent: "center", display: "flex" }}>
+                        <strong>{`$${totalRemaining}`}</strong>
+                      </tr>
+                    </TableCell>
+                    <TableCell style={{ width: 180 }} align="left">
+                      <tr style={{ justifyContent: "left", display: "flex" }}>
+                        Charge Back
+                      </tr>
+                    </TableCell>
+                    <TableCell style={{ width: 180 }} align="left">
+                      <tr style={{ justifyContent: "left", display: "flex" }}>
+                        Refund
+                      </tr>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
           </TableBody>
-          <TableRow>
-            <TableCell colSpan={7} style={{ textAlign: "right" }}>
-              <strong>Total Received Payment:</strong>
-              {`$${calculateTotalPaymentForFilteredTickets(filteredTickets)}`}
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell colSpan={7} style={{ textAlign: "right" }}>
-              <strong>Total Remaining:</strong>
-              {`$${calculateTotalRemainingForFilteredTickets(filteredTickets)}`}
-            </TableCell>
-          </TableRow>
         </Table>
       </TableContainer>
     </div>
