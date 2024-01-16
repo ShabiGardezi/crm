@@ -244,7 +244,7 @@ function App() {
               path="/socialmedia_Inactiveclients"
               element={<InActiveSocialMediaSalesClients />}
             />
-            <Route path="/all_payment_history" element={<AllAddUpPayments />} />
+            <Route path="/refund_history" element={<AllAddUpPayments />} />
             <Route
               path="/single_payment_history"
               element={<SingleEntriesPayments />}

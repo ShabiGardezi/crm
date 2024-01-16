@@ -417,6 +417,11 @@ const Header = () => {
                         <ListItemText primary="Monthly Fronter Commission" />
                       </ListItem>
                     </Link>
+                    <Link to="/refund_history">
+                      <ListItem button>
+                        <ListItemText primary="Charge Back & Refund" />
+                      </ListItem>
+                    </Link>
                   </div>
                 )}
               </React.Fragment>
