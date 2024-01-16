@@ -124,7 +124,7 @@ export default function AllAddUpPayments() {
         style={{ textAlign: "center", marginTop: "2%" }}
         fontFamily={"revert-layer"}
       >
-        Clients Payment Info
+        Charge Back and Refund Info
       </Typography>
 
       <TableContainer component={Paper}>
