@@ -287,6 +287,7 @@ export default function CloserSalarySheet() {
               <TableCell>Total Payment</TableCell>
               <TableCell>10% Of Sales</TableCell>
               <TableCell>Bounty On Total Sales</TableCell>
+              <TableCell>Recurring Sales</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

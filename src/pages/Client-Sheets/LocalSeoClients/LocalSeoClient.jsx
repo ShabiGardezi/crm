@@ -31,11 +31,13 @@ import TablePaginationActions from "../../Tickets/TicketsTablePagination/Tickets
 import UnauthorizedError from "../../../components/Error_401";
 import { Typography } from "@mui/material";
 import LocalSeoSalesCards from "../../SalesClientsSheet/LocalSeoSalesSheet/LocalSeoSalesCards";
+import { InputLabel } from "@mui/material";
 
 export default function LocalSeoSheet() {
   const apiUrl = process.env.REACT_APP_API_URL;
   const user = JSON.parse(localStorage.getItem("user"));
   const [page, setPage] = React.useState(0);
+  const [selectedUser, setSelectedUser] = useState("");
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [tickets, setTickets] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -49,6 +51,23 @@ export default function LocalSeoSheet() {
   const [remainingPrice, setRemainingPrice] = useState("");
   const [ticketSelected, setTicketSelected] = useState();
   const [paymentRecieved, setPaymentRecieved] = useState(0);
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const departmentId = "651b3409819ff0aec6af1387";
+        const response = await axios.get(
+          `${apiUrl}/api/tickets/users/${departmentId}`
+        );
+        setUsers(response.data);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    };
+
+    fetchUsers();
+  }, []);
   // Function to open the recurring dialog and reset state values
   const handleRecurringDialogOpen = () => {
     setOpenRecurringDialog(true);
@@ -78,7 +97,11 @@ export default function LocalSeoSheet() {
       });
       const response = await axios.post(
         `${apiUrl}/api/tickets/update_payment_history`,
-        { ticketId: ticketSelected._id, payment: remainingPrice }
+        {
+          ticketId: ticketSelected._id,
+          payment: remainingPrice,
+          selectedUser: selectedUser,
+        }
       );
     } catch (error) {}
 
@@ -676,6 +699,24 @@ export default function LocalSeoSheet() {
                               onChange={handleRemainingPriceChange}
                               fullWidth
                             />
+                            <FormControl fullWidth>
+                              <InputLabel>User</InputLabel>
+                              <Select
+                                value={selectedUser}
+                                onChange={(e) =>
+                                  setSelectedUser(e.target.value)
+                                }
+                              >
+                                {users.map((user) => (
+                                  <MenuItem
+                                    key={user._id}
+                                    value={user.username}
+                                  >
+                                    {user.username}
+                                  </MenuItem>
+                                ))}
+                              </Select>
+                            </FormControl>
                           </DialogContent>
                           <DialogActions>
                             <Button onClick={handleRecurringDialogClose}>
