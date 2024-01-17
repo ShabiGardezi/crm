@@ -222,6 +222,29 @@ export default function CloserSalarySheet() {
     const commissionableAmount = 0.9 * totalPayment;
     return roundCommission(commissionableAmount);
   };
+  const calculateSumOfTenPercent = (tickets, closer, selectedMonth) => {
+    const closerTickets = tickets.filter(
+      (ticket) =>
+        ticket.businessdetails.closer === closer &&
+        isTicketInSelectedMonth(ticket, selectedMonth)
+    );
+
+    if (closerTickets.length === 0) {
+      return 0; // Return 0 if there are no tickets for the closer in the selected month
+    }
+
+    return closerTickets.reduce((total, ticket) => {
+      const ninetyPercent = 0.9 * parseFloat(ticket.quotation.price);
+      const tenPercentOfNinetyPercent = 0.1 * ninetyPercent;
+      return total + tenPercentOfNinetyPercent;
+    }, 0);
+  };
+
+  // Function to check if a ticket's createdAt date is within the selected month
+  const isTicketInSelectedMonth = (ticket, selectedMonth) => {
+    const createdAtDate = new Date(ticket.createdAt);
+    return createdAtDate.getMonth() === selectedMonth;
+  };
 
   return (
     <div>
@@ -273,6 +296,12 @@ export default function CloserSalarySheet() {
                 startDate,
                 endDate
               );
+              const sumOfTenPercent = calculateSumOfTenPercent(
+                tickets,
+                closer,
+                selectedMonth
+              );
+
               const bountyAmount = calculateBountyAmount(totalSalary);
 
               return (
@@ -281,7 +310,9 @@ export default function CloserSalarySheet() {
                   <TableCell>
                     <b>{`$${totalSalary}`}</b>
                   </TableCell>
-                  <TableCell>10% of ninety percent</TableCell>
+                  <TableCell>
+                    <b>{`$${sumOfTenPercent.toFixed(2)}`}</b>
+                  </TableCell>
                   <TableCell>
                     <b>{`${bountyAmount.toFixed(2)} PKR`}</b>
                   </TableCell>
