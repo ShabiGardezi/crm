@@ -158,7 +158,9 @@ export default function FronterComissionSheet() {
       return total + excludedTotalPayment;
     }, 0);
   };
-
+  const hasSameFronterAndCloser = (ticket) => {
+    return ticket.businessdetails.fronter === ticket.businessdetails.closer;
+  };
   return (
     <div>
       <Header />
@@ -207,8 +209,7 @@ export default function FronterComissionSheet() {
                   (fronter) =>
                     !tickets.some(
                       (ticket) =>
-                        ticket.businessdetails.fronter ===
-                          ticket.businessdetails.closer &&
+                        hasSameFronterAndCloser(ticket) &&
                         ticket.businessdetails.fronter === fronter
                     )
                 )

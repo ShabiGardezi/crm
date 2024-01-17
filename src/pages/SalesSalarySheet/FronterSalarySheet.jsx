@@ -60,8 +60,10 @@ export default function FronterSalarySheet() {
         const createdAtDate = new Date(ticket.createdAt);
 
         // Check if the ticket's createdAt date is within the selected range
+        // Exclude tickets where fronter name is the same as closer name
         return (
           ticket.businessdetails.fronter === fronterName &&
+          ticket.businessdetails.fronter !== ticket.businessdetails.closer &&
           (!startDate || createdAtDate >= startDate) &&
           (!endDate ||
             createdAtDate <= new Date(endDate.getTime() + 24 * 60 * 60 * 1000)) // Include end date
