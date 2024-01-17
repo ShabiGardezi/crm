@@ -13,7 +13,6 @@ import Header from "../Header";
 export default function FronterSalarySheet() {
   const apiUrl = process.env.REACT_APP_API_URL;
   const [tickets, setTickets] = useState([]);
-  const [selectedFronter, setSelectedFronter] = useState("All");
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth()); // Default to current month
   const [startDate, setStartDate] = useState(
     new Date(new Date().getFullYear(), new Date().getMonth(), 1)
@@ -22,14 +21,6 @@ export default function FronterSalarySheet() {
     new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0)
   );
 
-  const handleStartDateSelect = (date) => {
-    setStartDate(date);
-  };
-
-  // Handle end date selection
-  const handleEndDateSelect = (date) => {
-    setEndDate(date);
-  };
   const filteredTickets = tickets.filter((ticket) => {
     const createdAtDate = new Date(ticket.createdAt);
 
@@ -37,7 +28,7 @@ export default function FronterSalarySheet() {
     return (
       (!startDate || createdAtDate >= startDate) &&
       (!endDate ||
-        createdAtDate <= new Date(endDate.getTime() + 24 * 60 * 60 * 1000)) && // Include end date
+        createdAtDate <= new Date(endDate.getTime() + 24 * 60 * 60 * 1000)) &&
       ticket.businessdetails.fronter !== ticket.businessdetails.closer
     );
   });
@@ -79,38 +70,6 @@ export default function FronterSalarySheet() {
       .reduce((total, ticket) => total + parseFloat(ticket.quotation.price), 0);
   };
 
-  // Calculate commission based on total payment
-  const calculateCommission = () => {
-    const totalPayment = calculateTotalPayment(
-      selectedFronter,
-      startDate,
-      endDate
-    );
-
-    const commissionThresholdLow = 500;
-    const commissionThresholdMedium = 800;
-    const commissionThresholdHigh = 1500;
-    const commissionThresholdVeryHigh = 2000;
-
-    const ninetyPercent = 0.9 * totalPayment;
-
-    if (totalPayment <= commissionThresholdLow) {
-      return 0; // No commission
-    } else if (totalPayment <= commissionThresholdMedium) {
-      const commission = 0.025 * ninetyPercent;
-      return roundCommission(commission);
-    } else if (totalPayment <= commissionThresholdHigh) {
-      const commission = 0.05 * ninetyPercent;
-      return roundCommission(commission);
-    } else if (totalPayment <= commissionThresholdVeryHigh) {
-      const commission = 0.075 * ninetyPercent;
-      return roundCommission(commission);
-    } else {
-      const commission = 0.1 * ninetyPercent;
-      return roundCommission(commission);
-    }
-  };
-
   const roundCommission = (commission) => {
     // Round off to 2 decimal places with adjustment
     const roundedCommission = Math.round(commission * 100) / 100;
@@ -122,13 +81,6 @@ export default function FronterSalarySheet() {
     ...new Set(tickets.map((ticket) => ticket.businessdetails.fronter)),
   ];
 
-  // Calculate total payment for all fronters
-  const calculateTotalPaymentForAll = () => {
-    return fronters.reduce((total, fronter) => {
-      const totalPayment = calculateTotalPayment(fronter, startDate, endDate);
-      return total + totalPayment;
-    }, 0);
-  };
   const calculateCommissionRate = (totalSalary) => {
     const commissionThresholdLow = 500;
     const commissionThresholdMedium = 800;

@@ -226,7 +226,7 @@ export default function FronterComissionSheet() {
         style={{ textAlign: "center", marginBottom: "2%" }}
         fontFamily={"revert-layer"}
       >
-        Fronter's Daily Sheet
+        Fronter's All Time Sheet
       </Typography>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 800 }} aria-label="custom pagination table">
