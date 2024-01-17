@@ -10,10 +10,11 @@ import {
   Typography,
 } from "@mui/material";
 import Header from "../Header";
+
 export default function CloserSalarySheet() {
   const apiUrl = process.env.REACT_APP_API_URL;
   const [tickets, setTickets] = useState([]);
-  const [selectedCloser, setSelectedFronter] = useState("All");
+  const [selectedCloser, setSelectedCloser] = useState("All");
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth()); // Default to current month
   const [startDate, setStartDate] = useState(
     new Date(new Date().getFullYear(), new Date().getMonth(), 1)
@@ -128,6 +129,7 @@ export default function CloserSalarySheet() {
       return total + totalPayment;
     }, 0);
   };
+
   const calculateCommissionRate = (totalSalary) => {
     const commissionThresholdLow = 500;
     const commissionThresholdMedium = 800;
@@ -146,6 +148,16 @@ export default function CloserSalarySheet() {
       return 7.5; // Commission rate for very high threshold
     } else {
       return 10; // Commission rate for exceeding very high threshold
+    }
+  };
+
+  const calculateBountyAmount = (totalPayment) => {
+    if (totalPayment >= 7000 && totalPayment <= 10000) {
+      return 10000;
+    } else if (totalPayment > 10000) {
+      return 15000;
+    } else {
+      return 0;
     }
   };
 
@@ -181,12 +193,14 @@ export default function CloserSalarySheet() {
         monthlyTickets
       );
       const netSalary = totalSalary * 0.9 * (commissionRate / 100);
+      const bountyAmount = calculateBountyAmount(totalSalary);
 
       return {
         totalSalary,
         commissionableAmount,
         commissionRate,
         netSalary,
+        bountyAmount,
       };
     } catch (error) {
       console.error("Error fetching tickets:", error.message);
@@ -201,6 +215,7 @@ export default function CloserSalarySheet() {
       0
     );
   };
+
   // Function to calculate commissionable amount for a closer with a specific set of tickets
   const calculateCommissionableAmountForFronter = (closer, tickets) => {
     const totalPayment = calculateTotalPaymentForCloser(closer, tickets);
@@ -248,6 +263,7 @@ export default function CloserSalarySheet() {
               <TableCell>Agent Name</TableCell>
               <TableCell>Total Payment</TableCell>
               <TableCell>10% Of New Sales</TableCell>
+              <TableCell>Bounty On Total Sales</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -257,12 +273,17 @@ export default function CloserSalarySheet() {
                 startDate,
                 endDate
               );
+              const bountyAmount = calculateBountyAmount(totalSalary);
 
               return (
                 <TableRow key={closer}>
                   <TableCell>{closer}</TableCell>
                   <TableCell>
                     <b>{`$${totalSalary}`}</b>
+                  </TableCell>
+                  <TableCell>10% of ninety percent</TableCell>
+                  <TableCell>
+                    <b>{`${bountyAmount.toFixed(2)} PKR`}</b>
                   </TableCell>
                 </TableRow>
               );

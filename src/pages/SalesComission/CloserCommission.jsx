@@ -180,7 +180,7 @@ export default function CloserComissionSheet() {
             </div>
           </div>
           <div style={{ margin: "10px" }}>
-            <label id="closer-select-label">Select Fronter: </label>
+            <label id="closer-select-label">Select Closer: </label>
             <select
               labelId="closer-select-label"
               id="closer-select"
@@ -226,7 +226,9 @@ export default function CloserComissionSheet() {
                     <TableRow>
                       <TableCell>{ticket.businessdetails.clientName}</TableCell>
                       <TableCell>{ticket.businessdetails.fronter}</TableCell>
-                      <TableCell>{ticket.businessdetails.closer}</TableCell>
+                      <TableCell>
+                        <strong>{ticket.businessdetails.closer}</strong>
+                      </TableCell>
                       <TableCell>{ticket.majorAssignee.name}</TableCell>
                       <TableCell>
                         {new Date(ticket.createdAt).toLocaleDateString()}

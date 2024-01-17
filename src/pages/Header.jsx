@@ -417,6 +417,16 @@ const Header = () => {
                         <ListItemText primary="Monthly Fronter Commission" />
                       </ListItem>
                     </Link>
+                    <Link to="/closer_comission_sheet">
+                      <ListItem button>
+                        <ListItemText primary="Daily Closer Sale" />
+                      </ListItem>
+                    </Link>
+                    <Link to="/closer_salary_sheet">
+                      <ListItem button>
+                        <ListItemText primary="Closer Monthly Commission" />
+                      </ListItem>
+                    </Link>
                     <Link to="/refund_history">
                       <ListItem button>
                         <ListItemText primary="Charge Back & Refund" />

@@ -225,7 +225,9 @@ export default function FronterComissionSheet() {
                   <>
                     <TableRow>
                       <TableCell>{ticket.businessdetails.clientName}</TableCell>
-                      <TableCell>{ticket.businessdetails.fronter}</TableCell>
+                      <TableCell>
+                        <strong>{ticket.businessdetails.fronter}</strong>
+                      </TableCell>
                       <TableCell>{ticket.businessdetails.closer}</TableCell>
                       <TableCell>{ticket.majorAssignee.name}</TableCell>
                       <TableCell>
