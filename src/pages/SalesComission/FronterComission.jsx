@@ -141,7 +141,21 @@ export default function FronterComissionSheet() {
   const calculateTotalPaymentForAll = () => {
     return fronters.reduce((total, fronter) => {
       const totalPayment = calculateTotalPayment(fronter, startDate, endDate);
-      return total + totalPayment;
+
+      // Exclude tickets where fronter and closer names are the same
+      const excludedTotalPayment = filteredTickets
+        .filter(
+          (ticket) =>
+            ticket.businessdetails.fronter !== ticket.businessdetails.closer
+        )
+        .reduce((total, ticket) => {
+          if (ticket.businessdetails.fronter === fronter) {
+            return total + parseFloat(ticket.quotation.price);
+          }
+          return total;
+        }, 0);
+
+      return total + excludedTotalPayment;
     }, 0);
   };
 
@@ -188,11 +202,21 @@ export default function FronterComissionSheet() {
               onChange={(e) => handleFronterSelect(e.target.value)}
             >
               <option value="All">All</option>
-              {fronters.map((fronter) => (
-                <option key={fronter} value={fronter}>
-                  {fronter}
-                </option>
-              ))}
+              {fronters
+                .filter(
+                  (fronter) =>
+                    !tickets.some(
+                      (ticket) =>
+                        ticket.businessdetails.fronter ===
+                          ticket.businessdetails.closer &&
+                        ticket.businessdetails.fronter === fronter
+                    )
+                )
+                .map((fronter) => (
+                  <option key={fronter} value={fronter}>
+                    {fronter}
+                  </option>
+                ))}
             </select>
           </div>
         </div>
@@ -221,25 +245,29 @@ export default function FronterComissionSheet() {
             {filteredTickets.map((ticket) => (
               <React.Fragment key={ticket._id}>
                 {(selectedFronter === "All" ||
-                  ticket.businessdetails.fronter === selectedFronter) && (
-                  <>
-                    <TableRow>
-                      <TableCell>{ticket.businessdetails.clientName}</TableCell>
-                      <TableCell>
-                        <strong>{ticket.businessdetails.fronter}</strong>
-                      </TableCell>
-                      <TableCell>{ticket.businessdetails.closer}</TableCell>
-                      <TableCell>{ticket.majorAssignee.name}</TableCell>
-                      <TableCell>
-                        {new Date(ticket.createdAt).toLocaleDateString()}
-                      </TableCell>
-                      <TableCell>
-                        {ticket.businessdetails.work_status}
-                      </TableCell>
-                      <TableCell>{`$${ticket.quotation.price}`}</TableCell>
-                    </TableRow>
-                  </>
-                )}
+                  ticket.businessdetails.fronter === selectedFronter) &&
+                  ticket.businessdetails.fronter !==
+                    ticket.businessdetails.closer && (
+                    <>
+                      <TableRow>
+                        <TableCell>
+                          {ticket.businessdetails.clientName}
+                        </TableCell>
+                        <TableCell>
+                          <strong>{ticket.businessdetails.fronter}</strong>
+                        </TableCell>
+                        <TableCell>{ticket.businessdetails.closer}</TableCell>
+                        <TableCell>{ticket.majorAssignee.name}</TableCell>
+                        <TableCell>
+                          {new Date(ticket.createdAt).toLocaleDateString()}
+                        </TableCell>
+                        <TableCell>
+                          {ticket.businessdetails.work_status}
+                        </TableCell>
+                        <TableCell>{`$${ticket.quotation.price}`}</TableCell>
+                      </TableRow>
+                    </>
+                  )}
               </React.Fragment>
             ))}
             {selectedFronter === "All" && (

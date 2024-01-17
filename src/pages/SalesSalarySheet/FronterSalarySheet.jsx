@@ -37,7 +37,8 @@ export default function FronterSalarySheet() {
     return (
       (!startDate || createdAtDate >= startDate) &&
       (!endDate ||
-        createdAtDate <= new Date(endDate.getTime() + 24 * 60 * 60 * 1000)) // Include end date
+        createdAtDate <= new Date(endDate.getTime() + 24 * 60 * 60 * 1000)) && // Include end date
+      ticket.businessdetails.fronter !== ticket.businessdetails.closer
     );
   });
   useEffect(() => {
@@ -258,35 +259,44 @@ export default function FronterSalarySheet() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {fronters.map((fronter) => {
-              const totalSalary = calculateTotalPayment(
-                fronter,
-                startDate,
-                endDate
-              );
-              const commissionRate = calculateCommissionRate(totalSalary);
-              const commissionableAmount = calculateCommissionableAmount(
-                fronter,
-                startDate,
-                endDate
-              );
+            {fronters
+              .filter((fronter) => {
+                // Check if the current fronter has tickets where closer and fronter names are different
+                return filteredTickets.some(
+                  (ticket) =>
+                    ticket.businessdetails.fronter === fronter &&
+                    ticket.businessdetails.closer !== fronter
+                );
+              })
+              .map((fronter) => {
+                const totalSalary = calculateTotalPayment(
+                  fronter,
+                  startDate,
+                  endDate
+                );
+                const commissionRate = calculateCommissionRate(totalSalary);
+                const commissionableAmount = calculateCommissionableAmount(
+                  fronter,
+                  startDate,
+                  endDate
+                );
 
-              const netSalary = totalSalary * 0.9 * (commissionRate / 100);
+                const netSalary = totalSalary * 0.9 * (commissionRate / 100);
 
-              return (
-                <TableRow key={fronter}>
-                  <TableCell>{fronter}</TableCell>
-                  <TableCell>
-                    <b>{`$${totalSalary}`}</b>
-                  </TableCell>
-                  <TableCell>{`$${roundCommission(
-                    0.9 * totalSalary
-                  )}`}</TableCell>
-                  <TableCell>{`${commissionRate}%`}</TableCell>
-                  <TableCell>{`$${roundCommission(netSalary)}`}</TableCell>
-                </TableRow>
-              );
-            })}
+                return (
+                  <TableRow key={fronter}>
+                    <TableCell>{fronter}</TableCell>
+                    <TableCell>
+                      <b>{`$${totalSalary}`}</b>
+                    </TableCell>
+                    <TableCell>{`$${roundCommission(
+                      0.9 * totalSalary
+                    )}`}</TableCell>
+                    <TableCell>{`${commissionRate}%`}</TableCell>
+                    <TableCell>{`$${roundCommission(netSalary)}`}</TableCell>
+                  </TableRow>
+                );
+              })}
           </TableBody>
         </Table>
       </TableContainer>
