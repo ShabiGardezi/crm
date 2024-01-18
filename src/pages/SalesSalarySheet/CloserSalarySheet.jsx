@@ -245,7 +245,14 @@ export default function CloserSalarySheet() {
     const createdAtDate = new Date(ticket.createdAt);
     return createdAtDate.getMonth() === selectedMonth;
   };
+  const calculateRecurringSales = (closerPayments) => {
+    // Take 90% of each payment and multiply by 5%
+    const recurringSales = closerPayments
+      .map((payment) => 0.9 * payment.payment * 0.05)
+      .reduce((total, recurring) => total + recurring, 0);
 
+    return recurringSales;
+  };
   return (
     <div>
       <Header />
@@ -305,19 +312,71 @@ export default function CloserSalarySheet() {
 
               const bountyAmount = calculateBountyAmount(totalSalary);
 
+              // Find the payment history for the current closer
+              const closerPaymentHistory = tickets
+                .filter((ticket) => ticket.businessdetails.closer === closer)
+                .map((ticket) => ticket.payment_history.slice(1)) // Skip the entry at index 0
+                .flat();
+
+              // Separate payments for the closer and other users
+              const closerPayments = [];
+              const otherUserPayments = [];
+
+              // Process each payment in the payment history
+              closerPaymentHistory.forEach((payment) => {
+                if (payment.user === closer) {
+                  // Payment associated with the closer
+                  closerPayments.push(payment);
+                } else {
+                  // Payment associated with another user
+                  otherUserPayments.push(payment);
+                }
+              });
+
               return (
-                <TableRow key={closer}>
-                  <TableCell>{closer}</TableCell>
-                  <TableCell>
-                    <b>{`$${totalSalary}`}</b>
-                  </TableCell>
-                  <TableCell>
-                    <b>{`$${sumOfTenPercent.toFixed(2)}`}</b>
-                  </TableCell>
-                  <TableCell>
-                    <b>{`${bountyAmount.toFixed(2)} PKR`}</b>
-                  </TableCell>
-                </TableRow>
+                <React.Fragment key={closer}>
+                  {/* Row for Closer's Payments */}
+                  <TableRow>
+                    <TableCell>{closer}</TableCell>
+                    <TableCell>
+                      <b>{`$${totalSalary}`}</b>
+                    </TableCell>
+                    <TableCell>
+                      <b>{`$${sumOfTenPercent.toFixed(2)}`}</b>
+                    </TableCell>
+                    <TableCell>
+                      <b>{`${bountyAmount.toFixed(2)} PKR`}</b>
+                    </TableCell>
+                    <TableCell>
+                      <b>{`$${calculateRecurringSales(closerPayments).toFixed(
+                        2
+                      )}`}</b>
+                    </TableCell>
+                  </TableRow>
+
+                  {/* Rows for Other User's Payments */}
+                  {otherUserPayments.map((payment, index) => (
+                    <TableRow key={`${closer}-other-user-${index}`}>
+                      <TableCell>{payment.user}</TableCell>
+                      <TableCell colSpan={3}></TableCell>
+                      <TableCell>
+                        <b>{`$${calculateRecurringSales(
+                          otherUserPayments
+                        ).toFixed(2)}`}</b>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+
+                  {/* Row for Recurring Sales */}
+                  {/* <TableRow>
+                    <TableCell colSpan={4}></TableCell>
+                    <TableCell>
+                      <b>{`$${calculateRecurringSales(closerPayments).toFixed(
+                        2
+                      )}`}</b>
+                    </TableCell>
+                  </TableRow> */}
+                </React.Fragment>
               );
             })}
           </TableBody>
