@@ -122,14 +122,6 @@ export default function CloserSalarySheet() {
     ...new Set(tickets.map((ticket) => ticket.businessdetails.closer)),
   ];
 
-  // Calculate total payment for all closers
-  const calculateTotalPaymentForAll = () => {
-    return closers.reduce((total, closer) => {
-      const totalPayment = calculateTotalPayment(closer, startDate, endDate);
-      return total + totalPayment;
-    }, 0);
-  };
-
   const calculateCommissionRate = (totalSalary) => {
     const commissionThresholdLow = 500;
     const commissionThresholdMedium = 800;
@@ -245,14 +237,28 @@ export default function CloserSalarySheet() {
     const createdAtDate = new Date(ticket.createdAt);
     return createdAtDate.getMonth() === selectedMonth;
   };
-  const calculateRecurringSales = (closerPayments) => {
-    // Take 90% of each payment and multiply by 5%
-    const recurringSales = closerPayments
+
+  // Function to calculate recurring sales
+  const calculateRecurringSalesForMonth = (closerPayments, selectedMonth) => {
+    // Filter payments for the selected month
+    const paymentsForMonth = closerPayments.filter((payment) => {
+      const paymentDate = new Date(payment.date);
+      return paymentDate.getMonth() === selectedMonth;
+    });
+
+    // Filter payments with non-zero payment amounts and associated users
+    const validPayments = paymentsForMonth.filter(
+      (payment) => payment.payment > 0 && payment.user
+    );
+
+    // Take 90% of each valid payment and multiply by 5%
+    const recurringSales = validPayments
       .map((payment) => 0.9 * payment.payment * 0.05)
       .reduce((total, recurring) => total + recurring, 0);
 
     return recurringSales;
   };
+
   return (
     <div>
       <Header />
@@ -332,7 +338,10 @@ export default function CloserSalarySheet() {
                   otherUserPayments.push(payment);
                 }
               });
-
+              const recurringSalesForMonth = calculateRecurringSalesForMonth(
+                closerPayments,
+                selectedMonth
+              );
               return (
                 <React.Fragment key={closer}>
                   {/* Row for Closer's Payments */}
@@ -348,9 +357,10 @@ export default function CloserSalarySheet() {
                       <b>{`${bountyAmount.toFixed(2)} PKR`}</b>
                     </TableCell>
                     <TableCell>
-                      <b>{`$${calculateRecurringSales(closerPayments).toFixed(
-                        2
-                      )}`}</b>
+                      <b>{`$${calculateRecurringSalesForMonth(
+                        closerPayments,
+                        selectedMonth
+                      ).toFixed(2)}`}</b>
                     </TableCell>
                   </TableRow>
 
@@ -360,8 +370,9 @@ export default function CloserSalarySheet() {
                       <TableCell>{payment.user}</TableCell>
                       <TableCell colSpan={3}></TableCell>
                       <TableCell>
-                        <b>{`$${calculateRecurringSales(
-                          otherUserPayments
+                        <b>{`$${calculateRecurringSalesForMonth(
+                          otherUserPayments,
+                          selectedMonth
                         ).toFixed(2)}`}</b>
                       </TableCell>
                     </TableRow>
