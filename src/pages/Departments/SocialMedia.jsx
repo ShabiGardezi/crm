@@ -260,7 +260,7 @@ const SocialMediaForm = () => {
               name="clientName"
               value={formData.clientName}
               onChange={handleChange}
-              multiline
+              required
               onInput={(e) => fetchSuggestions(e.target.value)}
             />
 
@@ -580,3 +580,5 @@ const SocialMediaForm = () => {
 };
 
 export default SocialMediaForm;
+// WORK TYPE => ISNTAGRAM, FACEBOOK
+// No of posts on selected work type

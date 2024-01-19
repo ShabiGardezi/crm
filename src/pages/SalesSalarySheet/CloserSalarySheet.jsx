@@ -169,7 +169,7 @@ export default function CloserSalarySheet() {
           <TableHead>
             <TableRow>
               <TableCell>Agent Name</TableCell>
-              <TableCell>Total Sales</TableCell>
+              <TableCell>Total New Sales</TableCell>
               <TableCell>
                 <Tooltip
                   title="This column shows 10% on 90% of payment for New And Up Sales of Closer"

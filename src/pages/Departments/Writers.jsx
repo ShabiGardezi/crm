@@ -187,7 +187,7 @@ const WritersForm = () => {
             <Header/>
             <form onSubmit={handleSubmit}>
                 <div className="formtitle">
-                    <Typography variant="h5">Custometer</Typography>
+                    <Typography variant="h5">Customer</Typography>
                 </div>
                 <Grid container spacing={3}>
                     <Grid item xs={5}>

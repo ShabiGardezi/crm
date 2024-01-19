@@ -202,7 +202,7 @@ export default function CloserComissionSheet() {
         style={{ textAlign: "center", marginBottom: "2%" }}
         fontFamily={"revert-layer"}
       >
-        Closer's All Time Sheet
+        Closer Daily Sheet
       </Typography>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 800 }} aria-label="custom pagination table">
@@ -215,6 +215,7 @@ export default function CloserComissionSheet() {
               <TableCell>Date</TableCell>
               <TableCell>Work Type</TableCell>
               <TableCell>Client Payment</TableCell>
+              <TableCell>Sales Type</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -237,7 +238,40 @@ export default function CloserComissionSheet() {
                         {ticket.businessdetails.work_status}
                       </TableCell>
                       <TableCell>{`$${ticket.quotation.price}`}</TableCell>
+                      {/* <TableCell>
+                        {ticket.payment_history[0].payment !== 0
+                          ? "Recurring"
+                          : ticket.businessdetails.fronter !==
+                            ticket.businessdetails.closer
+                          ? "New Sales"
+                          : "Up Sales"}
+                      </TableCell>
+                      */}
                     </TableRow>
+
+                    {/* Display payment history for the current ticket */}
+                    {ticket.payment_history.slice(1).map((payment, index) => (
+                      <TableRow key={`${ticket._id}-payment-${index}`}>
+                        <TableCell>
+                          {ticket.businessdetails.clientName}
+                        </TableCell>
+                        <TableCell>{ticket.businessdetails.fronter}</TableCell>
+                        <TableCell>
+                          <strong>{payment.closer}</strong>
+                        </TableCell>
+                        <TableCell>{ticket.majorAssignee.name}</TableCell>
+                        <TableCell>
+                          {new Date(payment.date).toLocaleDateString()}
+                        </TableCell>
+                        <TableCell>
+                          {ticket.businessdetails.work_status}
+                        </TableCell>
+                        <TableCell>
+                          <b>{`$${payment.payment}`}</b>
+                        </TableCell>
+                        {/* <TableCell>{"Recurring"}</TableCell> */}
+                      </TableRow>
+                    ))}
                   </>
                 )}
               </React.Fragment>
@@ -272,14 +306,6 @@ export default function CloserComissionSheet() {
                   </b>
                 </TableCell>
               </TableRow>
-
-              {/* <TableCell colSpan={5}></TableCell>
-              <TableCell>
-                <b>Commission for {selectedCloser}:</b>
-              </TableCell>
-              <TableCell>
-                <b>{`$${calculateCommission()}`}</b>
-              </TableCell> */}
             </TableBody>
           )}
         </Table>
