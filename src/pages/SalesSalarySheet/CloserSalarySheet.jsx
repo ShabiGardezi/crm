@@ -8,6 +8,7 @@ import {
   TableHead,
   Paper,
   Typography,
+  Tooltip,
 } from "@mui/material";
 import Header from "../Header";
 
@@ -90,9 +91,8 @@ export default function CloserSalarySheet() {
     // Point 2: Check payment_history for each ticket for the selected month
     const totalFromPaymentHistory = tickets
       .map((ticket) => ticket.payment_history)
-      .filter((paymentHistory) => paymentHistory.length > 1) // Check if payment_history has more than one entry
+      .filter((paymentHistory) => paymentHistory.length > 1)
       .reduce((total, paymentHistory) => {
-        // Start from 1st index
         for (let i = 1; i < paymentHistory.length; i++) {
           const paymentDate = new Date(paymentHistory[i].date);
           if (
@@ -105,10 +105,40 @@ export default function CloserSalarySheet() {
         return total;
       }, 0);
 
-    // Calculate the overall total for the selected month
-    const overallTotal = totalFromQuotation + totalFromPaymentHistory;
+    // Point 2: Calculate total commission for the selected month
+    const totalCommission = tickets
+      .map((ticket) => ticket.payment_history)
+      .filter((paymentHistory) => paymentHistory.length > 1)
+      .reduce((total, paymentHistory) => {
+        for (let i = 1; i < paymentHistory.length; i++) {
+          const paymentDate = new Date(paymentHistory[i].date);
+          if (
+            paymentHistory[i].closer === closerName &&
+            paymentDate.getMonth() === selectedMonth
+          ) {
+            const paymentAmount = paymentHistory[i].payment;
+            const commission = 0.05 * (0.9 * paymentAmount); // 5% commission on 90% of the payment
+            total += commission;
+          }
+        }
+        return total;
+      }, 0);
 
-    return overallTotal;
+    // Calculate the overall total for the selected month (excluding commission)
+    const overallTotal = totalFromQuotation;
+
+    return { overallTotal, totalCommission };
+  };
+  const calculateTotalCommissionForCloser = (closer, selectedMonth) => {
+    const sumOfTenPercent = calculateSumOfTenPercent(
+      tickets,
+      closer,
+      selectedMonth
+    );
+
+    const { totalCommission } = calculateTotalForCloser(closer, selectedMonth);
+
+    return sumOfTenPercent + totalCommission;
   };
 
   return (
@@ -139,15 +169,31 @@ export default function CloserSalarySheet() {
           <TableHead>
             <TableRow>
               <TableCell>Agent Name</TableCell>
-              <TableCell>Total Payment</TableCell>
-              <TableCell>10% Of Sales</TableCell>
+              <TableCell>Total Sales</TableCell>
+              <TableCell>
+                <Tooltip
+                  title="This column shows 10% on 90% of payment for New And Up Sales of Closer"
+                  arrow
+                >
+                  <span>10% Of Sales</span>
+                </Tooltip>
+              </TableCell>
+              <TableCell>
+                <Tooltip title="This column shows 5% on 90% of reurring payment">
+                  <span>Recurring Sales</span>
+                </Tooltip>
+              </TableCell>
+              <TableCell>
+                <Tooltip title="Total Commission On Recurring, New and Up Sales">
+                  <span>Total Commission</span>
+                </Tooltip>
+              </TableCell>
               <TableCell>Bounty On Total Sales</TableCell>
-              <TableCell>Recurring Sales</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {closers.map((closer) => {
-              const totalSalary = calculateTotalForCloser(
+              const { overallTotal, totalCommission } = calculateTotalForCloser(
                 closer,
                 selectedMonth
               ); // Calculate total for the closer
@@ -158,16 +204,23 @@ export default function CloserSalarySheet() {
                 selectedMonth
               );
 
-              const bountyAmount = calculateBountyAmount(totalSalary);
-
+              const bountyAmount = calculateBountyAmount(overallTotal);
+              const totalCommissionForCloser =
+                calculateTotalCommissionForCloser(closer, selectedMonth);
               return (
                 <TableRow key={closer}>
                   <TableCell>{closer}</TableCell>
                   <TableCell>
-                    <b>{`$${totalSalary.toFixed(2)}`}</b>
+                    <b>{`$${overallTotal.toFixed(2)}`}</b>
                   </TableCell>
                   <TableCell>
                     <b>{`$${sumOfTenPercent.toFixed(2)}`}</b>
+                  </TableCell>
+                  <TableCell>
+                    <b>{`$${totalCommission.toFixed(2)}`}</b>
+                  </TableCell>
+                  <TableCell>
+                    <b>{`$${totalCommissionForCloser.toFixed(2)}`}</b>
                   </TableCell>
                   <TableCell>
                     <b>{`${bountyAmount.toFixed(2)} PKR`}</b>
