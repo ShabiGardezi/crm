@@ -30,11 +30,17 @@ export default function FronterComissionSheet() {
   const filteredTickets = tickets.filter((ticket) => {
     const createdAtDate = new Date(ticket.createdAt);
 
+    // Set the time components to the start and end of the day
+    const startOfDay = new Date(startDate);
+    startOfDay.setHours(0, 0, 0, 0);
+
+    const endOfDay = new Date(endDate);
+    endOfDay.setHours(23, 59, 59, 999);
+
     // Check if the ticket's createdAt date is within the selected range
     return (
-      (!startDate || createdAtDate >= startDate) &&
-      (!endDate ||
-        createdAtDate <= new Date(endDate.getTime() + 24 * 60 * 60 * 1000)) // Include end date
+      (!startDate || createdAtDate >= startOfDay) &&
+      (!endDate || createdAtDate <= endOfDay)
     );
   });
   useEffect(() => {

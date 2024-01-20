@@ -22,6 +22,7 @@ export default function CloserComissionSheet() {
   const handleStartDateSelect = (date) => {
     setStartDate(date);
   };
+  console.log(startDate);
 
   // Handle end date selection
   const handleEndDateSelect = (date) => {
@@ -30,13 +31,20 @@ export default function CloserComissionSheet() {
   const filteredTickets = tickets.filter((ticket) => {
     const createdAtDate = new Date(ticket.createdAt);
 
+    // Set the time components to the start and end of the day
+    const startOfDay = new Date(startDate);
+    startOfDay.setHours(0, 0, 0, 0);
+
+    const endOfDay = new Date(endDate);
+    endOfDay.setHours(23, 59, 59, 999);
+
     // Check if the ticket's createdAt date is within the selected range
     return (
-      (!startDate || createdAtDate >= startDate) &&
-      (!endDate ||
-        createdAtDate <= new Date(endDate.getTime() + 24 * 60 * 60 * 1000)) // Include end date
+      (!startDate || createdAtDate >= startOfDay) &&
+      (!endDate || createdAtDate <= endOfDay)
     );
   });
+
   useEffect(() => {
     const fetchTickets = async () => {
       try {
@@ -238,7 +246,7 @@ export default function CloserComissionSheet() {
                         {ticket.businessdetails.work_status}
                       </TableCell>
                       <TableCell>{`$${ticket.quotation.price}`}</TableCell>
-                      {/* <TableCell>
+                      <TableCell>
                         {ticket.payment_history[0].payment !== 0
                           ? "Recurring"
                           : ticket.businessdetails.fronter !==
@@ -246,7 +254,6 @@ export default function CloserComissionSheet() {
                           ? "New Sales"
                           : "Up Sales"}
                       </TableCell>
-                      */}
                     </TableRow>
 
                     {/* Display payment history for the current ticket */}
@@ -269,7 +276,7 @@ export default function CloserComissionSheet() {
                         <TableCell>
                           <b>{`$${payment.payment}`}</b>
                         </TableCell>
-                        {/* <TableCell>{"Recurring"}</TableCell> */}
+                        {<TableCell>{"Recurring"}</TableCell>}
                       </TableRow>
                     ))}
                   </>
