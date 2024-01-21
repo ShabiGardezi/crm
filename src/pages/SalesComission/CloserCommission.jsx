@@ -22,7 +22,6 @@ export default function CloserComissionSheet() {
   const handleStartDateSelect = (date) => {
     setStartDate(date);
   };
-  console.log(startDate);
 
   // Handle end date selection
   const handleEndDateSelect = (date) => {
