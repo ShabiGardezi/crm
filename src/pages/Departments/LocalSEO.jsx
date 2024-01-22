@@ -26,7 +26,7 @@ const LocalSEOForm = () => {
     department: "Local SEO / GMB Optimization",
     priorityLevel: "",
     assignor: user?.username || "",
-    dueDate: new Date().toISOString().substr(0, 10), // Initialize with the current date in yyyy-mm-dd format
+    dueDate: new Date().toISOString().substr(0, 10),
     keywords: "",
     supportPerson: "",
     webUrl: "",
@@ -49,6 +49,7 @@ const LocalSEOForm = () => {
     notes: "",
     fronter: "",
     closer: "",
+    outsourced_work: "",
   });
   const sendNotification = async (
     ticketId,
@@ -118,6 +119,7 @@ const LocalSEOForm = () => {
         assignorDepartment: user.department._id,
         department: formData.department,
         businessdetails: {
+          outsourced_work: formData.outsourced_work,
           fronter: formData.fronter,
           supportPerson: formData.supportPerson,
           closer: formData.closer,
@@ -290,10 +292,16 @@ const LocalSEOForm = () => {
             />
           </Grid>
         </Grid>
-
-        <div className="formtitle ticketHeading">
-          <Typography variant="h5">Sale Department</Typography>
-        </div>
+        {user?.department?._id !== "65ae7e27e00c92860edad99c" && (
+          <div className="formtitle ticketHeading">
+            <Typography variant="h5">Sale Department</Typography>
+          </div>
+        )}
+        {user?.department?._id === "65ae7e27e00c92860edad99c" && (
+          <div className="formtitle ticketHeading">
+            <Typography variant="h5">Work Information</Typography>
+          </div>
+        )}
         <Grid container spacing={2}>
           <Grid item xs={3}>
             <TextField
@@ -305,62 +313,88 @@ const LocalSEOForm = () => {
               disabled
             />
           </Grid>
-          <Grid item xs={3}>
-            <FormControl fullWidth>
-              <InputLabel id="supportPersonLabel">Support Person</InputLabel>
-              <Select
-                labelId="supportPersonLabel"
-                id="supportPerson"
-                name="supportPerson"
-                value={formData.supportPerson}
-                onChange={handleChange}
-              >
-                {users.map((user) => (
-                  <MenuItem key={user._id} value={user.username}>
-                    {user.username}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item xs={3}>
-            <FormControl fullWidth>
-              <InputLabel id="closerLabel">Closer Person</InputLabel>
-              <Select
-                labelId="closerLabel"
-                id="closer"
-                name="closer"
-                value={formData.closer}
-                onChange={handleChange}
-                required
-              >
-                {users.map((user) => (
-                  <MenuItem key={user._id} value={user.username}>
-                    {user.username}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item xs={3}>
-            <FormControl fullWidth>
-              <InputLabel id="fronterLabel">Fronter</InputLabel>
-              <Select
-                labelId="fronterLabel"
-                id="fronter"
-                name="fronter"
-                value={formData.fronter}
-                onChange={handleChange}
-                required
-              >
-                {users.map((user) => (
-                  <MenuItem key={user._id} value={user.username}>
-                    {user.username}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
+          {user?.department?._id === "65ae7e27e00c92860edad99c" && (
+            <Grid item xs={3}>
+              <FormControl fullWidth required>
+                <InputLabel id="outsourcedWorkLabel">
+                  Outsourced Work
+                </InputLabel>
+                <Select
+                  labelId="outsourcedWorkLabel"
+                  id="outsourcedWork"
+                  name="outsourced_work"
+                  value={formData.outsourced_work}
+                  onChange={handleChange}
+                >
+                  <MenuItem value="L.L.G.">L.L.G.</MenuItem>
+                  <MenuItem value="Meri Jagga">Meri Jagga</MenuItem>
+                  <MenuItem value="Others">Others</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+          )}
+          {user?.department?._id !== "65ae7e27e00c92860edad99c" && (
+            <>
+              <Grid item xs={3}>
+                <FormControl fullWidth>
+                  <InputLabel id="supportPersonLabel">
+                    Support Person
+                  </InputLabel>
+                  <Select
+                    labelId="supportPersonLabel"
+                    id="supportPerson"
+                    name="supportPerson"
+                    value={formData.supportPerson}
+                    onChange={handleChange}
+                  >
+                    {users.map((user) => (
+                      <MenuItem key={user._id} value={user.username}>
+                        {user.username}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={3}>
+                <FormControl fullWidth>
+                  <InputLabel id="closerLabel">Closer Person</InputLabel>
+                  <Select
+                    labelId="closerLabel"
+                    id="closer"
+                    name="closer"
+                    value={formData.closer}
+                    onChange={handleChange}
+                    required
+                  >
+                    {users.map((user) => (
+                      <MenuItem key={user._id} value={user.username}>
+                        {user.username}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={3}>
+                <FormControl fullWidth>
+                  <InputLabel id="fronterLabel">Fronter</InputLabel>
+                  <Select
+                    labelId="fronterLabel"
+                    id="fronter"
+                    name="fronter"
+                    value={formData.fronter}
+                    onChange={handleChange}
+                    required
+                  >
+                    {users.map((user) => (
+                      <MenuItem key={user._id} value={user.username}>
+                        {user.username}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+            </>
+          )}
         </Grid>
         <div className="formtitle ticketHeading">
           <Typography variant="h5">Local SEO Form</Typography>

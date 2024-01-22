@@ -335,62 +335,88 @@ const WordPress = () => {
               disabled
             />
           </Grid>{" "}
-          <Grid item xs={3}>
-            <FormControl fullWidth>
-              <InputLabel id="supportPersonLabel">Support Person</InputLabel>
-              <Select
-                labelId="supportPersonLabel"
-                id="supportPerson"
-                name="supportPerson"
-                value={formData.supportPerson}
-                onChange={handleChange}
-              >
-                {users.map((user) => (
-                  <MenuItem key={user._id} value={user.username}>
-                    {user.username}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item xs={3}>
-            <FormControl fullWidth>
-              <InputLabel id="closerLabel">Closer Person</InputLabel>
-              <Select
-                labelId="closerLabel"
-                id="closer"
-                name="closer"
-                value={formData.closer}
-                onChange={handleChange}
-                required
-              >
-                {users.map((user) => (
-                  <MenuItem key={user._id} value={user.username}>
-                    {user.username}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item xs={3}>
-            <FormControl fullWidth>
-              <InputLabel id="fronterLabel">Fronter</InputLabel>
-              <Select
-                labelId="fronterLabel"
-                id="fronter"
-                name="fronter"
-                value={formData.fronter}
-                onChange={handleChange}
-                required
-              >
-                {users.map((user) => (
-                  <MenuItem key={user._id} value={user.username}>
-                    {user.username}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
+          {user?.department?._id === "65ae7e27e00c92860edad99c" && (
+            <Grid item xs={3}>
+              <FormControl fullWidth required>
+                <InputLabel id="outsourcedWorkLabel">
+                  Outsourced Work
+                </InputLabel>
+                <Select
+                  labelId="outsourcedWorkLabel"
+                  id="outsourcedWork"
+                  name="outsourced_work"
+                  value={formData.outsourced_work}
+                  onChange={handleChange}
+                >
+                  <MenuItem value="L.L.G.">L.L.G.</MenuItem>
+                  <MenuItem value="Meri Jagga">Meri Jagga</MenuItem>
+                  <MenuItem value="Others">Others</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+          )}
+          {user?.department?._id !== "65ae7e27e00c92860edad99c" && (
+            <>
+              <Grid item xs={3}>
+                <FormControl fullWidth>
+                  <InputLabel id="supportPersonLabel">
+                    Support Person
+                  </InputLabel>
+                  <Select
+                    labelId="supportPersonLabel"
+                    id="supportPerson"
+                    name="supportPerson"
+                    value={formData.supportPerson}
+                    onChange={handleChange}
+                  >
+                    {users.map((user) => (
+                      <MenuItem key={user._id} value={user.username}>
+                        {user.username}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={3}>
+                <FormControl fullWidth>
+                  <InputLabel id="closerLabel">Closer Person</InputLabel>
+                  <Select
+                    labelId="closerLabel"
+                    id="closer"
+                    name="closer"
+                    value={formData.closer}
+                    onChange={handleChange}
+                    required
+                  >
+                    {users.map((user) => (
+                      <MenuItem key={user._id} value={user.username}>
+                        {user.username}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={3}>
+                <FormControl fullWidth>
+                  <InputLabel id="fronterLabel">Fronter</InputLabel>
+                  <Select
+                    labelId="fronterLabel"
+                    id="fronter"
+                    name="fronter"
+                    value={formData.fronter}
+                    onChange={handleChange}
+                    required
+                  >
+                    {users.map((user) => (
+                      <MenuItem key={user._id} value={user.username}>
+                        {user.username}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+            </>
+          )}
         </Grid>
         <div className="formtitle ticketHeading">
           <Typography variant="h5">Ticket Details</Typography>

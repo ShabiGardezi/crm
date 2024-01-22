@@ -130,24 +130,24 @@ export default function ShowCloseTickets() {
   };
   useEffect(() => {
     // Check if the user's department id is equal to the specified value
-    if (user?.department?._id === "651b3409819ff0aec6af1387") {
-      const fetchData = async () => {
-        try {
-          const response = await fetch(
-            `${apiUrl}/api/tickets/completedTickets?departmentId=${user?.department?._id}`
-          );
-          if (response.ok) {
-            const data = await response.json();
-            setTickets(data.payload);
-          } else {
-            console.error("Error fetching data");
-          }
-        } catch (error) {
-          console.error("Error fetching data", error);
+    // if (user?.department?._id === "651b3409819ff0aec6af1387") {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          `${apiUrl}/api/tickets/completedTickets?departmentId=${user?.department?._id}`
+        );
+        if (response.ok) {
+          const data = await response.json();
+          setTickets(data.payload);
+        } else {
+          console.error("Error fetching data");
         }
-      };
-      fetchData();
-    }
+      } catch (error) {
+        console.error("Error fetching data", error);
+      }
+    };
+    fetchData();
+    // }
   }, [user?.department?._id]); // Include user.department._id in the dependency array
 
   return (
@@ -218,21 +218,32 @@ export default function ShowCloseTickets() {
                       <VisibilityIcon />
                     </IconButton>
                   </TableCell>
-                  <TableCell style={{ width: 160 }} align="left">
-                    <FormControl>
-                      <Select
-                        value={selectedStatus[ticket._id] || "Completed"}
-                        onChange={(e) => handleStatusChange(e, ticket._id)}
-                      >
-                        <MenuItem value="Not Started Yet">
-                          Not Started Yet
-                        </MenuItem>
-                        <MenuItem value="In Progress">In Progress</MenuItem>
-                        <MenuItem value="Pending">Pending</MenuItem>
-                        <MenuItem value="Completed">Completed</MenuItem>
-                      </Select>
-                    </FormControl>
-                  </TableCell>
+                  {user?.department?._id !== "651b3409819ff0aec6af1387" ||
+                    (user?.department?._id !== "65ae7e27e00c92860edad99c" && (
+                      <TableCell style={{ width: 160 }} align="left">
+                        <FormControl>
+                          <Select
+                            value={
+                              selectedStatus[ticket._id] || "Not Started Yet"
+                            }
+                            onChange={(e) => handleStatusChange(e, ticket._id)}
+                          >
+                            <MenuItem value="Not Started Yet">
+                              Not Started Yet
+                            </MenuItem>
+                            <MenuItem value="In Progress">In Progress</MenuItem>
+                            <MenuItem value="Pending">Pending</MenuItem>
+                            <MenuItem value="Completed">Completed</MenuItem>
+                          </Select>
+                        </FormControl>
+                      </TableCell>
+                    ))}
+                  {user?.department?._id === "651b3409819ff0aec6af1387" ||
+                    (user?.department?._id === "65ae7e27e00c92860edad99c" && (
+                      <TableCell style={{ width: 160 }} align="left">
+                        {ticket.status}
+                      </TableCell>
+                    ))}
                 </TableRow>
               ))}
             {emptyRows > 0 && (

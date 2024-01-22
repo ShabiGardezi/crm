@@ -24,8 +24,11 @@ const SocialMediaForm = () => {
   const [selectedClient, setSelectedClient] = useState(null);
   const [clientSuggestions, setClientSuggestions] = useState([]);
   const [showFbReviewsField, setShowFbReviewsField] = useState(false);
+  const [showPostField, setShowPostField] = useState(false);
   const [showLikesFollowersField, setShowLikesFollowersField] = useState(false);
   const [showGmbReviewsField, setShowGmbReviewsField] = useState(false);
+  const [showOthers, setShowOthers] = useState(false);
+  const [showProjectNameField, setShowProjectNameField] = useState(false);
 
   const [formData, setFormData] = useState({
     department: "Social Media / Customer Reviews Management",
@@ -53,6 +56,11 @@ const SocialMediaForm = () => {
     closer: "",
     fronter: "",
     noOfFbreviews: "0",
+    // Other_Project: "",
+    Other_Project_Name: "",
+    Other_Platform: "",
+    no_of_posts: "",
+    outsourced_work: "",
     LikesFollowers: "0",
   });
   useEffect(() => {
@@ -92,6 +100,13 @@ const SocialMediaForm = () => {
       setShowFbReviewsField(value === "No. Of FB Reviews");
       setShowLikesFollowersField(value === "Likes/Followers");
       setShowGmbReviewsField(value === "No.Of GMB Reviews");
+      setShowOthers(value === "Other_Posts");
+      setShowPostField(
+        value === "Instaram_Posting" || value === "Facebook_Posting"
+      );
+    }
+    if (name === "outsourced_work") {
+      setShowProjectNameField(value === "Other_Project");
     }
     setFormData({
       ...formData,
@@ -126,6 +141,13 @@ const SocialMediaForm = () => {
   const handleSubmit = async (event) => {
     event.preventDefault(); // Prevent the default form submission behavior
     try {
+      let selectedOutsourcedWork = formData.outsourced_work;
+
+      // Check if outsourced_work is "Other_Project"
+      if (selectedOutsourcedWork === "Other_Project") {
+        // Set the value of outsourced_work to the filled value of Other_Project
+        selectedOutsourcedWork = formData.Other_Project_Name;
+      }
       // Make an Axios POST request to your backend API
       const selectedDepartment = departments.find(
         (department) => department.name === formData.department
@@ -155,6 +177,11 @@ const SocialMediaForm = () => {
           noOfreviewsGMB: formData.noOfreviewsGMB,
           noOfFbreviews: formData.noOfFbreviews,
           LikesFollowers: formData.LikesFollowers,
+          Other_Platform: formData.Other_Platform,
+          no_of_posts: formData.no_of_posts,
+          outsourced_work: formData.outsourced_work,
+          // Other_Project: formData.Other_Project,
+          Other_Project_Name: formData.Other_Project_Name,
           notes: formData.notes,
         },
         quotation: {
@@ -307,62 +334,104 @@ const SocialMediaForm = () => {
             />
           </Grid>
 
-          <Grid item xs={3}>
-            <FormControl fullWidth>
-              <InputLabel id="supportPersonLabel">Support Person</InputLabel>
-              <Select
-                labelId="supportPersonLabel"
-                id="supportPerson"
-                name="supportPerson"
-                value={formData.supportPerson}
-                onChange={handleChange}
-              >
-                {users.map((user) => (
-                  <MenuItem key={user._id} value={user.username}>
-                    {user.username}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item xs={3}>
-            <FormControl fullWidth>
-              <InputLabel id="closerLabel">Closer Person</InputLabel>
-              <Select
-                labelId="closerLabel"
-                id="closer"
-                name="closer"
-                value={formData.closer}
-                onChange={handleChange}
-                required
-              >
-                {users.map((user) => (
-                  <MenuItem key={user._id} value={user.username}>
-                    {user.username}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item xs={3}>
-            <FormControl fullWidth>
-              <InputLabel id="fronterLabel">Fronter</InputLabel>
-              <Select
-                labelId="fronterLabel"
-                id="fronter"
-                name="fronter"
-                value={formData.fronter}
-                onChange={handleChange}
-                required
-              >
-                {users.map((user) => (
-                  <MenuItem key={user._id} value={user.username}>
-                    {user.username}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
+          {user?.department?._id === "65ae7e27e00c92860edad99c" && (
+            <>
+              <Grid item xs={3}>
+                <FormControl fullWidth required>
+                  <InputLabel id="outsourcedWorkLabel">
+                    Outsourced Work
+                  </InputLabel>
+                  <Select
+                    labelId="outsourcedWorkLabel"
+                    id="outsourcedWork"
+                    name="outsourced_work"
+                    value={formData.outsourced_work}
+                    onChange={handleChange}
+                  >
+                    <MenuItem value="L.L.G.">L.L.G.</MenuItem>
+                    <MenuItem value="Meri Jagga">Meri Jagga</MenuItem>
+                    <MenuItem value="Other_Project">Others</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              {/* Conditionally render the Project Name field based on the selection */}
+              {showProjectNameField && (
+                <Grid item xs={3}>
+                  <TextField
+                    label="Project Name"
+                    fullWidth
+                    name="Other_Project_Name"
+                    value={formData.Other_Project_Name}
+                    onChange={handleChange}
+                    required={showProjectNameField}
+                  />
+                </Grid>
+              )}
+            </>
+          )}
+
+          {user?.department?._id !== "65ae7e27e00c92860edad99c" && (
+            <>
+              <Grid item xs={3}>
+                <FormControl fullWidth>
+                  <InputLabel id="supportPersonLabel">
+                    Support Person
+                  </InputLabel>
+                  <Select
+                    labelId="supportPersonLabel"
+                    id="supportPerson"
+                    name="supportPerson"
+                    value={formData.supportPerson}
+                    onChange={handleChange}
+                  >
+                    {users.map((user) => (
+                      <MenuItem key={user._id} value={user.username}>
+                        {user.username}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={3}>
+                <FormControl fullWidth>
+                  <InputLabel id="closerLabel">Closer Person</InputLabel>
+                  <Select
+                    labelId="closerLabel"
+                    id="closer"
+                    name="closer"
+                    value={formData.closer}
+                    onChange={handleChange}
+                    required
+                  >
+                    {users.map((user) => (
+                      <MenuItem key={user._id} value={user.username}>
+                        {user.username}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={3}>
+                <FormControl fullWidth>
+                  <InputLabel id="fronterLabel">Fronter</InputLabel>
+                  <Select
+                    labelId="fronterLabel"
+                    id="fronter"
+                    name="fronter"
+                    value={formData.fronter}
+                    onChange={handleChange}
+                    required
+                  >
+                    {users.map((user) => (
+                      <MenuItem key={user._id} value={user.username}>
+                        {user.username}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+            </>
+          )}
         </Grid>
         <div className="formtitle ticketHeading">
           <Typography variant="h5">
@@ -479,43 +548,100 @@ const SocialMediaForm = () => {
               <MenuItem value="No. Of FB Reviews">No. Of FB Reviews </MenuItem>
               <MenuItem value="Likes/Followers">Likes/Followers</MenuItem>
               <MenuItem value="No.Of GMB Reviews">No.Of GMB Reviews</MenuItem>
+              <MenuItem value="Instaram_Posting">Instaram Posting</MenuItem>
+              <MenuItem value="Facebook_Posting">Facebook Posting</MenuItem>
+              <MenuItem value="Other_Posts">Others Posting</MenuItem>
             </TextField>
           </Grid>
-          {showGmbReviewsField && (
-            <Grid item xs={3}>
-              <TextField
-                label="No. Of FB Reviews"
-                fullWidth
-                name="noOfFbreviews"
-                value={formData.noOfFbreviews}
-                onChange={handleChange}
-                multiline
-              />
-            </Grid>
-          )}
           {showFbReviewsField && (
-            <Grid item xs={3}>
-              <TextField
-                label="No. Of FB Reviews"
-                fullWidth
-                name="noOfreviewsGMB"
-                value={formData.noOfreviewsGMB}
-                onChange={handleChange}
-                multiline
-              />
-            </Grid>
+            <>
+              <Grid item xs={3}>
+                <TextField
+                  label="No. Of FB Reviews"
+                  fullWidth
+                  name="noOfFbreviews"
+                  value={formData.noOfFbreviews}
+                  onChange={handleChange}
+                  required
+                />
+              </Grid>
+            </>
+          )}
+          {showPostField && (
+            <>
+              <Grid item xs={3}>
+                <TextField
+                  label="No. Of Posts"
+                  fullWidth
+                  name="no_of_posts"
+                  value={formData.no_of_posts}
+                  onChange={handleChange}
+                  required
+                />
+              </Grid>
+            </>
+          )}
+          {showOthers && (
+            <>
+              <Grid item xs={3}>
+                <TextField
+                  label="Platform Name"
+                  fullWidth
+                  name="Other_Posts"
+                  value={formData.Other_Posts}
+                  onChange={handleChange}
+                  required={showOthers} // Set required based on showOthers state
+                />
+              </Grid>
+              <Grid item xs={3}>
+                <TextField
+                  label="No. of posts"
+                  fullWidth
+                  name="no_of_posts"
+                  value={formData.no_of_posts}
+                  onChange={handleChange}
+                  required
+                />
+              </Grid>
+            </>
+          )}
+          {showGmbReviewsField && (
+            <>
+              <Grid item xs={3}>
+                <TextField
+                  label="No. Of GMB Reviews"
+                  fullWidth
+                  name="noOfreviewsGMB"
+                  value={formData.noOfreviewsGMB}
+                  onChange={handleChange}
+                  required
+                />
+              </Grid>
+            </>
           )}
           {showLikesFollowersField && (
-            <Grid item xs={3}>
-              <TextField
-                label="No. Of Likes & Followers"
-                fullWidth
-                name="LikesFollowers"
-                value={formData.LikesFollowers}
-                onChange={handleChange}
-                multiline
-              />
-            </Grid>
+            <>
+              <Grid item xs={3}>
+                <TextField
+                  label="No. Of Likes & Followers"
+                  fullWidth
+                  name="LikesFollowers"
+                  value={formData.LikesFollowers}
+                  onChange={handleChange}
+                  required
+                />
+              </Grid>
+              <Grid item xs={3}>
+                <TextField
+                  label="Platform Name"
+                  fullWidth
+                  name="Other_Platform"
+                  value={formData.Other_Platform}
+                  onChange={handleChange}
+                  required={showLikesFollowersField}
+                />
+              </Grid>
+            </>
           )}
           <Grid item xs={3}>
             <TextField

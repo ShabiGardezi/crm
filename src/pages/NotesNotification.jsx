@@ -127,17 +127,21 @@ const NotesNotification = ({ notes, onNotificationClick }) => {
                 assignorDepartmentId
               );
               return (
-                <li
-                  key={index}
-                  onClick={() => {
-                    window.location.href = departmentLink;
-                    onNotificationClick(id);
-                  }}
-                >
-                  <span style={{ color: "red" }}>{username}</span> has edited
-                  the notes for Business Name:
-                  <span style={{ color: "red" }}>{clientName}</span>
-                </li>
+                <React.Fragment>
+                  {username && clientName && (
+                    <li
+                      key={index}
+                      onClick={() => {
+                        window.location.href = departmentLink;
+                        onNotificationClick(id);
+                      }}
+                    >
+                      <span style={{ color: "red" }}>{username}</span> has
+                      edited the notes for Business Name:
+                      <span style={{ color: "red" }}>{clientName}</span>
+                    </li>
+                  )}
+                </React.Fragment>
               );
             })}
           </ul>

@@ -73,7 +73,11 @@ const Header = () => {
     const fetchDepartments = async () => {
       try {
         const response = await axios.get(`${apiUrl}/api/departments`);
-        const departmentsToExcludeForAll = ["Sales", "Custom Development"];
+        const departmentsToExcludeForAll = [
+          "Sales",
+          "Custom Development",
+          "Outsourced",
+        ];
         const userDepartmentIdToExclude = "651b3409819ff0aec6af1387";
         const departmentsToExcludeForUser = ["Writers", "Designers"];
 
@@ -280,28 +284,31 @@ const Header = () => {
                 <ListItemText primary="Home" />
               </ListItem>
             </Link>
-            <Link to="/inbox">
-              <ListItem button>
-                <ListItemIcon>
-                  <Badge
-                    badgeContent={nCount}
-                    color="primary"
-                    invisible={nCount === 0}
-                  >
-                    <Inbox />
-                  </Badge>
-                </ListItemIcon>
-                <ListItemText primary="Inbox" />
-              </ListItem>
-            </Link>
-            {user?.department?._id !== "651b3409819ff0aec6af1387" && (
-              <ListItem button onClick={handleListItemClick}>
-                <ListItemIcon>
-                  <AssignmentIcon />
-                </ListItemIcon>
-                <ListItemText primary="Work Status" />
-              </ListItem>
+            {user?.department?._id !== "65ae7e27e00c92860edad99c" && (
+              <Link to="/inbox">
+                <ListItem button>
+                  <ListItemIcon>
+                    <Badge
+                      badgeContent={nCount}
+                      color="primary"
+                      invisible={nCount === 0}
+                    >
+                      <Inbox />
+                    </Badge>
+                  </ListItemIcon>
+                  <ListItemText primary="Inbox" />
+                </ListItem>
+              </Link>
             )}
+            {user?.department?._id !== "651b3409819ff0aec6af1387" &&
+              user?.department?._id !== "65ae7e27e00c92860edad99c" && (
+                <ListItem button onClick={handleListItemClick}>
+                  <ListItemIcon>
+                    <AssignmentIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Work Status" />
+                </ListItem>
+              )}
             {user?.department?._id === "651b3409819ff0aec6af1387" && (
               <React.Fragment>
                 <ListItem button onClick={toggleClientHistory}>
