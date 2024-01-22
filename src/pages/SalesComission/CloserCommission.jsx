@@ -256,30 +256,39 @@ export default function CloserComissionSheet() {
                     </TableRow>
 
                     {/* Display payment history for the current ticket */}
-                    {ticket.payment_history.slice(1).map((payment, index) => (
-                      <TableRow key={`${ticket._id}-payment-${index}`}>
-                        <TableCell>
-                          {ticket.businessdetails.clientName}
-                        </TableCell>
-                        <TableCell>{ticket.businessdetails.fronter}</TableCell>
-                        <TableCell>
-                          <strong>{payment.closer}</strong>
-                        </TableCell>
-                        <TableCell>{ticket.majorAssignee.name}</TableCell>
-                        <TableCell>
-                          {new Date(payment.date).toLocaleDateString()}
-                        </TableCell>
-                        <TableCell>
-                          {ticket.businessdetails.work_status}
-                        </TableCell>
-                        <TableCell>
-                          <b>{`$${payment.payment}`}</b>
-                        </TableCell>
-                        {<TableCell>{"Recurring"}</TableCell>}
-                      </TableRow>
-                    ))}
                   </>
                 )}
+              </React.Fragment>
+            ))}
+
+            {filteredTickets.map((ticket) => (
+              <React.Fragment key={ticket._id}>
+                {/* Display payment history for the current ticket */}
+                {ticket.payment_history.slice(1).map((payment, index) => {
+                  if (selectedCloser !== "All")
+                    if (payment.closer !== selectedCloser) return;
+
+                  return (
+                    <TableRow key={`${ticket._id}-payment-${index}`}>
+                      <TableCell>{ticket.businessdetails.clientName}</TableCell>
+                      <TableCell>{ticket.businessdetails.fronter}</TableCell>
+                      <TableCell>
+                        <strong>{payment.closer}</strong>
+                      </TableCell>
+                      <TableCell>{ticket.majorAssignee.name}</TableCell>
+                      <TableCell>
+                        {new Date(payment.date).toLocaleDateString()}
+                      </TableCell>
+                      <TableCell>
+                        {ticket.businessdetails.work_status}
+                      </TableCell>
+                      <TableCell>
+                        <b>{`$${payment.payment}`}</b>
+                      </TableCell>
+                      {<TableCell>{"Recurring"}</TableCell>}
+                    </TableRow>
+                  );
+                })}
               </React.Fragment>
             ))}
             {selectedCloser === "All" && (
