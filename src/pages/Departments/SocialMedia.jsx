@@ -28,8 +28,16 @@ const SocialMediaForm = () => {
   const [showLikesFollowersField, setShowLikesFollowersField] = useState(false);
   const [showGmbReviewsField, setShowGmbReviewsField] = useState(false);
   const [showOthers, setShowOthers] = useState(false);
-  const [showProjectNameField, setShowProjectNameField] = useState(false);
+  const [projectName, setProjectName] = useState(""); // State for the Department Name field
 
+  const handleProjectNameChange = (event) => {
+    setProjectName(event.target.value);
+    // Update the form data
+    setFormData({
+      ...formData,
+      projectName: event.target.value,
+    });
+  };
   const [formData, setFormData] = useState({
     department: "Social Media / Customer Reviews Management",
     priorityLevel: "",
@@ -56,8 +64,6 @@ const SocialMediaForm = () => {
     closer: "",
     fronter: "",
     noOfFbreviews: "0",
-    // Other_Project: "",
-    Other_Project_Name: "",
     Other_Platform: "",
     no_of_posts: "",
     outsourced_work: "",
@@ -105,9 +111,7 @@ const SocialMediaForm = () => {
         value === "Instaram_Posting" || value === "Facebook_Posting"
       );
     }
-    if (name === "outsourced_work") {
-      setShowProjectNameField(value === "Other_Project");
-    }
+
     setFormData({
       ...formData,
       [name]: value,
@@ -143,11 +147,6 @@ const SocialMediaForm = () => {
     try {
       let selectedOutsourcedWork = formData.outsourced_work;
 
-      // Check if outsourced_work is "Other_Project"
-      if (selectedOutsourcedWork === "Other_Project") {
-        // Set the value of outsourced_work to the filled value of Other_Project
-        selectedOutsourcedWork = formData.Other_Project_Name;
-      }
       // Make an Axios POST request to your backend API
       const selectedDepartment = departments.find(
         (department) => department.name === formData.department
@@ -162,6 +161,9 @@ const SocialMediaForm = () => {
         created_by: user._id,
         assignorDepartment: user.department._id,
         businessdetails: {
+          outsourced_work: formData.outsourced_work,
+          projectName: formData.projectName,
+          Other_Platform: formData.Other_Platform,
           fronter: formData.fronter,
           closer: formData.closer,
           supportPerson: formData.supportPerson,
@@ -177,11 +179,8 @@ const SocialMediaForm = () => {
           noOfreviewsGMB: formData.noOfreviewsGMB,
           noOfFbreviews: formData.noOfFbreviews,
           LikesFollowers: formData.LikesFollowers,
-          Other_Platform: formData.Other_Platform,
           no_of_posts: formData.no_of_posts,
-          outsourced_work: formData.outsourced_work,
           // Other_Project: formData.Other_Project,
-          Other_Project_Name: formData.Other_Project_Name,
           notes: formData.notes,
         },
         quotation: {
@@ -357,20 +356,19 @@ const SocialMediaForm = () => {
                   >
                     <MenuItem value="L.L.G.">L.L.G.</MenuItem>
                     <MenuItem value="Meri Jagga">Meri Jagga</MenuItem>
-                    <MenuItem value="Other_Project">Others</MenuItem>
+                    <MenuItem value="Others">Others</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>
-              {/* Conditionally render the Project Name field based on the selection */}
-              {showProjectNameField && (
+              {formData.outsourced_work === "Others" && (
                 <Grid item xs={3}>
                   <TextField
-                    label="Project Name"
+                    label="Department Name"
                     fullWidth
-                    name="Other_Project_Name"
-                    value={formData.Other_Project_Name}
-                    onChange={handleChange}
-                    required={showProjectNameField}
+                    name="projectName"
+                    value={projectName}
+                    onChange={handleProjectNameChange}
+                    required
                   />
                 </Grid>
               )}
@@ -592,22 +590,22 @@ const SocialMediaForm = () => {
             <>
               <Grid item xs={3}>
                 <TextField
-                  label="Platform Name"
-                  fullWidth
-                  name="Other_Posts"
-                  value={formData.Other_Posts}
-                  onChange={handleChange}
-                  required={showOthers} // Set required based on showOthers state
-                />
-              </Grid>
-              <Grid item xs={3}>
-                <TextField
                   label="No. of posts"
                   fullWidth
                   name="no_of_posts"
                   value={formData.no_of_posts}
                   onChange={handleChange}
                   required
+                />
+              </Grid>
+              <Grid item xs={3}>
+                <TextField
+                  label="Platform Name"
+                  fullWidth
+                  name="Other_Platform"
+                  value={formData.Other_Platform}
+                  onChange={handleChange}
+                  required={showOthers}
                 />
               </Grid>
             </>

@@ -22,6 +22,7 @@ const LocalSEOForm = () => {
   const [clientSuggestions, setClientSuggestions] = useState([]);
   const [selectedClient, setSelectedClient] = useState(null);
   const [users, setUsers] = useState([]);
+  const [projectName, setProjectName] = useState(""); // State for the Department Name field
   const [formData, setFormData] = useState({
     department: "Local SEO / GMB Optimization",
     priorityLevel: "",
@@ -51,6 +52,14 @@ const LocalSEOForm = () => {
     closer: "",
     outsourced_work: "",
   });
+  const handleProjectNameChange = (event) => {
+    setProjectName(event.target.value);
+    // Update the form data
+    setFormData({
+      ...formData,
+      projectName: event.target.value,
+    });
+  };
   const sendNotification = async (
     ticketId,
     userId,
@@ -120,6 +129,7 @@ const LocalSEOForm = () => {
         department: formData.department,
         businessdetails: {
           outsourced_work: formData.outsourced_work,
+          projectName: formData.projectName,
           fronter: formData.fronter,
           supportPerson: formData.supportPerson,
           closer: formData.closer,
@@ -314,25 +324,40 @@ const LocalSEOForm = () => {
             />
           </Grid>
           {user?.department?._id === "65ae7e27e00c92860edad99c" && (
-            <Grid item xs={3}>
-              <FormControl fullWidth required>
-                <InputLabel id="outsourcedWorkLabel">
-                  Outsourced Work
-                </InputLabel>
-                <Select
-                  labelId="outsourcedWorkLabel"
-                  id="outsourcedWork"
-                  name="outsourced_work"
-                  value={formData.outsourced_work}
-                  onChange={handleChange}
-                >
-                  <MenuItem value="L.L.G.">L.L.G.</MenuItem>
-                  <MenuItem value="Meri Jagga">Meri Jagga</MenuItem>
-                  <MenuItem value="Others">Others</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
+            <>
+              <Grid item xs={3}>
+                <FormControl fullWidth required>
+                  <InputLabel id="outsourcedWorkLabel">
+                    Outsourced Work
+                  </InputLabel>
+                  <Select
+                    labelId="outsourcedWorkLabel"
+                    id="outsourcedWork"
+                    name="outsourced_work"
+                    value={formData.outsourced_work}
+                    onChange={handleChange}
+                  >
+                    <MenuItem value="L.L.G.">L.L.G.</MenuItem>
+                    <MenuItem value="Meri Jagga">Meri Jagga</MenuItem>
+                    <MenuItem value="Others">Others</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              {formData.outsourced_work === "Others" && (
+                <Grid item xs={3}>
+                  <TextField
+                    label="Department Name"
+                    fullWidth
+                    name="projectName"
+                    value={projectName}
+                    onChange={handleProjectNameChange}
+                    required
+                  />
+                </Grid>
+              )}
+            </>
           )}
+
           {user?.department?._id !== "65ae7e27e00c92860edad99c" && (
             <>
               <Grid item xs={3}>

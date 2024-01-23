@@ -204,7 +204,9 @@ export default function ShowCloseTickets() {
                   </TableCell>
                   <TableCell style={{ width: 160 }} align="left">
                     {ticket.assignorDepartment.name === "Outsourced"
-                      ? ticket.businessdetails.outsourced_work
+                      ? ticket.businessdetails.outsourced_work === "Others"
+                        ? ticket.businessdetails.projectName
+                        : ticket.businessdetails.outsourced_work
                       : ticket.assignorDepartment.name}
                   </TableCell>
                   <TableCell style={{ width: 160 }} align="left">
