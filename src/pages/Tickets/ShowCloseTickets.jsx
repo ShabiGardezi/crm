@@ -218,8 +218,8 @@ export default function ShowCloseTickets() {
                       <VisibilityIcon />
                     </IconButton>
                   </TableCell>
-                  {user?.department?._id !== "651b3409819ff0aec6af1387" ||
-                    (user?.department?._id !== "65ae7e27e00c92860edad99c" && (
+                  {user?.department?._id !== "651b3409819ff0aec6af1387" &&
+                    user?.department?._id !== "65ae7e27e00c92860edad99c" && (
                       <TableCell style={{ width: 160 }} align="left">
                         <FormControl>
                           <Select
@@ -237,7 +237,7 @@ export default function ShowCloseTickets() {
                           </Select>
                         </FormControl>
                       </TableCell>
-                    ))}
+                    )}
                   {user?.department?._id === "651b3409819ff0aec6af1387" ||
                     (user?.department?._id === "65ae7e27e00c92860edad99c" && (
                       <TableCell style={{ width: 160 }} align="left">
