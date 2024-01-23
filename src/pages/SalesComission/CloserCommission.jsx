@@ -264,9 +264,7 @@ export default function CloserComissionSheet() {
                       <TableCell>
                         {ticket.businessdetails.work_status}
                       </TableCell>
-                      <TableCell>
-                        <b>{`$${payment.payment}`}</b>
-                      </TableCell>
+                      <TableCell>{`$${payment.payment}`} </TableCell>
                       {<TableCell>{"Recurring"}</TableCell>}
                     </TableRow>
                   );
