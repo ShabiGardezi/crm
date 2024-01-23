@@ -115,7 +115,7 @@ export default function CloserComissionSheet() {
   };
 
   // Get unique closer names from businessdetails.closer and payment_history array
-  const fronters = [
+  const closers = [
     ...new Set(tickets.map((ticket) => ticket.businessdetails.closer)),
   ];
 
@@ -179,7 +179,7 @@ export default function CloserComissionSheet() {
               onChange={(e) => handleFronterSelect(e.target.value)}
             >
               <option value="All">All</option>
-              {fronters.map((closer) => (
+              {closers.map((closer) => (
                 <option key={closer} value={closer}>
                   {closer}
                 </option>
