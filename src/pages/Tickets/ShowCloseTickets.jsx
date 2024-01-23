@@ -203,7 +203,9 @@ export default function ShowCloseTickets() {
                     {ticket.TicketDetails.assignor}
                   </TableCell>
                   <TableCell style={{ width: 160 }} align="left">
-                    {ticket.assignorDepartment.name}
+                    {ticket.assignorDepartment.name === "Outsourced"
+                      ? ticket.businessdetails.outsourced_work
+                      : ticket.assignorDepartment.name}
                   </TableCell>
                   <TableCell style={{ width: 160 }} align="left">
                     {ticket.majorAssignee.name}
