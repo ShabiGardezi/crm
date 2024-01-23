@@ -28,6 +28,8 @@ const WordPress = () => {
   const [showWordpressFields, setShowWordpressFields] = useState(false);
   const [showEcommerceFields, setShowEcommerceFields] = useState(false);
   const [selectedWebsiteType, setSelectedWebsiteType] = useState("");
+  const [projectName, setProjectName] = useState("");
+
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -74,6 +76,8 @@ const WordPress = () => {
     notes: "",
     departmentName: "",
     work_status: "",
+    outsourced_work: "",
+    projectName: "",
     socialProfile: "",
   });
 
@@ -103,6 +107,16 @@ const WordPress = () => {
   };
   const handleChange = (event) => {
     const { name, value } = event.target;
+    if (name === "outsourced_work") {
+      // If the selected value is "Others", reset the "Project Name" field
+      if (value === "Others") {
+        setProjectName("");
+      }
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    }
     if (name === "work_status") {
       setSelectedWebsiteType(value);
     }
@@ -180,6 +194,8 @@ const WordPress = () => {
           supportPerson: formData.supportPerson,
           notes: formData.notes,
           departmentName: formData.departmentName,
+          outsourced_work: formData.outsourced_work,
+          projectName: formData.projectName,
           socialProfile: formData.socialProfile,
           work_status: formData.work_status,
         },
@@ -321,9 +337,16 @@ const WordPress = () => {
             />
           </Grid>
         </Grid>
-        <div className="formtitle ticketHeading">
-          <Typography variant="h5">Sale Department</Typography>
-        </div>
+        {user?.department?._id !== "65ae7e27e00c92860edad99c" && (
+          <div className="formtitle ticketHeading">
+            <Typography variant="h5">Sale Department</Typography>
+          </div>
+        )}
+        {user?.department?._id === "65ae7e27e00c92860edad99c" && (
+          <div className="formtitle ticketHeading">
+            <Typography variant="h5">Work Information</Typography>
+          </div>
+        )}
         <Grid container spacing={2}>
           <Grid item xs={3}>
             <TextField
@@ -334,26 +357,41 @@ const WordPress = () => {
               onChange={handleChange}
               disabled
             />
-          </Grid>{" "}
+          </Grid>
           {user?.department?._id === "65ae7e27e00c92860edad99c" && (
-            <Grid item xs={3}>
-              <FormControl fullWidth required>
-                <InputLabel id="outsourcedWorkLabel">
-                  Outsourced Work
-                </InputLabel>
-                <Select
-                  labelId="outsourcedWorkLabel"
-                  id="outsourcedWork"
-                  name="outsourced_work"
-                  value={formData.outsourced_work}
-                  onChange={handleChange}
-                >
-                  <MenuItem value="L.L.G.">L.L.G.</MenuItem>
-                  <MenuItem value="Meri Jagga">Meri Jagga</MenuItem>
-                  <MenuItem value="Others">Others</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
+            <>
+              <Grid item xs={3}>
+                <FormControl fullWidth>
+                  <InputLabel id="outsourcedWorkLabel">
+                    Outsourced Work
+                  </InputLabel>
+                  <Select
+                    labelId="outsourcedWorkLabel"
+                    id="outsourcedWork"
+                    name="outsourced_work"
+                    value={formData.outsourced_work}
+                    onChange={handleChange}
+                  >
+                    <MenuItem value="L.L.G.">L.L.G.</MenuItem>
+                    <MenuItem value="Meri Jagga">Meri Jagga</MenuItem>
+                    <MenuItem value="Others">Others</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              {/* Conditionally render the "Project Name" field based on the selected value */}
+              {formData.outsourced_work === "Others" && (
+                <Grid item xs={3}>
+                  <TextField
+                    label="Project Name"
+                    fullWidth
+                    name="projectName"
+                    value={formData.projectName}
+                    onChange={handleChange}
+                    required
+                  />
+                </Grid>
+              )}
+            </>
           )}
           {user?.department?._id !== "65ae7e27e00c92860edad99c" && (
             <>

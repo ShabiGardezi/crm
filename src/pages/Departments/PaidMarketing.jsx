@@ -275,9 +275,16 @@ const PaidMarketing = () => {
             />
           </Grid>
         </Grid>
-        <div className="formtitle ticketHeading">
-          <Typography variant="h5">Sale Department</Typography>
-        </div>
+        {user?.department?._id !== "65ae7e27e00c92860edad99c" && (
+          <div className="formtitle ticketHeading">
+            <Typography variant="h5">Sale Department</Typography>
+          </div>
+        )}
+        {user?.department?._id === "65ae7e27e00c92860edad99c" && (
+          <div className="formtitle ticketHeading">
+            <Typography variant="h5">Work Information</Typography>
+          </div>
+        )}
         <Grid container spacing={2}>
           <Grid item xs={3}>
             <TextField

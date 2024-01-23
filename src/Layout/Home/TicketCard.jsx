@@ -50,7 +50,10 @@ const TicketCards = () => {
         let completedTicketsEndpoint = `${apiUrl}/api/tickets/completed-count?departmentId=${user?.department?._id}`;
 
         // Check if user's department id is equal to the specified value
-        if (user?.department?._id === "651b3409819ff0aec6af1387") {
+        if (
+          user?.department?._id === "651b3409819ff0aec6af1387" ||
+          user?.department?._id === "65ae7e27e00c92860edad99c"
+        ) {
           // If yes, update the endpoints
           openTicketsEndpoint = `${apiUrl}/api/tickets/openTickets-count?departmentId=${user?.department?._id}`;
           completedTicketsEndpoint = `${apiUrl}/api/tickets/completedTickets-count?departmentId=${user?.department?._id}`;

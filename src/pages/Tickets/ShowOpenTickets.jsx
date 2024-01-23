@@ -129,7 +129,7 @@ export default function ShowOpenTickets() {
     const newStatus = event.target.value;
     newSelectedStatus[ticketId] = newStatus;
     setSelectedStatus(newSelectedStatus);
-
+    console.log(selectedStatus);
     const updateTicketStatus = async (ticketId, status) => {
       try {
         const response = await fetch(`${apiUrl}/api/tickets/status-update`, {
@@ -223,8 +223,8 @@ export default function ShowOpenTickets() {
                       <VisibilityIcon />
                     </IconButton>
                   </TableCell>
-                  {user?.department?._id !== "651b3409819ff0aec6af1387" ||
-                    (user?.department?._id !== "65ae7e27e00c92860edad99c" && (
+                  {user?.department?._id !== "651b3409819ff0aec6af1387" &&
+                    user?.department?._id !== "65ae7e27e00c92860edad99c" && (
                       <TableCell style={{ width: 160 }} align="left">
                         <FormControl>
                           <Select
@@ -242,7 +242,7 @@ export default function ShowOpenTickets() {
                           </Select>
                         </FormControl>
                       </TableCell>
-                    ))}
+                    )}
                   {user?.department?._id === "651b3409819ff0aec6af1387" ||
                     (user?.department?._id === "65ae7e27e00c92860edad99c" && (
                       <TableCell style={{ width: 160 }} align="left">

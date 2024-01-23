@@ -79,14 +79,15 @@ const Header = () => {
           "Outsourced",
         ];
         const userDepartmentIdToExclude = "651b3409819ff0aec6af1387";
-        const departmentsToExcludeForUser = ["Writers", "Designers"];
+        const departmentIdToExclude = "654bc9d114e9ed66948b4a01";
 
         const filteredDepartments = response.data.payload.filter(
           (department) =>
             !departmentsToExcludeForAll.includes(department.name) &&
             !(
-              user.department._id === userDepartmentIdToExclude &&
-              departmentsToExcludeForUser.includes(department.name)
+              (user?.department?._id === userDepartmentIdToExclude ||
+                user?.department?.name === "Outsourced") &&
+              department._id === departmentIdToExclude
             )
         );
 
@@ -96,7 +97,7 @@ const Header = () => {
       }
     };
     fetchDepartments();
-  }, [user.department._id]);
+  }, [user?.department?._id]);
 
   useEffect(() => {
     const handleOutsideClick = (e) => {
