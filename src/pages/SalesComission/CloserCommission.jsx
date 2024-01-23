@@ -15,6 +15,7 @@ export default function CloserComissionSheet() {
   const apiUrl = process.env.REACT_APP_API_URL;
   const [tickets, setTickets] = useState([]);
   const [selectedCloser, setSelectedCloser] = useState("All");
+  const [selectedSalesType, setSelectedSalesType] = useState("All"); // Add state for selected Sales Type
   const [fronterTotalPayment, setFronterTotalPayment] = useState({});
   const [fronterCommission, setFronterCommission] = useState({});
   const [startDate, setStartDate] = useState(null);
@@ -23,6 +24,10 @@ export default function CloserComissionSheet() {
     setStartDate(date);
   };
 
+  // Handle Sales Type selection in dropdown
+  const handleSalesTypeSelect = (salesType) => {
+    setSelectedSalesType(salesType);
+  };
   // Handle end date selection
   const handleEndDateSelect = (date) => {
     setEndDate(date);
@@ -73,51 +78,28 @@ export default function CloserComissionSheet() {
 
         // Check if the ticket's createdAt date is within the selected range
         return (
-          ticket.businessdetails.closer === closerName &&
+          (ticket.businessdetails.closer === closerName ||
+            ticket.payment_history.some(
+              (payment) => payment.closer === closerName
+            )) &&
           (!startDate || createdAtDate >= startDate) &&
           (!endDate ||
             createdAtDate <= new Date(endDate.getTime() + 24 * 60 * 60 * 1000)) // Include end date
         );
       })
-      .reduce((total, ticket) => total + parseFloat(ticket.quotation.price), 0);
-  };
+      .reduce((total, ticket) => {
+        // Add the quotation price if the closer matches
+        if (ticket.businessdetails.closer === closerName) {
+          total += parseFloat(ticket.quotation.price);
+        }
 
-  // Calculate commission based on total payment
-  const calculateCommission = () => {
-    const totalPayment = calculateTotalPayment(
-      selectedCloser,
-      startDate,
-      endDate
-    );
+        // Add payments from payment_history if the closer matches
+        total += ticket.payment_history
+          .filter((payment) => payment.closer === closerName)
+          .reduce((paymentTotal, payment) => paymentTotal + payment.payment, 0);
 
-    const commissionThresholdLow = 500;
-    const commissionThresholdMedium = 800;
-    const commissionThresholdHigh = 1500;
-    const commissionThresholdVeryHigh = 2000;
-
-    const ninetyPercent = 0.9 * totalPayment;
-
-    if (totalPayment <= commissionThresholdLow) {
-      return 0; // No commission
-    } else if (totalPayment <= commissionThresholdMedium) {
-      const commission = 0.025 * ninetyPercent;
-      return roundCommission(commission);
-    } else if (totalPayment <= commissionThresholdHigh) {
-      const commission = 0.05 * ninetyPercent;
-      return roundCommission(commission);
-    } else if (totalPayment <= commissionThresholdVeryHigh) {
-      const commission = 0.075 * ninetyPercent;
-      return roundCommission(commission);
-    } else {
-      const commission = 0.1 * ninetyPercent;
-      return roundCommission(commission);
-    }
-  };
-
-  const roundCommission = (commission) => {
-    // Round off to 2 decimal places with adjustment
-    const roundedCommission = Math.round(commission * 100) / 100;
-    return roundedCommission;
+        return total;
+      }, 0);
   };
 
   // Handle closer selection in dropdown
@@ -130,25 +112,27 @@ export default function CloserComissionSheet() {
       ...prevTotalPayment,
       [closer]: totalPayment,
     }));
-
-    // Calculate and store commission for the selected closer
-    const commission = calculateCommission(totalPayment);
-    setFronterCommission((prevCommission) => ({
-      ...prevCommission,
-      [closer]: commission,
-    }));
   };
 
-  // Get unique closer names
+  // Get unique closer names from businessdetails.closer and payment_history array
   const fronters = [
     ...new Set(tickets.map((ticket) => ticket.businessdetails.closer)),
   ];
 
-  // Calculate total payment for all fronters
+  // Calculate total payment for all closers
   const calculateTotalPaymentForAll = () => {
-    return fronters.reduce((total, closer) => {
-      const totalPayment = calculateTotalPayment(closer, startDate, endDate);
-      return total + totalPayment;
+    return tickets.reduce((total, ticket) => {
+      // Add the quotation price if available
+      if (ticket.quotation && ticket.quotation.price) {
+        total += parseFloat(ticket.quotation.price);
+      }
+
+      // Add payments from payment_history starting from index 1
+      total += ticket.payment_history
+        .slice(1)
+        .reduce((paymentTotal, payment) => paymentTotal + payment.payment, 0);
+
+      return total;
     }, 0);
   };
 
@@ -254,8 +238,6 @@ export default function CloserComissionSheet() {
                           : "Up Sales"}
                       </TableCell>
                     </TableRow>
-
-                    {/* Display payment history for the current ticket */}
                   </>
                 )}
               </React.Fragment>
