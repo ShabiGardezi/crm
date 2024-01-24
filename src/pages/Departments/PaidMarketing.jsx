@@ -24,6 +24,7 @@ const PaidMarketing = () => {
   const [ShowBudgetPrice, setShowBudgetPrice] = useState(null);
   const [ShowPlatform, setShowPlatform] = useState(null);
   const [users, setUsers] = useState([]);
+  const [projectName, setProjectName] = useState(""); // State for the Department Name field
   const [formData, setFormData] = useState({
     department: "Paid Marketing",
     priorityLevel: "",
@@ -47,6 +48,15 @@ const PaidMarketing = () => {
     work_status: "",
     selectedPlatform: "",
   });
+  const handleProjectNameChange = (event) => {
+    setProjectName(event.target.value);
+    // Update the form data
+    setFormData({
+      ...formData,
+      projectName: event.target.value,
+    });
+  };
+
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -81,7 +91,7 @@ const PaidMarketing = () => {
     } else {
       setShowBudgetPrice(false);
     }
-    if (name === "work_status" && value === "Other") {
+    if (name === "work_status" && value === "Other-Ads") {
       setShowPlatform(true);
     }
     const remaining = updatedPrice - updatedAdvancePrice;
@@ -133,20 +143,22 @@ const PaidMarketing = () => {
         created_by: user._id,
         assignorDepartment: user.department._id,
         businessdetails: {
-          fronter: formData.fronter,
-          closer: formData.closer,
-          supportPerson: formData.supportPerson,
           clientName: formData.clientName,
           clientEmail: formData.clientEmail,
+          serviceName: formData.serviceName,
+          outsourced_work: formData.outsourced_work,
+          projectName: formData.projectName,
+          work_status: formData.work_status,
+          selectedPlatform: formData.selectedPlatform,
+          selectedBudget: formData.selectedBudget,
+          budget: formData.budget,
           location: formData.location,
           WebsiteURL: formData.WebsiteURL,
           adAccountAccess: formData.adAccountAccess,
-          budget: formData.budget,
           notes: formData.notes,
-          selectedBudget: formData.selectedBudget,
-          work_status: formData.work_status,
-          selectedPlatform: formData.selectedPlatform,
-          serviceName: formData.serviceName,
+          fronter: formData.fronter,
+          closer: formData.closer,
+          supportPerson: formData.supportPerson,
         },
         quotation: {
           price: formData.price,
@@ -298,25 +310,40 @@ const PaidMarketing = () => {
           </Grid>
 
           {user?.department?._id === "65ae7e27e00c92860edad99c" && (
-            <Grid item xs={3}>
-              <FormControl fullWidth required>
-                <InputLabel id="outsourcedWorkLabel">
-                  Outsourced Work
-                </InputLabel>
-                <Select
-                  labelId="outsourcedWorkLabel"
-                  id="outsourcedWork"
-                  name="outsourced_work"
-                  value={formData.outsourced_work}
-                  onChange={handleChange}
-                >
-                  <MenuItem value="L.L.G.">L.L.G.</MenuItem>
-                  <MenuItem value="Meri Jagga">Meri Jagga</MenuItem>
-                  <MenuItem value="Others">Others</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
+            <>
+              <Grid item xs={3}>
+                <FormControl fullWidth required>
+                  <InputLabel id="outsourcedWorkLabel">
+                    Outsourced Work
+                  </InputLabel>
+                  <Select
+                    labelId="outsourcedWorkLabel"
+                    id="outsourcedWork"
+                    name="outsourced_work"
+                    value={formData.outsourced_work}
+                    onChange={handleChange}
+                  >
+                    <MenuItem value="L.L.G.">L.L.G.</MenuItem>
+                    <MenuItem value="Meri Jagga">Meri Jagga</MenuItem>
+                    <MenuItem value="Others">Others</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              {formData.outsourced_work === "Others" && (
+                <Grid item xs={3}>
+                  <TextField
+                    label="Department Name"
+                    fullWidth
+                    name="projectName"
+                    value={projectName}
+                    onChange={handleProjectNameChange}
+                    required
+                  />
+                </Grid>
+              )}
+            </>
           )}
+
           {user?.department?._id !== "65ae7e27e00c92860edad99c" && (
             <>
               <Grid item xs={3}>
@@ -542,6 +569,7 @@ const PaidMarketing = () => {
                 name="selectedPlatform"
                 value={formData.selectedPlatform}
                 onChange={handleChange}
+                required={ShowPlatform}
               />
             </Grid>
           )}

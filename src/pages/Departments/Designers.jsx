@@ -210,7 +210,7 @@ const DesignersForm = () => {
               name="clientName"
               value={formData.clientName}
               onChange={handleChange}
-              multiline
+              required
               onInput={(e) => fetchSuggestions(e.target.value)}
             />
 
@@ -238,7 +238,7 @@ const DesignersForm = () => {
               name="clientEmail"
               value={formData.clientEmail}
               onChange={handleChange}
-              multiline
+              required
             />
           </Grid>
         </Grid>
@@ -271,6 +271,7 @@ const DesignersForm = () => {
               value={truncateDepartmentName(formData.department, 10)}
               onChange={handleChange}
               select
+              disabled
             >
               {departments?.map((d) => (
                 <MenuItem key={d._id} value={d.name}>
