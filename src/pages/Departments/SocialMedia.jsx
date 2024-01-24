@@ -363,7 +363,7 @@ const SocialMediaForm = () => {
               {formData.outsourced_work === "Others" && (
                 <Grid item xs={3}>
                   <TextField
-                    label="Department Name"
+                    label="Project Name"
                     fullWidth
                     name="projectName"
                     value={projectName}

@@ -261,7 +261,7 @@ const WritersForm = () => {
                     </Grid>
                     <Grid item xs={2}>
                         <TextField
-                            label="Department Name"
+                            label="Project Name"
                             fullWidth
                             name="departmentName"
                             onChange={(e) => setSelectedDepartments(e.target.value)}

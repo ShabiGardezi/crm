@@ -6,6 +6,9 @@ import {
   Button,
   MenuItem,
   Typography,
+  Select,
+  FormControl,
+  InputLabel,
 } from "@material-ui/core";
 import axios from "axios";
 import Header from "../Header";
@@ -18,6 +21,7 @@ const DesignersForm = () => {
   const [selectedClient, setSelectedClient] = useState(null);
   const [selectedDepartments, setSelectedDepartments] = useState("");
   const [clientSuggestions, setClientSuggestions] = useState([]);
+  const [projectName, setProjectName] = useState(""); // State for the Department Name field
   const [formData, setFormData] = useState({
     priorityLevel: "",
     department: "Designers", // Initialize with "Designers"
@@ -36,6 +40,15 @@ const DesignersForm = () => {
     ReferralWebsite: "",
     departmentName: "",
   });
+  const handleProjectNameChange = (event) => {
+    setProjectName(event.target.value);
+    // Update the form data
+    setFormData({
+      ...formData,
+      projectName: event.target.value,
+    });
+  };
+
   useEffect(() => {
     // Calculate one month later from the current date
     const currentDate = new Date();
@@ -102,6 +115,8 @@ const DesignersForm = () => {
         created_by: user._id,
         assignorDepartment: user.department._id,
         businessdetails: {
+          outsourced_work: formData.outsourced_work,
+          projectName: formData.projectName,
           clientName: formData.clientName,
           ownerName: formData.ownerName,
           WebsiteURL: formData.WebsiteURL,
@@ -282,17 +297,52 @@ const DesignersForm = () => {
           </Grid>
           <Grid item xs={2}>
             <TextField
-              label="Department Name"
+              label="Your Depart."
               fullWidth
               name="departmentName"
               onChange={(e) => setSelectedDepartments(e.target.value)}
               select
+              required
             >
               <MenuItem value="WebSeo">Web Seo</MenuItem>
               <MenuItem value="Reviews">Reviews</MenuItem>
               <MenuItem value="Wordpress">Wordpress</MenuItem>
             </TextField>
           </Grid>
+          {user?.department?._id === "65ae7e27e00c92860edad99c" && (
+            <>
+              <Grid item xs={3}>
+                <FormControl fullWidth required>
+                  <InputLabel id="outsourcedWorkLabel">
+                    Outsourced Work
+                  </InputLabel>
+                  <Select
+                    labelId="outsourcedWorkLabel"
+                    id="outsourcedWork"
+                    name="outsourced_work"
+                    value={formData.outsourced_work}
+                    onChange={handleChange}
+                  >
+                    <MenuItem value="L.L.G.">L.L.G.</MenuItem>
+                    <MenuItem value="Meri Jagga">Meri Jagga</MenuItem>
+                    <MenuItem value="Others">Others</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              {formData.outsourced_work === "Others" && (
+                <Grid item xs={3}>
+                  <TextField
+                    label="Project Name"
+                    fullWidth
+                    name="projectName"
+                    value={projectName}
+                    onChange={handleProjectNameChange}
+                    required
+                  />
+                </Grid>
+              )}
+            </>
+          )}
           <Grid item xs={2}>
             <TextField
               label="Priority Level"
