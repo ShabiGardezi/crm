@@ -389,7 +389,7 @@ const Header = () => {
                 <ListItemText primary="Ticket History" />
               </ListItem>
             </Link>
-            {user?.role === "admin" && (
+            {/* {user?.role === "admin" && (
               <div className="signup">
                 <ListItem button>
                   <ListItemIcon>
@@ -400,7 +400,7 @@ const Header = () => {
                   </Link>
                 </ListItem>
               </div>
-            )}
+            )} */}
             {user?.role === "admin" && (
               <React.Fragment>
                 <ListItem button onClick={toggleSalesDropdown}>

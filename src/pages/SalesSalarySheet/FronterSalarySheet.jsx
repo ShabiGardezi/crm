@@ -198,7 +198,7 @@ export default function FronterSalarySheet() {
         style={{ textAlign: "center", marginBottom: "2%" }}
         fontFamily={"revert-layer"}
       >
-        Fronter's Salary Sheet - {getMonthName(selectedMonth)}
+        Fronter Commission Sheet - {getMonthName(selectedMonth)}
       </Typography>
 
       <TableContainer component={Paper}>
