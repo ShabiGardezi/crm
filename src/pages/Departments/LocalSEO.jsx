@@ -381,7 +381,7 @@ const LocalSEOForm = () => {
                 </FormControl>
               </Grid>
               <Grid item xs={3}>
-                <FormControl fullWidth>
+                <FormControl fullWidth required>
                   <InputLabel id="closerLabel">Closer Person</InputLabel>
                   <Select
                     labelId="closerLabel"
@@ -400,7 +400,7 @@ const LocalSEOForm = () => {
                 </FormControl>
               </Grid>
               <Grid item xs={3}>
-                <FormControl fullWidth>
+                <FormControl fullWidth required>
                   <InputLabel id="fronterLabel">Fronter</InputLabel>
                   <Select
                     labelId="fronterLabel"
