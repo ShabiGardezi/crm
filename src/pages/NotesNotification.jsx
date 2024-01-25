@@ -73,12 +73,12 @@ const NotesNotification = ({ notes, onNotificationClick }) => {
       return "/home";
     }
   };
-  const extractUsernameAndClientName = (note, index) => {
+  const extractUsernameAndbusinessName = (note, index) => {
     const noteData = notesNotification[index];
     if (!noteData || typeof note !== "string") {
       return {
         username: "",
-        clientName: "",
+        businessName: "",
         majorAssigneeId: "",
         assignorDepartmentId: "",
       };
@@ -90,11 +90,11 @@ const NotesNotification = ({ notes, onNotificationClick }) => {
     const match = note.match(regex);
 
     if (match) {
-      const [, username, clientName] = match;
+      const [, username, businessName] = match;
       return {
         id: id,
         username,
-        clientName,
+        businessName,
         majorAssigneeId,
         assignorDepartmentId,
       };
@@ -103,7 +103,7 @@ const NotesNotification = ({ notes, onNotificationClick }) => {
     return {
       id: "",
       username: "",
-      clientName: "",
+      businessName: "",
       majorAssigneeId: "",
       assignorDepartmentId: "",
     };
@@ -118,17 +118,17 @@ const NotesNotification = ({ notes, onNotificationClick }) => {
               const {
                 id,
                 username,
-                clientName,
+                businessName,
                 majorAssigneeId,
                 assignorDepartmentId,
-              } = extractUsernameAndClientName(note, index);
+              } = extractUsernameAndbusinessName(note, index);
               const departmentLink = getDepartmentLink(
                 majorAssigneeId,
                 assignorDepartmentId
               );
               return (
                 <React.Fragment>
-                  {username && clientName && (
+                  {username && businessName && (
                     <li
                       key={index}
                       onClick={() => {
@@ -138,7 +138,7 @@ const NotesNotification = ({ notes, onNotificationClick }) => {
                     >
                       <span style={{ color: "red" }}>{username}</span> has
                       edited the notes for Business Name:
-                      <span style={{ color: "red" }}>{clientName}</span>
+                      <span style={{ color: "red" }}>{businessName}</span>
                     </li>
                   )}
                 </React.Fragment>

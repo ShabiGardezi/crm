@@ -27,7 +27,7 @@ const DesignersForm = () => {
     department: "Designers", // Initialize with "Designers"
     assignor: user?.username || "",
     dueDate: new Date().toISOString().substr(0, 10), // Initialize with the current date in yyyy-mm-dd format
-    clientName: "",
+    businessName: "",
     ownerName: "",
     WebsiteURL: "",
     gmbUrl: "",
@@ -81,7 +81,7 @@ const DesignersForm = () => {
     assignorDepartmentId,
     majorAssigneeId,
     dueDate,
-    clientName
+    businessName
   ) => {
     try {
       const response = await axios.post(`${apiUrl}/api/notification`, {
@@ -90,7 +90,7 @@ const DesignersForm = () => {
         assignorDepartmentId: assignorDepartmentId,
         majorAssigneeId: majorAssigneeId,
         dueDate: dueDate,
-        clientName: clientName,
+        businessName: businessName,
       });
       if (response.status === 200) {
         console.log("Notification send", response.data.payload);
@@ -117,7 +117,7 @@ const DesignersForm = () => {
         businessdetails: {
           outsourced_work: formData.outsourced_work,
           projectName: formData.projectName,
-          clientName: formData.clientName,
+          businessName: formData.businessName,
           ownerName: formData.ownerName,
           WebsiteURL: formData.WebsiteURL,
           businessNumber: formData.businessNumber,
@@ -146,7 +146,7 @@ const DesignersForm = () => {
         user.department._id,
         majorAssignee,
         formData.dueDate,
-        formData.clientName
+        formData.businessName
       );
     } catch (error) {
       toast.error("An error occurred. Please try again.");
@@ -183,16 +183,16 @@ const DesignersForm = () => {
     }
   };
   // Function to fetch client details when a suggestion is selected
-  const handleClientSelection = async (clientName) => {
+  const handleClientSelection = async (businessName) => {
     try {
       const response = await axios.get(
-        `${apiUrl}/api/client/details/${clientName}`
+        `${apiUrl}/api/client/details/${businessName}`
       );
       setSelectedClient(response.data);
       setFormData({
         ...formData,
         clientEmail: response.data.clientEmail,
-        clientName: response.data.clientName,
+        businessName: response.data.businessName,
         work_status: response.data.work_status,
         WebsiteURL: response.data.WebsiteURL,
         ReferralWebsite: response.data.ReferralWebsite,
@@ -222,8 +222,8 @@ const DesignersForm = () => {
             <TextField
               label="Business Name"
               fullWidth
-              name="clientName"
-              value={formData.clientName}
+              name="businessName"
+              value={formData.businessName}
               onChange={handleChange}
               required
               onInput={(e) => fetchSuggestions(e.target.value)}
@@ -236,10 +236,10 @@ const DesignersForm = () => {
                   {clientSuggestions.map((client, index) => (
                     <li
                       key={index}
-                      onClick={() => handleClientSelection(client.clientName)}
+                      onClick={() => handleClientSelection(client.businessName)}
                       className="pointer-cursor" // Apply the CSS class here
                     >
-                      {client.clientName}
+                      {client.businessName}
                     </li>
                   ))}
                 </ul>

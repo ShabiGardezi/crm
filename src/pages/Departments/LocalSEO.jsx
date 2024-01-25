@@ -35,7 +35,7 @@ const LocalSEOForm = () => {
     price: "",
     advanceprice: 0, // Set the default value to 0
     remainingPrice: "",
-    clientName: "",
+    businessName: "",
     street: "",
     WebsiteURL: "",
     country: "",
@@ -66,7 +66,7 @@ const LocalSEOForm = () => {
     assignorDepartmentId,
     majorAssigneeId,
     dueDate,
-    clientName
+    businessName
   ) => {
     try {
       const response = await axios.post(`${apiUrl}/api/notification`, {
@@ -75,7 +75,7 @@ const LocalSEOForm = () => {
         assignorDepartmentId: assignorDepartmentId,
         majorAssigneeId: majorAssigneeId,
         dueDate: dueDate,
-        clientName: clientName,
+        businessName: businessName,
       });
       if (response.status === 200) {
         console.log("Notification send", response.data.payload);
@@ -133,7 +133,7 @@ const LocalSEOForm = () => {
           fronter: formData.fronter,
           supportPerson: formData.supportPerson,
           closer: formData.closer,
-          clientName: formData.clientName,
+          businessName: formData.businessName,
           street: formData.street,
           WebsiteURL: formData.WebsiteURL,
           country: formData.country,
@@ -167,7 +167,7 @@ const LocalSEOForm = () => {
         user.department._id,
         majorAssignee,
         formData.dueDate,
-        formData.clientName
+        formData.businessName
       );
     } catch (error) {
       // Handle errors (e.g., show an error message)
@@ -220,17 +220,17 @@ const LocalSEOForm = () => {
     }
   };
   // Function to fetch client details when a suggestion is selected
-  const handleClientSelection = async (clientName) => {
+  const handleClientSelection = async (businessName) => {
     try {
       const response = await axios.get(
-        `${apiUrl}/api/client/details/${clientName}`
+        `${apiUrl}/api/client/details/${businessName}`
       );
       setSelectedClient(response.data);
       setFormData({
         ...formData,
         businessNumber: response.data.businessNumber,
         clientEmail: response.data.clientEmail,
-        clientName: response.data.clientName,
+        businessName: response.data.businessName,
         country: response.data.country,
         state: response.data.state,
         street: response.data.street,
@@ -266,8 +266,8 @@ const LocalSEOForm = () => {
             <TextField
               label="Business Name"
               fullWidth
-              name="clientName"
-              value={formData.clientName}
+              name="businessName"
+              value={formData.businessName}
               onChange={handleChange}
               multiline
               onInput={(e) => fetchSuggestions(e.target.value)}
@@ -281,10 +281,10 @@ const LocalSEOForm = () => {
                   {clientSuggestions.map((client, index) => (
                     <li
                       key={index}
-                      onClick={() => handleClientSelection(client.clientName)}
+                      onClick={() => handleClientSelection(client.businessName)}
                       className="pointer-cursor" // Apply the CSS class here
                     >
-                      {client.clientName}
+                      {client.businessName}
                     </li>
                   ))}
                 </ul>

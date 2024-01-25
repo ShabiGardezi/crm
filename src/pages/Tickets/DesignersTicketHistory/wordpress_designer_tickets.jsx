@@ -164,7 +164,7 @@ export default function WordpressDesignersTickets() {
         <Table sx={{ minWidth: 800 }} aria-label="custom pagination table">
           <TableHead>
             <TableRow>
-              <TableCell>Client Name</TableCell>
+              <TableCell>Business Name</TableCell>
               <TableCell>Assignor</TableCell>
               <TableCell>Work Type</TableCell>
               <TableCell>Created At</TableCell>
@@ -184,7 +184,7 @@ export default function WordpressDesignersTickets() {
               .map((ticket) => (
                 <TableRow key={ticket._id}>
                   <TableCell component="th" scope="row">
-                    {ticket.businessdetails.clientName}
+                    {ticket.businessdetails.businessName}
                   </TableCell>
                   <TableCell style={{ width: 160 }} align="left">
                     {ticket.TicketDetails.assignor}

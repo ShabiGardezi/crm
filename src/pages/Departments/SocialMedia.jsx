@@ -49,7 +49,7 @@ const SocialMediaForm = () => {
     fronter: "",
     closer: "",
     supportPerson: "",
-    clientName: "",
+    businessName: "",
     street: "",
     WebsiteURL: "",
     clientEmail: "",
@@ -124,7 +124,7 @@ const SocialMediaForm = () => {
     assignorDepartmentId,
     majorAssigneeId,
     dueDate,
-    clientName
+    businessName
   ) => {
     try {
       const response = await axios.post(`${apiUrl}/api/notification`, {
@@ -133,7 +133,7 @@ const SocialMediaForm = () => {
         assignorDepartmentId: assignorDepartmentId,
         majorAssigneeId: majorAssigneeId,
         dueDate: dueDate,
-        clientName: clientName,
+        businessName: businessName,
       });
       if (response.status === 200) {
         console.log("Notification send", response.data.payload);
@@ -167,7 +167,7 @@ const SocialMediaForm = () => {
           fronter: formData.fronter,
           closer: formData.closer,
           supportPerson: formData.supportPerson,
-          clientName: formData.clientName,
+          businessName: formData.businessName,
           serviceName: formData.serviceName,
           WebsiteURL: formData.WebsiteURL,
           clientEmail: formData.clientEmail,
@@ -205,7 +205,7 @@ const SocialMediaForm = () => {
         user.department._id,
         majorAssignee,
         formData.dueDate,
-        formData.clientName
+        formData.businessName
       );
     } catch (error) {
       // Handle errors (e.g., show an error message)
@@ -242,17 +242,17 @@ const SocialMediaForm = () => {
     }
   };
   // Function to fetch client details when a suggestion is selected
-  const handleClientSelection = async (clientName) => {
+  const handleClientSelection = async (businessName) => {
     try {
       const response = await axios.get(
-        `${apiUrl}/api/client/details/${clientName}`
+        `${apiUrl}/api/client/details/${businessName}`
       );
       setSelectedClient(response.data);
       setFormData({
         ...formData,
         businessNumber: response.data.businessNumber,
         clientEmail: response.data.clientEmail,
-        clientName: response.data.clientName,
+        businessName: response.data.businessName,
         socialProfile: response.data.socialProfile,
         facebookURL: response.data.facebookURL,
         gmbUrl: response.data.gmbUrl,
@@ -283,8 +283,8 @@ const SocialMediaForm = () => {
             <TextField
               label="Business Name"
               fullWidth
-              name="clientName"
-              value={formData.clientName}
+              name="businessName"
+              value={formData.businessName}
               onChange={handleChange}
               required
               onInput={(e) => fetchSuggestions(e.target.value)}
@@ -297,10 +297,10 @@ const SocialMediaForm = () => {
                   {clientSuggestions.map((client, index) => (
                     <li
                       key={index}
-                      onClick={() => handleClientSelection(client.clientName)}
+                      onClick={() => handleClientSelection(client.businessName)}
                       className="pointer-cursor" // Apply the CSS class here
                     >
-                      {client.clientName}
+                      {client.businessName}
                     </li>
                   ))}
                 </ul>
@@ -398,7 +398,7 @@ const SocialMediaForm = () => {
                 </FormControl>
               </Grid>
               <Grid item xs={3}>
-                <FormControl fullWidth>
+                <FormControl fullWidth required>
                   <InputLabel id="closerLabel">Closer Person</InputLabel>
                   <Select
                     labelId="closerLabel"
@@ -417,7 +417,7 @@ const SocialMediaForm = () => {
                 </FormControl>
               </Grid>
               <Grid item xs={3}>
-                <FormControl fullWidth>
+                <FormControl fullWidth required>
                   <InputLabel id="fronterLabel">Fronter</InputLabel>
                   <Select
                     labelId="fronterLabel"

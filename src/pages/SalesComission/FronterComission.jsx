@@ -258,7 +258,7 @@ export default function FronterComissionSheet() {
                     <>
                       <TableRow>
                         <TableCell>
-                          {ticket.businessdetails.clientName}
+                          {ticket.businessdetails.businessName}
                         </TableCell>
                         <TableCell>
                           <strong>{ticket.businessdetails.fronter}</strong>

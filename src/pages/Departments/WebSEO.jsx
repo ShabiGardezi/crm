@@ -38,7 +38,7 @@ const WebSeoForm = () => {
     serviceName: "",
     serviceQuantity: "",
     servicePrice: "",
-    clientName: "",
+    businessName: "",
     street: "",
     Keywords: "",
     WebsiteURL: "",
@@ -102,7 +102,7 @@ const WebSeoForm = () => {
     assignorDepartmentId,
     majorAssigneeId,
     dueDate,
-    clientName
+    businessName
   ) => {
     try {
       const response = await axios.post(`${apiUrl}/api/notification`, {
@@ -111,7 +111,7 @@ const WebSeoForm = () => {
         assignorDepartmentId: assignorDepartmentId,
         majorAssigneeId: majorAssigneeId,
         dueDate: dueDate,
-        clientName: clientName,
+        businessName: businessName,
       });
     } catch (error) {
       console.error("Error adding note:", error);
@@ -175,7 +175,7 @@ const WebSeoForm = () => {
           GoogleAnalyticsAccess: formData.GoogleAnalyticsAccess,
           LoginCredentials: formData.LoginCredentials,
           monthlyBlogsRequirement: formData.monthlyBlogsRequirement,
-          clientName: formData.clientName,
+          businessName: formData.businessName,
           street: formData.street,
           WebsiteURL: formData.WebsiteURL,
           country: formData.country,
@@ -213,7 +213,7 @@ const WebSeoForm = () => {
         user.department._id,
         majorAssignee,
         formData.dueDate,
-        formData.clientName
+        formData.businessName
       );
       // Handle the response as needed (e.g., show a success message)
     } catch (error) {
@@ -251,17 +251,17 @@ const WebSeoForm = () => {
     }
   };
   // Function to fetch client details when a suggestion is selected
-  const handleClientSelection = async (clientName) => {
+  const handleClientSelection = async (businessName) => {
     try {
       const response = await axios.get(
-        `${apiUrl}/api/client/details/${clientName}`
+        `${apiUrl}/api/client/details/${businessName}`
       );
       setSelectedClient(response.data);
       setFormData({
         ...formData,
         businessNumber: response.data.businessNumber,
         clientEmail: response.data.clientEmail,
-        clientName: response.data.clientName,
+        businessName: response.data.businessName,
         country: response.data.country,
         state: response.data.state,
         street: response.data.street,
@@ -297,8 +297,8 @@ const WebSeoForm = () => {
             <TextField
               label="Business Name"
               fullWidth
-              name="clientName"
-              value={formData.clientName}
+              name="businessName"
+              value={formData.businessName}
               onChange={handleChange}
               required
               onInput={(e) => fetchSuggestions(e.target.value)}
@@ -311,10 +311,10 @@ const WebSeoForm = () => {
                   {clientSuggestions.map((client, index) => (
                     <li
                       key={index}
-                      onClick={() => handleClientSelection(client.clientName)}
+                      onClick={() => handleClientSelection(client.businessName)}
                       className="pointer-cursor" // Apply the CSS class here
                     >
-                      {client.clientName}
+                      {client.businessName}
                     </li>
                   ))}
                 </ul>
@@ -411,7 +411,7 @@ const WebSeoForm = () => {
                 </FormControl>
               </Grid>
               <Grid item xs={3}>
-                <FormControl fullWidth>
+                <FormControl fullWidth required>
                   <InputLabel id="closerLabel">Closer Person</InputLabel>
                   <Select
                     labelId="closerLabel"
@@ -430,7 +430,7 @@ const WebSeoForm = () => {
                 </FormControl>
               </Grid>
               <Grid item xs={3}>
-                <FormControl fullWidth>
+                <FormControl fullWidth required>
                   <InputLabel id="fronterLabel">Fronter</InputLabel>
                   <Select
                     labelId="fronterLabel"

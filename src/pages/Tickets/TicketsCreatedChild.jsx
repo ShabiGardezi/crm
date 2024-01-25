@@ -92,7 +92,7 @@ export default function TicketsCreatedChildComponent() {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
-  const rows = [].sort((a, b) => (a.clientName < b.clientName ? -1 : 1));
+  const rows = [].sort((a, b) => (a.businessName < b.businessName ? -1 : 1));
 
   return (
     <div>
@@ -121,7 +121,8 @@ export default function TicketsCreatedChildComponent() {
         <Table sx={{ minWidth: 800 }} aria-label="custom pagination table">
           <TableHead>
             <TableRow>
-              <TableCell>Client Name</TableCell>
+              <TableCell>Serial Number</TableCell>
+              <TableCell>Business Name</TableCell>
               <TableCell>Assignor</TableCell>
               <TableCell>Assignor Department</TableCell>
               <TableCell>Assignee Department</TableCell>
@@ -136,7 +137,10 @@ export default function TicketsCreatedChildComponent() {
               .map((ticket) => (
                 <TableRow key={ticket._id}>
                   <TableCell component="th" scope="row">
-                    {ticket.businessdetails.clientName}
+                    {ticket.serialNumber}
+                  </TableCell>
+                  <TableCell component="th" scope="row">
+                    {ticket.businessdetails.businessName}
                   </TableCell>
                   <TableCell style={{ width: 160 }} align="left">
                     {ticket.TicketDetails.assignor}
@@ -172,8 +176,8 @@ export default function TicketsCreatedChildComponent() {
             <TableFooter>
               <TableRow>
                 <TablePagination
-                rowsPerPageOptions={[10, 20, 25, { label: "All", value: -1 }]}
-                colSpan={6} // Adjusted to match the number of columns
+                  rowsPerPageOptions={[10, 20, 25, { label: "All", value: -1 }]}
+                  colSpan={6} // Adjusted to match the number of columns
                   count={tickets?.length ?? 0} // Ensure tickets and tickets.length are defined
                   rowsPerPage={rowsPerPage}
                   page={page}

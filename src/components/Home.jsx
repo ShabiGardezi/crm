@@ -56,7 +56,7 @@ const Home = () => {
           for (const ticket of data.payload) {
             await fetchReportingDate(
               ticket._id,
-              ticket.businessdetails.clientName,
+              ticket.businessdetails.businessName,
               ticket.majorAssignee,
               ticket.assignorDepartment
             );
@@ -75,7 +75,7 @@ const Home = () => {
   }, []);
   const fetchReportingDate = async (
     ticketId,
-    clientName,
+    businessName,
     majorAssignee,
     assignorDepartment
   ) => {
@@ -94,12 +94,12 @@ const Home = () => {
 
           if (
             currentDate >= reportingDate &&
-            !processedBusinesses.has(clientName)
+            !processedBusinesses.has(businessName)
           ) {
             if (isMajorAssignee || isAssignorDepartment) {
               setMajorAssigneeId(majorAssignee?._id);
               setAssignorDepartmentId(assignorDepartment?._id);
-              let notificationMessage = `Reporting date reached for Business Name: <span class="red-text">${clientName}</span>`;
+              let notificationMessage = `Reporting date reached for Business Name: <span class="red-text">${businessName}</span>`;
 
               if (isMajorAssignee) {
                 notificationMessage += ` (assigned by ${assignorDepartment.name})`;
@@ -119,7 +119,7 @@ const Home = () => {
               ]);
 
               setProcessedBusinesses((prevBusinesses) =>
-                new Set(prevBusinesses).add(clientName)
+                new Set(prevBusinesses).add(businessName)
               );
             }
           }

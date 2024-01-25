@@ -98,18 +98,18 @@ export default function AllAddUpPayments() {
     });
     return totalPayment;
   };
-  const calculateTotalPaymentForFilteredTickets = (tickets, clientName) => {
+  const calculateTotalPaymentForFilteredTickets = (tickets, businessName) => {
     const totalPayment = tickets.reduce((total, ticket) => {
-      if (ticket.businessdetails.clientName === clientName) {
+      if (ticket.businessdetails.businessName === businessName) {
         return total + calculateTotalPaymentForTicket(ticket.payment_history);
       }
       return total;
     }, 0);
     return totalPayment.toFixed(2);
   };
-  const calculateTotalRemainingForFilteredTickets = (tickets, clientName) => {
+  const calculateTotalRemainingForFilteredTickets = (tickets, businessName) => {
     const totalRemaining = tickets.reduce((total, ticket) => {
-      if (ticket.businessdetails.clientName === clientName) {
+      if (ticket.businessdetails.businessName === businessName) {
         return total + parseFloat(ticket.quotation.remainingPrice);
       }
       return total;
@@ -163,28 +163,28 @@ export default function AllAddUpPayments() {
             {tickets
               .reduce((uniqueClients, ticket) => {
                 if (
-                  !uniqueClients.includes(ticket.businessdetails.clientName)
+                  !uniqueClients.includes(ticket.businessdetails.businessName)
                 ) {
-                  uniqueClients.push(ticket.businessdetails.clientName);
+                  uniqueClients.push(ticket.businessdetails.businessName);
                   return uniqueClients;
                 }
                 return uniqueClients;
               }, [])
-              .map((clientName) => {
+              .map((businessName) => {
                 const totalPayment = calculateTotalPaymentForFilteredTickets(
                   tickets,
-                  clientName
+                  businessName
                 );
                 const totalRemaining =
                   calculateTotalRemainingForFilteredTickets(
                     tickets,
-                    clientName
+                    businessName
                   );
 
                 return (
-                  <TableRow key={clientName}>
+                  <TableRow key={businessName}>
                     <TableCell component="th" scope="row">
-                      {clientName}
+                      {businessName}
                     </TableCell>
                     <TableCell style={{ width: 180 }} align="left">
                       <tr style={{ justifyContent: "center", display: "flex" }}>

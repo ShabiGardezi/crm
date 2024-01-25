@@ -164,7 +164,7 @@ export default function ReviewsDesignersTickets() {
         <Table sx={{ minWidth: 800 }} aria-label="custom pagination table">
           <TableHead>
             <TableRow>
-              <TableCell>Client Name</TableCell>
+              <TableCell>Business Name</TableCell>
               <TableCell>Assignor</TableCell>
               <TableCell>Created At</TableCell>
               <TableCell>Deadline</TableCell>
@@ -182,7 +182,7 @@ export default function ReviewsDesignersTickets() {
               .map((ticket) => (
                 <TableRow key={ticket._id}>
                   <TableCell component="th" scope="row">
-                    {ticket.businessdetails.clientName}
+                    {ticket.businessdetails.businessName}
                   </TableCell>
                   <TableCell style={{ width: 160 }} align="left">
                     {ticket.TicketDetails.assignor}

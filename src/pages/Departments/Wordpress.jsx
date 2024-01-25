@@ -60,7 +60,7 @@ const WordPress = () => {
     remainingPrice: "",
     serviceName: "",
     serviceDescription: "",
-    clientName: "",
+    businessName: "",
     gmbUrl: "",
     country: "",
     state: "",
@@ -87,7 +87,7 @@ const WordPress = () => {
     assignorDepartmentId,
     majorAssigneeId,
     dueDate,
-    clientName
+    businessName
   ) => {
     try {
       const response = await axios.post(`${apiUrl}/api/notification`, {
@@ -96,7 +96,7 @@ const WordPress = () => {
         assignorDepartmentId: assignorDepartmentId,
         majorAssigneeId: majorAssigneeId,
         dueDate: dueDate,
-        clientName: clientName,
+        businessName: businessName,
       });
       if (response.status === 200) {
         console.log("Notification send", response.data.payload);
@@ -177,7 +177,7 @@ const WordPress = () => {
         majorAssignee: majorAssignee,
         assignorDepartment: user.department._id,
         businessdetails: {
-          clientName: formData.clientName,
+          businessName: formData.businessName,
           serviceName: formData.serviceName,
           serviceDescription: formData.serviceDescription,
           street: formData.street,
@@ -220,7 +220,7 @@ const WordPress = () => {
         user.department._id,
         majorAssignee,
         formData.dueDate,
-        formData.clientName
+        formData.businessName
       );
     } catch (error) {
       toast.error("An error occurred. Please try again.");
@@ -229,10 +229,10 @@ const WordPress = () => {
       console.error("Error:", error);
     }
   };
-  const handleClientSelection = async (clientName) => {
+  const handleClientSelection = async (businessName) => {
     try {
       const response = await axios.get(
-        `${apiUrl}/api/client/details/${clientName}`
+        `${apiUrl}/api/client/details/${businessName}`
       );
       setSelectedClient(response.data);
       setFormData({
@@ -240,7 +240,7 @@ const WordPress = () => {
         businessNumber: response.data.businessNumber,
         ownerName: response.data.ownerName,
         clientEmail: response.data.clientEmail,
-        clientName: response.data.clientName,
+        businessName: response.data.businessName,
         country: response.data.country,
         state: response.data.state,
         street: response.data.street,
@@ -302,8 +302,8 @@ const WordPress = () => {
             <TextField
               label="Business Name"
               fullWidth
-              name="clientName"
-              value={formData.clientName}
+              name="businessName"
+              value={formData.businessName}
               onChange={handleChange}
               required
               onInput={(e) => fetchSuggestions(e.target.value)}
@@ -316,10 +316,10 @@ const WordPress = () => {
                   {clientSuggestions.map((client, index) => (
                     <li
                       key={index}
-                      onClick={() => handleClientSelection(client.clientName)}
+                      onClick={() => handleClientSelection(client.businessName)}
                       className="pointer-cursor" // Apply the CSS class here
                     >
-                      {client.clientName}
+                      {client.businessName}
                     </li>
                   ))}
                 </ul>
@@ -416,7 +416,7 @@ const WordPress = () => {
                 </FormControl>
               </Grid>
               <Grid item xs={3}>
-                <FormControl fullWidth>
+                <FormControl fullWidth required>
                   <InputLabel id="closerLabel">Closer Person</InputLabel>
                   <Select
                     labelId="closerLabel"
@@ -435,7 +435,7 @@ const WordPress = () => {
                 </FormControl>
               </Grid>
               <Grid item xs={3}>
-                <FormControl fullWidth>
+                <FormControl fullWidth required>
                   <InputLabel id="fronterLabel">Fronter</InputLabel>
                   <Select
                     labelId="fronterLabel"
@@ -545,6 +545,7 @@ const WordPress = () => {
             value={selectedTechDepartment}
             onChange={handleChange}
             select
+            required
           >
             <MenuItem value="Wordpress">Wordpress</MenuItem>
             <MenuItem value="E-commerce">E-commerce</MenuItem>

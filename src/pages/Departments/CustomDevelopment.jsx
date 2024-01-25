@@ -30,7 +30,7 @@ const CustomDevelopment = () => {
         serviceDescription: "",
         serviceQuantity: "",
         servicePrice: "",
-        clientName: "",
+        businessName: "",
         WebsiteURL: "",
         country: "",
         state: "",
@@ -62,7 +62,7 @@ const CustomDevelopment = () => {
             remainingPrice: remaining, // Update remainingPrice in formData
         });
     };
-    const sendNotification = async (ticketId, userId, assignorDepartmentId, majorAssigneeId, dueDate, clientName) => {
+    const sendNotification = async (ticketId, userId, assignorDepartmentId, majorAssigneeId, dueDate, businessName) => {
         try {
             const response = await axios.post(`${apiUrl}/api/notification`, {
                 ticketId: ticketId,
@@ -70,7 +70,7 @@ const CustomDevelopment = () => {
                 assignorDepartmentId: assignorDepartmentId,
                 majorAssigneeId: majorAssigneeId,
                 dueDate: dueDate,
-                clientName: clientName,
+                businessName: businessName,
             });
             if (response.status === 200) {
                 console.log("Notification send", response.data.payload);
@@ -95,7 +95,7 @@ const CustomDevelopment = () => {
                 created_by: user._id,
                 assignorDepartment: user.department._id,
                 businessdetails: {
-                    clientName: formData.clientName,
+                    businessName: formData.businessName,
                     street: formData.street,
                     WebsiteURL: formData.WebsiteURL,
                     country: formData.country,
@@ -126,7 +126,7 @@ const CustomDevelopment = () => {
             // Handle the response as needed (e.g., show a success message)
             console.log("Success:", response);
             toast.success("Form submitted successfully!");
-            sendNotification(response.data.payload._id.toString(),user._id, user.department._id, majorAssignee, formData.dueDate, formData.clientName);
+            sendNotification(response.data.payload._id.toString(),user._id, user.department._id, majorAssignee, formData.dueDate, formData.businessName);
 
         } catch (error) {
             // Handle errors (e.g., show an error message)
@@ -286,8 +286,8 @@ const CustomDevelopment = () => {
                         <TextField
                             label="Business Name"
                             fullWidth
-                            name="clientName"
-                            value={formData.clientName}
+                            name="businessName"
+                            value={formData.businessName}
                             onChange={handleChange}
                             multiline
                         />

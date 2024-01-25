@@ -216,7 +216,7 @@ export default function CloserComissionSheet() {
                   ticket.businessdetails.closer === selectedCloser) && (
                   <>
                     <TableRow>
-                      <TableCell>{ticket.businessdetails.clientName}</TableCell>
+                      <TableCell>{ticket.businessdetails.businessName}</TableCell>
                       <TableCell>{ticket.businessdetails.fronter}</TableCell>
                       <TableCell>
                         <strong>{ticket.businessdetails.closer}</strong>
@@ -252,7 +252,7 @@ export default function CloserComissionSheet() {
 
                   return (
                     <TableRow key={`${ticket._id}-payment-${index}`}>
-                      <TableCell>{ticket.businessdetails.clientName}</TableCell>
+                      <TableCell>{ticket.businessdetails.businessName}</TableCell>
                       <TableCell>{ticket.businessdetails.fronter}</TableCell>
                       <TableCell>
                         <strong>{payment.closer}</strong>

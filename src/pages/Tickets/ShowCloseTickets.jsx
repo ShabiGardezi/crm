@@ -20,7 +20,7 @@ import TablePaginationActions from "./TicketsTablePagination/TicketsPagination";
 import WritersFilteredCards from "./WritersTicketHistory/WritersFilteredCards";
 
 <TablePaginationActions />;
-const rows = [].sort((a, b) => (a.clientName < b.clientName ? -1 : 1));
+const rows = [].sort((a, b) => (a.businessName < b.businessName ? -1 : 1));
 
 export default function ShowCloseTickets() {
   const apiUrl = process.env.REACT_APP_API_URL;
@@ -182,7 +182,8 @@ export default function ShowCloseTickets() {
         <Table sx={{ minWidth: 800 }} aria-label="custom pagination table">
           <TableHead>
             <TableRow>
-              <TableCell>Client Name</TableCell>
+              <TableCell>Serial Number</TableCell>
+              <TableCell>Business Name</TableCell>
               <TableCell>Assignor</TableCell>
               <TableCell>Assignor Department</TableCell>
               <TableCell>Assignee Department</TableCell>
@@ -197,7 +198,10 @@ export default function ShowCloseTickets() {
               .map((ticket) => (
                 <TableRow key={ticket._id}>
                   <TableCell component="th" scope="row">
-                    {ticket.businessdetails.clientName}
+                    {ticket.serialNumber}
+                  </TableCell>
+                  <TableCell component="th" scope="row">
+                    {ticket.businessdetails.businessName}
                   </TableCell>
                   <TableCell style={{ width: 160 }} align="left">
                     {ticket.TicketDetails.assignor}

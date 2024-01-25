@@ -233,7 +233,7 @@ export default function SingleEntriesPayments() {
                     p.payment !== null && (
                       <TableRow key={`${ticket._id}-${p.date}`}>
                         <TableCell>
-                          {ticket.businessdetails.clientName}
+                          {ticket.businessdetails.businessName}
                         </TableCell>
                         <TableCell>{ticket.businessdetails.fronter}</TableCell>
                         <TableCell>{ticket.businessdetails.closer}</TableCell>

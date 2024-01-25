@@ -42,7 +42,7 @@ const PaidMarketing = () => {
     location: "",
     WebsiteURL: "",
     notes: "",
-    clientName: "",
+    businessName: "",
     clientEmail: "",
     selectedBudget: "",
     work_status: "",
@@ -108,7 +108,7 @@ const PaidMarketing = () => {
     assignorDepartmentId,
     majorAssigneeId,
     dueDate,
-    clientName
+    businessName
   ) => {
     try {
       const response = await axios.post(`${apiUrl}/api/notification`, {
@@ -117,7 +117,7 @@ const PaidMarketing = () => {
         assignorDepartmentId: assignorDepartmentId,
         majorAssigneeId: majorAssigneeId,
         dueDate: dueDate,
-        clientName: clientName,
+        businessName: businessName,
       });
       if (response.status === 200) {
         console.log("Notification send", response.data.payload);
@@ -143,7 +143,7 @@ const PaidMarketing = () => {
         created_by: user._id,
         assignorDepartment: user.department._id,
         businessdetails: {
-          clientName: formData.clientName,
+          businessName: formData.businessName,
           clientEmail: formData.clientEmail,
           serviceName: formData.serviceName,
           outsourced_work: formData.outsourced_work,
@@ -180,7 +180,7 @@ const PaidMarketing = () => {
         user.department._id,
         majorAssignee,
         formData.dueDate,
-        formData.clientName
+        formData.businessName
       );
     } catch (error) {
       // Handle errors (e.g., show an error message)
@@ -188,16 +188,16 @@ const PaidMarketing = () => {
       console.error("Error:", error);
     }
   };
-  const handleClientSelection = async (clientName) => {
+  const handleClientSelection = async (businessName) => {
     try {
       const response = await axios.get(
-        `${apiUrl}/api/client/details/${clientName}`
+        `${apiUrl}/api/client/details/${businessName}`
       );
       setSelectedClient(response.data);
       setFormData({
         ...formData,
         clientEmail: response.data.clientEmail,
-        clientName: response.data.clientName,
+        businessName: response.data.businessName,
         WebsiteURL: response.data.WebsiteURL,
       });
       setClientSuggestions([]);
@@ -252,8 +252,8 @@ const PaidMarketing = () => {
             <TextField
               label="Business Name"
               fullWidth
-              name="clientName"
-              value={formData.clientName}
+              name="businessName"
+              value={formData.businessName}
               onChange={handleChange}
               required
               onInput={(e) => fetchSuggestions(e.target.value)}
@@ -266,10 +266,10 @@ const PaidMarketing = () => {
                   {clientSuggestions.map((client, index) => (
                     <li
                       key={index}
-                      onClick={() => handleClientSelection(client.clientName)}
+                      onClick={() => handleClientSelection(client.businessName)}
                       className="pointer-cursor" // Apply the CSS class here
                     >
-                      {client.clientName}
+                      {client.businessName}
                     </li>
                   ))}
                 </ul>
@@ -367,7 +367,7 @@ const PaidMarketing = () => {
                 </FormControl>
               </Grid>
               <Grid item xs={3}>
-                <FormControl fullWidth>
+                <FormControl fullWidth required>
                   <InputLabel id="closerLabel">Closer Person</InputLabel>
                   <Select
                     labelId="closerLabel"
@@ -386,7 +386,7 @@ const PaidMarketing = () => {
                 </FormControl>
               </Grid>
               <Grid item xs={3}>
-                <FormControl fullWidth>
+                <FormControl fullWidth required>
                   <InputLabel id="fronterLabel">Fronter</InputLabel>
                   <Select
                     labelId="fronterLabel"

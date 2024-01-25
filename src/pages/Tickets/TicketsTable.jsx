@@ -157,7 +157,7 @@ export default function TicketsTable() {
         <Table sx={{ minWidth: 800 }} aria-label="custom pagination table">
           <TableHead>
             <TableRow>
-              <TableCell>Client Name</TableCell>
+              <TableCell>Business Name</TableCell>
               <TableCell>Assignor</TableCell>
               <TableCell>Assignor Department</TableCell>
               <TableCell>Assignee Department</TableCell>
@@ -182,7 +182,7 @@ export default function TicketsTable() {
                 <TableRow key={ticket._id}>
                   {ticket.businessdetails && (
                     <TableCell component="th" scope="row">
-                      {ticket.businessdetails.clientName}
+                      {ticket.businessdetails.businessName}
                     </TableCell>
                   )}
                   {ticket.TicketDetails && (

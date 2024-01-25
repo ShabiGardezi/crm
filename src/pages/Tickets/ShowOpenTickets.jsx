@@ -185,7 +185,8 @@ export default function ShowOpenTickets() {
         <Table sx={{ minWidth: 800 }} aria-label="custom pagination table">
           <TableHead>
             <TableRow>
-              <TableCell>Client Name</TableCell>
+              <TableCell>Serail No.</TableCell>
+              <TableCell>Business Name</TableCell>
               <TableCell>Assignor</TableCell>
               <TableCell>Assignor Department</TableCell>
               <TableCell>Assignee Department</TableCell>
@@ -201,7 +202,10 @@ export default function ShowOpenTickets() {
               .map((ticket) => (
                 <TableRow key={ticket._id}>
                   <TableCell component="th" scope="row">
-                    {ticket.businessdetails.clientName}
+                    {ticket.serialNumber}
+                  </TableCell>
+                  <TableCell component="th" scope="row">
+                    {ticket.businessdetails.businessName}
                   </TableCell>
                   <TableCell style={{ width: 160 }} align="left">
                     {ticket.TicketDetails.assignor}
@@ -248,12 +252,9 @@ export default function ShowOpenTickets() {
                         </FormControl>
                       </TableCell>
                     )}
-                  {user?.department?._id === "651b3409819ff0aec6af1387" ||
-                    (user?.department?._id === "65ae7e27e00c92860edad99c" && (
-                      <TableCell style={{ width: 160 }} align="left">
-                        {ticket.status}
-                      </TableCell>
-                    ))}
+                  <TableCell style={{ width: 160 }} align="left">
+                    {ticket.status}
+                  </TableCell>
                 </TableRow>
               ))}
             {emptyRows > 0 && (

@@ -25,7 +25,7 @@ const WritersForm = () => {
         dueDate: new Date().toISOString().substr(0, 10), // Initialize with the current date in yyyy-mm-dd format
         serviceName: "",
         serviceAreas: "",
-        clientName: "",
+        businessName: "",
         ownerName: "",
         street: "",
         Keywords: "",
@@ -48,7 +48,7 @@ const WritersForm = () => {
             dueDate: currentDate.toISOString().substr(0, 10),
         });
     }, []);
-    const sendNotification = async (ticketId, userId, assignorDepartmentId, majorAssigneeId, dueDate, clientName) => {
+    const sendNotification = async (ticketId, userId, assignorDepartmentId, majorAssigneeId, dueDate, businessName) => {
         try {
             const response = await axios.post(`${apiUrl}/api/notification`, {
                 ticketId: ticketId,
@@ -56,7 +56,7 @@ const WritersForm = () => {
                 assignorDepartmentId: assignorDepartmentId,
                 majorAssigneeId: majorAssigneeId,
                 dueDate: dueDate,
-                clientName: clientName,
+                businessName: businessName,
             });
             if (response.status === 200) {
                 console.log("Notification send", response.data.payload);
@@ -96,7 +96,7 @@ const WritersForm = () => {
                 created_by: user._id,
                 assignorDepartment: user.department._id,
                 businessdetails: {
-                    clientName: formData.clientName,
+                    businessName: formData.businessName,
                     ownerName: formData.ownerName,
                     serviceName: formData.serviceName,
                     street: formData.street,
@@ -124,7 +124,7 @@ const WritersForm = () => {
 
             // Handle the response as needed (e.g., show a success message)
             console.log("Success:", response);
-            sendNotification(response.data.payload._id.toString(),user._id, user.department._id, majorAssignee, formData.dueDate, formData.clientName);
+            sendNotification(response.data.payload._id.toString(),user._id, user.department._id, majorAssignee, formData.dueDate, formData.businessName);
         } catch (error) {
             toast.error("An error occurred. Please try again.");
 
@@ -163,16 +163,16 @@ const WritersForm = () => {
         }
     };
     // Function to fetch client details when a suggestion is selected
-    const handleClientSelection = async (clientName) => {
+    const handleClientSelection = async (businessName) => {
         try {
             const response = await axios.get(
-                `${apiUrl}/api/client/details/${clientName}`
+                `${apiUrl}/api/client/details/${businessName}`
             );
             setSelectedClient(response.data);
             setFormData({
                 ...formData,
                 clientEmail: response.data.clientEmail,
-                clientName: response.data.clientName,
+                businessName: response.data.businessName,
                 work_status: response.data.work_status,
                 WebsiteURL: response.data.WebsiteURL,
                 ReferralWebsite: response.data.ReferralWebsite,
@@ -194,8 +194,8 @@ const WritersForm = () => {
                         <TextField
                             label="Business Name"
                             fullWidth
-                            name="clientName"
-                            value={formData.clientName}
+                            name="businessName"
+                            value={formData.businessName}
                             onChange={handleChange}
                             multiline
                             onInput={(e) => fetchSuggestions(e.target.value)}
@@ -208,10 +208,10 @@ const WritersForm = () => {
                                     {clientSuggestions.map((client, index) => (
                                         <li
                                             key={index}
-                                            onClick={() => handleClientSelection(client.clientName)}
+                                            onClick={() => handleClientSelection(client.businessName)}
                                             className="pointer-cursor" // Apply the CSS class here
                                         >
-                                            {client.clientName}
+                                            {client.businessName}
                                         </li>
                                     ))}
                                 </ul>

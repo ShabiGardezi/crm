@@ -422,7 +422,7 @@ export default function LocalSeoSheet() {
                 <TableRow key={ticket._id}>
                   {ticket.businessdetails && (
                     <TableCell component="th" scope="row">
-                      {ticket.businessdetails.clientName}
+                      {ticket.businessdetails.businessName}
                     </TableCell>
                   )}
                   {ticket.TicketDetails && (
@@ -533,7 +533,7 @@ export default function LocalSeoSheet() {
                     >
                       <DialogTitle style={{ textAlign: "center" }}>
                         {ticketSelected
-                          ? `Payment History - ${ticketSelected.businessdetails.clientName}`
+                          ? `Payment History - ${ticketSelected.businessdetails.businessName}`
                           : "Payment History"}
                       </DialogTitle>
                       <DialogContent
