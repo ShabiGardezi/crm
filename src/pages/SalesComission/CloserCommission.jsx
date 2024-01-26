@@ -10,6 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 import Header from "../Header";
+import { parse } from "date-fns";
 
 export default function CloserComissionSheet() {
   const apiUrl = process.env.REACT_APP_API_URL;
@@ -130,7 +131,14 @@ export default function CloserComissionSheet() {
       // Add payments from payment_history starting from index 1
       total += ticket.payment_history
         .slice(1)
-        .reduce((paymentTotal, payment) => paymentTotal + payment.payment, 0);
+        .reduce((paymentTotal, payment) => {
+          // Convert the payment to a number if it's a string
+          const paymentAmount =
+            typeof payment.payment === "string"
+              ? parseFloat(payment.payment)
+              : payment.payment;
+          return paymentTotal + paymentAmount;
+        }, 0);
 
       return total;
     }, 0);
@@ -216,7 +224,9 @@ export default function CloserComissionSheet() {
                   ticket.businessdetails.closer === selectedCloser) && (
                   <>
                     <TableRow>
-                      <TableCell>{ticket.businessdetails.businessName}</TableCell>
+                      <TableCell>
+                        {ticket.businessdetails.businessName}
+                      </TableCell>
                       <TableCell>{ticket.businessdetails.fronter}</TableCell>
                       <TableCell>
                         <strong>{ticket.businessdetails.closer}</strong>
@@ -252,7 +262,9 @@ export default function CloserComissionSheet() {
 
                   return (
                     <TableRow key={`${ticket._id}-payment-${index}`}>
-                      <TableCell>{ticket.businessdetails.businessName}</TableCell>
+                      <TableCell>
+                        {ticket.businessdetails.businessName}
+                      </TableCell>
                       <TableCell>{ticket.businessdetails.fronter}</TableCell>
                       <TableCell>
                         <strong>{payment.closer}</strong>

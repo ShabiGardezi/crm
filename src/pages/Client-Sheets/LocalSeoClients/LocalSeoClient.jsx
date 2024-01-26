@@ -425,6 +425,7 @@ export default function LocalSeoSheet() {
         <Table sx={{ minWidth: 800 }} aria-label="custom pagination table">
           <TableHead>
             <TableRow>
+              <TableCell>Serial Number</TableCell>
               <TableCell>Business Name</TableCell>
               <TableCell>Sales Person</TableCell>
               <TableCell>Work Status</TableCell>
@@ -444,6 +445,9 @@ export default function LocalSeoSheet() {
               .map((ticket) => {
                 return (
                   <TableRow key={ticket._id}>
+                    <TableCell component="th" scope="row">
+                      {ticket.serialNumber}
+                    </TableCell>
                     {ticket.businessdetails && (
                       <TableCell component="th" scope="row">
                         {ticket.businessdetails.businessName}
