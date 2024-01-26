@@ -56,6 +56,7 @@ import FronterSalarySheet from "./pages/SalesSalarySheet/FronterSalarySheet";
 import CloserComissionSheet from "./pages/SalesComission/CloserCommission";
 import CloserSalarySheet from "./pages/SalesSalarySheet/CloserSalarySheet";
 import Outsource_Work_Tickets from "./pages/OutsourceWork/Outsource_Work_Tickets";
+import BackGroundImg from "./components/BackGroundImg";
 
 function App() {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -66,6 +67,7 @@ function App() {
   return (
     <div className="App">
       <Toaster />
+      <BackGroundImg />
       <Routes>
         <Route path="/" element={<SignIn />} />
         <Route path="/signin" element={<SignIn />} />
@@ -268,7 +270,10 @@ function App() {
               path="/closer_salary_sheet"
               element={<CloserSalarySheet />}
             />
-            <Route path="/outsource_tickets" element={<Outsource_Work_Tickets />} />
+            <Route
+              path="/outsource_tickets"
+              element={<Outsource_Work_Tickets />}
+            />
           </>
         )}
       </Routes>

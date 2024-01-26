@@ -31,7 +31,7 @@ import "../../styles/clients/AddClient.css";
 import { useLocation } from "react-router-dom";
 import TablePaginationActions from "../Tickets/TicketsTablePagination/TicketsPagination";
 import UnauthorizedError from "../../components/Error_401";
-import { Typography } from "@mui/material";
+import { InputLabel, Typography } from "@mui/material";
 import WebSeoSalesCards from "../SalesClientsSheet/WebSeoSalesSheet/WebSeoSalesCards";
 
 export default function WebSeoSheet() {
@@ -51,7 +51,24 @@ export default function WebSeoSheet() {
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [selectedPaymentIndex, setSelectedPaymentIndex] = useState(null);
   const [newPayment, setNewPayment] = useState("");
+  const [selectedUser, setSelectedUser] = useState("");
+  const [users, setUsers] = useState([]);
 
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const departmentId = "651b3409819ff0aec6af1387";
+        const response = await axios.get(
+          `${apiUrl}/api/tickets/users/${departmentId}`
+        );
+        setUsers(response.data);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    };
+
+    fetchUsers();
+  }, []);
   // Function to open the recurring dialog and reset state values
   const handleRecurringDialogOpen = () => {
     setOpenRecurringDialog(true);
@@ -83,7 +100,11 @@ export default function WebSeoSheet() {
       });
       const response = await axios.post(
         `${apiUrl}/api/tickets/update_payment_history`,
-        { ticketId: ticketSelected._id, payment: remainingPrice }
+        {
+          ticketId: ticketSelected._id,
+          payment: remainingPrice,
+          selectedUser: selectedUser,
+        }
       );
     } catch (error) {}
 
@@ -624,13 +645,7 @@ export default function WebSeoSheet() {
                                           <div className="payment">
                                             {`$${p.payment}`}
                                             <button
-                                              style={{
-                                                marginLeft: "10px",
-                                                background: "white",
-                                                border: "none",
-                                                textDecoration: "underline",
-                                                cursor: "pointer",
-                                              }}
+                                              style={{ marginLeft: "10px" }}
                                               onClick={() => {
                                                 setEditDialogOpen(true);
                                                 setSelectedPaymentIndex(index);
@@ -681,7 +696,6 @@ export default function WebSeoSheet() {
                               </DialogActions>
                             </Dialog>
                           </table>
-
                           <hr
                             style={{
                               marginTop: "16px",
@@ -734,6 +748,19 @@ export default function WebSeoSheet() {
                             onChange={handleRemainingPriceChange}
                             fullWidth
                           />
+                          <FormControl fullWidth>
+                            <InputLabel>User</InputLabel>
+                            <Select
+                              value={selectedUser}
+                              onChange={(e) => setSelectedUser(e.target.value)}
+                            >
+                              {users.map((user) => (
+                                <MenuItem key={user._id} value={user.username}>
+                                  {user.username}
+                                </MenuItem>
+                              ))}
+                            </Select>
+                          </FormControl>
                         </DialogContent>
                         <DialogActions>
                           <Button onClick={handleRecurringDialogClose}>
