@@ -235,7 +235,9 @@ export default function ShowOpenTickets() {
                       <FormControl>
                         <Select
                           value={
-                            selectedStatus[ticket._id] || "Not Started Yet"
+                            selectedStatus[ticket._id] ||
+                            ticket.status ||
+                            "Not Started Yet"
                           }
                           onChange={(e) => handleStatusChange(e, ticket._id)}
                         >

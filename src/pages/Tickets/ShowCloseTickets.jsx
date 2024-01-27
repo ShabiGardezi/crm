@@ -232,7 +232,9 @@ export default function ShowCloseTickets() {
                       <FormControl>
                         <Select
                           value={
-                            selectedStatus[ticket?.status] || "Not Started Yet"
+                            selectedStatus[ticket._id] ||
+                            ticket.status ||
+                            "Not Started Yet"
                           }
                           onChange={(e) => handleStatusChange(e, ticket._id)}
                         >
