@@ -82,13 +82,19 @@ const Header = () => {
         const departmentIdToExclude = "654bc9d114e9ed66948b4a01";
 
         const filteredDepartments = response.data.payload.filter(
-          (department) =>
-            !departmentsToExcludeForAll.includes(department.name) &&
-            !(
-              (user?.department?._id === userDepartmentIdToExclude ||
+          (department) => {
+            const isExcludedForAll = departmentsToExcludeForAll.includes(
+              department.name
+            );
+            const isExcludedForUser =
+              (user?.department?._id === userDepartmentIdToExclude &&
+                department.name === "Designers") ||
+              ((user?.department?._id === userDepartmentIdToExclude ||
                 user?.department?.name === "Outsourced") &&
-              department._id === departmentIdToExclude
-            )
+                department._id === departmentIdToExclude);
+
+            return !isExcludedForAll && !isExcludedForUser;
+          }
         );
 
         setDepartments(filteredDepartments);
@@ -96,6 +102,7 @@ const Header = () => {
         console.log(error);
       }
     };
+
     fetchDepartments();
   }, [user?.department?._id]);
 
@@ -190,15 +197,15 @@ const Header = () => {
     const depId = user?.department?._id;
 
     if (depId === "65195c4b504d80e8f11b0d13") {
-      navigate("/localseo_clients?depId=65195c4b504d80e8f11b0d13");
+      navigate("/active_clients");
     } else if (depId === "65195c81504d80e8f11b0d14") {
-      navigate("/website_sheet?depId=65195c81504d80e8f11b0d14");
+      navigate("/active_clients");
     } else if (depId === "65195c8f504d80e8f11b0d15") {
-      navigate("/webseo_clients?depId=65195c8f504d80e8f11b0d15");
+      navigate("/active_clients");
     } else if (depId === "651ada3c819ff0aec6af1380") {
-      navigate("/paid_marketing_sheet?depId=651ada3c819ff0aec6af1380");
+      navigate("/active_clients");
     } else if (depId === "651ada78819ff0aec6af1381") {
-      navigate("/social_media_client?depId=651ada78819ff0aec6af1381");
+      navigate("/active_clients");
     }
   };
   const [isSalesDropdownOpen, setSalesDropdownOpen] = useState(false);
@@ -324,27 +331,32 @@ const Header = () => {
 
                 {isClientHistoryOpen && (
                   <div className="client-history-dropdown">
-                    <Link to="/localseo_clients?depId=65195c4b504d80e8f11b0d13">
+                    {/* <Link to="/localseo_clients?depId=65195c4b504d80e8f11b0d13"> */}
+                    <Link to="/localseoactiveclients">
                       <ListItem button>
                         <ListItemText primary="Local SEO / GMB Optimization" />
                       </ListItem>
                     </Link>
-                    <Link to="/website_sheet?depId=65195c81504d80e8f11b0d14">
+                    {/* <Link to="/website_sheet?depId=65195c81504d80e8f11b0d14"> */}
+                    <Link to="/wordpressactiveclients">
                       <ListItem button>
                         <ListItemText primary="Wordpress Development" />
                       </ListItem>
                     </Link>
-                    <Link to="/webseo_clients?depId=65195c8f504d80e8f11b0d15">
+                    {/* <Link to="/webseo_clients?depId=65195c8f504d80e8f11b0d15"> */}
+                    <Link to="/webseoactiveclients">
                       <ListItem button>
                         <ListItemText primary="Website SEO" />
                       </ListItem>
                     </Link>
-                    <Link to="/paid_marketing_sheet?depId=651ada3c819ff0aec6af1380">
+                    {/* <Link to="/paid_marketing_sheet?depId=651ada3c819ff0aec6af1380"> */}
+                    <Link to="/marketingactiveclients">
                       <ListItem button>
                         <ListItemText primary="Paid Marketing" />
                       </ListItem>
                     </Link>
-                    <Link to="/social_media_client?depId=651ada78819ff0aec6af1381">
+                    {/* <Link to="/social_media_client?depId=651ada78819ff0aec6af1381"> */}
+                    <Link to="/socialmedia_activeclients">
                       <ListItem button>
                         <ListItemText primary="Social Media / Customer Reviews Management" />
                       </ListItem>

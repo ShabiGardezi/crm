@@ -255,7 +255,7 @@ const PaidMarketingActiveClient = () => {
                 {new Date(ticket.createdAt).toLocaleDateString()}
               </TableCell>
               <TableCell style={{ width: 160 }} align="left">
-                {ticket.businessdetails.platform}
+                {ticket.businessdetails.work_status}
               </TableCell>
               <TableCell style={{ width: 160 }} align="left">
                 {ticket.businessdetails.selectedBudget}
