@@ -269,7 +269,8 @@ export default function FronterComissionSheet() {
                           {new Date(ticket.createdAt).toLocaleDateString()}
                         </TableCell>
                         <TableCell>
-                          {ticket.businessdetails.work_status}
+                          {ticket.businessdetails.work_status ||
+                            ticket.businessdetails.departmentName}
                         </TableCell>
                         <TableCell>{`$${ticket.quotation.price}`}</TableCell>
                       </TableRow>

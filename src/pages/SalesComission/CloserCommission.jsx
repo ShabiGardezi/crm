@@ -249,7 +249,8 @@ export default function CloserComissionSheet() {
                         {new Date(visibleTicket.createdAt).toLocaleDateString()}
                       </TableCell>
                       <TableCell>
-                        {visibleTicket.businessdetails.work_status}
+                        {visibleTicket.businessdetails.work_status ||
+                          visibleTicket.businessdetails.departmentName}
                       </TableCell>
                       <TableCell>{`$${visibleTicket.quotation.price}`}</TableCell>
                       <TableCell>
@@ -296,7 +297,8 @@ export default function CloserComissionSheet() {
                           {new Date(payment.date).toLocaleDateString()}
                         </TableCell>
                         <TableCell>
-                          {visibleTicket.businessdetails.work_status}
+                          {visibleTicket.businessdetails.work_status ||
+                            visibleTicket.businessdetails.departmentName}
                         </TableCell>
                         <TableCell>{`$${payment.payment}`}</TableCell>
                         <TableCell>{"Recurring"}</TableCell>

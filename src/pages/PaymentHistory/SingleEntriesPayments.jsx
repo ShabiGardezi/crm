@@ -242,7 +242,8 @@ export default function SingleEntriesPayments() {
                           {new Date(p.date).toLocaleDateString()}
                         </TableCell>
                         <TableCell>
-                          {ticket.businessdetails.work_status}
+                          {ticket.businessdetails.work_status ||
+                            ticket.businessdetails.departmentName}
                         </TableCell>
                         {<TableCell>{`$${p.payment}`}</TableCell>}
                         <TableCell>{`$${ticket.quotation.remainingPrice}`}</TableCell>
