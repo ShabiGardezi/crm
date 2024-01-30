@@ -380,25 +380,32 @@ const PaidMarketingActiveClient = () => {
                   {ticket.TicketDetails.assignor}
                 </TableCell>
               )}
-              <TableCell style={{ width: 160 }} align="left">
-                <FormControl>
-                  <Select
-                    value={ticket.ActiveNotActive || "Active"}
-                    onClick={() => handleClick(ticket)}
-                    style={{
-                      backgroundColor:
-                        ticket.ActiveNotActive === "Active"
-                          ? "#28a745"
-                          : "#dc3545", // set background color for Select
-                      color:
-                        ticket.ActiveNotActive === "Active" ? "white" : "black", // set text color for better visibility
-                    }}
-                  >
-                    <MenuItem value="Active">Active</MenuItem>
-                    <MenuItem value="Not Active">Not Active</MenuItem>
-                  </Select>
-                </FormControl>
-              </TableCell>
+              {["Tier-1", "Tier-3"].includes(user?.role) ? (
+                <TableCell style={{ width: 160 }} align="left">
+                  <FormControl>
+                    <Select
+                      value={ticket.ActiveNotActive || "Active"}
+                      onClick={() => handleClick(ticket)}
+                      style={{
+                        backgroundColor:
+                          ticket.ActiveNotActive === "Active"
+                            ? "#28a745"
+                            : "#dc3545",
+                        color:
+                          ticket.ActiveNotActive === "Active"
+                            ? "white"
+                            : "black",
+                      }}
+                    >
+                      <MenuItem value="Active">Active</MenuItem>
+                      <MenuItem value="Not Active">Not Active</MenuItem>
+                    </Select>
+                  </FormControl>
+                </TableCell>
+              ) : (
+                <TableCell>{ticket.ActiveNotActive}</TableCell>
+              )}
+
               <TableCell style={{ width: 160 }} align="left">
                 {new Date(ticket.createdAt).toLocaleDateString()}
               </TableCell>

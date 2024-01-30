@@ -386,7 +386,7 @@ export default function LocalSeoSheet() {
   if (
     param1 !== user?.department?._id &&
     param1 !== "651b3409819ff0aec6af1387" &&
-    user.role !== "admin"
+    user.role !== "Tier-1"
   ) {
     return <UnauthorizedError />;
   }

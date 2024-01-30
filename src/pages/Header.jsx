@@ -308,16 +308,15 @@ const Header = () => {
                 </ListItem>
               </Link>
             )}
-            {user?.department?._id !== "651b3409819ff0aec6af1387" &&
-              user?.department?._id !== "65ae7e27e00c92860edad99c" && (
-                <ListItem button onClick={handleListItemClick}>
-                  <ListItemIcon>
-                    <AssignmentIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Work Status" />
-                </ListItem>
-              )}
-            {user?.department?._id === "651b3409819ff0aec6af1387" && (
+            {user?.role === "Tier-3" && (
+              <ListItem button onClick={handleListItemClick}>
+                <ListItemIcon>
+                  <AssignmentIcon />
+                </ListItemIcon>
+                <ListItemText primary="Work Status" />
+              </ListItem>
+            )}
+            {["Tier-1", "Tier-2"].includes(user?.role) && (
               <React.Fragment>
                 <ListItem button onClick={toggleClientHistory}>
                   <ListItemIcon>
@@ -365,33 +364,37 @@ const Header = () => {
                 )}
               </React.Fragment>
             )}
-            <ListItem button onClick={toggleDepartment}>
-              <ListItemIcon>
-                <DepartmentIcon />
-              </ListItemIcon>
-              <ListItemText primary="New Ticket" />
-              <ListItemIcon style={{ marginLeft: "auto" }}>
-                <ExpandMoreIcon />
-              </ListItemIcon>
-            </ListItem>
-            {isDepartmentOpen && (
-              <div className="client-history-dropdown">
-                {departments?.map((d) => (
-                  <ListItem
-                    button
-                    key={d._id}
-                    onClick={() => handleDepartmentSelect(d.name)}
-                  >
-                    <Link
-                      to={`/department/${encodeURIComponent(
-                        d.name.toLowerCase()
-                      )}`}
-                    >
-                      <ListItemText primary={d.name} />
-                    </Link>
-                  </ListItem>
-                ))}
-              </div>
+            {["Tier-1", "Tier-2"].includes(user?.role) && (
+              <>
+                <ListItem button onClick={toggleDepartment}>
+                  <ListItemIcon>
+                    <DepartmentIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="New Ticket" />
+                  <ListItemIcon style={{ marginLeft: "auto" }}>
+                    <ExpandMoreIcon />
+                  </ListItemIcon>
+                </ListItem>
+                {isDepartmentOpen && (
+                  <div className="client-history-dropdown">
+                    {departments?.map((d) => (
+                      <ListItem
+                        button
+                        key={d._id}
+                        onClick={() => handleDepartmentSelect(d.name)}
+                      >
+                        <Link
+                          to={`/department/${encodeURIComponent(
+                            d.name.toLowerCase()
+                          )}`}
+                        >
+                          <ListItemText primary={d.name} />
+                        </Link>
+                      </ListItem>
+                    ))}
+                  </div>
+                )}
+              </>
             )}
             <Link to="/history">
               <ListItem button>
@@ -401,7 +404,7 @@ const Header = () => {
                 <ListItemText primary="Ticket History" />
               </ListItem>
             </Link>
-            {user?.role === "admin" && (
+            {user?.role === "Tier-1" && (
               <div className="signup">
                 <ListItem button>
                   <ListItemIcon>
@@ -413,7 +416,7 @@ const Header = () => {
                 </ListItem>
               </div>
             )}
-            {user?.role === "admin" && (
+            {user?.role === "Tier-1" && (
               <React.Fragment>
                 <ListItem button onClick={toggleSalesDropdown}>
                   <ListItemIcon>
@@ -456,7 +459,7 @@ const Header = () => {
                 )}
               </React.Fragment>
             )}
-            {user?.role === "admin" && (
+            {user?.role === "Tier-1" && (
               <div className="signup">
                 <ListItem button>
                   <ListItemIcon>

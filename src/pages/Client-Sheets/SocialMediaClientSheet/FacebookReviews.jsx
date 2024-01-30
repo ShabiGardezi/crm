@@ -253,7 +253,7 @@ export default function FbReviewSheet(props) {
         // console.log(user.role);
         // console.log(props.department);
         let url = "";
-        if (user.role === "admin" || user.department.name === "Sales") {
+        if (user.role === "Tier-1" || user.department.name === "Sales") {
           url = `${apiUrl}/api/tickets?departmentId=${props.department._id}`;
         } else {
           url = `${apiUrl}/api/tickets?departmentId=${user?.department?._id}`;

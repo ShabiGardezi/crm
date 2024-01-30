@@ -363,7 +363,7 @@ export default function PaidMarketingClientSheet(props) {
     const fetchData = async () => {
       try {
         let url = "";
-        if (user.role === "admin" || user.department.name === "Sales") {
+        if (user.role === "Tier-1" || user.department.name === "Sales") {
           url = `${apiUrl}/api/tickets?departmentId=${props.department._id}`;
         } else {
           url = `${apiUrl}/api/tickets?departmentId=${user?.department?._id}`;

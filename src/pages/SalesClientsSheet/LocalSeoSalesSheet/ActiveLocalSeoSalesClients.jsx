@@ -338,11 +338,11 @@ export default function LocalSeoSheet() {
   };
   if (
     param1 !== user?.department?._id &&
-    param1 !== "651b3409819ff0aec6af1387" &&
-    user.role !== "admin"
+    !["Tier-1", "Tier-2"].includes(user?.role)
   ) {
     return <UnauthorizedError />;
   }
+
   const handleEditPayment = async () => {
     try {
       if (ticketSelected && selectedPaymentIndex !== null) {
@@ -435,27 +435,32 @@ export default function LocalSeoSheet() {
                       {ticket.businessdetails.work_status}
                     </TableCell>
                   )}
-                  <TableCell style={{ width: 160 }} align="left">
-                    <FormControl>
-                      <Select
-                        value={ticket.ActiveNotActive || "Active"}
-                        onClick={() => handleClick(ticket)}
-                        style={{
-                          backgroundColor:
-                            ticket.ActiveNotActive === "Active"
-                              ? "#049404"
-                              : "red", // set background color for Select
-                          color:
-                            ticket.ActiveNotActive === "Active"
-                              ? "white"
-                              : "black",
-                        }}
-                      >
-                        <MenuItem value="Active">Active</MenuItem>
-                        <MenuItem value="Not Active">Not Active</MenuItem>
-                      </Select>
-                    </FormControl>
-                  </TableCell>
+                  {["Tier-1", "Tier-3"].includes(user?.role) ? (
+                    <TableCell style={{ width: 160 }} align="left">
+                      <FormControl>
+                        <Select
+                          value={ticket.ActiveNotActive || "Active"}
+                          onClick={() => handleClick(ticket)}
+                          style={{
+                            backgroundColor:
+                              ticket.ActiveNotActive === "Active"
+                                ? "#28a745"
+                                : "#dc3545",
+                            color:
+                              ticket.ActiveNotActive === "Active"
+                                ? "white"
+                                : "black",
+                          }}
+                        >
+                          <MenuItem value="Active">Active</MenuItem>
+                          <MenuItem value="Not Active">Not Active</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </TableCell>
+                  ) : (
+                    <TableCell>{ticket.ActiveNotActive}</TableCell>
+                  )}
+
                   <TableCell
                     style={{ width: 160, cursor: "pointer" }}
                     align="left"

@@ -168,7 +168,7 @@ export default function WordpressClientSheet(props) {
     const fetchData = async () => {
       try {
         let url = "";
-        if (user.role === "admin" || user.department.name === "Sales") {
+        if (user.role === "Tier-1" || user.department.name === "Sales") {
           url = `${apiUrl}/api/tickets?departmentId=${props.department._id}`;
         } else {
           url = `${apiUrl}/api/tickets?departmentId=${user?.department?._id}`;
@@ -191,7 +191,7 @@ export default function WordpressClientSheet(props) {
   if (
     param1 !== user?.department?._id &&
     param1 !== "651b3409819ff0aec6af1387" &&
-    user.role !== "admin"
+    user.role !== "Tier-1"
   ) {
     return <UnauthorizedError />;
   }

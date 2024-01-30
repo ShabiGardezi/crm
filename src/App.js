@@ -73,7 +73,7 @@ function App() {
         <Route path="/signin" element={<SignIn />} />
         <Route
           path="/signup"
-          element={user?.role === "admin" ? <SignUp /> : <Navigate to="/" />}
+          element={user?.role === "Tier-1" ? <SignUp /> : <Navigate to="/" />}
         />
         {user && (
           <>

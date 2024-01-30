@@ -367,8 +367,7 @@ export default function ActiveWebSeoSalesClients() {
   };
   if (
     param1 !== user?.department?._id &&
-    param1 !== "651b3409819ff0aec6af1387" &&
-    user.role !== "admin"
+    !["Tier-1", "Tier-2"].includes(user?.role)
   ) {
     return <UnauthorizedError />;
   }
@@ -377,9 +376,7 @@ export default function ActiveWebSeoSalesClients() {
     <>
       <Header />
       <div className="cards">
-        {user?.department._id === "651b3409819ff0aec6af1387" && (
-          <WebSeoSalesCards />
-        )}
+        {user?.role === "Tier-1" && <WebSeoSalesCards />}
         <OneTimeServiceClientsCard />
       </div>
       <TableContainer component={Paper}>

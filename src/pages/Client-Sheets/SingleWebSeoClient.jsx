@@ -92,29 +92,6 @@ export default function LocalSeoSheet() {
     setIsTicketDetailsOpen(false);
   };
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await fetch(
-  //         `${apiUrl}/api/tickets?departmentId=${user?.department?._id}`
-  //       );
-  //       if (response.ok) {
-  //         const data = await response.json();
-  //         setTickets(data.payload);
-  //         data.payload.forEach((ticket) => {
-  //           fetchReportingDate(ticket._id);
-  //         });
-  //       } else {
-  //         console.error("Error fetching data");
-  //       }
-  //     } catch (error) {
-  //       console.error("Error fetching data", error);
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, []);
-
   const fetchReportingDate = async (ticketId) => {
     try {
       const response = await fetch(
@@ -384,7 +361,9 @@ export default function LocalSeoSheet() {
                   style={{
                     width: 180,
                     whiteSpace: "pre-line",
-                    background: ticket.businessdetails.notes ? "#ed08088f" : "white",
+                    background: ticket.businessdetails.notes
+                      ? "#ed08088f"
+                      : "white",
                     color: ticket.businessdetails.notes ? "white" : "black",
                   }} // Apply the white-space property here
                   align="left"
