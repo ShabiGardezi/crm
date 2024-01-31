@@ -38,37 +38,47 @@ const NotesNotification = ({ notes, onNotificationClick }) => {
     const userDepartmentId = user?.department?._id;
 
     if (
-      assignorDepartmentId === "65195c4b504d80e8f11b0d13" ||
+      assignorDepartmentId === "65195c4b504d80e8f11b0d13" &&
       majorAssigneeId === "651b3409819ff0aec6af1387"
     ) {
-      return "/localseo_clients?depId=65195c4b504d80e8f11b0d13";
+      return user?.department?._id === "651b3409819ff0aec6af1387"
+        ? "/localseoactiveclients"
+        : "/home";
     }
     if (userDepartmentId === "65195c4b504d80e8f11b0d13") {
-      return "/localseo_clients?depId=65195c4b504d80e8f11b0d13";
+      return "/active_clients";
     } else if (
-      (majorAssigneeId === "651b3409819ff0aec6af1387" &&
-        assignorDepartmentId === "65195c81504d80e8f11b0d14") ||
-      userDepartmentId === "65195c81504d80e8f11b0d14"
+      majorAssigneeId === "651b3409819ff0aec6af1387" &&
+      assignorDepartmentId === "65195c81504d80e8f11b0d14"
     ) {
-      return "/website_sheet?depId=65195c81504d80e8f11b0d14";
+      return "/wordpressactiveclients";
+    }
+    if (userDepartmentId === "65195c81504d80e8f11b0d14") {
+      return "/active_clients";
     } else if (
-      (majorAssigneeId === "651b3409819ff0aec6af1387" &&
-        assignorDepartmentId === "65195c8f504d80e8f11b0d15") ||
-      userDepartmentId === "65195c8f504d80e8f11b0d15"
+      majorAssigneeId === "651b3409819ff0aec6af1387" &&
+      assignorDepartmentId === "65195c8f504d80e8f11b0d15"
     ) {
-      return "/webseo_clients?depId=65195c8f504d80e8f11b0d15";
+      return "/webseoactiveclients";
+    }
+    if (userDepartmentId === "65195c8f504d80e8f11b0d15") {
+      return "/active_clients";
     } else if (
-      (majorAssigneeId === "651b3409819ff0aec6af1387" &&
-        assignorDepartmentId === "651ada3c819ff0aec6af1380") ||
-      userDepartmentId === "651ada3c819ff0aec6af1380"
+      majorAssigneeId === "651b3409819ff0aec6af1387" &&
+      assignorDepartmentId === "651ada3c819ff0aec6af1380"
     ) {
-      return "/paid_marketing_sheet?depId=651ada3c819ff0aec6af1380";
+      return "/marketingactiveclients";
+    }
+    if (userDepartmentId === "651ada3c819ff0aec6af1380") {
+      return "/active_clients";
     } else if (
-      (majorAssigneeId === "651b3409819ff0aec6af1387" &&
-        assignorDepartmentId === "651ada78819ff0aec6af1381") ||
-      userDepartmentId === "651ada78819ff0aec6af1381"
+      majorAssigneeId === "651b3409819ff0aec6af1387" &&
+      assignorDepartmentId === "651ada78819ff0aec6af1381"
     ) {
-      return "/social_media_client?depId=651ada78819ff0aec6af1381";
+      return "/socialmedia_activeclients";
+    }
+    if (userDepartmentId === "651ada78819ff0aec6af1381") {
+      return "/active_clients";
     } else {
       return "/home";
     }

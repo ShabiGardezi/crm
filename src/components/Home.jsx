@@ -137,39 +137,33 @@ const Home = () => {
 
     if (assignorDepartmentId === "651b3409819ff0aec6af1387") {
       if (majorAssigneeId === "65195c4b504d80e8f11b0d13") {
-        window.location.href =
-          "/localseo_clients?depId=65195c4b504d80e8f11b0d13";
+        window.location.href = "/localseoactiveclients";
       }
       if (majorAssigneeId === "65195c8f504d80e8f11b0d15") {
-        window.location.href = "/webseo_clients?depId=65195c8f504d80e8f11b0d15";
+        window.location.href = "/webseoactiveclients";
       }
       if (majorAssigneeId === "651ada78819ff0aec6af1381") {
-        window.location.href =
-          "/social_media_client?depId=651ada78819ff0aec6af1381";
+        window.location.href = "/socialmedia_activeclients";
       }
       if (majorAssigneeId === "651ada3c819ff0aec6af1380") {
-        window.location.href =
-          "/paid_marketing_sheet?depId=651ada3c819ff0aec6af1380";
+        window.location.href = "/marketingactiveclients";
       }
       if (majorAssigneeId === "65195c81504d80e8f11b0d14") {
-        window.location.href = "/website_sheet?depId=65195c81504d80e8f11b0d14";
+        window.location.href = "/wordpressactiveclients";
       }
     }
 
     if (majorAssigneeId) {
       if (user?.department?._id === "65195c8f504d80e8f11b0d15") {
-        window.location.href = "/webseo_clients?depId=65195c8f504d80e8f11b0d15";
+        window.location.href = "/active_clients";
       } else if (user?.department?._id === "65195c4b504d80e8f11b0d13") {
-        window.location.href =
-          "/localseo_clients?depId=65195c4b504d80e8f11b0d13";
+        window.location.href = "/active_clients";
       } else if (user?.department?._id === "65195c81504d80e8f11b0d14") {
-        window.location.href = "/website_sheet?depId=65195c81504d80e8f11b0d14";
+        window.location.href = "/active_clients";
       } else if (user?.department?._id === "651ada3c819ff0aec6af1380") {
-        window.location.href =
-          "/paid_marketing_sheet?depId=651ada3c819ff0aec6af1380";
+        window.location.href = "/active_clients";
       } else if (user?.department?._id === "651ada78819ff0aec6af1381") {
-        window.location.href =
-          "/social_media_client?depId=651ada78819ff0aec6af1381";
+        window.location.href = "/active_clients";
       } else {
         console.error("Invalid majorAssigneeId or assignorDepartmentId");
       }

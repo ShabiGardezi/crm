@@ -376,7 +376,8 @@ export default function ActiveWebSeoSalesClients() {
     <>
       <Header />
       <div className="cards">
-        {user?.role === "Tier-1" && <WebSeoSalesCards />}
+        {user?.role === "Tier-1" ||
+          (user?.role === "Tier-2" && <WebSeoSalesCards />)}
         <OneTimeServiceClientsCard />
       </div>
       <TableContainer component={Paper}>

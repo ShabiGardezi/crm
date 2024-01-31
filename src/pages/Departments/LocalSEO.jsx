@@ -43,6 +43,7 @@ const LocalSEOForm = () => {
     zipcode: "",
     businessNumber: "",
     clientEmail: "",
+    reportingDate: "",
     businessHours: "",
     socialProfile: "",
     gmbUrl: "",
@@ -157,6 +158,7 @@ const LocalSEOForm = () => {
           priority: formData.priorityLevel,
         },
         payment_history: parseFloat(formData.advanceprice),
+        clientReporting: formData.reportingDate,
       });
 
       // Handle the response as needed (e.g., show a success message)
@@ -299,6 +301,16 @@ const LocalSEOForm = () => {
               value={formData.clientEmail}
               onChange={handleChange}
               required
+            />
+          </Grid>{" "}
+          <Grid item xs={1}>
+            <TextField
+              label="Reporting Date"
+              fullWidth
+              name="reportingDate"
+              value={formData.reportingDate}
+              onChange={handleChange}
+              // defaultValue={new Date()}
             />
           </Grid>
         </Grid>

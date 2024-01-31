@@ -24,7 +24,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import UnauthorizedError from "../../../components/Error_401";
 import axios from "axios";
 import "../../../styles/clients/AddClient.css";
-import { Typography } from "@mui/material";
+import { InputLabel, Typography } from "@mui/material";
 import Header from "../../Header";
 import DisplayTicketDetails from "../../Tickets/DisplayTicketDetails";
 import TablePaginationActions from "../../Tickets/TicketsTablePagination/TicketsPagination";
@@ -46,13 +46,28 @@ export default function LocalSeoSheet() {
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [selectedPaymentIndex, setSelectedPaymentIndex] = useState(null);
   const [newPayment, setNewPayment] = useState("");
+  const [users, setUsers] = useState([]);
+  const [selectedUser, setSelectedUser] = useState("");
 
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const departmentId = "651b3409819ff0aec6af1387";
+        const response = await axios.get(
+          `${apiUrl}/api/tickets/users/${departmentId}`
+        );
+        setUsers(response.data);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    };
+
+    fetchUsers();
+  }, []);
   // Function to open the recurring dialog and reset state values
   const handleRecurringDialogOpen = () => {
     setOpenRecurringDialog(true);
-    // setRemainingPrice("");
   };
-
   // Function to close the recurring dialog
   const handleRecurringDialogClose = () => {
     setOpenRecurringDialog(false);
@@ -79,7 +94,11 @@ export default function LocalSeoSheet() {
       });
       const response = await axios.post(
         `${apiUrl}/api/tickets/update_payment_history`,
-        { ticketId: ticketSelected._id, payment: remainingPrice }
+        {
+          ticketId: ticketSelected._id,
+          payment: remainingPrice,
+          selectedUser: selectedUser,
+        }
       );
     } catch (error) {}
 
@@ -404,24 +423,27 @@ export default function LocalSeoSheet() {
         <Table sx={{ minWidth: 800 }} aria-label="custom pagination table">
           <TableHead>
             <TableRow>
-              <TableCell>Business Name</TableCell>
-              <TableCell>Sales Person</TableCell>
-              <TableCell>Work Status</TableCell>
-              <TableCell>Active/Not Active</TableCell>
-              <TableCell>Subscription Date</TableCell>
-              <TableCell>Reporting Date</TableCell>
-              <TableCell>Details</TableCell>
-              <TableCell>Notes</TableCell>
-              <TableCell>Recurring</TableCell>
+              <TableCell style={{ width: 160 }}>Business Name</TableCell>
+              <TableCell style={{ width: 160 }}>Sales Person</TableCell>
+              <TableCell style={{ width: 160 }}>Work Status</TableCell>
+              <TableCell style={{ width: 160 }}>Active/Not Active</TableCell>
+              <TableCell style={{ width: 160 }}>Subscription Date</TableCell>
+              <TableCell style={{ width: 160 }}>Reporting Date</TableCell>
+              <TableCell style={{ width: 160 }}>Details</TableCell>
+              <TableCell style={{ width: 180 }}>Notes</TableCell>
+              {user?.role === "Tier-1" || user?.role === "Tier-2" ? (
+                <TableCell style={{ width: 160 }}>Recurring</TableCell>
+              ) : null}
             </TableRow>
           </TableHead>
+
           <TableBody>
             {tickets
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((ticket) => (
                 <TableRow key={ticket._id}>
                   {ticket.businessdetails && (
-                    <TableCell component="th" scope="row">
+                    <TableCell style={{ width: 160 }} align="left">
                       {ticket.businessdetails.businessName}
                     </TableCell>
                   )}
@@ -437,64 +459,22 @@ export default function LocalSeoSheet() {
                   )}
                   {["Tier-1", "Tier-3"].includes(user?.role) ? (
                     <TableCell style={{ width: 160 }} align="left">
-                      <FormControl>
-                        <Select
-                          value={ticket.ActiveNotActive || "Active"}
-                          onClick={() => handleClick(ticket)}
-                          style={{
-                            backgroundColor:
-                              ticket.ActiveNotActive === "Active"
-                                ? "#28a745"
-                                : "#dc3545",
-                            color:
-                              ticket.ActiveNotActive === "Active"
-                                ? "white"
-                                : "black",
-                          }}
-                        >
-                          <MenuItem value="Active">Active</MenuItem>
-                          <MenuItem value="Not Active">Not Active</MenuItem>
-                        </Select>
-                      </FormControl>
+                      <FormControl>{/* ... Your content here */}</FormControl>
                     </TableCell>
                   ) : (
                     <TableCell>{ticket.ActiveNotActive}</TableCell>
                   )}
-
-                  <TableCell
-                    style={{ width: 160, cursor: "pointer" }}
-                    align="left"
-                    title="Format: MM-DD-YYYY" // Tooltip for date format
-                  >
+                  <TableCell style={{ width: 160 }} align="left">
                     {new Date(ticket.createdAt).toLocaleDateString()}
                   </TableCell>
-                  <TableCell
-                    style={{
-                      width: 160,
-                      cursor: "pointer",
-                      color:
-                        new Date(ticket.reportingDate) <= new Date()
-                          ? "white"
-                          : "black",
-                      background:
-                        new Date(ticket.reportingDate) <= new Date()
-                          ? "#ed08088f"
-                          : "inherit",
-                    }}
-                    title="Format: MM-DD-YYYY" // Tooltip for date format
-                    align="left"
-                    contentEditable={true}
-                    onBlur={(e) =>
-                      handleReportingDateEdit(ticket._id, e.target.innerText)
-                    }
-                  >
+                  <TableCell style={{ width: 160 }} align="left">
                     {new Date(ticket.reportingDate).toLocaleDateString()}
                   </TableCell>
                   <TableCell style={{ width: 160 }} align="left">
                     <IconButton onClick={() => fetchTicketDetails(ticket._id)}>
                       <VisibilityIcon />
                     </IconButton>
-                  </TableCell>
+                  </TableCell>{" "}
                   <TableCell
                     style={{
                       width: 180,
@@ -512,175 +492,205 @@ export default function LocalSeoSheet() {
                   >
                     {ticket.businessdetails.notes}
                   </TableCell>
-                  <TableCell>
-                    <Button
-                      style={{ backgroundColor: "red" }}
-                      variant="contained"
-                      color="primary"
-                      onClick={() => {
-                        handleRecurringDialogOpen();
-                        setTicketSelected(ticket);
-                        setPaymentRecieved(() => {
-                          let payment = 0;
-                          ticket.payment_history.forEach((p) => {
-                            payment = payment + p.payment;
+                  {user?.role === "Tier-1" || user?.role === "Tier-2" ? (
+                    <TableCell>
+                      <Button
+                        style={{ backgroundColor: "red" }}
+                        variant="contained"
+                        color="primary"
+                        onClick={() => {
+                          handleRecurringDialogOpen();
+                          setTicketSelected(ticket);
+                          setPaymentRecieved(() => {
+                            let payment = 0;
+                            ticket.payment_history.forEach((p) => {
+                              payment = payment + p.payment;
+                            });
+                            return payment;
                           });
-                          return payment;
-                        });
-                      }}
-                    >
-                      Recurring
-                    </Button>
-                    {/* Recurring Dialog */}
-                    <Dialog
-                      open={openRecurringDialog}
-                      onClose={handleRecurringDialogClose}
-                    >
-                      <DialogTitle style={{ textAlign: "center" }}>
-                        {ticketSelected
-                          ? `Payment History - ${ticketSelected.businessdetails.businessName}`
-                          : "Payment History"}
-                      </DialogTitle>
-                      <DialogContent
-                        style={{ overflowY: "auto", maxHeight: "500px" }}
+                        }}
                       >
-                        <table style={{ width: "100%" }}>
-                          <thead>
-                            <tr>
-                              <th>Date</th>
-                              <th>Work Type</th>
-                              <th>Received</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {ticketSelected &&
-                              ticketSelected?.payment_history.map(
-                                (p, index) =>
-                                  // Check if payment is not null before rendering the row
-                                  p.payment !== null && (
-                                    <tr key={p.date}>
-                                      <td style={{ textAlign: "center" }}>
-                                        {new Date(p.date).toLocaleDateString()}
-                                      </td>
-                                      <td style={{ textAlign: "center" }}>
-                                        {
-                                          ticketSelected.businessdetails
-                                            .work_status
-                                        }
-                                      </td>
-                                      <td style={{ textAlign: "center" }}>
-                                        <div className="payment">
-                                          {`$${p.payment}`}
-                                          <button
-                                            style={{ marginLeft: "10px" }}
-                                            onClick={() => {
-                                              setEditDialogOpen(true);
-                                              setSelectedPaymentIndex(index);
-                                            }}
-                                          >
-                                            Edit
-                                          </button>
-                                        </div>
-                                      </td>
-                                    </tr>
-                                  )
-                              )}
-                          </tbody>
-                          <Dialog
-                            open={editDialogOpen}
-                            onClose={() => setEditDialogOpen(false)}
-                          >
-                            <DialogTitle>
-                              {` Edit Payment: Old Payment is
-                              $${ticketSelected?.payment_history[selectedPaymentIndex]?.payment}`}
-                            </DialogTitle>
-                            <DialogContent>
-                              <TextField
-                                label="New Payment"
-                                value={newPayment}
-                                onChange={(e) => setNewPayment(e.target.value)}
-                                fullWidth
-                              />
-                            </DialogContent>
-                            <DialogActions>
-                              <Button onClick={() => setEditDialogOpen(false)}>
-                                Cancel
-                              </Button>
-                              <Button
-                                onClick={() => {
-                                  setEditDialogOpen(false);
-                                  setOpenRecurringDialog(false);
-                                  handleEditPayment();
-                                }}
-                                color="primary"
-                              >
-                                Save
-                              </Button>
-                            </DialogActions>
-                          </Dialog>
-                        </table>
-                        <hr
+                        Recurring
+                      </Button>
+                      {/* Recurring Dialog */}
+                      <Dialog
+                        open={openRecurringDialog}
+                        onClose={handleRecurringDialogClose}
+                      >
+                        <DialogTitle style={{ textAlign: "center" }}>
+                          {ticketSelected
+                            ? `Payment History - ${ticketSelected.businessdetails.businessName}`
+                            : "Payment History"}
+                        </DialogTitle>
+                        <DialogContent
                           style={{
-                            marginTop: "16px",
-                            marginBottom: "16px",
-                            border: "0",
-                            borderTop: "2px solid #eee",
+                            overflowY: "auto",
+                            maxHeight: "500px",
                           }}
-                        />
-
-                        <Typography>
-                          <div
-                            style={{
-                              display: "flex",
-                              justifyContent: "space-between",
-                              fontWeight: "bold",
-                            }}
-                          >
-                            <div>Payment Received:</div>
-                            <div>{`$${paymentRecieved}`}</div>
-                          </div>
-                        </Typography>
-                        <Typography>
-                          <div
-                            style={{
-                              display: "flex",
-                              justifyContent: "space-between",
-                              fontWeight: "bold",
-                            }}
-                          >
-                            <div>Remaining Charges:</div>
-                            <div
-                              class="remainingCharges"
-                              contentEditable={true}
-                              onBlur={(e) =>
-                                handleRemainingEdit(
-                                  ticketSelected?._id,
-                                  e.target.innerText
-                                )
-                              }
+                        >
+                          <table style={{ width: "100%" }}>
+                            <thead>
+                              <tr>
+                                <th>Date</th>
+                                <th>Work Type</th>
+                                <th>Received</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {ticketSelected &&
+                                ticketSelected?.payment_history.map(
+                                  (p, index) =>
+                                    // Check if payment is not null before rendering the row
+                                    p.payment !== null && (
+                                      <tr key={p.date}>
+                                        <td style={{ textAlign: "center" }}>
+                                          {new Date(
+                                            p.date
+                                          ).toLocaleDateString()}
+                                        </td>
+                                        <td style={{ textAlign: "center" }}>
+                                          {
+                                            ticketSelected.businessdetails
+                                              .work_status
+                                          }
+                                        </td>
+                                        <td style={{ textAlign: "center" }}>
+                                          <div className="payment">
+                                            {`$${p.payment}`}
+                                            <button
+                                              style={{
+                                                marginLeft: "10px",
+                                              }}
+                                              onClick={() => {
+                                                setEditDialogOpen(true);
+                                                setSelectedPaymentIndex(index);
+                                              }}
+                                            >
+                                              Edit
+                                            </button>
+                                          </div>
+                                        </td>
+                                      </tr>
+                                    )
+                                )}
+                            </tbody>
+                            <Dialog
+                              open={editDialogOpen}
+                              onClose={() => setEditDialogOpen(false)}
                             >
-                              {" "}
-                              {`${ticketSelected?.quotation.remainingPrice}`}
+                              <DialogTitle>
+                                {` Edit Payment: Old Payment is
+                                $${ticketSelected?.payment_history[selectedPaymentIndex]?.payment}`}
+                              </DialogTitle>
+                              <DialogContent>
+                                <TextField
+                                  label="New Payment"
+                                  value={newPayment}
+                                  onChange={(e) =>
+                                    setNewPayment(e.target.value)
+                                  }
+                                  fullWidth
+                                />
+                              </DialogContent>
+                              <DialogActions>
+                                <Button
+                                  onClick={() => setEditDialogOpen(false)}
+                                >
+                                  Cancel
+                                </Button>
+                                <Button
+                                  onClick={() => {
+                                    setEditDialogOpen(false);
+                                    setOpenRecurringDialog(false);
+                                    handleEditPayment();
+                                  }}
+                                  color="primary"
+                                >
+                                  Save
+                                </Button>
+                              </DialogActions>
+                            </Dialog>
+                          </table>
+                          <hr
+                            style={{
+                              marginTop: "16px",
+                              marginBottom: "16px",
+                              border: "0",
+                              borderTop: "2px solid #eee",
+                            }}
+                          />
+
+                          <Typography>
+                            <div
+                              style={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                                fontWeight: "bold",
+                              }}
+                            >
+                              <div>Payment Received:</div>
+                              <div>{`$${paymentRecieved}`}</div>
                             </div>
-                          </div>
-                        </Typography>
-                        <TextField
-                          label="Payment Received"
-                          value={remainingPrice}
-                          onChange={handleRemainingPriceChange}
-                          fullWidth
-                        />
-                      </DialogContent>
-                      <DialogActions>
-                        <Button onClick={handleRecurringDialogClose}>
-                          Cancel
-                        </Button>
-                        <Button onClick={handleRecurringSubmit} color="primary">
-                          Save
-                        </Button>
-                      </DialogActions>
-                    </Dialog>
-                  </TableCell>
+                          </Typography>
+                          <Typography>
+                            <div
+                              style={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                                fontWeight: "bold",
+                              }}
+                            >
+                              <div>Remaining Charges:</div>
+                              <div
+                                class="remainingCharges"
+                                contentEditable={true}
+                                onBlur={(e) =>
+                                  handleRemainingEdit(
+                                    ticketSelected?._id,
+                                    e.target.innerText
+                                  )
+                                }
+                              >
+                                {`${
+                                  ticketSelected?.quotation.remainingPrice || 0
+                                }`}
+                              </div>
+                            </div>
+                          </Typography>
+                          <TextField
+                            label="Payment Received"
+                            value={remainingPrice}
+                            onChange={handleRemainingPriceChange}
+                            fullWidth
+                          />
+                          <FormControl fullWidth>
+                            <InputLabel>User</InputLabel>
+                            <Select
+                              value={selectedUser}
+                              onChange={(e) => setSelectedUser(e.target.value)}
+                            >
+                              {users.map((user) => (
+                                <MenuItem key={user._id} value={user.username}>
+                                  {user.username}
+                                </MenuItem>
+                              ))}
+                            </Select>
+                          </FormControl>
+                        </DialogContent>
+                        <DialogActions>
+                          <Button onClick={handleRecurringDialogClose}>
+                            Cancel
+                          </Button>
+                          <Button
+                            onClick={handleRecurringSubmit}
+                            color="primary"
+                          >
+                            Save
+                          </Button>
+                        </DialogActions>
+                      </Dialog>
+                    </TableCell>
+                  ) : null}
                 </TableRow>
               ))}
             {emptyRows > 0 && (

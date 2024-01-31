@@ -534,7 +534,7 @@ export default function LocalSeoSheet() {
                     >
                       {ticket.businessdetails.notes}
                     </TableCell>
-                    {user?.department?._id === "651b3409819ff0aec6af1387" && (
+                    {user?.role === "Tier-1" || user?.role === "Tier-2" ? (
                       <TableCell>
                         <Button
                           style={{ backgroundColor: "red" }}
@@ -565,7 +565,10 @@ export default function LocalSeoSheet() {
                               : "Payment History"}
                           </DialogTitle>
                           <DialogContent
-                            style={{ overflowY: "auto", maxHeight: "500px" }}
+                            style={{
+                              overflowY: "auto",
+                              maxHeight: "500px",
+                            }}
                           >
                             <table style={{ width: "100%" }}>
                               <thead>
@@ -597,7 +600,9 @@ export default function LocalSeoSheet() {
                                             <div className="payment">
                                               {`$${p.payment}`}
                                               <button
-                                                style={{ marginLeft: "10px" }}
+                                                style={{
+                                                  marginLeft: "10px",
+                                                }}
                                                 onClick={() => {
                                                   setEditDialogOpen(true);
                                                   setSelectedPaymentIndex(
@@ -619,7 +624,7 @@ export default function LocalSeoSheet() {
                               >
                                 <DialogTitle>
                                   {` Edit Payment: Old Payment is
-                              $${ticketSelected?.payment_history[selectedPaymentIndex]?.payment}`}
+                                $${ticketSelected?.payment_history[selectedPaymentIndex]?.payment}`}
                                 </DialogTitle>
                                 <DialogContent>
                                   <TextField
@@ -735,7 +740,7 @@ export default function LocalSeoSheet() {
                           </DialogActions>
                         </Dialog>
                       </TableCell>
-                    )}
+                    ) : null}
                   </TableRow>
                 );
               })}

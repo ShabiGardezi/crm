@@ -15,6 +15,13 @@ import Select from "@mui/material/Select";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import axios from "axios";
 import "../../styles/Home/TicketCard.css";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import TextField from "@mui/material/TextField";
+
 import TablePaginationActions from "../Tickets/TicketsTablePagination/TicketsPagination";
 import DisplayTicketDetails from "../Tickets/DisplayTicketDetails";
 export default function LocalSeoActiveClients() {
@@ -27,6 +34,13 @@ export default function LocalSeoActiveClients() {
   const [reportingDates, setReportingDates] = useState({});
   const [isTicketDetailsOpen, setIsTicketDetailsOpen] = useState(false);
   const [selectedTicketDetails, setSelectedTicketDetails] = useState(null);
+  const [clientReportDate, setClientReportDate] = useState(0);
+  const [nextReportDate, setNextReportDate] = useState("");
+  const [openReportsDialog, setOpenReportsDialog] = useState(false);
+  const [ticketSelected, setTicketSelected] = useState();
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [selectedDateIndex, setSelectedDateIndex] = useState(null);
+  const [newDate, setNewDate] = useState("");
 
   // Function to fetch ticket details by ID
   const fetchTicketDetails = async (ticketId) => {
@@ -63,7 +77,15 @@ export default function LocalSeoActiveClients() {
   const closeTicketDetailsModal = () => {
     setIsTicketDetailsOpen(false);
   };
-
+  const handleReportDateChange = (event) => {
+    setNextReportDate(event.target.value);
+  };
+  const handleReportsDialogClose = () => {
+    setOpenReportsDialog(false);
+  };
+  const handleReportsDialogOpen = () => {
+    setOpenReportsDialog(true);
+  };
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -197,6 +219,71 @@ export default function LocalSeoActiveClients() {
       status: temp,
     });
   };
+  // Function to handle the submission of a new report date
+  const handleReportDateSubmit = async () => {
+    try {
+      if (ticketSelected && nextReportDate) {
+        // Make the API request to update the report history with the new date
+        const response = await axios.post(
+          `${apiUrl}/api/tickets/update_report_history`,
+          {
+            reportDate: nextReportDate,
+            ticketId: ticketSelected._id,
+          }
+        );
+
+        if (response.status === 200) {
+          // Update the local state with the updated ticket
+          const updatedTicket = response.data.payload;
+          setTickets((prevTickets) =>
+            prevTickets.map((t) =>
+              t._id === updatedTicket._id ? updatedTicket : t
+            )
+          );
+
+          // Close the reports dialog
+          handleReportsDialogClose();
+        } else {
+          console.error("Error updating report date");
+        }
+      } else {
+        console.error("Invalid ticket or report date");
+      }
+    } catch (error) {
+      console.error("Error updating report date", error);
+    }
+  };
+  const handleEditReportingDate = async () => {
+    try {
+      if (ticketSelected && newDate) {
+        const response = await axios.put(
+          `${apiUrl}/api/tickets/update_client_reporting/${ticketSelected._id}/${selectedDateIndex}`,
+          {
+            clientReporting: newDate,
+          }
+        );
+
+        if (response.status === 200) {
+          const updatedTicket = response.data.payload;
+          setTickets((prevTickets) =>
+            prevTickets.map((t) =>
+              t._id === updatedTicket._id ? updatedTicket : t
+            )
+          );
+
+          // Close the reports dialog
+          handleReportsDialogClose();
+        } else {
+          console.error("Error updating client reporting");
+        }
+      } else {
+        console.error("Invalid ticket or client reporting date");
+      }
+    } catch (error) {
+      console.error("Error updating client reporting", error);
+    }
+  };
+
   return (
     <>
       <div>
@@ -231,6 +318,9 @@ export default function LocalSeoActiveClients() {
             <TableCell>Reporting Date</TableCell>
             <TableCell>Details</TableCell>
             <TableCell>Notes</TableCell>
+            {user?.role === "Tier-1" || user?.role === "Tier-3" ? (
+              <TableCell>Report To Client</TableCell>
+            ) : null}
           </TableRow>
         </TableHead>
         <TableBody>
@@ -313,7 +403,9 @@ export default function LocalSeoActiveClients() {
                   style={{
                     width: 180,
                     whiteSpace: "pre-line",
-                    background: ticket.businessdetails.notes ? "#ed08088f" : "white",
+                    background: ticket.businessdetails.notes
+                      ? "#ed08088f"
+                      : "white",
                     color: ticket.businessdetails.notes ? "white" : "black",
                   }} // Apply the white-space property here
                   align="left"
@@ -324,6 +416,148 @@ export default function LocalSeoActiveClients() {
                 >
                   {ticket.businessdetails.notes}
                 </TableCell>
+                {user?.role === "Tier-1" || user?.role === "Tier-3" ? (
+                  <TableCell>
+                    <Button
+                      style={{ backgroundColor: "red" }}
+                      variant="contained"
+                      color="primary"
+                      onClick={() => {
+                        handleReportsDialogOpen();
+                        setTicketSelected(ticket);
+                        setClientReportDate(() => {
+                          return ticket.clientReporting &&
+                            ticket.clientReporting.length > 1
+                            ? ticket.clientReporting
+                                .slice(1)
+                                .map((report, index) => (
+                                  <li key={index + 1}>
+                                    {report.clientReporting}
+                                  </li>
+                                ))
+                            : "No Reports";
+                        });
+                      }}
+                    >
+                      Client Report
+                    </Button>
+                    <Dialog
+                      open={openReportsDialog}
+                      onClose={handleReportsDialogClose}
+                    >
+                      <DialogTitle style={{ textAlign: "center" }}>
+                        {ticketSelected
+                          ? `Reporting Dates - ${ticketSelected.businessdetails.businessName}`
+                          : "Reporting Dates"}
+                      </DialogTitle>
+                      <DialogContent
+                        style={{
+                          overflowY: "auto",
+                          maxHeight: "500px",
+                        }}
+                      >
+                        <table style={{ width: "100%" }}>
+                          <thead>
+                            <tr>
+                              <th>Work Type</th>
+                              <th>Report Date</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {ticketSelected &&
+                              ticketSelected?.clientReporting.map(
+                                (p, index) =>
+                                  p.clientReporting !== null && (
+                                    <tr key={p.date}>
+                                      <td style={{ textAlign: "center" }}>
+                                        {
+                                          ticketSelected.businessdetails
+                                            .work_status
+                                        }
+                                      </td>
+                                      <td style={{ textAlign: "center" }}>
+                                        <div className="payment">
+                                          {`${p.clientReporting}`}
+                                          <button
+                                            style={{
+                                              marginLeft: "10px",
+                                            }}
+                                            onClick={() => {
+                                              setEditDialogOpen(true);
+                                              setSelectedDateIndex(index);
+                                            }}
+                                          >
+                                            Edit
+                                          </button>
+                                        </div>
+                                      </td>
+                                    </tr>
+                                  )
+                              )}
+                          </tbody>
+
+                          <TextField
+                            label="Enter Report Date"
+                            value={nextReportDate}
+                            onChange={handleReportDateChange}
+                            fullWidth
+                          />
+                          <Dialog
+                            open={editDialogOpen}
+                            onClose={() => setEditDialogOpen(false)}
+                          >
+                            <DialogTitle>
+                              {` Edit Date: Old Date is
+                           ${ticketSelected?.clientReporting[selectedDateIndex]?.clientReporting}`}
+                            </DialogTitle>
+                            <DialogContent>
+                              <TextField
+                                label="New Date"
+                                value={newDate}
+                                onChange={(e) => setNewDate(e.target.value)}
+                                fullWidth
+                              />
+                            </DialogContent>
+                            <DialogActions>
+                              <Button onClick={() => setEditDialogOpen(false)}>
+                                Cancel
+                              </Button>
+                              <Button
+                                onClick={() => {
+                                  setEditDialogOpen(false);
+                                  setOpenReportsDialog(false);
+                                  handleEditReportingDate();
+                                }}
+                                color="primary"
+                              >
+                                Save
+                              </Button>
+                            </DialogActions>
+                          </Dialog>
+                        </table>
+                        <hr
+                          style={{
+                            marginTop: "16px",
+                            marginBottom: "16px",
+                            border: "0",
+                            borderTop: "2px solid #eee",
+                          }}
+                        />
+                      </DialogContent>
+                      <DialogActions>
+                        <Button onClick={handleReportsDialogClose}>
+                          Cancel
+                        </Button>
+                        <Button
+                          onClick={handleReportDateSubmit}
+                          color="primary"
+                        >
+                          Save
+                        </Button>
+                      </DialogActions>
+                    </Dialog>
+                  </TableCell>
+                ) : null}
               </TableRow>
             ))}
           {emptyRows > 0 && (
