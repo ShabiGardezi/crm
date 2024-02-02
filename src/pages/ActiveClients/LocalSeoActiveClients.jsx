@@ -310,14 +310,14 @@ export default function LocalSeoActiveClients() {
       <Table sx={{ minWidth: 800 }} aria-label="custom pagination table">
         <TableHead>
           <TableRow>
-            <TableCell>Business Name</TableCell>
-            <TableCell>Sales Person</TableCell>
-            <TableCell>Work Type</TableCell>
-            <TableCell>Active/Not Active</TableCell>
-            <TableCell>Subscription Date</TableCell>
-            <TableCell>Reporting Date</TableCell>
-            <TableCell>Details</TableCell>
-            <TableCell>Notes</TableCell>
+            <TableCell style={{ width: 160 }}>Business Name</TableCell>
+            <TableCell style={{ width: 160 }}>Sales Person</TableCell>
+            <TableCell style={{ width: 160 }}>Work Type</TableCell>
+            <TableCell style={{ width: 160 }}>Active/Not Active</TableCell>
+            <TableCell style={{ width: 160 }}>Subscription Date</TableCell>
+            <TableCell style={{ width: 160 }}>Reporting Date</TableCell>
+            <TableCell style={{ width: 160 }}>Details</TableCell>
+            <TableCell style={{ width: 160 }}>Notes</TableCell>
             {user?.role === "Tier-1" || user?.role === "Tier-3" ? (
               <TableCell>Report To Client</TableCell>
             ) : null}
@@ -417,7 +417,7 @@ export default function LocalSeoActiveClients() {
                   {ticket.businessdetails.notes}
                 </TableCell>
                 {user?.role === "Tier-1" || user?.role === "Tier-3" ? (
-                  <TableCell>
+                  <TableCell style={{ width: 160 }}>
                     <Button
                       style={{ backgroundColor: "red" }}
                       variant="contained"

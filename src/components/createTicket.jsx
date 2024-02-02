@@ -15,6 +15,7 @@ import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 function CreateTicketCard() {
   const apiUrl = process.env.REACT_APP_API_URL;
+  const user = JSON.parse(localStorage.getItem("user"));
   const [formData, setFormData] = useState({
     department: "",
   });
@@ -26,13 +27,38 @@ function CreateTicketCard() {
     const fetchDepartments = async () => {
       try {
         const response = await axios.get(`${apiUrl}/api/departments`);
-        setDepartments(response.data.payload);
+        const departmentsToExcludeForAll = [
+          "Sales",
+          "Custom Development",
+          "Outsourced",
+        ];
+        const userDepartmentIdToExclude = "651b3409819ff0aec6af1387";
+        const departmentIdToExclude = "654bc9d114e9ed66948b4a01";
+
+        const filteredDepartments = response.data.payload.filter(
+          (department) => {
+            const isExcludedForAll = departmentsToExcludeForAll.includes(
+              department.name
+            );
+            const isExcludedForUser =
+              (user?.department?._id === userDepartmentIdToExclude &&
+                department.name === "Designers") ||
+              ((user?.department?._id === userDepartmentIdToExclude ||
+                user?.department?.name === "Outsourced") &&
+                department._id === departmentIdToExclude);
+
+            return !isExcludedForAll && !isExcludedForUser;
+          }
+        );
+
+        setDepartments(filteredDepartments);
       } catch (error) {
         console.log(error);
       }
     };
+
     fetchDepartments();
-  }, []);
+  }, [user?.department?._id]);
 
   const handleDepartmentSelect = (departmentId) => {
     // Define a mapping of department names to their respective routes

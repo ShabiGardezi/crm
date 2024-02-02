@@ -227,13 +227,16 @@ const Header = () => {
           >
             <MenuIcon />
           </IconButton>
-          <Button
-            color="inherit"
-            startIcon={<AddIcon />}
-            onClick={openCreateModal}
-          >
-            Create
-          </Button>
+          {["Tier-1", "Tier-2"].includes(user?.role) && (
+            <Button
+              color="inherit"
+              startIcon={<AddIcon />}
+              onClick={openCreateModal}
+            >
+              Create
+            </Button>
+          )}
+
           <Dialog open={isCreateModalOpen} onClose={closeCreateModal}>
             <DialogContent>
               <CreateTicketCard />
@@ -416,49 +419,50 @@ const Header = () => {
                 </ListItem>
               </div>
             )}
-            {user?.role === "Tier-1" && (
-              <React.Fragment>
-                <ListItem button onClick={toggleSalesDropdown}>
-                  <ListItemIcon>
-                    <AssignmentIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Sales Sheet" />
-                  <ListItemIcon style={{ marginLeft: "auto" }}>
-                    <ExpandMoreIcon />
-                  </ListItemIcon>
-                </ListItem>
+            {user?.role === "Tier-1" ||
+              (user?.role === "Tier-2" && (
+                <React.Fragment>
+                  <ListItem button onClick={toggleSalesDropdown}>
+                    <ListItemIcon>
+                      <AssignmentIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Sales Sheet" />
+                    <ListItemIcon style={{ marginLeft: "auto" }}>
+                      <ExpandMoreIcon />
+                    </ListItemIcon>
+                  </ListItem>
 
-                {isSalesDropdownOpen && (
-                  <div className="client-history-dropdown">
-                    <Link to="/fronter_comission_sheet">
-                      <ListItem button>
-                        <ListItemText primary="Daily Fronter Sale" />
-                      </ListItem>
-                    </Link>
-                    <Link to="/fronter_salary_sheet">
-                      <ListItem button>
-                        <ListItemText primary="Monthly Fronter Commission" />
-                      </ListItem>
-                    </Link>
-                    <Link to="/closer_comission_sheet">
-                      <ListItem button>
-                        <ListItemText primary="Daily Closer Sale" />
-                      </ListItem>
-                    </Link>
-                    <Link to="/closer_salary_sheet">
-                      <ListItem button>
-                        <ListItemText primary="Closer Monthly Commission" />
-                      </ListItem>
-                    </Link>
-                    <Link to="/refund_history">
-                      <ListItem button>
-                        <ListItemText primary="Charge Back & Refund" />
-                      </ListItem>
-                    </Link>
-                  </div>
-                )}
-              </React.Fragment>
-            )}
+                  {isSalesDropdownOpen && (
+                    <div className="client-history-dropdown">
+                      <Link to="/fronter_comission_sheet">
+                        <ListItem button>
+                          <ListItemText primary="Daily Fronter Sale" />
+                        </ListItem>
+                      </Link>
+                      <Link to="/fronter_salary_sheet">
+                        <ListItem button>
+                          <ListItemText primary="Monthly Fronter Commission" />
+                        </ListItem>
+                      </Link>
+                      <Link to="/closer_comission_sheet">
+                        <ListItem button>
+                          <ListItemText primary="Daily Closer Sale" />
+                        </ListItem>
+                      </Link>
+                      <Link to="/closer_salary_sheet">
+                        <ListItem button>
+                          <ListItemText primary="Closer Monthly Commission" />
+                        </ListItem>
+                      </Link>
+                      {/* <Link to="/refund_history">
+                        <ListItem button>
+                          <ListItemText primary="Charge Back & Refund" />
+                        </ListItem>
+                      </Link> */}
+                    </div>
+                  )}
+                </React.Fragment>
+              ))}
             {user?.role === "Tier-1" && (
               <div className="signup">
                 <ListItem button>
