@@ -78,7 +78,14 @@ export default function FronterComissionSheet() {
             createdAtDate <= new Date(endDate.getTime() + 24 * 60 * 60 * 1000)) // Include end date
         );
       })
-      .reduce((total, ticket) => total + parseFloat(ticket.quotation.price), 0);
+      .reduce((total, ticket) => {
+        // Calculate the sum of payments from payment history for the current fronter
+        const paymentHistoryTotal = ticket.payment_history.reduce(
+          (paymentTotal, paymentEntry) => paymentTotal + paymentEntry.payment,
+          0
+        );
+        return total + paymentHistoryTotal;
+      }, 0);
   };
 
   // Calculate commission based on total payment
@@ -146,24 +153,27 @@ export default function FronterComissionSheet() {
   // Calculate total payment for all fronters
   const calculateTotalPaymentForAll = () => {
     return fronters.reduce((total, fronter) => {
-      const totalPayment = calculateTotalPayment(fronter, startDate, endDate);
+      // Filter tickets for the current fronter
+      const fronterTickets = filteredTickets.filter(
+        (ticket) => ticket.businessdetails.fronter === fronter
+      );
 
-      // Exclude tickets where fronter and closer names are the same
-      const excludedTotalPayment = filteredTickets
-        .filter(
-          (ticket) =>
-            ticket.businessdetails.fronter !== ticket.businessdetails.closer
-        )
-        .reduce((total, ticket) => {
-          if (ticket.businessdetails.fronter === fronter) {
-            return total + parseFloat(ticket.quotation.price);
-          }
-          return total;
-        }, 0);
+      // Calculate total payment from payment history for the current fronter
+      const fronterTotalPayment = fronterTickets.reduce(
+        (fronterTotal, ticket) => {
+          const paymentHistoryTotal = ticket.payment_history.reduce(
+            (paymentTotal, paymentEntry) => paymentTotal + paymentEntry.payment,
+            0
+          );
+          return fronterTotal + paymentHistoryTotal;
+        },
+        0
+      );
 
-      return total + excludedTotalPayment;
+      return total + fronterTotalPayment;
     }, 0);
   };
+
   const hasSameFronterAndCloser = (ticket) => {
     return ticket.businessdetails.fronter === ticket.businessdetails.closer;
   };
@@ -272,7 +282,12 @@ export default function FronterComissionSheet() {
                           {ticket.businessdetails.work_status ||
                             ticket.businessdetails.departmentName}
                         </TableCell>
-                        <TableCell>{`$${ticket.quotation.price}`}</TableCell>
+                        <TableCell>
+                          {/* Display individual payments from payment history */}
+                          {ticket.payment_history.map((paymentEntry, index) => (
+                            <div key={index}>${paymentEntry.payment}</div>
+                          ))}
+                        </TableCell>
                       </TableRow>
                     </>
                   )}

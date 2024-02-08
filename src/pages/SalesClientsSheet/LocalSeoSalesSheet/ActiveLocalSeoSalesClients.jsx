@@ -459,7 +459,25 @@ export default function LocalSeoSheet() {
                   )}
                   {["Tier-1", "Tier-3"].includes(user?.role) ? (
                     <TableCell style={{ width: 160 }} align="left">
-                      <FormControl>{/* ... Your content here */}</FormControl>
+                      <FormControl>
+                        <Select
+                          value={ticket.ActiveNotActive || "Active"}
+                          onClick={() => handleClick(ticket)}
+                          style={{
+                            backgroundColor:
+                              ticket.ActiveNotActive === "Active"
+                                ? "#28a745"
+                                : "#dc3545", // set background color for Select
+                            color:
+                              ticket.ActiveNotActive === "Active"
+                                ? "white"
+                                : "black",
+                          }}
+                        >
+                          <MenuItem value="Active">Active</MenuItem>
+                          <MenuItem value="Not Active">Not Active</MenuItem>
+                        </Select>
+                      </FormControl>
                     </TableCell>
                   ) : (
                     <TableCell>{ticket.ActiveNotActive}</TableCell>

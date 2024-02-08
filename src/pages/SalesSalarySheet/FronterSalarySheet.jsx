@@ -69,7 +69,14 @@ export default function FronterSalarySheet() {
             createdAtDate <= new Date(endDate.getTime() + 24 * 60 * 60 * 1000)) // Include end date
         );
       })
-      .reduce((total, ticket) => total + parseFloat(ticket.quotation.price), 0);
+      .reduce((total, ticket) => {
+        // Calculate the sum of payments from payment history for the current fronter
+        const paymentHistoryTotal = ticket.payment_history.reduce(
+          (paymentTotal, paymentEntry) => paymentTotal + paymentEntry.payment,
+          0
+        );
+        return total + paymentHistoryTotal;
+      }, 0);
   };
 
   const roundCommission = (commission) => {
@@ -157,7 +164,7 @@ export default function FronterSalarySheet() {
   // Function to calculate total payment for a fronter with a specific set of tickets
   const calculateTotalPaymentForFronter = (fronter, tickets) => {
     return tickets.reduce(
-      (total, ticket) => total + parseFloat(ticket.quotation.price),
+      (total, ticket) => total + parseFloat(ticket.quotation.advanceprice),
       0
     );
   };

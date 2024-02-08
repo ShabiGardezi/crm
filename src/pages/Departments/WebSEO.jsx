@@ -26,6 +26,7 @@ const WebSeoForm = () => {
   const [clientSuggestions, setClientSuggestions] = useState([]);
   const [projectName, setProjectName] = useState(""); // State for the Department Name field
   const [formData, setFormData] = useState({
+    salesType: "",
     department: "Website SEO",
     priorityLevel: "",
     assignor: user?.username || "",
@@ -166,6 +167,7 @@ const WebSeoForm = () => {
         created_by: user._id,
         assignorDepartment: user.department._id,
         businessdetails: {
+          salesType: formData.salesType,
           outsourced_work: formData.outsourced_work,
           projectName: formData.projectName,
           serviceName: formData.serviceName,
@@ -388,66 +390,91 @@ const WebSeoForm = () => {
               )}
             </>
           )}
+
           {user?.department?._id !== "65ae7e27e00c92860edad99c" && (
             <>
               <Grid item xs={3}>
-                <FormControl fullWidth>
-                  <InputLabel id="supportPersonLabel">
-                    Support Person
-                  </InputLabel>
-                  <Select
-                    labelId="supportPersonLabel"
-                    id="supportPerson"
-                    name="supportPerson"
-                    value={formData.supportPerson}
-                    onChange={handleChange}
-                  >
-                    {users.map((user) => (
-                      <MenuItem key={user._id} value={user.username}>
-                        {user.username}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={3}>
                 <FormControl fullWidth required>
-                  <InputLabel id="closerLabel">Closer Person</InputLabel>
+                  <InputLabel id="salesTypeLabel">Sales Type</InputLabel>
                   <Select
-                    labelId="closerLabel"
-                    id="closer"
-                    name="closer"
-                    value={formData.closer}
+                    labelId="salesTypeLabel"
+                    id="salesType"
+                    name="salesType"
+                    value={formData.salesType}
                     onChange={handleChange}
-                    required
                   >
-                    {users.map((user) => (
-                      <MenuItem key={user._id} value={user.username}>
-                        {user.username}
-                      </MenuItem>
-                    ))}
+                    <MenuItem value="New Sales">New Sales</MenuItem>
+                    <MenuItem value="Up Sales">Up Sales</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={3}>
-                <FormControl fullWidth required>
-                  <InputLabel id="fronterLabel">Fronter</InputLabel>
-                  <Select
-                    labelId="fronterLabel"
-                    id="fronter"
-                    name="fronter"
-                    value={formData.fronter}
-                    onChange={handleChange}
-                    required
-                  >
-                    {users.map((user) => (
-                      <MenuItem key={user._id} value={user.username}>
-                        {user.username}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
+              {formData.salesType === "Up Sales" && (
+                <>
+                  <Grid item xs={3}>
+                    <FormControl fullWidth required>
+                      <InputLabel id="supportPersonLabel">
+                        Support Person
+                      </InputLabel>
+                      <Select
+                        labelId="supportPersonLabel"
+                        id="supportPerson"
+                        name="supportPerson"
+                        value={formData.supportPerson}
+                        onChange={handleChange}
+                      >
+                        {users.map((user) => (
+                          <MenuItem key={user._id} value={user.username}>
+                            {user.username}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                </>
+              )}
+
+              {formData.salesType === "New Sales" && (
+                <>
+                  <Grid item xs={3}>
+                    <FormControl fullWidth required>
+                      <InputLabel id="closerLabel">Closer Person</InputLabel>
+                      <Select
+                        labelId="closerLabel"
+                        id="closer"
+                        name="closer"
+                        value={formData.closer}
+                        onChange={handleChange}
+                        required
+                      >
+                        {users.map((user) => (
+                          <MenuItem key={user._id} value={user.username}>
+                            {user.username}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={3}>
+                    <FormControl fullWidth required>
+                      <InputLabel id="fronterLabel">Fronter</InputLabel>
+                      <Select
+                        labelId="fronterLabel"
+                        id="fronter"
+                        name="fronter"
+                        value={formData.fronter}
+                        onChange={handleChange}
+                        required
+                      >
+                        {users.map((user) => (
+                          <MenuItem key={user._id} value={user.username}>
+                            {user.username}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                </>
+              )}
             </>
           )}
         </Grid>
