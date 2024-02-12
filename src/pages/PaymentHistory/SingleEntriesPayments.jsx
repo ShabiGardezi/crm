@@ -7,6 +7,7 @@ import {
   TableRow,
   TableHead,
   Paper,
+  Button,
   InputBase,
 } from "@mui/material";
 import Header from "../Header";
@@ -26,6 +27,8 @@ export default function SingleEntriesPayments() {
   const [tickets, setTickets] = useState([]); // State to store fetched data
   const [searchQuery, setSearchQuery] = useState("");
   const [filter, setFilter] = useState("All");
+  const [editingTicketId, setEditingTicketId] = useState(null);
+  const [newRemainingPrice, setNewRemainingPrice] = useState("");
 
   const handleStartDateChange = (event) => {
     setStartDate(event.target.value);
@@ -134,18 +137,57 @@ export default function SingleEntriesPayments() {
   };
   const calculateTotalPaymentForFilteredTickets = (filteredTickets) => {
     const totalPayment = filteredTickets.reduce((total, ticket) => {
-      return total + calculateTotalPaymentForTicket(ticket.payment_history);
+      const paymentFromHistory = ticket.payment_history.reduce(
+        (acc, payment) => {
+          return acc + parseFloat(payment.payment);
+        },
+        0
+      );
+      return total + paymentFromHistory;
     }, 0);
+
     return totalPayment.toFixed(2);
   };
+
   const calculateTotalRemainingForFilteredTickets = (filteredTickets) => {
     const totalRemaining = filteredTickets.reduce((total, ticket) => {
-      return total + parseFloat(ticket.quotation.remainingPrice);
+      // Get the last remaining price from the remaining_price_history array
+      const lastRemainingPrice =
+        ticket.remaining_price_history[
+          ticket.remaining_price_history.length - 1
+        ]?.remainingPrice || 0;
+      // Add the last remaining price to the total
+      return total + parseFloat(lastRemainingPrice);
     }, 0);
 
     return totalRemaining.toFixed(2);
   };
 
+  const handleSaveRemainingPrice = async (ticketId, paymentHistoryId) => {
+    try {
+      const response = await fetch(
+        `${apiUrl}/api/tickets/update_remaining_price`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            ticketId: ticketId,
+            paymentHistoryId: paymentHistoryId,
+            remainingPrice: newRemainingPrice,
+          }),
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Failed to update remaining price");
+      }
+      // Optionally update the state or show a success message
+      setEditingTicketId(null);
+    } catch (error) {
+      console.error("Error updating remaining price:", error.message);
+    }
+  };
   return (
     <div>
       <Header />
@@ -235,8 +277,8 @@ export default function SingleEntriesPayments() {
                         <TableCell>
                           {ticket.businessdetails.businessName}
                         </TableCell>
-                        <TableCell>{ticket.businessdetails.fronter}</TableCell>
-                        <TableCell>{ticket.businessdetails.closer}</TableCell>
+                        <TableCell>{p.fronter}</TableCell>
+                        <TableCell>{p.closer}</TableCell>
                         <TableCell>{ticket.majorAssignee.name}</TableCell>
                         <TableCell>
                           {new Date(p.date).toLocaleDateString()}
@@ -245,8 +287,55 @@ export default function SingleEntriesPayments() {
                           {ticket.businessdetails.work_status ||
                             ticket.businessdetails.departmentName}
                         </TableCell>
-                        {<TableCell>{`$${p.payment}`}</TableCell>}
-                        <TableCell>{`$${ticket.quotation.remainingPrice}`}</TableCell>
+                        <TableCell>{`$${p.payment}`}</TableCell>
+                        {/* <TableCell>{`$${p.remainingPrice}`}</TableCell>{" "} */}
+                        <TableCell>
+                          {editingTicketId === ticket._id ? (
+                            <>
+                              <input
+                                type="number"
+                                value={newRemainingPrice}
+                                onChange={(e) =>
+                                  setNewRemainingPrice(e.target.value)
+                                }
+                              />
+                              <Button
+                                onClick={() =>
+                                  handleSaveRemainingPrice(
+                                    ticket._id,
+                                    ticket.payment_history[0]._id
+                                  )
+                                }
+                              >
+                                Save
+                              </Button>
+                            </>
+                          ) : (
+                            <>
+                              {/* Show the remaining price from the latest entry in remaining_price_history */}
+                              {ticket.remaining_price_history.length > 0
+                                ? ticket.remaining_price_history[
+                                    ticket.remaining_price_history.length - 1
+                                  ].remainingPrice
+                                : "No remaining price history"}
+                              <Button
+                                onClick={() => {
+                                  setEditingTicketId(ticket._id);
+                                  setNewRemainingPrice(
+                                    ticket.remaining_price_history.length > 0
+                                      ? ticket.remaining_price_history[
+                                          ticket.remaining_price_history
+                                            .length - 1
+                                        ].remainingPrice
+                                      : ""
+                                  );
+                                }}
+                              >
+                                Edit
+                              </Button>
+                            </>
+                          )}
+                        </TableCell>
                       </TableRow>
                     )
                 )}

@@ -8,6 +8,7 @@ import {
   TableHead,
   Paper,
   Typography,
+  Button,
 } from "@mui/material";
 import Header from "../Header";
 
@@ -19,6 +20,8 @@ export default function FronterComissionSheet() {
   const [fronterCommission, setFronterCommission] = useState({});
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [editingTicketId, setEditingTicketId] = useState(null);
+  const [newRemainingPrice, setNewRemainingPrice] = useState("");
   const handleStartDateSelect = (date) => {
     setStartDate(date);
   };
@@ -177,6 +180,34 @@ export default function FronterComissionSheet() {
   const hasSameFronterAndCloser = (ticket) => {
     return ticket.businessdetails.fronter === ticket.businessdetails.closer;
   };
+  const currentDate = new Date().toISOString(); // Get current date and time
+
+  const handleSaveRemainingPrice = async (ticketId, paymentHistoryId) => {
+    try {
+      const response = await fetch(
+        `${apiUrl}/api/tickets//update_remaining_price`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            ticketId: ticketId,
+            paymentHistoryId: paymentHistoryId,
+            remainingPrice: newRemainingPrice,
+            updatedAt: currentDate, // Include the current date and time
+          }),
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Failed to update remaining price");
+      }
+      // Optionally update the state or show a success message
+      setEditingTicketId(null);
+    } catch (error) {
+      console.error("Error updating remaining price:", error.message);
+    }
+  };
   return (
     <div>
       <Header />
@@ -266,29 +297,26 @@ export default function FronterComissionSheet() {
                   ticket.businessdetails.fronter !==
                     ticket.businessdetails.closer && (
                     <>
-                      <TableRow>
-                        <TableCell>
-                          {ticket.businessdetails.businessName}
-                        </TableCell>
-                        <TableCell>
-                          <strong>{ticket.businessdetails.fronter}</strong>
-                        </TableCell>
-                        <TableCell>{ticket.businessdetails.closer}</TableCell>
-                        <TableCell>{ticket.majorAssignee.name}</TableCell>
-                        <TableCell>
-                          {new Date(ticket.createdAt).toLocaleDateString()}
-                        </TableCell>
-                        <TableCell>
-                          {ticket.businessdetails.work_status ||
-                            ticket.businessdetails.departmentName}
-                        </TableCell>
-                        <TableCell>
-                          {/* Display individual payments from payment history */}
-                          {ticket.payment_history.map((paymentEntry, index) => (
-                            <div key={index}>${paymentEntry.payment}</div>
-                          ))}
-                        </TableCell>
-                      </TableRow>
+                      {ticket.payment_history.map((paymentEntry, index) => (
+                        <TableRow key={`${ticket._id}-${index}`}>
+                          <TableCell>
+                            {ticket.businessdetails.businessName}
+                          </TableCell>
+                          <TableCell>
+                            <strong>{paymentEntry.fronter}</strong>
+                          </TableCell>
+                          <TableCell>{paymentEntry.closer}</TableCell>
+                          <TableCell>{ticket.majorAssignee.name}</TableCell>
+                          <TableCell>
+                            {new Date(ticket.createdAt).toLocaleDateString()}
+                          </TableCell>
+                          <TableCell>
+                            {ticket.businessdetails.work_status ||
+                              ticket.businessdetails.departmentName}
+                          </TableCell>
+                          <TableCell>${paymentEntry.payment}</TableCell>
+                        </TableRow>
+                      ))}
                     </>
                   )}
               </React.Fragment>
@@ -305,6 +333,7 @@ export default function FronterComissionSheet() {
               </TableRow>
             )}
           </TableBody>
+
           {/* Display total payment for the selected fronter */}
           {selectedFronter !== "All" && (
             <TableBody>

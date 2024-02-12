@@ -453,11 +453,11 @@ const Header = () => {
                         <ListItemText primary="Closer Monthly Commission" />
                       </ListItem>
                     </Link>
-                    {/* <Link to="/refund_history">
-                        <ListItem button>
-                          <ListItemText primary="Charge Back & Refund" />
-                        </ListItem>
-                      </Link> */}
+                    <Link to="/refund_history">
+                      <ListItem button>
+                        <ListItemText primary="Charge Back & Refund" />
+                      </ListItem>
+                    </Link>
                   </div>
                 )}
               </React.Fragment>
