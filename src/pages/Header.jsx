@@ -423,7 +423,7 @@ const Header = () => {
                   <div className="client-history-dropdown">
                     <ListItem button>
                       <Link to="/single_payment_history">
-                        <ListItemText primary="Accounts" />
+                        <ListItemText primary="Received & Remaining Balance" />
                       </Link>
                     </ListItem>
                     <Link to="/fronter_comission_sheet">
@@ -446,11 +446,11 @@ const Header = () => {
                         <ListItemText primary="Closer Monthly Commission" />
                       </ListItem>
                     </Link>
-                    <Link to="/refund_history">
+                    {/* <Link to="/refund_history">
                       <ListItem button>
                         <ListItemText primary="Charge Back & Refund" />
                       </ListItem>
-                    </Link>
+                    </Link> */}
                   </div>
                 )}
               </React.Fragment>

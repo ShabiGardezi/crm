@@ -184,10 +184,26 @@ export default function SingleEntriesPayments() {
       }
       // Optionally update the state or show a success message
       setEditingTicketId(null);
+
+      // Update the remaining price in the ticket object
+      setTickets((prevTickets) =>
+        prevTickets.map((prevTicket) =>
+          prevTicket._id === ticketId
+            ? {
+                ...prevTicket,
+                remaining_price_history: [
+                  ...prevTicket.remaining_price_history,
+                  { remainingPrice: newRemainingPrice },
+                ],
+              }
+            : prevTicket
+        )
+      );
     } catch (error) {
       console.error("Error updating remaining price:", error.message);
     }
   };
+
   return (
     <div>
       <Header />
@@ -268,81 +284,81 @@ export default function SingleEntriesPayments() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {filteredTickets.map((ticket) => (
-              <React.Fragment key={ticket._id}>
-                {ticket.payment_history.map(
-                  (p) =>
-                    p.payment !== null && (
-                      <TableRow key={`${ticket._id}-${p.date}`}>
-                        <TableCell>
-                          {ticket.businessdetails.businessName}
-                        </TableCell>
-                        <TableCell>{p.fronter}</TableCell>
-                        <TableCell>{p.closer}</TableCell>
-                        <TableCell>{ticket.majorAssignee.name}</TableCell>
-                        <TableCell>
-                          {new Date(p.date).toLocaleDateString()}
-                        </TableCell>
-                        <TableCell>
-                          {ticket.businessdetails.work_status ||
-                            ticket.businessdetails.departmentName}
-                        </TableCell>
-                        <TableCell>{`$${p.payment}`}</TableCell>
-                        {/* <TableCell>{`$${p.remainingPrice}`}</TableCell>{" "} */}
-                        <TableCell>
-                          {editingTicketId === ticket._id ? (
-                            <>
-                              <input
-                                type="number"
-                                value={newRemainingPrice}
-                                onChange={(e) =>
-                                  setNewRemainingPrice(e.target.value)
-                                }
-                              />
-                              <Button
-                                onClick={() =>
-                                  handleSaveRemainingPrice(
-                                    ticket._id,
-                                    ticket.payment_history[0]._id
-                                  )
-                                }
-                              >
-                                Save
-                              </Button>
-                            </>
-                          ) : (
-                            <>
-                              {/* Show the remaining price from the latest entry in remaining_price_history */}
-                              {ticket.remaining_price_history.length > 0
-                                ? `$${
-                                    ticket.remaining_price_history[
-                                      ticket.remaining_price_history.length - 1
-                                    ].remainingPrice
-                                  }`
-                                : "No remaining price history"}
-                              <Button
-                                onClick={() => {
-                                  setEditingTicketId(ticket._id);
-                                  setNewRemainingPrice(
-                                    ticket.remaining_price_history.length > 0
-                                      ? ticket.remaining_price_history[
-                                          ticket.remaining_price_history
-                                            .length - 1
-                                        ].remainingPrice
-                                      : ""
-                                  );
-                                }}
-                              >
-                                Edit
-                              </Button>
-                            </>
-                          )}
-                        </TableCell>
-                      </TableRow>
-                    )
-                )}
-              </React.Fragment>
-            ))}
+            {filteredTickets.map((ticket) => {
+              // Calculate total received payment for the current ticket
+              const totalReceivedPayment = calculateTotalPaymentForTicket(
+                ticket.payment_history
+              );
+
+              // Get the remaining price from the last index of remaining_price_history array
+              const remainingPrice =
+                ticket.remaining_price_history.length > 0
+                  ? ticket.remaining_price_history[
+                      ticket.remaining_price_history.length - 1
+                    ].remainingPrice
+                  : 0;
+
+              return (
+                <TableRow key={ticket._id}>
+                  <TableCell>{ticket.businessdetails.businessName}</TableCell>
+                  <TableCell>{ticket.payment_history[0].fronter}</TableCell>
+                  <TableCell>{ticket.payment_history[0].closer}</TableCell>
+                  <TableCell>{ticket.majorAssignee.name}</TableCell>
+                  <TableCell>
+                    {new Date(
+                      ticket.payment_history[0].date
+                    ).toLocaleDateString()}
+                  </TableCell>
+                  <TableCell>
+                    {ticket.businessdetails.work_status ||
+                      ticket.businessdetails.departmentName}
+                  </TableCell>
+                  {/* Display the total received payment for the ticket */}
+                  <TableCell>{`$${totalReceivedPayment.toFixed(2)}`}</TableCell>
+                  <TableCell>
+                    {editingTicketId === ticket._id ? (
+                      <>
+                        <input
+                          type="number"
+                          value={newRemainingPrice}
+                          onChange={(e) => setNewRemainingPrice(e.target.value)}
+                        />
+                        <Button
+                          onClick={() =>
+                            handleSaveRemainingPrice(
+                              ticket._id,
+                              ticket.payment_history[0]._id
+                            )
+                          }
+                        >
+                          Save
+                        </Button>
+                      </>
+                    ) : (
+                      <>
+                        {ticket.remaining_price_history.length > 0
+                          ? `$${remainingPrice}`
+                          : "No remaining price history"}
+                        <Button
+                          onClick={() => {
+                            setEditingTicketId(ticket._id);
+                            setNewRemainingPrice(
+                              ticket.remaining_price_history.length > 0
+                                ? ticket.remaining_price_history[
+                                    ticket.remaining_price_history.length - 1
+                                  ].remainingPrice
+                                : ""
+                            );
+                          }}
+                        >
+                          Edit
+                        </Button>
+                      </>
+                    )}
+                  </TableCell>
+                </TableRow>
+              );
+            })}
           </TableBody>
           <TableRow>
             <TableCell colSpan={7} style={{ textAlign: "right" }}>
