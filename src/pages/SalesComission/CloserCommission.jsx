@@ -78,21 +78,15 @@ export default function CloserComissionSheet() {
 
         // Check if the ticket's createdAt date is within the selected range
         return (
-          (ticket.businessdetails.closer === closerName ||
-            ticket.payment_history.some(
-              (payment) => payment.closer === closerName
-            )) &&
+          ticket.payment_history.some(
+            (payment) => payment.closer === closerName
+          ) &&
           (!startDate || createdAtDate >= startDate) &&
           (!endDate ||
             createdAtDate <= new Date(endDate.getTime() + 24 * 60 * 60 * 1000)) // Include end date
         );
       })
       .reduce((total, ticket) => {
-        // Add the quotation price if the closer matches
-        if (ticket.businessdetails.closer === closerName) {
-          total += parseFloat(ticket.quotation.price);
-        }
-
         // Add payments from payment_history if the closer matches
         total += ticket.payment_history
           .filter((payment) => payment.closer === closerName)
@@ -121,27 +115,20 @@ export default function CloserComissionSheet() {
 
   // Calculate total payment for all closers
   const calculateTotalPaymentForAll = () => {
-    return tickets.reduce((total, ticket) => {
-      // Add the quotation price if available
-      if (ticket.quotation && ticket.quotation.price) {
-        total += parseFloat(ticket.quotation.price);
-      }
+    let totalPayment = 0; // Initialize total payment
 
-      // Add payments from payment_history starting from index 1
-      total += ticket.payment_history
-        .slice(1)
-        .reduce((paymentTotal, payment) => {
-          // Convert the payment to a number if it's a string
-          const paymentAmount =
-            typeof payment.payment === "string"
-              ? parseFloat(payment.payment)
-              : payment.payment;
-          return paymentTotal + paymentAmount;
-        }, 0);
+    // Iterate over filtered tickets
+    filteredTickets.forEach((ticket) => {
+      // Iterate over payment history of the current ticket
+      ticket.payment_history.forEach((payment) => {
+        // Add the payment amount to the total payment
+        totalPayment += payment.payment;
+      });
+    });
 
-      return total;
-    }, 0);
+    return totalPayment.toFixed(2); // Format total payment as a string with 2 decimal places
   };
+
   const [currentPage, setCurrentPage] = useState(1);
   const RowsPerPage = 100; // Set the number of rows per page
 
@@ -229,48 +216,47 @@ export default function CloserComissionSheet() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {visibleRows.map((visibleTicket) => (
-              <React.Fragment key={visibleTicket._id}>
+            {filteredTickets.map((ticket) => (
+              <React.Fragment key={ticket._id}>
                 {(selectedCloser === "All" ||
-                  visibleTicket.businessdetails.closer === selectedCloser) && (
+                  ticket.businessdetails.closer === selectedCloser) && (
                   <>
-                    <TableRow>
-                      <TableCell>
-                        {visibleTicket.businessdetails.businessName}
-                      </TableCell>
-                      <TableCell>
-                        {visibleTicket.businessdetails.fronter}
-                      </TableCell>
-                      <TableCell>
-                        <strong>{visibleTicket.businessdetails.closer}</strong>
-                      </TableCell>
-                      <TableCell>{visibleTicket.majorAssignee.name}</TableCell>
-                      <TableCell>
-                        {new Date(visibleTicket.createdAt).toLocaleDateString()}
-                      </TableCell>
-                      <TableCell>
-                        {visibleTicket.businessdetails.work_status ||
-                          visibleTicket.businessdetails.departmentName}
-                      </TableCell>
-                      <TableCell>{`$${visibleTicket.quotation.price}`}</TableCell>
-                      <TableCell>
-                        {visibleTicket.payment_history[0].payment !== 0
-                          ? "Recurring"
-                          : visibleTicket.businessdetails.fronter !==
-                            visibleTicket.businessdetails.closer
-                          ? "New Sales"
-                          : "Up Sales"}
-                      </TableCell>
-                    </TableRow>
+                    {ticket.payment_history.map((paymentEntry, index) => (
+                      <TableRow key={`${ticket._id}-${index}`}>
+                        <TableCell>
+                          {ticket.businessdetails.businessName}
+                        </TableCell>
+                        <TableCell>{paymentEntry.fronter}</TableCell>
+                        <TableCell>
+                          <strong>{paymentEntry.closer} </strong>
+                        </TableCell>
+                        <TableCell>{ticket.majorAssignee.name}</TableCell>
+                        <TableCell>
+                          {new Date(ticket.createdAt).toLocaleDateString()}
+                        </TableCell>
+                        <TableCell>
+                          {ticket.businessdetails.work_status ||
+                            ticket.businessdetails.departmentName}
+                        </TableCell>
+                        <TableCell>${paymentEntry.payment}</TableCell>
+                        <TableCell>
+                          {ticket.payment_history[0].payment !== 0
+                            ? "Recurring"
+                            : ticket.businessdetails.fronter !==
+                              ticket.businessdetails.closer
+                            ? "New Sales"
+                            : "Up Sales"}
+                        </TableCell>
+                      </TableRow>
+                    ))}
                   </>
                 )}
               </React.Fragment>
             ))}
 
-            {visibleRows.map((visibleTicket) => (
-              <React.Fragment key={`${visibleTicket._id}-payment`}>
-                {/* Display payment history for the current ticket */}
-                {visibleTicket.payment_history
+            {/* {visibleRows.map((ticket) => (
+              <React.Fragment key={`${ticket._id}-payment`}>
+                {ticket.payment_history
                   .slice(1)
                   .map((payment, index) => {
                     if (
@@ -280,25 +266,25 @@ export default function CloserComissionSheet() {
                       return null;
 
                     return (
-                      <TableRow key={`${visibleTicket._id}-payment-${index}`}>
+                      <TableRow key={`${ticket._id}-payment-${index}`}>
                         <TableCell>
-                          {visibleTicket.businessdetails.businessName}
+                          {ticket.businessdetails.businessName}
                         </TableCell>
                         <TableCell>
-                          {visibleTicket.businessdetails.fronter}
+                          {ticket.businessdetails.fronter}
                         </TableCell>
                         <TableCell>
                           <strong>{payment.closer}</strong>
                         </TableCell>
                         <TableCell>
-                          {visibleTicket.majorAssignee.name}
+                          {ticket.majorAssignee.name}
                         </TableCell>
                         <TableCell>
                           {new Date(payment.date).toLocaleDateString()}
                         </TableCell>
                         <TableCell>
-                          {visibleTicket.businessdetails.work_status ||
-                            visibleTicket.businessdetails.departmentName}
+                          {ticket.businessdetails.work_status ||
+                            ticket.businessdetails.departmentName}
                         </TableCell>
                         <TableCell>{`$${payment.payment}`}</TableCell>
                         <TableCell>{"Recurring"}</TableCell>
@@ -306,7 +292,7 @@ export default function CloserComissionSheet() {
                     );
                   })}
               </React.Fragment>
-            ))}
+            ))} */}
 
             {selectedCloser === "All" && (
               <TableRow>

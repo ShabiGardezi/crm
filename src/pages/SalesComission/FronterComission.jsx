@@ -308,7 +308,7 @@ export default function FronterComissionSheet() {
                           <TableCell>{paymentEntry.closer}</TableCell>
                           <TableCell>{ticket.majorAssignee.name}</TableCell>
                           <TableCell>
-                            {new Date(ticket.createdAt).toLocaleDateString()}
+                            {new Date(paymentEntry.date).toLocaleDateString()}
                           </TableCell>
                           <TableCell>
                             {ticket.businessdetails.work_status ||

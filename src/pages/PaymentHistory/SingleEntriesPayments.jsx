@@ -305,10 +305,15 @@ export default function SingleEntriesPayments() {
                   <TableCell>{ticket.payment_history[0].closer}</TableCell>
                   <TableCell>{ticket.majorAssignee.name}</TableCell>
                   <TableCell>
-                    {new Date(
-                      ticket.payment_history[0].date
-                    ).toLocaleDateString()}
+                    {ticket.payment_history && ticket.payment_history.length > 0
+                      ? new Date(
+                          ticket.payment_history[
+                            ticket.payment_history.length - 1
+                          ].date
+                        ).toLocaleDateString()
+                      : "No payment history"}
                   </TableCell>
+
                   <TableCell>
                     {ticket.businessdetails.work_status ||
                       ticket.businessdetails.departmentName}
