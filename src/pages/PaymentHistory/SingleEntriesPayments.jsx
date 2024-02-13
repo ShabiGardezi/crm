@@ -314,9 +314,11 @@ export default function SingleEntriesPayments() {
                             <>
                               {/* Show the remaining price from the latest entry in remaining_price_history */}
                               {ticket.remaining_price_history.length > 0
-                                ? ticket.remaining_price_history[
-                                    ticket.remaining_price_history.length - 1
-                                  ].remainingPrice
+                                ? `$${
+                                    ticket.remaining_price_history[
+                                      ticket.remaining_price_history.length - 1
+                                    ].remainingPrice
+                                  }`
                                 : "No remaining price history"}
                               <Button
                                 onClick={() => {

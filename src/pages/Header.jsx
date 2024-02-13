@@ -407,18 +407,6 @@ const Header = () => {
                 <ListItemText primary="Ticket History" />
               </ListItem>
             </Link>
-            {user?.role === "Tier-1" && (
-              <div className="signup">
-                <ListItem button>
-                  <ListItemIcon>
-                    <AccountBalanceIcon />
-                  </ListItemIcon>
-                  <Link to="/single_payment_history">
-                    <ListItemText primary="Accounts" />
-                  </Link>
-                </ListItem>
-              </div>
-            )}
             {["Tier-1", "Tier-2"].includes(user?.role) && (
               <React.Fragment>
                 <ListItem button onClick={toggleSalesDropdown}>
@@ -433,6 +421,11 @@ const Header = () => {
 
                 {isSalesDropdownOpen && (
                   <div className="client-history-dropdown">
+                    <ListItem button>
+                      <Link to="/single_payment_history">
+                        <ListItemText primary="Accounts" />
+                      </Link>
+                    </ListItem>
                     <Link to="/fronter_comission_sheet">
                       <ListItem button>
                         <ListItemText primary="Daily Fronter Sale" />
