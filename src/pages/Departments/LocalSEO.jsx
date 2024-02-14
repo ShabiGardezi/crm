@@ -99,19 +99,26 @@ const LocalSEOForm = () => {
 
     const remaining = updatedPrice - updatedAdvancePrice;
     setRemainingPrice(remaining);
-    if (name === "work_status") {
-      // Update the state
+
+    // If the selected sales type is "Up Sales" and the field being changed is "Closer Person"
+    if (formData.salesType === "Up Sales" && name === "closer") {
+      // Automatically set the "Fronter" field to the same value as the "Closer Person"
       setFormData({
         ...formData,
         [name]: value,
+        fronter: value, // Automatically set the "Fronter" field to the same value
+        remainingPrice: remaining,
+      });
+    } else {
+      // Update the state for other fields
+      setFormData({
+        ...formData,
+        [name]: value,
+        remainingPrice: remaining,
       });
     }
-    setFormData({
-      ...formData,
-      [name]: value,
-      remainingPrice: remaining, // Update remainingPrice in formData
-    });
   };
+
   const handleSubmit = async (event) => {
     event.preventDefault(); // Prevent the default form submission behavior
     try {
@@ -159,7 +166,7 @@ const LocalSEOForm = () => {
           assignor: formData.assignor,
           priority: formData.priorityLevel,
         },
-        payment_history: parseFloat(formData.advanceprice),
+        payment_history: parseFloat(formData.advanceprice, formData.salesType),
         clientReporting: formData.reportingDate,
       });
 

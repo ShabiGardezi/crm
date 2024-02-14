@@ -34,15 +34,11 @@ export default function CloserComissionSheet() {
   };
   const filteredTickets = tickets.filter((ticket) => {
     const createdAtDate = new Date(ticket.createdAt);
-
-    // Set the time components to the start and end of the day
     const startOfDay = new Date(startDate);
     startOfDay.setHours(0, 0, 0, 0);
-
     const endOfDay = new Date(endDate);
     endOfDay.setHours(23, 59, 59, 999);
 
-    // Check if the ticket's createdAt date is within the selected range
     return (
       (!startDate || createdAtDate >= startOfDay) &&
       (!endDate || createdAtDate <= endOfDay)
@@ -142,6 +138,23 @@ export default function CloserComissionSheet() {
     (currentPage - 1) * RowsPerPage,
     currentPage * RowsPerPage
   );
+  const getSalesType = (ticket, paymentEntry) => {
+    // Check if it's a new sales, up sales, or recurring sales
+    if (ticket.businessdetails.salesType === "New Sales") {
+      return "New Sales";
+    } else if (ticket.businessdetails.salesType === "Up Sales") {
+      // Check if the fronter and closer are the same
+      if (paymentEntry.fronter === paymentEntry.closer) {
+        return "Up Sales";
+      } else {
+        return "Recurring";
+      }
+    } else {
+      // If sales type is not specified or not recognized, default to "Recurring"
+      return "Recurring";
+    }
+  };
+
   return (
     <div>
       <Header />
@@ -240,12 +253,7 @@ export default function CloserComissionSheet() {
                         </TableCell>
                         <TableCell>${paymentEntry.payment}</TableCell>
                         <TableCell>
-                          {ticket.payment_history[0].payment !== 0
-                            ? "Recurring"
-                            : ticket.businessdetails.fronter !==
-                              ticket.businessdetails.closer
-                            ? "New Sales"
-                            : "Up Sales"}
+                          {getSalesType(ticket, paymentEntry)}
                         </TableCell>
                       </TableRow>
                     ))}
