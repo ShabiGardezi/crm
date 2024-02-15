@@ -166,7 +166,7 @@ const LocalSEOForm = () => {
           assignor: formData.assignor,
           priority: formData.priorityLevel,
         },
-        payment_history: parseFloat(formData.advanceprice, formData.salesType),
+        payment_history: parseFloat(formData.advanceprice),
         clientReporting: formData.reportingDate,
       });
 

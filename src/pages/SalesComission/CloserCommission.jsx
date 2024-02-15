@@ -11,7 +11,6 @@ import {
   Button,
 } from "@mui/material";
 import Header from "../Header";
-import { parse } from "date-fns";
 
 export default function CloserComissionSheet() {
   const apiUrl = process.env.REACT_APP_API_URL;
@@ -21,6 +20,11 @@ export default function CloserComissionSheet() {
   const [fronterTotalPayment, setFronterTotalPayment] = useState({});
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [newSalesTotalPayment, setNewSalesTotalPayment] = useState(0);
+  const [upSalesTotalPayment, setUpSalesTotalPayment] = useState(0);
+  const [recurringSalesTotalPayment, setRecurringSalesTotalPayment] =
+    useState(0);
+
   const handleStartDateSelect = (date) => {
     setStartDate(date);
   };
@@ -65,7 +69,51 @@ export default function CloserComissionSheet() {
 
     fetchTickets();
   }, []);
+  useEffect(() => {
+    const calculateNewSalesTotalPayment = () => {
+      let total = 0;
+      filteredTickets.forEach((ticket) => {
+        ticket.payment_history.forEach((paymentEntry) => {
+          if (paymentEntry.salesType === "New Sales") {
+            total += paymentEntry.payment;
+          }
+        });
+      });
+      return total;
+    };
 
+    const total = calculateNewSalesTotalPayment();
+    setNewSalesTotalPayment(total);
+    const calculateUpSalesTotalPayment = () => {
+      let total = 0;
+      filteredTickets.forEach((ticket) => {
+        ticket.payment_history.forEach((paymentEntry) => {
+          if (paymentEntry.salesType === "Up Sales") {
+            total += paymentEntry.payment;
+          }
+        });
+      });
+      return total;
+    };
+
+    const calculateRecurringSalesTotalPayment = () => {
+      let total = 0;
+      filteredTickets.forEach((ticket) => {
+        ticket.payment_history.forEach((paymentEntry) => {
+          if (paymentEntry.salesType === "Recurring Sales") {
+            total += paymentEntry.payment;
+          }
+        });
+      });
+      return total;
+    };
+
+    const upSalesTotal = calculateUpSalesTotalPayment();
+    const recurringSalesTotal = calculateRecurringSalesTotalPayment();
+
+    setUpSalesTotalPayment(upSalesTotal);
+    setRecurringSalesTotalPayment(recurringSalesTotal);
+  }, [filteredTickets]);
   // Calculate total payment for each closer
   const calculateTotalPayment = (closerName, startDate, endDate) => {
     return tickets
@@ -138,22 +186,6 @@ export default function CloserComissionSheet() {
     (currentPage - 1) * RowsPerPage,
     currentPage * RowsPerPage
   );
-  const getSalesType = (ticket, paymentEntry) => {
-    // Check if it's a new sales, up sales, or recurring sales
-    if (ticket.businessdetails.salesType === "New Sales") {
-      return "New Sales";
-    } else if (ticket.businessdetails.salesType === "Up Sales") {
-      // Check if the fronter and closer are the same
-      if (paymentEntry.fronter === paymentEntry.closer) {
-        return "Up Sales";
-      } else {
-        return "Recurring";
-      }
-    } else {
-      // If sales type is not specified or not recognized, default to "Recurring"
-      return "Recurring";
-    }
-  };
 
   return (
     <div>
@@ -205,6 +237,20 @@ export default function CloserComissionSheet() {
               ))}
             </select>
           </div>
+          <div style={{ margin: "10px" }}>
+            <label id="sales-type-select-label">Select Sales Type: </label>
+            <select
+              labelId="sales-type-select-label"
+              id="sales-type-select"
+              value={selectedSalesType}
+              onChange={(e) => handleSalesTypeSelect(e.target.value)}
+            >
+              <option value="All">All</option>
+              <option value="New Sales">New Sales</option>
+              <option value="Up Sales">Up Sales</option>
+              <option value="Recurring Sales">Recurring Sales</option>
+            </select>
+          </div>
         </div>
       </div>
       <Typography
@@ -234,29 +280,32 @@ export default function CloserComissionSheet() {
                 {(selectedCloser === "All" ||
                   ticket.businessdetails.closer === selectedCloser) && (
                   <>
-                    {ticket.payment_history.map((paymentEntry, index) => (
-                      <TableRow key={`${ticket._id}-${index}`}>
-                        <TableCell>
-                          {ticket.businessdetails.businessName}
-                        </TableCell>
-                        <TableCell>{paymentEntry.fronter}</TableCell>
-                        <TableCell>
-                          <strong>{paymentEntry.closer} </strong>
-                        </TableCell>
-                        <TableCell>{ticket.majorAssignee.name}</TableCell>
-                        <TableCell>
-                          {new Date(ticket.createdAt).toLocaleDateString()}
-                        </TableCell>
-                        <TableCell>
-                          {ticket.businessdetails.work_status ||
-                            ticket.businessdetails.departmentName}
-                        </TableCell>
-                        <TableCell>${paymentEntry.payment}</TableCell>
-                        <TableCell>
-                          {getSalesType(ticket, paymentEntry)}
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                    {ticket.payment_history.map(
+                      (paymentEntry, index) =>
+                        // Check if the payment entry matches the selected sales type
+                        (selectedSalesType === "All" ||
+                          paymentEntry.salesType === selectedSalesType) && (
+                          <TableRow key={`${ticket._id}-${index}`}>
+                            <TableCell>
+                              {ticket.businessdetails.businessName}
+                            </TableCell>
+                            <TableCell>{paymentEntry.fronter}</TableCell>
+                            <TableCell>
+                              <strong>{paymentEntry.closer} </strong>
+                            </TableCell>
+                            <TableCell>{ticket.majorAssignee.name}</TableCell>
+                            <TableCell>
+                              {new Date(ticket.createdAt).toLocaleDateString()}
+                            </TableCell>
+                            <TableCell>
+                              {ticket.businessdetails.work_status ||
+                                ticket.businessdetails.departmentName}
+                            </TableCell>
+                            <TableCell>${paymentEntry.payment}</TableCell>
+                            <TableCell>{paymentEntry.salesType}</TableCell>
+                          </TableRow>
+                        )
+                    )}
                   </>
                 )}
               </React.Fragment>
@@ -301,15 +350,38 @@ export default function CloserComissionSheet() {
                   })}
               </React.Fragment>
             ))} */}
+            <TableRow>
+              <TableCell colSpan={6}></TableCell>
+              <TableCell style={{ display: "flex", justifyContent: "end" }}>
+                {selectedSalesType === "New Sales" && (
+                  <div style={{ marginTop: "10px" }}>
+                    <p>Total payment for New Sales: ${newSalesTotalPayment}</p>
+                  </div>
+                )}
+                {selectedSalesType === "Up Sales" && (
+                  <div style={{ marginTop: "10px" }}>
+                    <p>Total payment for Up Sales: ${upSalesTotalPayment}</p>
+                  </div>
+                )}
 
-            {selectedCloser === "All" && (
+                {selectedSalesType === "Recurring Sales" && (
+                  <div style={{ marginTop: "10px" }}>
+                    <p>
+                      Total payment for Recurring Sales: $
+                      {recurringSalesTotalPayment}
+                    </p>
+                  </div>
+                )}
+              </TableCell>
+            </TableRow>
+            {selectedCloser === "All" && selectedSalesType === "All" && (
               <TableRow>
-                <TableCell colSpan={5}></TableCell>
+                <TableCell colSpan={6}></TableCell>
                 <TableCell>
-                  <b>Total payment for all closers is:</b>
-                </TableCell>
-                <TableCell>
-                  <b>{`$${calculateTotalPaymentForAll()}`}</b>
+                  <b>
+                    Total payment for {selectedSalesType} is:{" "}
+                    <b>{`$${calculateTotalPaymentForAll()}`}</b>
+                  </b>
                 </TableCell>
               </TableRow>
             )}
