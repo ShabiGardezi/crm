@@ -20,8 +20,6 @@ export default function FronterComissionSheet() {
   const [fronterCommission, setFronterCommission] = useState({});
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [editingTicketId, setEditingTicketId] = useState(null);
-  const [newRemainingPrice, setNewRemainingPrice] = useState("");
   const handleStartDateSelect = (date) => {
     setStartDate(date);
   };
@@ -182,32 +180,6 @@ export default function FronterComissionSheet() {
   };
   const currentDate = new Date().toISOString(); // Get current date and time
 
-  const handleSaveRemainingPrice = async (ticketId, paymentHistoryId) => {
-    try {
-      const response = await fetch(
-        `${apiUrl}/api/tickets//update_remaining_price`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            ticketId: ticketId,
-            paymentHistoryId: paymentHistoryId,
-            remainingPrice: newRemainingPrice,
-            updatedAt: currentDate, // Include the current date and time
-          }),
-        }
-      );
-      if (!response.ok) {
-        throw new Error("Failed to update remaining price");
-      }
-      // Optionally update the state or show a success message
-      setEditingTicketId(null);
-    } catch (error) {
-      console.error("Error updating remaining price:", error.message);
-    }
-  };
   return (
     <div>
       <Header />
